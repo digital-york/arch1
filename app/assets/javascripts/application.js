@@ -17,3 +17,5 @@
 // Required by Blacklight
 //= require blacklight/blacklight
 //= require_tree .
+//= require cocoon
+//= require jquery-ui/datepicker
