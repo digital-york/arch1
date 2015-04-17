@@ -6,19 +6,20 @@ class CatalogController < ApplicationController
   include Blacklight::Catalog
   include Hydra::Controller::ControllerBehavior
   # These before_filters apply the hydra access controls
-  before_filter :enforce_show_permissions, :only=>:show
+  #before_filter :enforce_show_permissions, :only=>:show
   # This applies appropriate access controls to all solr queries
-  CatalogController.solr_search_params_logic += [:add_access_controls_to_solr_params]
+  #CatalogController.solr_search_params_logic += [:add_access_controls_to_solr_params]
 
 
   configure_blacklight do |config|
     config.default_solr_params = {
+:qf => 'title_tesim author_tesim',
       :qt => 'search',
       :rows => 10
     }
 
-    # solr field configuration for search results/index views
-    config.index.title_field = 'title_tesim'
+    # solr field configuration for search results/login views
+    config.login.title_field = 'title_tesim'
     config.index.display_type_field = 'has_model_ssim'
 
 
@@ -57,7 +58,7 @@ class CatalogController < ApplicationController
     #config.default_solr_params[:'facet.field'] = config.facet_fields.select{ |k, v| v[:show] != false}.keys
 
 
-    # solr fields to be displayed in the index (search results) view
+    # solr fields to be displayed in the login (search results) view
     #   The ordering of the field names is the order of the display
     config.add_index_field solr_name('title', :stored_searchable, type: :string), :label => 'Title:'
     config.add_index_field solr_name('title_vern', :stored_searchable, type: :string), :label => 'Title:'

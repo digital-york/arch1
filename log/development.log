@@ -1,0 +1,1802 @@
+  [1m[36m (6.0ms)[0m  [1mCREATE TABLE "schema_migrations" ("version" varchar NOT NULL) [0m
+  [1m[35m (0.1ms)[0m  select sqlite_version(*)
+  [1m[36m (7.2ms)[0m  [1mCREATE UNIQUE INDEX "unique_schema_migrations" ON "schema_migrations" ("version")[0m
+  [1m[35mActiveRecord::SchemaMigration Load (0.1ms)[0m  SELECT "schema_migrations".* FROM "schema_migrations"
+Migrating to DeviseCreateUsers (20150210093259)
+  [1m[36m (0.0ms)[0m  [1mbegin transaction[0m
+DEPRECATION WARNING: `#timestamp` was called without specifying an option for `null`. In Rails 5, this behavior will change to `null: false`. You should manually specify `null: true` to prevent the behavior of your existing migrations from changing. (called from block in change at /home/vagrant/rails_projects/hydra-demo3/db/migrate/20150210093259_devise_create_users.rb:34)
+  [1m[35m (0.2ms)[0m  CREATE TABLE "users" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "email" varchar DEFAULT '' NOT NULL, "encrypted_password" varchar DEFAULT '' NOT NULL, "reset_password_token" varchar, "reset_password_sent_at" datetime, "remember_created_at" datetime, "sign_in_count" integer DEFAULT 0 NOT NULL, "current_sign_in_at" datetime, "last_sign_in_at" datetime, "current_sign_in_ip" varchar, "last_sign_in_ip" varchar, "created_at" datetime, "updated_at" datetime) 
+  [1m[36m (1.8ms)[0m  [1mCREATE UNIQUE INDEX "index_users_on_email" ON "users" ("email")[0m
+  [1m[35m (0.1ms)[0m              SELECT sql
+            FROM sqlite_master
+            WHERE name='index_users_on_email' AND type='index'
+            UNION ALL
+            SELECT sql
+            FROM sqlite_temp_master
+            WHERE name='index_users_on_email' AND type='index'
+
+  [1m[36m (0.1ms)[0m  [1mCREATE UNIQUE INDEX "index_users_on_reset_password_token" ON "users" ("reset_password_token")[0m
+  [1m[35mSQL (0.1ms)[0m  INSERT INTO "schema_migrations" ("version") VALUES (?)  [["version", "20150210093259"]]
+  [1m[36m (7.6ms)[0m  [1mcommit transaction[0m
+Migrating to AddDeviseGuestsToUsers (20150210093260)
+  [1m[35m (0.0ms)[0m  begin transaction
+  [1m[36m (0.2ms)[0m  [1mALTER TABLE "users" ADD "guest" boolean DEFAULT 'f'[0m
+  [1m[35mSQL (0.2ms)[0m  INSERT INTO "schema_migrations" ("version") VALUES (?)  [["version", "20150210093260"]]
+  [1m[36m (9.9ms)[0m  [1mcommit transaction[0m
+Migrating to CreateSearches (20150210093302)
+  [1m[35m (0.0ms)[0m  begin transaction
+DEPRECATION WARNING: `#timestamp` was called without specifying an option for `null`. In Rails 5, this behavior will change to `null: false`. You should manually specify `null: true` to prevent the behavior of your existing migrations from changing. (called from block in up at /home/vagrant/rails_projects/hydra-demo3/db/migrate/20150210093302_create_searches.blacklight.rb:10)
+  [1m[36m (0.2ms)[0m  [1mCREATE TABLE "searches" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "query_params" text, "user_id" integer, "user_type" varchar, "created_at" datetime, "updated_at" datetime) [0m
+  [1m[35m (0.1ms)[0m  CREATE  INDEX "index_searches_on_user_id" ON "searches" ("user_id")
+  [1m[36mSQL (0.1ms)[0m  [1mINSERT INTO "schema_migrations" ("version") VALUES (?)[0m  [["version", "20150210093302"]]
+  [1m[35m (1.7ms)[0m  commit transaction
+Migrating to CreateBookmarks (20150210093303)
+  [1m[36m (0.1ms)[0m  [1mbegin transaction[0m
+DEPRECATION WARNING: `#timestamp` was called without specifying an option for `null`. In Rails 5, this behavior will change to `null: false`. You should manually specify `null: true` to prevent the behavior of your existing migrations from changing. (called from block in up at /home/vagrant/rails_projects/hydra-demo3/db/migrate/20150210093303_create_bookmarks.blacklight.rb:10)
+  [1m[35m (0.1ms)[0m  CREATE TABLE "bookmarks" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "user_id" integer NOT NULL, "user_type" varchar, "document_id" varchar, "title" varchar, "created_at" datetime, "updated_at" datetime) 
+  [1m[36mSQL (0.2ms)[0m  [1mINSERT INTO "schema_migrations" ("version") VALUES (?)[0m  [["version", "20150210093303"]]
+  [1m[35m (2.0ms)[0m  commit transaction
+Migrating to AddPolymorphicTypeToBookmarks (20150210093304)
+  [1m[36m (0.0ms)[0m  [1mbegin transaction[0m
+  [1m[35m (0.2ms)[0m  ALTER TABLE "bookmarks" ADD "document_type" varchar
+  [1m[36m (0.1ms)[0m  [1mCREATE  INDEX "index_bookmarks_on_user_id" ON "bookmarks" ("user_id")[0m
+  [1m[35mSQL (0.1ms)[0m  INSERT INTO "schema_migrations" ("version") VALUES (?)  [["version", "20150210093304"]]
+  [1m[36m (1.9ms)[0m  [1mcommit transaction[0m
+  [1m[35mActiveRecord::SchemaMigration Load (0.1ms)[0m  SELECT "schema_migrations".* FROM "schema_migrations"
+  [1m[36m (0.1ms)[0m  [1m            SELECT sql
+            FROM sqlite_master
+            WHERE name='index_bookmarks_on_user_id' AND type='index'
+            UNION ALL
+            SELECT sql
+            FROM sqlite_temp_master
+            WHERE name='index_bookmarks_on_user_id' AND type='index'
+[0m
+  [1m[35m (0.1ms)[0m              SELECT sql
+            FROM sqlite_master
+            WHERE name='index_searches_on_user_id' AND type='index'
+            UNION ALL
+            SELECT sql
+            FROM sqlite_temp_master
+            WHERE name='index_searches_on_user_id' AND type='index'
+
+  [1m[36m (0.1ms)[0m  [1m            SELECT sql
+            FROM sqlite_master
+            WHERE name='index_users_on_reset_password_token' AND type='index'
+            UNION ALL
+            SELECT sql
+            FROM sqlite_temp_master
+            WHERE name='index_users_on_reset_password_token' AND type='index'
+[0m
+  [1m[35m (0.1ms)[0m              SELECT sql
+            FROM sqlite_master
+            WHERE name='index_users_on_email' AND type='index'
+            UNION ALL
+            SELECT sql
+            FROM sqlite_temp_master
+            WHERE name='index_users_on_email' AND type='index'
+
+Downloading jetty at https://github.com/projecthydra/hydra-jetty/archive/v8.1.1.zip ...
+Unpacking tmp/v8.1.1.zip...
+
+
+Started GET "/" for 10.0.2.2 at 2015-02-10 09:42:57 +0000
+  [1m[36mActiveRecord::SchemaMigration Load (0.1ms)[0m  [1mSELECT "schema_migrations".* FROM "schema_migrations"[0m
+ActiveFedora: loading fedora config from /home/vagrant/rails_projects/hydra-demo3/config/fedora.yml
+ActiveFedora: loading solr config from /home/vagrant/rails_projects/hydra-demo3/config/solr.yml
+Processing by CatalogController#index as HTML
+Solr :rows parameter not set (by the user, configuration, or default solr parameters); using 10 rows by default
+Usergroups are ["public"]
+Solr parameters: {"facet.field"=>["object_type_sim", "pub_date_sim", "subject_topic_sim", "language_sim", "lc1_letter_sim", "subject_geo_sim", "subject_era_sim"], "facet.query"=>[], "facet.pivot"=>[], "fq"=>["edit_access_group_ssim:public OR discover_access_group_ssim:public OR read_access_group_ssim:public"], "hl.fl"=>[], "qt"=>"search", "rows"=>10, "spellcheck.q"=>nil, "sort"=>"score desc, pub_date_dtsi desc, title_tesi asc"}
+Solr query: {"qt"=>"search", "facet.field"=>["object_type_sim", "pub_date_sim", "subject_topic_sim", "language_sim", "lc1_letter_sim", "subject_geo_sim", "subject_era_sim"], "facet.query"=>[], "facet.pivot"=>[], "fq"=>["edit_access_group_ssim:public OR discover_access_group_ssim:public OR read_access_group_ssim:public"], "hl.fl"=>[], "rows"=>10, "spellcheck.q"=>nil, "sort"=>"score desc, pub_date_dtsi desc, title_tesi asc"}
+Solr fetch (96.4ms)
+  Rendered /usr/local/lib/ruby/gems/2.1.0/gems/blacklight-5.9.0/app/views/catalog/_facets.html.erb (0.4ms)
+  Rendered /usr/local/lib/ruby/gems/2.1.0/gems/blacklight-5.9.0/app/views/catalog/_search_sidebar.html.erb (2.1ms)
+  Rendered /usr/local/lib/ruby/gems/2.1.0/gems/blacklight-5.9.0/app/views/catalog/_home_text.html.erb (20.1ms)
+  Rendered /usr/local/lib/ruby/gems/2.1.0/gems/blacklight-5.9.0/app/views/catalog/_home.html.erb (22.5ms)
+  Rendered /usr/local/lib/ruby/gems/2.1.0/gems/blacklight-5.9.0/app/views/catalog/index.html.erb within layouts/blacklight (30.8ms)
+  [1m[35m (4.4ms)[0m  begin transaction
+  [1m[36mUser Exists (1.1ms)[0m  [1mSELECT  1 AS one FROM "users" WHERE "users"."email" = 'guest_xg6me6xlyxz-latpnu7r_1423561380_1@example.com' LIMIT 1[0m
+  [1m[35m (1.1ms)[0m  rollback transaction
+  Rendered /usr/local/lib/ruby/gems/2.1.0/gems/blacklight-5.9.0/app/views/blacklight/nav/_bookmark.html.erb (60.3ms)
+  Rendered /usr/local/lib/ruby/gems/2.1.0/gems/blacklight-5.9.0/app/views/blacklight/nav/_search_history.html.erb (0.4ms)
+  Rendered /usr/local/lib/ruby/gems/2.1.0/gems/blacklight-5.9.0/app/views/_user_util_links.html.erb (184.9ms)
+  Rendered /usr/local/lib/ruby/gems/2.1.0/gems/blacklight-5.9.0/app/views/catalog/_search_form.html.erb (1.6ms)
+  Rendered /usr/local/lib/ruby/gems/2.1.0/gems/blacklight-5.9.0/app/views/shared/_header_navbar.html.erb (190.1ms)
+  Rendered /usr/local/lib/ruby/gems/2.1.0/gems/blacklight-5.9.0/app/views/shared/_ajax_modal.html.erb (0.2ms)
+  Rendered /usr/local/lib/ruby/gems/2.1.0/gems/blacklight-5.9.0/app/views/_flash_msg.html.erb (1.6ms)
+  Rendered /usr/local/lib/ruby/gems/2.1.0/gems/blacklight-5.9.0/app/views/shared/_footer.html.erb (0.2ms)
+Completed 200 OK in 2965ms (Views: 2804.3ms | ActiveRecord: 7.1ms)
+
+
+Started GET "/assets/blacklight/logo-aed4fae153bb48e180bcc458723b3c38.png" for 10.0.2.2 at 2015-02-10 09:43:00 +0000
+
+
+Started GET "/" for 10.0.2.2 at 2015-02-10 09:45:14 +0000
+Processing by CatalogController#index as HTML
+Solr :rows parameter not set (by the user, configuration, or default solr parameters); using 10 rows by default
+Usergroups are ["public"]
+Solr parameters: {"facet.field"=>["object_type_sim", "pub_date_sim", "subject_topic_sim", "language_sim", "lc1_letter_sim", "subject_geo_sim", "subject_era_sim"], "facet.query"=>[], "facet.pivot"=>[], "fq"=>["edit_access_group_ssim:public OR discover_access_group_ssim:public OR read_access_group_ssim:public"], "hl.fl"=>[], "qt"=>"search", "rows"=>10, "spellcheck.q"=>nil, "sort"=>"score desc, pub_date_dtsi desc, title_tesi asc"}
+Solr query: {"qt"=>"search", "facet.field"=>["object_type_sim", "pub_date_sim", "subject_topic_sim", "language_sim", "lc1_letter_sim", "subject_geo_sim", "subject_era_sim"], "facet.query"=>[], "facet.pivot"=>[], "fq"=>["edit_access_group_ssim:public OR discover_access_group_ssim:public OR read_access_group_ssim:public"], "hl.fl"=>[], "rows"=>10, "spellcheck.q"=>nil, "sort"=>"score desc, pub_date_dtsi desc, title_tesi asc"}
+Solr fetch (20.6ms)
+  Rendered /usr/local/lib/ruby/gems/2.1.0/gems/blacklight-5.9.0/app/views/catalog/_facets.html.erb (0.4ms)
+  Rendered /usr/local/lib/ruby/gems/2.1.0/gems/blacklight-5.9.0/app/views/catalog/_search_sidebar.html.erb (2.9ms)
+  Rendered catalog/_home_text.html.erb (0.3ms)
+  Rendered /usr/local/lib/ruby/gems/2.1.0/gems/blacklight-5.9.0/app/views/catalog/_home.html.erb (1.1ms)
+  Rendered /usr/local/lib/ruby/gems/2.1.0/gems/blacklight-5.9.0/app/views/catalog/index.html.erb within layouts/blacklight (8.8ms)
+  [1m[36mUser Load (0.3ms)[0m  [1mSELECT  "users".* FROM "users" WHERE "users"."email" = ? LIMIT 1[0m  [["email", "guest_xg6me6xlyxz-latpnu7r_1423561380_1@example.com"]]
+  [1m[35m (0.0ms)[0m  begin transaction
+  [1m[36mUser Exists (0.1ms)[0m  [1mSELECT  1 AS one FROM "users" WHERE "users"."email" = 'guest_xg6me6xlyxz-latpnu7r_1423561380_1@example.com' LIMIT 1[0m
+  [1m[35m (0.0ms)[0m  rollback transaction
+  Rendered /usr/local/lib/ruby/gems/2.1.0/gems/blacklight-5.9.0/app/views/blacklight/nav/_bookmark.html.erb (0.7ms)
+  Rendered /usr/local/lib/ruby/gems/2.1.0/gems/blacklight-5.9.0/app/views/blacklight/nav/_search_history.html.erb (0.1ms)
+  Rendered /usr/local/lib/ruby/gems/2.1.0/gems/blacklight-5.9.0/app/views/_user_util_links.html.erb (80.1ms)
+  Rendered /usr/local/lib/ruby/gems/2.1.0/gems/blacklight-5.9.0/app/views/catalog/_search_form.html.erb (0.7ms)
+  Rendered /usr/local/lib/ruby/gems/2.1.0/gems/blacklight-5.9.0/app/views/shared/_header_navbar.html.erb (84.5ms)
+  Rendered /usr/local/lib/ruby/gems/2.1.0/gems/blacklight-5.9.0/app/views/shared/_ajax_modal.html.erb (0.0ms)
+  Rendered /usr/local/lib/ruby/gems/2.1.0/gems/blacklight-5.9.0/app/views/_flash_msg.html.erb (0.9ms)
+  Rendered /usr/local/lib/ruby/gems/2.1.0/gems/blacklight-5.9.0/app/views/shared/_footer.html.erb (0.0ms)
+Completed 200 OK in 218ms (Views: 174.2ms | ActiveRecord: 0.4ms)
+
+
+Started GET "/assets/jquery-87424c3c19e96d4fb033c10ebe21ec40.js?body=1" for 10.0.2.2 at 2015-02-10 09:45:14 +0000
+
+
+Started GET "/assets/blacklight/ajax_modal-4da104f071afb0bfdbb49748c35f7c85.js?body=1" for 10.0.2.2 at 2015-02-10 09:45:14 +0000
+
+
+Started GET "/assets/blacklight/autofocus-4ffa9441865d4c66cccefb719c22cb3f.js?body=1" for 10.0.2.2 at 2015-02-10 09:45:14 +0000
+
+
+Started GET "/assets/blacklight/core-b45474e5aafe46355581b438ac76277b.js?body=1" for 10.0.2.2 at 2015-02-10 09:45:14 +0000
+
+
+Started GET "/assets/turbolinks-da8ddad9c2c5483d4c5c30c1ce325253.js?body=1" for 10.0.2.2 at 2015-02-10 09:45:14 +0000
+
+
+Started GET "/assets/jquery_ujs-e27bd20a10d28155845a22d71ef94f2f.js?body=1" for 10.0.2.2 at 2015-02-10 09:45:14 +0000
+
+
+Started GET "/assets/bootstrap/transition-9e4de96204f41141474e9dbb59570af9.js?body=1" for 10.0.2.2 at 2015-02-10 09:45:14 +0000
+
+
+Started GET "/assets/bootstrap/dropdown-65c3929585250221f53bae696936ed44.js?body=1" for 10.0.2.2 at 2015-02-10 09:45:14 +0000
+
+
+Started GET "/assets/bootstrap/alert-7c03e11fecf6b3ef100f76ae4f08586e.js?body=1" for 10.0.2.2 at 2015-02-10 09:45:14 +0000
+
+
+Started GET "/assets/bootstrap/modal-ce380b9327d2cf6c826d8df818ea48a1.js?body=1" for 10.0.2.2 at 2015-02-10 09:45:14 +0000
+
+
+Started GET "/assets/blacklight-6ee36af506d0e1353da84e654502d28f.css?body=1" for 10.0.2.2 at 2015-02-10 09:45:14 +0000
+
+
+Started GET "/assets/application-1dd30d9b00f8d28675182a0ad79065cf.css?body=1" for 10.0.2.2 at 2015-02-10 09:45:14 +0000
+
+
+Started GET "/assets/blacklight/checkbox_submit-3f90c9d4a3ccfac44f4fa7864a5d2b68.js?body=1" for 10.0.2.2 at 2015-02-10 09:45:14 +0000
+
+
+Started GET "/assets/blacklight/bookmark_toggle-10c1b0221b94b4ad792a6adb7fa2fb00.js?body=1" for 10.0.2.2 at 2015-02-10 09:45:14 +0000
+
+
+Started GET "/assets/blacklight/search_context-45b846bd19b7fcd3f10e4011bca74dd4.js?body=1" for 10.0.2.2 at 2015-02-10 09:45:14 +0000
+
+
+Started GET "/assets/blacklight/collapsable-99104400bab090426e76eab33520c8a9.js?body=1" for 10.0.2.2 at 2015-02-10 09:45:14 +0000
+
+
+Started GET "/assets/bootstrap/collapse-7a82a3d4fb154ded3d2702465e21ca00.js?body=1" for 10.0.2.2 at 2015-02-10 09:45:14 +0000
+
+
+Started GET "/assets/blacklight/blacklight-7ce845cbc86d1e13378a7af83489c4c4.js?body=1" for 10.0.2.2 at 2015-02-10 09:45:14 +0000
+
+
+Started GET "/assets/application-fd5655ff61ca24333a1177cea0bfa774.js?body=1" for 10.0.2.2 at 2015-02-10 09:45:14 +0000
+
+
+Started GET "/assets/blacklight/logo-aed4fae153bb48e180bcc458723b3c38.png" for 10.0.2.2 at 2015-02-10 09:45:15 +0000
+
+
+Started GET "/" for 10.0.2.2 at 2015-02-10 09:45:36 +0000
+Processing by CatalogController#index as HTML
+Solr :rows parameter not set (by the user, configuration, or default solr parameters); using 10 rows by default
+Usergroups are ["public"]
+Solr parameters: {"facet.field"=>["object_type_sim", "pub_date_sim", "subject_topic_sim", "language_sim", "lc1_letter_sim", "subject_geo_sim", "subject_era_sim"], "facet.query"=>[], "facet.pivot"=>[], "fq"=>["edit_access_group_ssim:public OR discover_access_group_ssim:public OR read_access_group_ssim:public"], "hl.fl"=>[], "qt"=>"search", "rows"=>10, "spellcheck.q"=>nil, "sort"=>"score desc, pub_date_dtsi desc, title_tesi asc"}
+Solr query: {"qt"=>"search", "facet.field"=>["object_type_sim", "pub_date_sim", "subject_topic_sim", "language_sim", "lc1_letter_sim", "subject_geo_sim", "subject_era_sim"], "facet.query"=>[], "facet.pivot"=>[], "fq"=>["edit_access_group_ssim:public OR discover_access_group_ssim:public OR read_access_group_ssim:public"], "hl.fl"=>[], "rows"=>10, "spellcheck.q"=>nil, "sort"=>"score desc, pub_date_dtsi desc, title_tesi asc"}
+Solr fetch (25.1ms)
+  Rendered /usr/local/lib/ruby/gems/2.1.0/gems/blacklight-5.9.0/app/views/catalog/_facets.html.erb (0.3ms)
+  Rendered /usr/local/lib/ruby/gems/2.1.0/gems/blacklight-5.9.0/app/views/catalog/_search_sidebar.html.erb (2.8ms)
+  Rendered catalog/_home_text.html.erb (0.3ms)
+  Rendered /usr/local/lib/ruby/gems/2.1.0/gems/blacklight-5.9.0/app/views/catalog/_home.html.erb (1.3ms)
+  Rendered /usr/local/lib/ruby/gems/2.1.0/gems/blacklight-5.9.0/app/views/catalog/index.html.erb within layouts/blacklight (7.1ms)
+  [1m[36mUser Load (0.1ms)[0m  [1mSELECT  "users".* FROM "users" WHERE "users"."email" = ? LIMIT 1[0m  [["email", "guest_xg6me6xlyxz-latpnu7r_1423561380_1@example.com"]]
+  [1m[35m (0.1ms)[0m  begin transaction
+  [1m[36mUser Exists (0.1ms)[0m  [1mSELECT  1 AS one FROM "users" WHERE "users"."email" = 'guest_xg6me6xlyxz-latpnu7r_1423561380_1@example.com' LIMIT 1[0m
+  [1m[35m (0.0ms)[0m  rollback transaction
+  Rendered /usr/local/lib/ruby/gems/2.1.0/gems/blacklight-5.9.0/app/views/blacklight/nav/_bookmark.html.erb (0.7ms)
+  Rendered /usr/local/lib/ruby/gems/2.1.0/gems/blacklight-5.9.0/app/views/blacklight/nav/_search_history.html.erb (0.2ms)
+  Rendered /usr/local/lib/ruby/gems/2.1.0/gems/blacklight-5.9.0/app/views/_user_util_links.html.erb (73.6ms)
+  Rendered /usr/local/lib/ruby/gems/2.1.0/gems/blacklight-5.9.0/app/views/catalog/_search_form.html.erb (0.7ms)
+  Rendered /usr/local/lib/ruby/gems/2.1.0/gems/blacklight-5.9.0/app/views/shared/_header_navbar.html.erb (77.2ms)
+  Rendered /usr/local/lib/ruby/gems/2.1.0/gems/blacklight-5.9.0/app/views/shared/_ajax_modal.html.erb (0.0ms)
+  Rendered /usr/local/lib/ruby/gems/2.1.0/gems/blacklight-5.9.0/app/views/_flash_msg.html.erb (0.9ms)
+  Rendered /usr/local/lib/ruby/gems/2.1.0/gems/blacklight-5.9.0/app/views/shared/_footer.html.erb (0.0ms)
+Completed 200 OK in 214ms (Views: 174.8ms | ActiveRecord: 0.3ms)
+
+
+Started GET "/assets/jquery_ujs-e27bd20a10d28155845a22d71ef94f2f.js?body=1" for 10.0.2.2 at 2015-02-10 09:45:37 +0000
+
+
+Started GET "/assets/blacklight/ajax_modal-4da104f071afb0bfdbb49748c35f7c85.js?body=1" for 10.0.2.2 at 2015-02-10 09:45:37 +0000
+
+
+Started GET "/assets/blacklight/core-b45474e5aafe46355581b438ac76277b.js?body=1" for 10.0.2.2 at 2015-02-10 09:45:37 +0000
+
+
+Started GET "/assets/blacklight/autofocus-4ffa9441865d4c66cccefb719c22cb3f.js?body=1" for 10.0.2.2 at 2015-02-10 09:45:37 +0000
+
+
+Started GET "/assets/turbolinks-da8ddad9c2c5483d4c5c30c1ce325253.js?body=1" for 10.0.2.2 at 2015-02-10 09:45:37 +0000
+
+
+Started GET "/assets/jquery-87424c3c19e96d4fb033c10ebe21ec40.js?body=1" for 10.0.2.2 at 2015-02-10 09:45:37 +0000
+
+
+Started GET "/assets/bootstrap/transition-9e4de96204f41141474e9dbb59570af9.js?body=1" for 10.0.2.2 at 2015-02-10 09:45:37 +0000
+
+
+Started GET "/assets/blacklight/search_context-45b846bd19b7fcd3f10e4011bca74dd4.js?body=1" for 10.0.2.2 at 2015-02-10 09:45:37 +0000
+
+
+Started GET "/assets/bootstrap/dropdown-65c3929585250221f53bae696936ed44.js?body=1" for 10.0.2.2 at 2015-02-10 09:45:37 +0000
+
+
+Started GET "/assets/bootstrap/modal-ce380b9327d2cf6c826d8df818ea48a1.js?body=1" for 10.0.2.2 at 2015-02-10 09:45:37 +0000
+
+
+Started GET "/assets/blacklight-6ee36af506d0e1353da84e654502d28f.css?body=1" for 10.0.2.2 at 2015-02-10 09:45:37 +0000
+
+
+Started GET "/assets/bootstrap/alert-7c03e11fecf6b3ef100f76ae4f08586e.js?body=1" for 10.0.2.2 at 2015-02-10 09:45:37 +0000
+
+
+Started GET "/assets/application-1dd30d9b00f8d28675182a0ad79065cf.css?body=1" for 10.0.2.2 at 2015-02-10 09:45:37 +0000
+
+
+Started GET "/assets/blacklight/checkbox_submit-3f90c9d4a3ccfac44f4fa7864a5d2b68.js?body=1" for 10.0.2.2 at 2015-02-10 09:45:37 +0000
+
+
+Started GET "/assets/blacklight/bookmark_toggle-10c1b0221b94b4ad792a6adb7fa2fb00.js?body=1" for 10.0.2.2 at 2015-02-10 09:45:37 +0000
+
+
+Started GET "/assets/blacklight/collapsable-99104400bab090426e76eab33520c8a9.js?body=1" for 10.0.2.2 at 2015-02-10 09:45:37 +0000
+
+
+Started GET "/assets/bootstrap/collapse-7a82a3d4fb154ded3d2702465e21ca00.js?body=1" for 10.0.2.2 at 2015-02-10 09:45:37 +0000
+
+
+Started GET "/assets/blacklight/blacklight-7ce845cbc86d1e13378a7af83489c4c4.js?body=1" for 10.0.2.2 at 2015-02-10 09:45:37 +0000
+
+
+Started GET "/assets/application-fd5655ff61ca24333a1177cea0bfa774.js?body=1" for 10.0.2.2 at 2015-02-10 09:45:37 +0000
+
+
+Started GET "/assets/blacklight/logo-aed4fae153bb48e180bcc458723b3c38.png" for 10.0.2.2 at 2015-02-10 09:45:37 +0000
+ActiveFedora: loading fedora config from /home/vagrant/rails_projects/hydra-demo3/config/fedora.yml
+ActiveFedora: loading solr config from /home/vagrant/rails_projects/hydra-demo3/config/solr.yml
+Attempted to init base path `dev`, but it already exists
+ActiveFedora: loading fedora config from /home/vagrant/rails_projects/hydra-demo3/config/fedora.yml
+ActiveFedora: loading solr config from /home/vagrant/rails_projects/hydra-demo3/config/solr.yml
+Attempted to init base path `dev`, but it already exists
+
+
+Started GET "/" for 10.0.2.2 at 2015-02-10 10:00:55 +0000
+Processing by CatalogController#index as HTML
+Solr :rows parameter not set (by the user, configuration, or default solr parameters); using 10 rows by default
+Solr query: {"qt"=>"search", "facet.field"=>["object_type_sim", "pub_date_sim", "subject_topic_sim", "language_sim", "lc1_letter_sim", "subject_geo_sim", "subject_era_sim"], "facet.query"=>[], "facet.pivot"=>[], "fq"=>[], "hl.fl"=>[], "rows"=>10, "spellcheck.q"=>nil, "sort"=>"score desc, pub_date_dtsi desc, title_tesi asc"}
+Solr fetch (65.8ms)
+  Rendered /usr/local/lib/ruby/gems/2.1.0/gems/blacklight-5.9.0/app/views/catalog/_facets.html.erb (0.3ms)
+  Rendered /usr/local/lib/ruby/gems/2.1.0/gems/blacklight-5.9.0/app/views/catalog/_search_sidebar.html.erb (2.2ms)
+  Rendered catalog/_home_text.html.erb (0.0ms)
+  Rendered /usr/local/lib/ruby/gems/2.1.0/gems/blacklight-5.9.0/app/views/catalog/_home.html.erb (1.4ms)
+  Rendered /usr/local/lib/ruby/gems/2.1.0/gems/blacklight-5.9.0/app/views/catalog/index.html.erb within layouts/blacklight (7.1ms)
+  [1m[36mUser Load (0.1ms)[0m  [1mSELECT  "users".* FROM "users" WHERE "users"."email" = ? LIMIT 1[0m  [["email", "guest_xg6me6xlyxz-latpnu7r_1423561380_1@example.com"]]
+  [1m[35m (0.1ms)[0m  begin transaction
+  [1m[36mUser Exists (0.1ms)[0m  [1mSELECT  1 AS one FROM "users" WHERE "users"."email" = 'guest_xg6me6xlyxz-latpnu7r_1423561380_1@example.com' LIMIT 1[0m
+  [1m[35m (0.0ms)[0m  rollback transaction
+  Rendered /usr/local/lib/ruby/gems/2.1.0/gems/blacklight-5.9.0/app/views/blacklight/nav/_bookmark.html.erb (4.5ms)
+  Rendered /usr/local/lib/ruby/gems/2.1.0/gems/blacklight-5.9.0/app/views/blacklight/nav/_search_history.html.erb (0.2ms)
+  Rendered /usr/local/lib/ruby/gems/2.1.0/gems/blacklight-5.9.0/app/views/_user_util_links.html.erb (90.1ms)
+  Rendered /usr/local/lib/ruby/gems/2.1.0/gems/blacklight-5.9.0/app/views/catalog/_search_form.html.erb (1.3ms)
+  Rendered /usr/local/lib/ruby/gems/2.1.0/gems/blacklight-5.9.0/app/views/shared/_header_navbar.html.erb (95.0ms)
+  Rendered /usr/local/lib/ruby/gems/2.1.0/gems/blacklight-5.9.0/app/views/shared/_ajax_modal.html.erb (0.0ms)
+  Rendered /usr/local/lib/ruby/gems/2.1.0/gems/blacklight-5.9.0/app/views/_flash_msg.html.erb (1.2ms)
+  Rendered /usr/local/lib/ruby/gems/2.1.0/gems/blacklight-5.9.0/app/views/shared/_footer.html.erb (0.0ms)
+Completed 200 OK in 435ms (Views: 355.7ms | ActiveRecord: 2.5ms)
+
+
+Started GET "/assets/jquery-87424c3c19e96d4fb033c10ebe21ec40.js?body=1" for 10.0.2.2 at 2015-02-10 10:00:56 +0000
+
+
+Started GET "/assets/jquery_ujs-e27bd20a10d28155845a22d71ef94f2f.js?body=1" for 10.0.2.2 at 2015-02-10 10:00:56 +0000
+
+
+Started GET "/assets/blacklight/ajax_modal-4da104f071afb0bfdbb49748c35f7c85.js?body=1" for 10.0.2.2 at 2015-02-10 10:00:56 +0000
+
+
+Started GET "/assets/blacklight/autofocus-4ffa9441865d4c66cccefb719c22cb3f.js?body=1" for 10.0.2.2 at 2015-02-10 10:00:56 +0000
+
+
+Started GET "/assets/blacklight/core-b45474e5aafe46355581b438ac76277b.js?body=1" for 10.0.2.2 at 2015-02-10 10:00:56 +0000
+
+
+Started GET "/assets/turbolinks-da8ddad9c2c5483d4c5c30c1ce325253.js?body=1" for 10.0.2.2 at 2015-02-10 10:00:56 +0000
+
+
+Started GET "/assets/blacklight/search_context-45b846bd19b7fcd3f10e4011bca74dd4.js?body=1" for 10.0.2.2 at 2015-02-10 10:00:56 +0000
+
+
+Started GET "/assets/bootstrap/transition-9e4de96204f41141474e9dbb59570af9.js?body=1" for 10.0.2.2 at 2015-02-10 10:00:56 +0000
+
+
+Started GET "/assets/bootstrap/dropdown-65c3929585250221f53bae696936ed44.js?body=1" for 10.0.2.2 at 2015-02-10 10:00:56 +0000
+
+
+Started GET "/assets/bootstrap/alert-7c03e11fecf6b3ef100f76ae4f08586e.js?body=1" for 10.0.2.2 at 2015-02-10 10:00:56 +0000
+
+
+Started GET "/assets/blacklight-6ee36af506d0e1353da84e654502d28f.css?body=1" for 10.0.2.2 at 2015-02-10 10:00:56 +0000
+
+
+Started GET "/assets/application-1dd30d9b00f8d28675182a0ad79065cf.css?body=1" for 10.0.2.2 at 2015-02-10 10:00:56 +0000
+
+
+Started GET "/assets/bootstrap/modal-ce380b9327d2cf6c826d8df818ea48a1.js?body=1" for 10.0.2.2 at 2015-02-10 10:00:56 +0000
+
+
+Started GET "/assets/blacklight/checkbox_submit-3f90c9d4a3ccfac44f4fa7864a5d2b68.js?body=1" for 10.0.2.2 at 2015-02-10 10:00:56 +0000
+
+
+Started GET "/assets/blacklight/bookmark_toggle-10c1b0221b94b4ad792a6adb7fa2fb00.js?body=1" for 10.0.2.2 at 2015-02-10 10:00:56 +0000
+
+
+Started GET "/assets/blacklight/collapsable-99104400bab090426e76eab33520c8a9.js?body=1" for 10.0.2.2 at 2015-02-10 10:00:56 +0000
+
+
+Started GET "/assets/bootstrap/collapse-7a82a3d4fb154ded3d2702465e21ca00.js?body=1" for 10.0.2.2 at 2015-02-10 10:00:56 +0000
+
+
+Started GET "/assets/blacklight/blacklight-7ce845cbc86d1e13378a7af83489c4c4.js?body=1" for 10.0.2.2 at 2015-02-10 10:00:56 +0000
+
+
+Started GET "/assets/application-fd5655ff61ca24333a1177cea0bfa774.js?body=1" for 10.0.2.2 at 2015-02-10 10:00:56 +0000
+
+
+Started GET "/?utf8=%E2%9C%93&search_field=all_fields&q=anna" for 10.0.2.2 at 2015-02-10 10:01:08 +0000
+Processing by CatalogController#index as HTML
+  Parameters: {"utf8"=>"✓", "search_field"=>"all_fields", "q"=>"anna"}
+  [1m[36m (0.1ms)[0m  [1mbegin transaction[0m
+  [1m[35mSQL (0.2ms)[0m  INSERT INTO "searches" ("query_params", "created_at", "updated_at") VALUES (?, ?, ?)  [["query_params", "--- !ruby/hash:ActionController::Parameters\nutf8: \"✓\"\nsearch_field: all_fields\nq: anna\ncontroller: catalog\naction: index\n"], ["created_at", "2015-02-10 10:01:08.260176"], ["updated_at", "2015-02-10 10:01:08.260176"]]
+  [1m[36m (13.5ms)[0m  [1mcommit transaction[0m
+Solr :rows parameter not set (by the user, configuration, or default solr parameters); using 10 rows by default
+Solr query: {"qt"=>"search", "facet.field"=>["object_type_sim", "pub_date_sim", "subject_topic_sim", "language_sim", "lc1_letter_sim", "subject_geo_sim", "subject_era_sim"], "facet.query"=>[], "facet.pivot"=>[], "fq"=>[], "hl.fl"=>[], "rows"=>10, "q"=>"anna", "spellcheck.q"=>"anna", "sort"=>"score desc, pub_date_dtsi desc, title_tesi asc"}
+Solr fetch (52.8ms)
+  Rendered /usr/local/lib/ruby/gems/2.1.0/gems/blacklight-5.9.0/app/views/catalog/_facets.html.erb (0.2ms)
+  Rendered /usr/local/lib/ruby/gems/2.1.0/gems/blacklight-5.9.0/app/views/catalog/_search_sidebar.html.erb (1.5ms)
+  Rendered /usr/local/lib/ruby/gems/2.1.0/gems/blacklight-5.9.0/app/views/catalog/_opensearch_response_metadata.html.erb (0.4ms)
+  Rendered /usr/local/lib/ruby/gems/2.1.0/gems/blacklight-5.9.0/app/views/catalog/_did_you_mean.html.erb (0.3ms)
+  Rendered /usr/local/lib/ruby/gems/2.1.0/gems/blacklight-5.9.0/app/views/catalog/_constraints_element.html.erb (0.7ms)
+  Rendered /usr/local/lib/ruby/gems/2.1.0/gems/blacklight-5.9.0/app/views/catalog/_constraints.html.erb (5.0ms)
+  Rendered /usr/local/lib/ruby/gems/2.1.0/gems/blacklight-5.9.0/app/views/catalog/_paginate_compact.html.erb (2.9ms)
+  Rendered /usr/local/lib/ruby/gems/2.1.0/gems/blacklight-5.9.0/app/views/catalog/_sort_widget.html.erb (0.3ms)
+  Rendered /usr/local/lib/ruby/gems/2.1.0/gems/blacklight-5.9.0/app/views/catalog/_per_page_widget.html.erb (0.7ms)
+  Rendered /usr/local/lib/ruby/gems/2.1.0/gems/blacklight-5.9.0/app/views/catalog/_view_type_group.html.erb (0.7ms)
+  Rendered /usr/local/lib/ruby/gems/2.1.0/gems/blacklight-5.9.0/app/views/catalog/_sort_and_per_page.html.erb (11.4ms)
+  Rendered /usr/local/lib/ruby/gems/2.1.0/gems/blacklight-5.9.0/app/views/catalog/_search_header.html.erb (21.7ms)
+  Rendered /usr/local/lib/ruby/gems/2.1.0/gems/blacklight-5.9.0/app/views/catalog/_zero_results.html.erb (0.5ms)
+  Rendered /usr/local/lib/ruby/gems/2.1.0/gems/blacklight-5.9.0/app/views/catalog/_results_pagination.html.erb (0.3ms)
+  Rendered /usr/local/lib/ruby/gems/2.1.0/gems/blacklight-5.9.0/app/views/catalog/_search_results.html.erb (32.5ms)
+  Rendered /usr/local/lib/ruby/gems/2.1.0/gems/blacklight-5.9.0/app/views/catalog/index.html.erb within layouts/blacklight (37.4ms)
+  [1m[35mUser Load (0.1ms)[0m  SELECT  "users".* FROM "users" WHERE "users"."email" = ? LIMIT 1  [["email", "guest_xg6me6xlyxz-latpnu7r_1423561380_1@example.com"]]
+  [1m[36m (0.0ms)[0m  [1mbegin transaction[0m
+  [1m[35mUser Exists (0.1ms)[0m  SELECT  1 AS one FROM "users" WHERE "users"."email" = 'guest_xg6me6xlyxz-latpnu7r_1423561380_1@example.com' LIMIT 1
+  [1m[36m (0.0ms)[0m  [1mrollback transaction[0m
+  Rendered /usr/local/lib/ruby/gems/2.1.0/gems/blacklight-5.9.0/app/views/blacklight/nav/_bookmark.html.erb (1.1ms)
+  Rendered /usr/local/lib/ruby/gems/2.1.0/gems/blacklight-5.9.0/app/views/blacklight/nav/_search_history.html.erb (0.2ms)
+  Rendered /usr/local/lib/ruby/gems/2.1.0/gems/blacklight-5.9.0/app/views/_user_util_links.html.erb (72.9ms)
+  Rendered /usr/local/lib/ruby/gems/2.1.0/gems/blacklight-5.9.0/app/views/catalog/_search_form.html.erb (0.7ms)
+  Rendered /usr/local/lib/ruby/gems/2.1.0/gems/blacklight-5.9.0/app/views/shared/_header_navbar.html.erb (76.9ms)
+  Rendered /usr/local/lib/ruby/gems/2.1.0/gems/blacklight-5.9.0/app/views/shared/_ajax_modal.html.erb (0.0ms)
+  Rendered /usr/local/lib/ruby/gems/2.1.0/gems/blacklight-5.9.0/app/views/_flash_msg.html.erb (1.1ms)
+  Rendered /usr/local/lib/ruby/gems/2.1.0/gems/blacklight-5.9.0/app/views/shared/_footer.html.erb (0.0ms)
+Completed 200 OK in 347ms (Views: 208.3ms | ActiveRecord: 14.2ms)
+
+
+Started GET "/?utf8=%E2%9C%93&search_field=all_fields&q=anna" for 10.0.2.2 at 2015-02-10 10:01:53 +0000
+Processing by CatalogController#index as HTML
+  Parameters: {"utf8"=>"✓", "search_field"=>"all_fields", "q"=>"anna"}
+  [1m[35mSearch Load (0.1ms)[0m  SELECT "searches".* FROM "searches" WHERE "searches"."id" = 1  ORDER BY updated_at desc
+Solr :rows parameter not set (by the user, configuration, or default solr parameters); using 10 rows by default
+Solr query: {"qt"=>"search", "facet.field"=>["object_type_sim", "pub_date_sim", "subject_topic_sim", "language_sim", "lc1_letter_sim", "subject_geo_sim", "subject_era_sim"], "facet.query"=>[], "facet.pivot"=>[], "fq"=>[], "hl.fl"=>[], "qf"=>"title_tesim author_tesim", "rows"=>10, "q"=>"anna", "spellcheck.q"=>"anna", "sort"=>"score desc, pub_date_dtsi desc, title_tesi asc"}
+Solr fetch (31.7ms)
+  Rendered /usr/local/lib/ruby/gems/2.1.0/gems/blacklight-5.9.0/app/views/catalog/_facets.html.erb (0.0ms)
+  Rendered /usr/local/lib/ruby/gems/2.1.0/gems/blacklight-5.9.0/app/views/catalog/_search_sidebar.html.erb (1.1ms)
+  Rendered /usr/local/lib/ruby/gems/2.1.0/gems/blacklight-5.9.0/app/views/catalog/_opensearch_response_metadata.html.erb (0.1ms)
+  Rendered /usr/local/lib/ruby/gems/2.1.0/gems/blacklight-5.9.0/app/views/catalog/_did_you_mean.html.erb (0.1ms)
+  Rendered /usr/local/lib/ruby/gems/2.1.0/gems/blacklight-5.9.0/app/views/catalog/_constraints_element.html.erb (0.2ms)
+  Rendered /usr/local/lib/ruby/gems/2.1.0/gems/blacklight-5.9.0/app/views/catalog/_constraints.html.erb (2.2ms)
+  Rendered /usr/local/lib/ruby/gems/2.1.0/gems/blacklight-5.9.0/app/views/catalog/_paginate_compact.html.erb (1.8ms)
+  Rendered /usr/local/lib/ruby/gems/2.1.0/gems/blacklight-5.9.0/app/views/catalog/_sort_widget.html.erb (0.8ms)
+  Rendered /usr/local/lib/ruby/gems/2.1.0/gems/blacklight-5.9.0/app/views/catalog/_per_page_widget.html.erb (1.4ms)
+  Rendered /usr/local/lib/ruby/gems/2.1.0/gems/blacklight-5.9.0/app/views/catalog/_view_type_group.html.erb (0.1ms)
+  Rendered /usr/local/lib/ruby/gems/2.1.0/gems/blacklight-5.9.0/app/views/catalog/_sort_and_per_page.html.erb (10.3ms)
+  Rendered /usr/local/lib/ruby/gems/2.1.0/gems/blacklight-5.9.0/app/views/catalog/_search_header.html.erb (16.9ms)
+Looking for document index partial document_list
+Looking for document partial index_header_list_book
+Looking for document partial index_header_list_default
+Looking for document partial index_header_book
+Looking for document partial index_header_default
+  [1m[36mUser Load (0.7ms)[0m  [1mSELECT  "users".* FROM "users" WHERE "users"."email" = ? LIMIT 1[0m  [["email", "guest_xg6me6xlyxz-latpnu7r_1423561380_1@example.com"]]
+  [1m[35m (0.1ms)[0m  begin transaction
+  [1m[36mUser Exists (0.1ms)[0m  [1mSELECT  1 AS one FROM "users" WHERE "users"."email" = 'guest_xg6me6xlyxz-latpnu7r_1423561380_1@example.com' LIMIT 1[0m
+  [1m[35m (0.0ms)[0m  rollback transaction
+  Rendered /usr/local/lib/ruby/gems/2.1.0/gems/blacklight-5.9.0/app/views/catalog/_bookmark_control.html.erb (5.2ms)
+Looking for document partial thumbnail_list_book
+Looking for document partial thumbnail_list_default
+Looking for document partial thumbnail_book
+Looking for document partial thumbnail_default
+Looking for document partial index_list_book
+Looking for document partial index_list_default
+Looking for document partial index_book
+Looking for document partial index_default
+  Rendered /usr/local/lib/ruby/gems/2.1.0/gems/blacklight-5.9.0/app/views/catalog/_document.html.erb (219.1ms)
+  Rendered /usr/local/lib/ruby/gems/2.1.0/gems/blacklight-5.9.0/app/views/catalog/_results_pagination.html.erb (0.1ms)
+  Rendered /usr/local/lib/ruby/gems/2.1.0/gems/blacklight-5.9.0/app/views/catalog/_search_results.html.erb (246.0ms)
+  Rendered /usr/local/lib/ruby/gems/2.1.0/gems/blacklight-5.9.0/app/views/catalog/index.html.erb within layouts/blacklight (249.8ms)
+  Rendered /usr/local/lib/ruby/gems/2.1.0/gems/blacklight-5.9.0/app/views/blacklight/nav/_bookmark.html.erb (0.3ms)
+  Rendered /usr/local/lib/ruby/gems/2.1.0/gems/blacklight-5.9.0/app/views/blacklight/nav/_search_history.html.erb (0.1ms)
+  Rendered /usr/local/lib/ruby/gems/2.1.0/gems/blacklight-5.9.0/app/views/_user_util_links.html.erb (4.1ms)
+  Rendered /usr/local/lib/ruby/gems/2.1.0/gems/blacklight-5.9.0/app/views/catalog/_search_form.html.erb (0.7ms)
+  Rendered /usr/local/lib/ruby/gems/2.1.0/gems/blacklight-5.9.0/app/views/shared/_header_navbar.html.erb (8.6ms)
+  Rendered /usr/local/lib/ruby/gems/2.1.0/gems/blacklight-5.9.0/app/views/shared/_ajax_modal.html.erb (0.0ms)
+  Rendered /usr/local/lib/ruby/gems/2.1.0/gems/blacklight-5.9.0/app/views/_flash_msg.html.erb (1.1ms)
+  Rendered /usr/local/lib/ruby/gems/2.1.0/gems/blacklight-5.9.0/app/views/shared/_footer.html.erb (0.0ms)
+Completed 200 OK in 400ms (Views: 349.5ms | ActiveRecord: 1.9ms)
+
+
+Started GET "/" for 10.0.2.2 at 2015-02-26 09:46:58 +0000
+  [1m[36mActiveRecord::SchemaMigration Load (0.1ms)[0m  [1mSELECT "schema_migrations".* FROM "schema_migrations"[0m
+ActiveFedora: loading fedora config from /home/vagrant/rails_projects/hydra-demo3/config/fedora.yml
+ActiveFedora: loading solr config from /home/vagrant/rails_projects/hydra-demo3/config/solr.yml
+Attempted to init base path `dev`, but it already exists
+Processing by CatalogController#index as HTML
+Solr :rows parameter not set (by the user, configuration, or default solr parameters); using 10 rows by default
+Solr query: {"qt"=>"search", "facet.field"=>["object_type_sim", "pub_date_sim", "subject_topic_sim", "language_sim", "lc1_letter_sim", "subject_geo_sim", "subject_era_sim"], "facet.query"=>[], "facet.pivot"=>[], "fq"=>[], "hl.fl"=>[], "qf"=>"title_tesim author_tesim", "rows"=>10, "spellcheck.q"=>nil, "sort"=>"score desc, pub_date_dtsi desc, title_tesi asc"}
+Solr fetch (147.6ms)
+  Rendered /usr/local/lib/ruby/gems/2.1.0/gems/blacklight-5.9.0/app/views/catalog/_facets.html.erb (0.5ms)
+  Rendered /usr/local/lib/ruby/gems/2.1.0/gems/blacklight-5.9.0/app/views/catalog/_search_sidebar.html.erb (2.1ms)
+  Rendered catalog/_home_text.html.erb (0.2ms)
+  Rendered /usr/local/lib/ruby/gems/2.1.0/gems/blacklight-5.9.0/app/views/catalog/_home.html.erb (9.7ms)
+  Rendered /usr/local/lib/ruby/gems/2.1.0/gems/blacklight-5.9.0/app/views/catalog/index.html.erb within layouts/blacklight (18.0ms)
+  [1m[35m (0.0ms)[0m  begin transaction
+  [1m[36mUser Exists (0.6ms)[0m  [1mSELECT  1 AS one FROM "users" WHERE "users"."email" = 'guest_tzp3kaihlfi7-be5ru2l_1424944019_1@example.com' LIMIT 1[0m
+  [1m[35m (0.1ms)[0m  rollback transaction
+  Rendered /usr/local/lib/ruby/gems/2.1.0/gems/blacklight-5.9.0/app/views/blacklight/nav/_bookmark.html.erb (15.3ms)
+  Rendered /usr/local/lib/ruby/gems/2.1.0/gems/blacklight-5.9.0/app/views/blacklight/nav/_search_history.html.erb (0.6ms)
+  Rendered /usr/local/lib/ruby/gems/2.1.0/gems/blacklight-5.9.0/app/views/_user_util_links.html.erb (123.2ms)
+  Rendered /usr/local/lib/ruby/gems/2.1.0/gems/blacklight-5.9.0/app/views/catalog/_search_form.html.erb (2.1ms)
+  Rendered /usr/local/lib/ruby/gems/2.1.0/gems/blacklight-5.9.0/app/views/shared/_header_navbar.html.erb (129.3ms)
+  Rendered /usr/local/lib/ruby/gems/2.1.0/gems/blacklight-5.9.0/app/views/shared/_ajax_modal.html.erb (0.3ms)
+  Rendered /usr/local/lib/ruby/gems/2.1.0/gems/blacklight-5.9.0/app/views/_flash_msg.html.erb (1.8ms)
+  Rendered /usr/local/lib/ruby/gems/2.1.0/gems/blacklight-5.9.0/app/views/shared/_footer.html.erb (0.2ms)
+Completed 200 OK in 547ms (Views: 373.2ms | ActiveRecord: 2.8ms)
+
+
+Started GET "/assets/jquery-87424c3c19e96d4fb033c10ebe21ec40.js?body=1" for 10.0.2.2 at 2015-02-26 09:46:59 +0000
+
+
+Started GET "/assets/jquery_ujs-e27bd20a10d28155845a22d71ef94f2f.js?body=1" for 10.0.2.2 at 2015-02-26 09:46:59 +0000
+
+
+Started GET "/assets/blacklight/ajax_modal-4da104f071afb0bfdbb49748c35f7c85.js?body=1" for 10.0.2.2 at 2015-02-26 09:46:59 +0000
+
+
+Started GET "/assets/blacklight/autofocus-4ffa9441865d4c66cccefb719c22cb3f.js?body=1" for 10.0.2.2 at 2015-02-26 09:46:59 +0000
+
+
+Started GET "/assets/blacklight/core-b45474e5aafe46355581b438ac76277b.js?body=1" for 10.0.2.2 at 2015-02-26 09:46:59 +0000
+
+
+Started GET "/assets/turbolinks-da8ddad9c2c5483d4c5c30c1ce325253.js?body=1" for 10.0.2.2 at 2015-02-26 09:46:59 +0000
+
+
+Started GET "/assets/blacklight/search_context-45b846bd19b7fcd3f10e4011bca74dd4.js?body=1" for 10.0.2.2 at 2015-02-26 09:46:59 +0000
+
+
+Started GET "/assets/blacklight/collapsable-99104400bab090426e76eab33520c8a9.js?body=1" for 10.0.2.2 at 2015-02-26 09:46:59 +0000
+
+
+Started GET "/assets/bootstrap/transition-9e4de96204f41141474e9dbb59570af9.js?body=1" for 10.0.2.2 at 2015-02-26 09:46:59 +0000
+
+
+Started GET "/assets/bootstrap/collapse-7a82a3d4fb154ded3d2702465e21ca00.js?body=1" for 10.0.2.2 at 2015-02-26 09:46:59 +0000
+
+
+Started GET "/assets/bootstrap/dropdown-65c3929585250221f53bae696936ed44.js?body=1" for 10.0.2.2 at 2015-02-26 09:46:59 +0000
+
+
+Started GET "/assets/bootstrap/alert-7c03e11fecf6b3ef100f76ae4f08586e.js?body=1" for 10.0.2.2 at 2015-02-26 09:46:59 +0000
+
+
+Started GET "/assets/bootstrap/modal-ce380b9327d2cf6c826d8df818ea48a1.js?body=1" for 10.0.2.2 at 2015-02-26 09:46:59 +0000
+
+
+Started GET "/assets/blacklight/logo-aed4fae153bb48e180bcc458723b3c38.png" for 10.0.2.2 at 2015-02-26 09:46:59 +0000
+
+
+Started GET "/" for 10.0.2.2 at 2015-02-26 14:42:06 +0000
+  [1m[36mActiveRecord::SchemaMigration Load (0.1ms)[0m  [1mSELECT "schema_migrations".* FROM "schema_migrations"[0m
+ActiveFedora: loading fedora config from /home/vagrant/rails_projects/hydra-demo3/config/fedora.yml
+ActiveFedora: loading solr config from /home/vagrant/rails_projects/hydra-demo3/config/solr.yml
+Attempted to init base path `dev`, but it already exists
+Processing by CatalogController#index as HTML
+Solr :rows parameter not set (by the user, configuration, or default solr parameters); using 10 rows by default
+Solr query: {"qt"=>"search", "facet.field"=>["object_type_sim", "pub_date_sim", "subject_topic_sim", "language_sim", "lc1_letter_sim", "subject_geo_sim", "subject_era_sim"], "facet.query"=>[], "facet.pivot"=>[], "fq"=>[], "hl.fl"=>[], "qf"=>"title_tesim author_tesim", "rows"=>10, "spellcheck.q"=>nil, "sort"=>"score desc, pub_date_dtsi desc, title_tesi asc"}
+Solr fetch (138.8ms)
+  Rendered /usr/local/lib/ruby/gems/2.1.0/gems/blacklight-5.9.0/app/views/catalog/_facets.html.erb (0.5ms)
+  Rendered /usr/local/lib/ruby/gems/2.1.0/gems/blacklight-5.9.0/app/views/catalog/_search_sidebar.html.erb (2.4ms)
+  Rendered catalog/_home_text.html.erb (0.2ms)
+  Rendered /usr/local/lib/ruby/gems/2.1.0/gems/blacklight-5.9.0/app/views/catalog/_home.html.erb (1.4ms)
+  Rendered /usr/local/lib/ruby/gems/2.1.0/gems/blacklight-5.9.0/app/views/catalog/index.html.erb within layouts/blacklight (10.5ms)
+  [1m[35mUser Load (0.2ms)[0m  SELECT  "users".* FROM "users" WHERE "users"."email" = ? LIMIT 1  [["email", "guest_tzp3kaihlfi7-be5ru2l_1424944019_1@example.com"]]
+  [1m[36m (0.0ms)[0m  [1mbegin transaction[0m
+  [1m[35mUser Exists (0.1ms)[0m  SELECT  1 AS one FROM "users" WHERE "users"."email" = 'guest_tzp3kaihlfi7-be5ru2l_1424944019_1@example.com' LIMIT 1
+  [1m[36m (0.0ms)[0m  [1mrollback transaction[0m
+  Rendered /usr/local/lib/ruby/gems/2.1.0/gems/blacklight-5.9.0/app/views/blacklight/nav/_bookmark.html.erb (12.7ms)
+  Rendered /usr/local/lib/ruby/gems/2.1.0/gems/blacklight-5.9.0/app/views/blacklight/nav/_search_history.html.erb (0.4ms)
+  Rendered /usr/local/lib/ruby/gems/2.1.0/gems/blacklight-5.9.0/app/views/_user_util_links.html.erb (121.8ms)
+  Rendered /usr/local/lib/ruby/gems/2.1.0/gems/blacklight-5.9.0/app/views/catalog/_search_form.html.erb (1.6ms)
+  Rendered /usr/local/lib/ruby/gems/2.1.0/gems/blacklight-5.9.0/app/views/shared/_header_navbar.html.erb (127.6ms)
+  Rendered /usr/local/lib/ruby/gems/2.1.0/gems/blacklight-5.9.0/app/views/shared/_ajax_modal.html.erb (0.2ms)
+  Rendered /usr/local/lib/ruby/gems/2.1.0/gems/blacklight-5.9.0/app/views/_flash_msg.html.erb (1.7ms)
+  Rendered /usr/local/lib/ruby/gems/2.1.0/gems/blacklight-5.9.0/app/views/shared/_footer.html.erb (0.1ms)
+Completed 200 OK in 526ms (Views: 364.6ms | ActiveRecord: 2.2ms)
+
+
+Started GET "/" for 10.0.2.2 at 2015-02-26 14:57:08 +0000
+  [1m[36mActiveRecord::SchemaMigration Load (0.1ms)[0m  [1mSELECT "schema_migrations".* FROM "schema_migrations"[0m
+ActiveFedora: loading fedora config from /home/vagrant/rails_projects/arch9/config/fedora.yml
+ActiveFedora: loading solr config from /home/vagrant/rails_projects/arch9/config/solr.yml
+Attempted to init base path `dev`, but it already exists
+Processing by CatalogController#index as HTML
+Solr :rows parameter not set (by the user, configuration, or default solr parameters); using 10 rows by default
+Solr query: {"qt"=>"search", "facet.field"=>["object_type_sim", "pub_date_sim", "subject_topic_sim", "language_sim", "lc1_letter_sim", "subject_geo_sim", "subject_era_sim"], "facet.query"=>[], "facet.pivot"=>[], "fq"=>[], "hl.fl"=>[], "qf"=>"title_tesim author_tesim", "rows"=>10, "spellcheck.q"=>nil, "sort"=>"score desc, pub_date_dtsi desc, title_tesi asc"}
+Solr fetch (124.7ms)
+  Rendered /usr/local/lib/ruby/gems/2.1.0/gems/blacklight-5.9.0/app/views/catalog/_facets.html.erb (0.7ms)
+  Rendered /usr/local/lib/ruby/gems/2.1.0/gems/blacklight-5.9.0/app/views/catalog/_search_sidebar.html.erb (3.4ms)
+  Rendered catalog/_home_text.html.erb (0.2ms)
+  Rendered /usr/local/lib/ruby/gems/2.1.0/gems/blacklight-5.9.0/app/views/catalog/_home.html.erb (2.0ms)
+  Rendered /usr/local/lib/ruby/gems/2.1.0/gems/blacklight-5.9.0/app/views/catalog/index.html.erb within layouts/blacklight (12.0ms)
+  [1m[35mUser Load (0.2ms)[0m  SELECT  "users".* FROM "users" WHERE "users"."email" = ? LIMIT 1  [["email", "guest_tzp3kaihlfi7-be5ru2l_1424944019_1@example.com"]]
+  [1m[36m (0.0ms)[0m  [1mbegin transaction[0m
+  [1m[35mUser Exists (0.1ms)[0m  SELECT  1 AS one FROM "users" WHERE "users"."email" = 'guest_tzp3kaihlfi7-be5ru2l_1424944019_1@example.com' LIMIT 1
+  [1m[36m (0.1ms)[0m  [1mrollback transaction[0m
+  Rendered /usr/local/lib/ruby/gems/2.1.0/gems/blacklight-5.9.0/app/views/blacklight/nav/_bookmark.html.erb (13.5ms)
+  Rendered /usr/local/lib/ruby/gems/2.1.0/gems/blacklight-5.9.0/app/views/blacklight/nav/_search_history.html.erb (0.4ms)
+  Rendered /usr/local/lib/ruby/gems/2.1.0/gems/blacklight-5.9.0/app/views/_user_util_links.html.erb (118.0ms)
+  Rendered /usr/local/lib/ruby/gems/2.1.0/gems/blacklight-5.9.0/app/views/catalog/_search_form.html.erb (1.7ms)
+  Rendered /usr/local/lib/ruby/gems/2.1.0/gems/blacklight-5.9.0/app/views/shared/_header_navbar.html.erb (123.3ms)
+  Rendered /usr/local/lib/ruby/gems/2.1.0/gems/blacklight-5.9.0/app/views/shared/_ajax_modal.html.erb (0.2ms)
+  Rendered /usr/local/lib/ruby/gems/2.1.0/gems/blacklight-5.9.0/app/views/_flash_msg.html.erb (1.7ms)
+  Rendered /usr/local/lib/ruby/gems/2.1.0/gems/blacklight-5.9.0/app/views/shared/_footer.html.erb (0.2ms)
+Completed 200 OK in 498ms (Views: 351.4ms | ActiveRecord: 0.8ms)
+
+
+Started GET "/" for 10.0.2.2 at 2015-02-26 15:13:21 +0000
+  [1m[36mActiveRecord::SchemaMigration Load (0.1ms)[0m  [1mSELECT "schema_migrations".* FROM "schema_migrations"[0m
+ActiveFedora: loading fedora config from /home/vagrant/rails_projects/arch9/config/fedora.yml
+ActiveFedora: loading solr config from /home/vagrant/rails_projects/arch9/config/solr.yml
+Attempted to init base path `dev`, but it already exists
+Processing by CatalogController#index as HTML
+Solr :rows parameter not set (by the user, configuration, or default solr parameters); using 10 rows by default
+Solr query: {"qt"=>"search", "facet.field"=>["object_type_sim", "pub_date_sim", "subject_topic_sim", "language_sim", "lc1_letter_sim", "subject_geo_sim", "subject_era_sim"], "facet.query"=>[], "facet.pivot"=>[], "fq"=>[], "hl.fl"=>[], "qf"=>"title_tesim author_tesim", "rows"=>10, "spellcheck.q"=>nil, "sort"=>"score desc, pub_date_dtsi desc, title_tesi asc"}
+Solr fetch (134.4ms)
+  Rendered /usr/local/lib/ruby/gems/2.1.0/gems/blacklight-5.9.0/app/views/catalog/_facets.html.erb (0.6ms)
+  Rendered /usr/local/lib/ruby/gems/2.1.0/gems/blacklight-5.9.0/app/views/catalog/_search_sidebar.html.erb (2.5ms)
+  Rendered catalog/_home_text.html.erb (0.2ms)
+  Rendered /usr/local/lib/ruby/gems/2.1.0/gems/blacklight-5.9.0/app/views/catalog/_home.html.erb (1.4ms)
+  Rendered /usr/local/lib/ruby/gems/2.1.0/gems/blacklight-5.9.0/app/views/catalog/index.html.erb within layouts/blacklight (11.0ms)
+  [1m[35mUser Load (0.5ms)[0m  SELECT  "users".* FROM "users" WHERE "users"."email" = ? LIMIT 1  [["email", "guest_tzp3kaihlfi7-be5ru2l_1424944019_1@example.com"]]
+  [1m[36m (0.0ms)[0m  [1mbegin transaction[0m
+  [1m[35mUser Exists (0.1ms)[0m  SELECT  1 AS one FROM "users" WHERE "users"."email" = 'guest_tzp3kaihlfi7-be5ru2l_1424944019_1@example.com' LIMIT 1
+  [1m[36m (0.1ms)[0m  [1mrollback transaction[0m
+  Rendered /usr/local/lib/ruby/gems/2.1.0/gems/blacklight-5.9.0/app/views/blacklight/nav/_bookmark.html.erb (13.4ms)
+  Rendered /usr/local/lib/ruby/gems/2.1.0/gems/blacklight-5.9.0/app/views/blacklight/nav/_search_history.html.erb (0.4ms)
+  Rendered /usr/local/lib/ruby/gems/2.1.0/gems/blacklight-5.9.0/app/views/_user_util_links.html.erb (120.2ms)
+  Rendered /usr/local/lib/ruby/gems/2.1.0/gems/blacklight-5.9.0/app/views/catalog/_search_form.html.erb (1.5ms)
+  Rendered /usr/local/lib/ruby/gems/2.1.0/gems/blacklight-5.9.0/app/views/shared/_header_navbar.html.erb (126.5ms)
+  Rendered /usr/local/lib/ruby/gems/2.1.0/gems/blacklight-5.9.0/app/views/shared/_ajax_modal.html.erb (0.2ms)
+  Rendered /usr/local/lib/ruby/gems/2.1.0/gems/blacklight-5.9.0/app/views/_flash_msg.html.erb (1.7ms)
+  Rendered /usr/local/lib/ruby/gems/2.1.0/gems/blacklight-5.9.0/app/views/shared/_footer.html.erb (0.2ms)
+Completed 200 OK in 516ms (Views: 358.9ms | ActiveRecord: 1.2ms)
+
+ActionController::RoutingError (uninitialized constant ArchesController):
+  activesupport (4.2.0) lib/active_support/inflector/methods.rb:261:in `const_get'
+  activesupport (4.2.0) lib/active_support/inflector/methods.rb:261:in `block in constantize'
+  activesupport (4.2.0) lib/active_support/inflector/methods.rb:259:in `each'
+  activesupport (4.2.0) lib/active_support/inflector/methods.rb:259:in `inject'
+  activesupport (4.2.0) lib/active_support/inflector/methods.rb:259:in `constantize'
+  actionpack (4.2.0) lib/action_dispatch/routing/route_set.rb:69:in `controller_reference'
+  actionpack (4.2.0) lib/action_dispatch/routing/route_set.rb:59:in `controller'
+  actionpack (4.2.0) lib/action_dispatch/routing/route_set.rb:38:in `serve'
+  actionpack (4.2.0) lib/action_dispatch/journey/router.rb:43:in `block in serve'
+  actionpack (4.2.0) lib/action_dispatch/journey/router.rb:30:in `each'
+  actionpack (4.2.0) lib/action_dispatch/journey/router.rb:30:in `serve'
+  actionpack (4.2.0) lib/action_dispatch/routing/route_set.rb:802:in `call'
+  warden (1.2.3) lib/warden/manager.rb:35:in `block in call'
+  warden (1.2.3) lib/warden/manager.rb:34:in `catch'
+  warden (1.2.3) lib/warden/manager.rb:34:in `call'
+  rack (1.6.0) lib/rack/etag.rb:24:in `call'
+  rack (1.6.0) lib/rack/conditionalget.rb:25:in `call'
+  rack (1.6.0) lib/rack/head.rb:13:in `call'
+  actionpack (4.2.0) lib/action_dispatch/middleware/params_parser.rb:27:in `call'
+  actionpack (4.2.0) lib/action_dispatch/middleware/flash.rb:260:in `call'
+  rack (1.6.0) lib/rack/session/abstract/id.rb:225:in `context'
+  rack (1.6.0) lib/rack/session/abstract/id.rb:220:in `call'
+  actionpack (4.2.0) lib/action_dispatch/middleware/cookies.rb:560:in `call'
+  activerecord (4.2.0) lib/active_record/query_cache.rb:36:in `call'
+  activerecord (4.2.0) lib/active_record/connection_adapters/abstract/connection_pool.rb:647:in `call'
+  active-fedora (9.0.0) lib/active_fedora/ldp_cache.rb:26:in `call'
+  activerecord (4.2.0) lib/active_record/migration.rb:378:in `call'
+  actionpack (4.2.0) lib/action_dispatch/middleware/callbacks.rb:29:in `block in call'
+  activesupport (4.2.0) lib/active_support/callbacks.rb:88:in `call'
+  activesupport (4.2.0) lib/active_support/callbacks.rb:88:in `_run_callbacks'
+  activesupport (4.2.0) lib/active_support/callbacks.rb:734:in `_run_call_callbacks'
+  activesupport (4.2.0) lib/active_support/callbacks.rb:81:in `run_callbacks'
+  actionpack (4.2.0) lib/action_dispatch/middleware/callbacks.rb:27:in `call'
+  actionpack (4.2.0) lib/action_dispatch/middleware/reloader.rb:73:in `call'
+  actionpack (4.2.0) lib/action_dispatch/middleware/remote_ip.rb:78:in `call'
+  web-console (2.0.0) lib/action_dispatch/debug_exceptions.rb:18:in `middleware_call'
+  web-console (2.0.0) lib/action_dispatch/debug_exceptions.rb:13:in `call'
+  actionpack (4.2.0) lib/action_dispatch/middleware/show_exceptions.rb:30:in `call'
+  railties (4.2.0) lib/rails/rack/logger.rb:38:in `call_app'
+  railties (4.2.0) lib/rails/rack/logger.rb:20:in `block in call'
+  activesupport (4.2.0) lib/active_support/tagged_logging.rb:68:in `block in tagged'
+  activesupport (4.2.0) lib/active_support/tagged_logging.rb:26:in `tagged'
+  activesupport (4.2.0) lib/active_support/tagged_logging.rb:68:in `tagged'
+  railties (4.2.0) lib/rails/rack/logger.rb:20:in `call'
+  actionpack (4.2.0) lib/action_dispatch/middleware/request_id.rb:21:in `call'
+  rack (1.6.0) lib/rack/methodoverride.rb:22:in `call'
+  rack (1.6.0) lib/rack/runtime.rb:18:in `call'
+  activesupport (4.2.0) lib/active_support/cache/strategy/local_cache_middleware.rb:28:in `call'
+  rack (1.6.0) lib/rack/lock.rb:17:in `call'
+  actionpack (4.2.0) lib/action_dispatch/middleware/static.rb:113:in `call'
+  rack (1.6.0) lib/rack/sendfile.rb:113:in `call'
+  railties (4.2.0) lib/rails/engine.rb:518:in `call'
+  railties (4.2.0) lib/rails/application.rb:164:in `call'
+  rack (1.6.0) lib/rack/lock.rb:17:in `call'
+  rack (1.6.0) lib/rack/content_length.rb:15:in `call'
+  rack (1.6.0) lib/rack/handler/webrick.rb:89:in `service'
+  /usr/local/lib/ruby/2.1.0/webrick/httpserver.rb:138:in `service'
+  /usr/local/lib/ruby/2.1.0/webrick/httpserver.rb:94:in `run'
+  /usr/local/lib/ruby/2.1.0/webrick/server.rb:295:in `block in start_thread'
+
+
+
+ActionView::Template::Error (no implicit conversion of nil into String):
+    1: <div id="image_frame" style="text-align: center">
+    2: 	
+    3: 	<% path = "folio_images/" + "reg_" + @register_choice + "_" + @folio_choice + "_" + @side_choice + ".jpg" %>
+    4: 	
+    5: 	<div style="left; height: 36px; background-color: grey; width: 100%; padding-top: 8px">
+    6: 		
+  app/views/arches/_image_zoom.erb:3:in `+'
+  app/views/arches/_image_zoom.erb:3:in `_app_views_arches__image_zoom_erb___399848273__632893718'
+  app/views/arches/new.html.erb:32:in `_app_views_arches_new_html_erb___328162809__633615408'
+
+
+
+ActionView::Template::Error (no implicit conversion of nil into String):
+    1: <div id="image_frame" style="text-align: center">
+    2: 	
+    3: 	<% path = "folio_images/" + "reg_" + @register_choice + "_" + @folio_choice + "_" + @side_choice + ".jpg" %>
+    4: 	
+    5: 	<div style="left; height: 36px; background-color: grey; width: 100%; padding-top: 8px">
+    6: 		
+  app/views/arches/_image_zoom.erb:3:in `+'
+  app/views/arches/_image_zoom.erb:3:in `_app_views_arches__image_zoom_erb___399848273__634252148'
+  app/views/arches/new.html.erb:32:in `_app_views_arches_new_html_erb___328162809__635656008'
+
+
+
+ActionView::MissingTemplate (Missing template arches/show, application/show with {:locale=>[:en], :formats=>[:html], :variants=>[], :handlers=>[:erb, :builder, :raw, :ruby, :coffee, :jbuilder]}. Searched in:
+  * "/usr/local/lib/ruby/gems/2.1.0/gems/web-console-2.0.0/lib/action_dispatch/templates"
+  * "/home/vagrant/rails_projects/arch9/app/views"
+  * "/usr/local/lib/ruby/gems/2.1.0/gems/devise-3.4.1/app/views"
+  * "/usr/local/lib/ruby/gems/2.1.0/gems/blacklight-5.9.3/app/views"
+  * "/usr/local/lib/ruby/gems/2.1.0/gems/kaminari-0.16.3/app/views"
+):
+  actionview (4.2.0) lib/action_view/path_set.rb:46:in `find'
+  actionview (4.2.0) lib/action_view/lookup_context.rb:121:in `find'
+  actionview (4.2.0) lib/action_view/renderer/abstract_renderer.rb:18:in `find_template'
+  actionview (4.2.0) lib/action_view/renderer/template_renderer.rb:40:in `determine_template'
+  actionview (4.2.0) lib/action_view/renderer/template_renderer.rb:8:in `render'
+  actionview (4.2.0) lib/action_view/renderer/renderer.rb:42:in `render_template'
+  actionview (4.2.0) lib/action_view/renderer/renderer.rb:23:in `render'
+  actionview (4.2.0) lib/action_view/rendering.rb:100:in `_render_template'
+  actionpack (4.2.0) lib/action_controller/metal/streaming.rb:217:in `_render_template'
+  actionview (4.2.0) lib/action_view/rendering.rb:83:in `render_to_body'
+  actionpack (4.2.0) lib/action_controller/metal/rendering.rb:32:in `render_to_body'
+  actionpack (4.2.0) lib/action_controller/metal/renderers.rb:37:in `render_to_body'
+  actionpack (4.2.0) lib/abstract_controller/rendering.rb:25:in `render'
+  actionpack (4.2.0) lib/action_controller/metal/rendering.rb:16:in `render'
+  actionpack (4.2.0) lib/action_controller/metal/instrumentation.rb:41:in `block (2 levels) in render'
+  activesupport (4.2.0) lib/active_support/core_ext/benchmark.rb:12:in `block in ms'
+  /usr/local/lib/ruby/2.1.0/benchmark.rb:294:in `realtime'
+  activesupport (4.2.0) lib/active_support/core_ext/benchmark.rb:12:in `ms'
+  actionpack (4.2.0) lib/action_controller/metal/instrumentation.rb:41:in `block in render'
+  actionpack (4.2.0) lib/action_controller/metal/instrumentation.rb:84:in `cleanup_view_runtime'
+  activerecord (4.2.0) lib/active_record/railties/controller_runtime.rb:25:in `cleanup_view_runtime'
+  actionpack (4.2.0) lib/action_controller/metal/instrumentation.rb:40:in `render'
+  actionpack (4.2.0) lib/action_controller/metal/implicit_render.rb:10:in `default_render'
+  actionpack (4.2.0) lib/action_controller/metal/implicit_render.rb:5:in `send_action'
+  actionpack (4.2.0) lib/abstract_controller/base.rb:198:in `process_action'
+  actionpack (4.2.0) lib/action_controller/metal/rendering.rb:10:in `process_action'
+  actionpack (4.2.0) lib/abstract_controller/callbacks.rb:20:in `block in process_action'
+  activesupport (4.2.0) lib/active_support/callbacks.rb:117:in `call'
+  activesupport (4.2.0) lib/active_support/callbacks.rb:117:in `call'
+  activesupport (4.2.0) lib/active_support/callbacks.rb:234:in `block in halting'
+  activesupport (4.2.0) lib/active_support/callbacks.rb:234:in `call'
+  activesupport (4.2.0) lib/active_support/callbacks.rb:234:in `block in halting'
+  activesupport (4.2.0) lib/active_support/callbacks.rb:234:in `call'
+  activesupport (4.2.0) lib/active_support/callbacks.rb:234:in `block in halting'
+  activesupport (4.2.0) lib/active_support/callbacks.rb:169:in `call'
+  activesupport (4.2.0) lib/active_support/callbacks.rb:169:in `block in halting'
+  activesupport (4.2.0) lib/active_support/callbacks.rb:169:in `call'
+  activesupport (4.2.0) lib/active_support/callbacks.rb:169:in `block in halting'
+  activesupport (4.2.0) lib/active_support/callbacks.rb:234:in `call'
+  activesupport (4.2.0) lib/active_support/callbacks.rb:234:in `block in halting'
+  activesupport (4.2.0) lib/active_support/callbacks.rb:169:in `call'
+  activesupport (4.2.0) lib/active_support/callbacks.rb:169:in `block in halting'
+  activesupport (4.2.0) lib/active_support/callbacks.rb:92:in `call'
+  activesupport (4.2.0) lib/active_support/callbacks.rb:92:in `_run_callbacks'
+  activesupport (4.2.0) lib/active_support/callbacks.rb:734:in `_run_process_action_callbacks'
+  activesupport (4.2.0) lib/active_support/callbacks.rb:81:in `run_callbacks'
+  actionpack (4.2.0) lib/abstract_controller/callbacks.rb:19:in `process_action'
+  actionpack (4.2.0) lib/action_controller/metal/rescue.rb:29:in `process_action'
+  actionpack (4.2.0) lib/action_controller/metal/instrumentation.rb:31:in `block in process_action'
+  activesupport (4.2.0) lib/active_support/notifications.rb:164:in `block in instrument'
+  activesupport (4.2.0) lib/active_support/notifications/instrumenter.rb:20:in `instrument'
+  activesupport (4.2.0) lib/active_support/notifications.rb:164:in `instrument'
+  actionpack (4.2.0) lib/action_controller/metal/instrumentation.rb:30:in `process_action'
+  actionpack (4.2.0) lib/action_controller/metal/params_wrapper.rb:250:in `process_action'
+  activerecord (4.2.0) lib/active_record/railties/controller_runtime.rb:18:in `process_action'
+  actionpack (4.2.0) lib/abstract_controller/base.rb:137:in `process'
+  actionview (4.2.0) lib/action_view/rendering.rb:30:in `process'
+  actionpack (4.2.0) lib/action_controller/metal.rb:195:in `dispatch'
+  actionpack (4.2.0) lib/action_controller/metal/rack_delegation.rb:13:in `dispatch'
+  actionpack (4.2.0) lib/action_controller/metal.rb:236:in `block in action'
+  actionpack (4.2.0) lib/action_dispatch/routing/route_set.rb:73:in `call'
+  actionpack (4.2.0) lib/action_dispatch/routing/route_set.rb:73:in `dispatch'
+  actionpack (4.2.0) lib/action_dispatch/routing/route_set.rb:42:in `serve'
+  actionpack (4.2.0) lib/action_dispatch/journey/router.rb:43:in `block in serve'
+  actionpack (4.2.0) lib/action_dispatch/journey/router.rb:30:in `each'
+  actionpack (4.2.0) lib/action_dispatch/journey/router.rb:30:in `serve'
+  actionpack (4.2.0) lib/action_dispatch/routing/route_set.rb:802:in `call'
+  warden (1.2.3) lib/warden/manager.rb:35:in `block in call'
+  warden (1.2.3) lib/warden/manager.rb:34:in `catch'
+  warden (1.2.3) lib/warden/manager.rb:34:in `call'
+  rack (1.6.0) lib/rack/etag.rb:24:in `call'
+  rack (1.6.0) lib/rack/conditionalget.rb:25:in `call'
+  rack (1.6.0) lib/rack/head.rb:13:in `call'
+  actionpack (4.2.0) lib/action_dispatch/middleware/params_parser.rb:27:in `call'
+  actionpack (4.2.0) lib/action_dispatch/middleware/flash.rb:260:in `call'
+  rack (1.6.0) lib/rack/session/abstract/id.rb:225:in `context'
+  rack (1.6.0) lib/rack/session/abstract/id.rb:220:in `call'
+  actionpack (4.2.0) lib/action_dispatch/middleware/cookies.rb:560:in `call'
+  activerecord (4.2.0) lib/active_record/query_cache.rb:36:in `call'
+  activerecord (4.2.0) lib/active_record/connection_adapters/abstract/connection_pool.rb:647:in `call'
+  active-fedora (9.0.2) lib/active_fedora/ldp_cache.rb:26:in `call'
+  activerecord (4.2.0) lib/active_record/migration.rb:378:in `call'
+  actionpack (4.2.0) lib/action_dispatch/middleware/callbacks.rb:29:in `block in call'
+  activesupport (4.2.0) lib/active_support/callbacks.rb:88:in `call'
+  activesupport (4.2.0) lib/active_support/callbacks.rb:88:in `_run_callbacks'
+  activesupport (4.2.0) lib/active_support/callbacks.rb:734:in `_run_call_callbacks'
+  activesupport (4.2.0) lib/active_support/callbacks.rb:81:in `run_callbacks'
+  actionpack (4.2.0) lib/action_dispatch/middleware/callbacks.rb:27:in `call'
+  actionpack (4.2.0) lib/action_dispatch/middleware/reloader.rb:73:in `call'
+  actionpack (4.2.0) lib/action_dispatch/middleware/remote_ip.rb:78:in `call'
+  web-console (2.0.0) lib/action_dispatch/debug_exceptions.rb:18:in `middleware_call'
+  web-console (2.0.0) lib/action_dispatch/debug_exceptions.rb:13:in `call'
+  actionpack (4.2.0) lib/action_dispatch/middleware/show_exceptions.rb:30:in `call'
+  railties (4.2.0) lib/rails/rack/logger.rb:38:in `call_app'
+  railties (4.2.0) lib/rails/rack/logger.rb:20:in `block in call'
+  activesupport (4.2.0) lib/active_support/tagged_logging.rb:68:in `block in tagged'
+  activesupport (4.2.0) lib/active_support/tagged_logging.rb:26:in `tagged'
+  activesupport (4.2.0) lib/active_support/tagged_logging.rb:68:in `tagged'
+  railties (4.2.0) lib/rails/rack/logger.rb:20:in `call'
+  actionpack (4.2.0) lib/action_dispatch/middleware/request_id.rb:21:in `call'
+  rack (1.6.0) lib/rack/methodoverride.rb:22:in `call'
+  rack (1.6.0) lib/rack/runtime.rb:18:in `call'
+  activesupport (4.2.0) lib/active_support/cache/strategy/local_cache_middleware.rb:28:in `call'
+  rack (1.6.0) lib/rack/lock.rb:17:in `call'
+  actionpack (4.2.0) lib/action_dispatch/middleware/static.rb:113:in `call'
+  rack (1.6.0) lib/rack/sendfile.rb:113:in `call'
+  railties (4.2.0) lib/rails/engine.rb:518:in `call'
+  railties (4.2.0) lib/rails/application.rb:164:in `call'
+  rack (1.6.0) lib/rack/lock.rb:17:in `call'
+  rack (1.6.0) lib/rack/content_length.rb:15:in `call'
+  rack (1.6.0) lib/rack/handler/webrick.rb:89:in `service'
+  /usr/local/lib/ruby/2.1.0/webrick/httpserver.rb:138:in `service'
+  /usr/local/lib/ruby/2.1.0/webrick/httpserver.rb:94:in `run'
+  /usr/local/lib/ruby/2.1.0/webrick/server.rb:295:in `block in start_thread'
+
+
+
+NameError (uninitialized constant ArchesController::ReadAuth):
+  app/controllers/arches_controller.rb:45:in `new'
+
+
+
+NameError (uninitialized constant ArchesController::ReadAuth):
+  app/controllers/arches_controller.rb:45:in `new'
+
+
+
+ActionView::Template::Error (no implicit conversion of nil into String):
+    1: <div id="image_frame" style="text-align: center">
+    2: 	
+    3: 	<% path = "folio_images/" + "reg_" + @register_choice + "_" + @folio_choice + "_" + @side_choice + ".jpg" %>
+    4: 	
+    5: 	<div style="left; height: 36px; background-color: grey; width: 100%; padding-top: 8px">
+    6: 		
+  app/views/arches/_image_zoom.erb:3:in `+'
+  app/views/arches/_image_zoom.erb:3:in `_app_views_arches__image_zoom_erb__897224736__628224358'
+  app/views/arches/new.html.erb:32:in `_app_views_arches_new_html_erb__530723770__584659198'
+
+
+
+ActionView::Template::Error (no implicit conversion of nil into String):
+    1: <div id="image_frame" style="text-align: center">
+    2: 	
+    3: 	<% path = "folio_images/" + "reg_" + @register_choice + "_" + @folio_choice + "_" + @side_choice + ".jpg" %>
+    4: 	
+    5: 	<div style="left; height: 36px; background-color: grey; width: 100%; padding-top: 8px">
+    6: 		
+  app/views/arches/_image_zoom.erb:3:in `+'
+  app/views/arches/_image_zoom.erb:3:in `_app_views_arches__image_zoom_erb__897224736__583504578'
+  app/views/arches/new.html.erb:32:in `_app_views_arches_new_html_erb__530723770__575399998'
+
+
+
+TypeError (no implicit conversion of nil into String):
+  app/controllers/arches_controller.rb:57:in `+'
+  app/controllers/arches_controller.rb:57:in `new'
+
+
+
+TypeError (no implicit conversion of nil into String):
+  app/controllers/arches_controller.rb:57:in `+'
+  app/controllers/arches_controller.rb:57:in `new'
+
+
+
+ActionView::Template::Error (no implicit conversion of nil into String):
+    1: <div id="image_frame" style="text-align: center">
+    2: 	
+    3: 
+    4: 	<% path = "folio_images/" + "reg_" + @register_choice + "_" + @folio_choice + "_" + @side_choice + ".jpg" %>
+    5: 	
+    6: 	<div style="left; height: 36px; background-color: grey; width: 100%; padding-top: 8px">
+    7: 		
+  app/views/arches/_image_zoom.erb:4:in `+'
+  app/views/arches/_image_zoom.erb:4:in `_app_views_arches__image_zoom_erb__897224736__628541068'
+  app/views/arches/new.html.erb:32:in `_app_views_arches_new_html_erb__530723770__575399998'
+
+
+
+ActiveFedora::UnknownAttributeError (Arch does not have an attribute `folioFace'):
+  app/controllers/arches_controller.rb:143:in `new'
+  app/controllers/arches_controller.rb:143:in `create'
+
+
+
+ActiveFedora::UnknownAttributeError (Arch does not have an attribute `folioFace'):
+  app/controllers/arches_controller.rb:143:in `new'
+  app/controllers/arches_controller.rb:143:in `create'
+
+
+
+ActiveFedora::UnknownAttributeError (Arch does not have an attribute `folioFace'):
+  app/controllers/arches_controller.rb:143:in `new'
+  app/controllers/arches_controller.rb:143:in `create'
+
+
+
+ActiveFedora::UnknownAttributeError (Arch does not have an attribute `folioFace'):
+  app/controllers/arches_controller.rb:143:in `new'
+  app/controllers/arches_controller.rb:143:in `create'
+
+
+
+SyntaxError (/home/vagrant/rails_projects/arch9/app/views/layouts/blacklight.html.erb:44: syntax error, unexpected ')', expecting ']'
+...end=( session[:register_choice) );@output_buffer.safe_append...
+...                               ^
+/home/vagrant/rails_projects/arch9/app/views/layouts/blacklight.html.erb:65: syntax error, unexpected keyword_ensure, expecting ')'
+/home/vagrant/rails_projects/arch9/app/views/layouts/blacklight.html.erb:67: syntax error, unexpected keyword_end, expecting ')'):
+  app/views/layouts/blacklight.html.erb:44: syntax error, unexpected ')', expecting ']'
+  app/views/layouts/blacklight.html.erb:65: syntax error, unexpected keyword_ensure, expecting ')'
+  app/views/layouts/blacklight.html.erb:67: syntax error, unexpected keyword_end, expecting ')'
+
+
+
+ActionController::RoutingError (No route matches [GET] "/images/folio_images/reg_02_02_Recto.jpg"):
+  web-console (2.0.0) lib/action_dispatch/debug_exceptions.rb:22:in `middleware_call'
+  web-console (2.0.0) lib/action_dispatch/debug_exceptions.rb:13:in `call'
+  actionpack (4.2.0) lib/action_dispatch/middleware/show_exceptions.rb:30:in `call'
+  railties (4.2.0) lib/rails/rack/logger.rb:38:in `call_app'
+  railties (4.2.0) lib/rails/rack/logger.rb:20:in `block in call'
+  activesupport (4.2.0) lib/active_support/tagged_logging.rb:68:in `block in tagged'
+  activesupport (4.2.0) lib/active_support/tagged_logging.rb:26:in `tagged'
+  activesupport (4.2.0) lib/active_support/tagged_logging.rb:68:in `tagged'
+  railties (4.2.0) lib/rails/rack/logger.rb:20:in `call'
+  actionpack (4.2.0) lib/action_dispatch/middleware/request_id.rb:21:in `call'
+  rack (1.6.0) lib/rack/methodoverride.rb:22:in `call'
+  rack (1.6.0) lib/rack/runtime.rb:18:in `call'
+  activesupport (4.2.0) lib/active_support/cache/strategy/local_cache_middleware.rb:28:in `call'
+  rack (1.6.0) lib/rack/lock.rb:17:in `call'
+  actionpack (4.2.0) lib/action_dispatch/middleware/static.rb:113:in `call'
+  rack (1.6.0) lib/rack/sendfile.rb:113:in `call'
+  railties (4.2.0) lib/rails/engine.rb:518:in `call'
+  railties (4.2.0) lib/rails/application.rb:164:in `call'
+  rack (1.6.0) lib/rack/lock.rb:17:in `call'
+  rack (1.6.0) lib/rack/content_length.rb:15:in `call'
+  rack (1.6.0) lib/rack/handler/webrick.rb:89:in `service'
+  /usr/local/lib/ruby/2.1.0/webrick/httpserver.rb:138:in `service'
+  /usr/local/lib/ruby/2.1.0/webrick/httpserver.rb:94:in `run'
+  /usr/local/lib/ruby/2.1.0/webrick/server.rb:295:in `block in start_thread'
+
+
+
+ActionView::Template::Error (no implicit conversion of nil into String):
+    1: <div id="image_frame" style="text-align: center">
+    2: 	
+    3: 
+    4: 	<% path = "folio_images/" + "reg_" + @register_choice + "_" + @folio_choice + "_" + @side_choice + ".jpg" %>
+    5: 	
+    6: 	<div style="left; height: 36px; background-color: grey; width: 100%; padding-top: 8px">
+    7: 		
+  app/views/arches/_image_zoom.erb:4:in `+'
+  app/views/arches/_image_zoom.erb:4:in `_app_views_arches__image_zoom_erb___1006765583__626617448'
+  app/views/arches/show.html.erb:118:in `_app_views_arches_show_html_erb__243847701__624166388'
+
+
+
+NoMethodError (undefined method `id' for #<ActiveFedora::Relation:0xb58bb1a8>):
+  app/controllers/arches_controller.rb:54:in `new'
+
+
+
+ActionController::RoutingError (No route matches [GET] "/images/folio_images/reg_02_01_Recto.jpg"):
+  web-console (2.0.0) lib/action_dispatch/debug_exceptions.rb:22:in `middleware_call'
+  web-console (2.0.0) lib/action_dispatch/debug_exceptions.rb:13:in `call'
+  actionpack (4.2.0) lib/action_dispatch/middleware/show_exceptions.rb:30:in `call'
+  railties (4.2.0) lib/rails/rack/logger.rb:38:in `call_app'
+  railties (4.2.0) lib/rails/rack/logger.rb:20:in `block in call'
+  activesupport (4.2.0) lib/active_support/tagged_logging.rb:68:in `block in tagged'
+  activesupport (4.2.0) lib/active_support/tagged_logging.rb:26:in `tagged'
+  activesupport (4.2.0) lib/active_support/tagged_logging.rb:68:in `tagged'
+  railties (4.2.0) lib/rails/rack/logger.rb:20:in `call'
+  actionpack (4.2.0) lib/action_dispatch/middleware/request_id.rb:21:in `call'
+  rack (1.6.0) lib/rack/methodoverride.rb:22:in `call'
+  rack (1.6.0) lib/rack/runtime.rb:18:in `call'
+  activesupport (4.2.0) lib/active_support/cache/strategy/local_cache_middleware.rb:28:in `call'
+  rack (1.6.0) lib/rack/lock.rb:17:in `call'
+  actionpack (4.2.0) lib/action_dispatch/middleware/static.rb:113:in `call'
+  rack (1.6.0) lib/rack/sendfile.rb:113:in `call'
+  railties (4.2.0) lib/rails/engine.rb:518:in `call'
+  railties (4.2.0) lib/rails/application.rb:164:in `call'
+  rack (1.6.0) lib/rack/lock.rb:17:in `call'
+  rack (1.6.0) lib/rack/content_length.rb:15:in `call'
+  rack (1.6.0) lib/rack/handler/webrick.rb:89:in `service'
+  /usr/local/lib/ruby/2.1.0/webrick/httpserver.rb:138:in `service'
+  /usr/local/lib/ruby/2.1.0/webrick/httpserver.rb:94:in `run'
+  /usr/local/lib/ruby/2.1.0/webrick/server.rb:295:in `block in start_thread'
+
+
+
+SyntaxError (/home/vagrant/rails_projects/arch9/app/controllers/arches_controller.rb:15: syntax error, unexpected tSTRING_DEND, expecting keyword_end
+/home/vagrant/rails_projects/arch9/app/controllers/arches_controller.rb:126: syntax error, unexpected tSTRING_DEND, expecting '}'
+/home/vagrant/rails_projects/arch9/app/controllers/arches_controller.rb:132: syntax error, unexpected tSTRING_DEND, expecting '}'
+/home/vagrant/rails_projects/arch9/app/controllers/arches_controller.rb:133: syntax error, unexpected tSTRING_DEND, expecting '}'
+/home/vagrant/rails_projects/arch9/app/controllers/arches_controller.rb:136: syntax error, unexpected tSTRING_DEND, expecting '}'
+/home/vagrant/rails_projects/arch9/app/controllers/arches_controller.rb:140: syntax error, unexpected tSTRING_DEND, expecting '}'
+/home/vagrant/rails_projects/arch9/app/controllers/arches_controller.rb:189: syntax error, unexpected tSTRING_DEND, expecting '}'
+/home/vagrant/rails_projects/arch9/app/controllers/arches_controller.rb:197: syntax error, unexpected tSTRING_DEND, expecting '}'
+/home/vagrant/rails_projects/arch9/app/controllers/arches_controller.rb:198: syntax error, unexpected tSTRING_DEND, expecting '}'
+/home/vagrant/rails_projects/arch9/app/controllers/arches_controller.rb:201: syntax error, unexpected tSTRING_DEND, expecting '}'
+/home/vagrant/rails_projects/arch9/app/controllers/arches_controller.rb:204: syntax error, unexpected tSTRING_DEND, expecting '}'
+/home/vagrant/rails_projects/arch9/app/controllers/arches_controller.rb:208: syntax error, unexpected tSTRING_DEND, expecting '}'
+/home/vagrant/rails_projects/arch9/app/controllers/arches_controller.rb:209: syntax error, unexpected tSTRING_DEND, expecting '}'
+/home/vagrant/rails_projects/arch9/app/controllers/arches_controller.rb:234: syntax error, unexpected tSTRING_DEND, expecting '}'
+/home/vagrant/rails_projects/arch9/app/controllers/arches_controller.rb:236: syntax error, unexpected tSTRING_DEND, expecting '}'
+/home/vagrant/rails_projects/arch9/app/controllers/arches_controller.rb:252: syntax error, unexpected keyword_end, expecting '}'):
+  app/controllers/arches_controller.rb:15: syntax error, unexpected tSTRING_DEND, expecting keyword_end
+  app/controllers/arches_controller.rb:126: syntax error, unexpected tSTRING_DEND, expecting '}'
+  app/controllers/arches_controller.rb:132: syntax error, unexpected tSTRING_DEND, expecting '}'
+  app/controllers/arches_controller.rb:133: syntax error, unexpected tSTRING_DEND, expecting '}'
+  app/controllers/arches_controller.rb:136: syntax error, unexpected tSTRING_DEND, expecting '}'
+  app/controllers/arches_controller.rb:140: syntax error, unexpected tSTRING_DEND, expecting '}'
+  app/controllers/arches_controller.rb:189: syntax error, unexpected tSTRING_DEND, expecting '}'
+  app/controllers/arches_controller.rb:197: syntax error, unexpected tSTRING_DEND, expecting '}'
+  app/controllers/arches_controller.rb:198: syntax error, unexpected tSTRING_DEND, expecting '}'
+  app/controllers/arches_controller.rb:201: syntax error, unexpected tSTRING_DEND, expecting '}'
+  app/controllers/arches_controller.rb:204: syntax error, unexpected tSTRING_DEND, expecting '}'
+  app/controllers/arches_controller.rb:208: syntax error, unexpected tSTRING_DEND, expecting '}'
+  app/controllers/arches_controller.rb:209: syntax error, unexpected tSTRING_DEND, expecting '}'
+  app/controllers/arches_controller.rb:234: syntax error, unexpected tSTRING_DEND, expecting '}'
+  app/controllers/arches_controller.rb:236: syntax error, unexpected tSTRING_DEND, expecting '}'
+  app/controllers/arches_controller.rb:252: syntax error, unexpected keyword_end, expecting '}'
+
+
+
+ActionView::Template::Error (no implicit conversion of nil into String):
+    1: <div id="image_frame" style="text-align: center">
+    2: 	
+    3: 
+    4: 	<% path = "folio_images/" + "reg_" + session[:register_choice] + "_" + session[:folio_choice] + "_" + session[:side_choice] + ".jpg" %>
+    5: 	
+    6: 	<div style="left; height: 36px; background-color: grey; width: 100%; padding-top: 8px">
+    7: 		
+  app/views/arches/_image_zoom.erb:4:in `+'
+  app/views/arches/_image_zoom.erb:4:in `_app_views_arches__image_zoom_erb___1006765583__624478248'
+  app/views/arches/show.html.erb:118:in `_app_views_arches_show_html_erb__243847701__576635868'
+
+
+
+NameError (undefined local variable or method `register_choice' for #<ArchesController:0xb5a79a58>):
+  app/controllers/arches_controller.rb:14:in `show'
+
+
+
+NameError (undefined local variable or method `register_choice' for #<ArchesController:0xb50ddc74>):
+  app/controllers/arches_controller.rb:16:in `show'
+
+
+
+NameError (undefined local variable or method `register_choice' for #<ArchesController:0xb5bab6ec>):
+  app/controllers/arches_controller.rb:16:in `show'
+
+
+
+ActionView::Template::Error (no implicit conversion of nil into String):
+    1: <div id="image_frame" style="text-align: center">
+    2: 	
+    3: 
+    4: 	<% path = "folio_images/" + "reg_" + session[:register_choice] + "_" + session[:folio_choice] + "_" + session[:side_choice] + ".jpg" %>
+    5: 	
+    6: 	<div style="left; height: 36px; background-color: grey; width: 100%; padding-top: 8px">
+    7: 		
+  app/views/arches/_image_zoom.erb:4:in `+'
+  app/views/arches/_image_zoom.erb:4:in `_app_views_arches__image_zoom_erb___133948660__623985908'
+  app/views/arches/show.html.erb:118:in `_app_views_arches_show_html_erb___516561890__569493278'
+
+
+
+ActionView::Template::Error (no implicit conversion of nil into String):
+    1: <div id="image_frame" style="text-align: center">
+    2: 	
+    3: 
+    4: 	<% path = "folio_images/" + "reg_" + session[:register_choice] + "_" + session[:folio_choice] + "_" + session[:side_choice] + ".jpg" %>
+    5: 	
+    6: 	<div style="left; height: 36px; background-color: grey; width: 100%; padding-top: 8px">
+    7: 		
+  app/views/arches/_image_zoom.erb:4:in `+'
+  app/views/arches/_image_zoom.erb:4:in `_app_views_arches__image_zoom_erb___133948660__623985908'
+  app/views/arches/show.html.erb:118:in `_app_views_arches_show_html_erb___516561890__569493278'
+
+
+
+ActionView::Template::Error (no implicit conversion of nil into String):
+    1: <div id="image_frame" style="text-align: center">
+    2: 	
+    3: 
+    4: 	<% path = "folio_images/" + "reg_" + session[:register_choice] + "_" + session[:folio_choice] + "_" + session[:side_choice] + ".jpg" %>
+    5: 	
+    6: 	<div style="left; height: 36px; background-color: grey; width: 100%; padding-top: 8px">
+    7: 		
+  app/views/arches/_image_zoom.erb:4:in `+'
+  app/views/arches/_image_zoom.erb:4:in `_app_views_arches__image_zoom_erb___133948660__623985908'
+  app/views/arches/show.html.erb:118:in `_app_views_arches_show_html_erb___516561890__569493278'
+
+
+
+ActionView::Template::Error (no implicit conversion of nil into String):
+    1: <div id="image_frame" style="text-align: center">
+    2: 	
+    3: 
+    4: 	<% path = "folio_images/" + "reg_" + session[:register_choice] + "_" + session[:folio_choice] + "_" + session[:side_choice] + ".jpg" %>
+    5: 	
+    6: 	<div style="left; height: 36px; background-color: grey; width: 100%; padding-top: 8px">
+    7: 		
+  app/views/arches/_image_zoom.erb:4:in `+'
+  app/views/arches/_image_zoom.erb:4:in `_app_views_arches__image_zoom_erb___133948660__623985908'
+  app/views/arches/show.html.erb:118:in `_app_views_arches_show_html_erb___516561890__569493278'
+
+
+
+ActionView::Template::Error (no implicit conversion of nil into String):
+    1: <div id="image_frame" style="text-align: center">
+    2: 	
+    3: 
+    4: 	<% path = "folio_images/" + "reg_" + session[:register_choice] + "_" + session[:folio_choice] + "_" + session[:side_choice] + ".jpg" %>
+    5: 	
+    6: 	<div style="left; height: 36px; background-color: grey; width: 100%; padding-top: 8px">
+    7: 		
+  app/views/arches/_image_zoom.erb:4:in `+'
+  app/views/arches/_image_zoom.erb:4:in `_app_views_arches__image_zoom_erb___133948660__623985908'
+  app/views/arches/show.html.erb:118:in `_app_views_arches_show_html_erb___516561890__569493278'
+
+
+
+ActionView::Template::Error (no implicit conversion of nil into String):
+    1: <div id="image_frame" style="text-align: center">
+    2: 	
+    3: 
+    4: 	<% path = "folio_images/" + "reg_" + session[:register_choice] + "_" + session[:folio_choice] + "_" + session[:side_choice] + ".jpg" %>
+    5: 	
+    6: 	<div style="left; height: 36px; background-color: grey; width: 100%; padding-top: 8px">
+    7: 		
+  app/views/arches/_image_zoom.erb:4:in `+'
+  app/views/arches/_image_zoom.erb:4:in `_app_views_arches__image_zoom_erb___133948660__623985908'
+  app/views/arches/show.html.erb:118:in `_app_views_arches_show_html_erb___516561890__569493278'
+
+
+
+ActionView::Template::Error (no implicit conversion of nil into String):
+    1: <div id="image_frame" style="text-align: center">
+    2: 	
+    3: 
+    4: 	<% path = "folio_images/" + "reg_" + session[:register_choice] + "_" + session[:folio_choice] + "_" + session[:side_choice] + ".jpg" %>
+    5: 	
+    6: 	<div style="left; height: 36px; background-color: grey; width: 100%; padding-top: 8px">
+    7: 		
+  app/views/arches/_image_zoom.erb:4:in `+'
+  app/views/arches/_image_zoom.erb:4:in `_app_views_arches__image_zoom_erb___133948660__623985908'
+  app/views/arches/show.html.erb:118:in `_app_views_arches_show_html_erb___516561890__569493278'
+
+
+
+ActionView::Template::Error (undefined local variable or method `null' for #<#<Class:0xbc27e630>:0xb5817670>):
+    1: <% if session[:register_choice] != null %>
+    2: 
+    3: <div id="image_frame" style="text-align: center">
+    4: 
+  app/views/arches/_image_zoom.erb:1:in `_app_views_arches__image_zoom_erb___133948660__564233198'
+  app/views/arches/show.html.erb:118:in `_app_views_arches_show_html_erb___516561890__569493278'
+
+
+
+NoMethodError (undefined method `entry_no' for #<Arch:0xba8ff31c>):
+  app/controllers/arches_controller.rb:30:in `block in show'
+  app/controllers/arches_controller.rb:29:in `show'
+
+
+
+NameError (undefined local variable or method `sesion' for #<ArchesController:0xb568f500>):
+  app/controllers/arches_controller.rb:38:in `show'
+
+
+
+ActionController::RoutingError (No route matches [GET] "/fonts/bootstrap/glyphicons-halflings-regular.woff"):
+  web-console (2.0.0) lib/action_dispatch/debug_exceptions.rb:22:in `middleware_call'
+  web-console (2.0.0) lib/action_dispatch/debug_exceptions.rb:13:in `call'
+  actionpack (4.2.0) lib/action_dispatch/middleware/show_exceptions.rb:30:in `call'
+  railties (4.2.0) lib/rails/rack/logger.rb:38:in `call_app'
+  railties (4.2.0) lib/rails/rack/logger.rb:20:in `block in call'
+  activesupport (4.2.0) lib/active_support/tagged_logging.rb:68:in `block in tagged'
+  activesupport (4.2.0) lib/active_support/tagged_logging.rb:26:in `tagged'
+  activesupport (4.2.0) lib/active_support/tagged_logging.rb:68:in `tagged'
+  railties (4.2.0) lib/rails/rack/logger.rb:20:in `call'
+  actionpack (4.2.0) lib/action_dispatch/middleware/request_id.rb:21:in `call'
+  rack (1.6.0) lib/rack/methodoverride.rb:22:in `call'
+  rack (1.6.0) lib/rack/runtime.rb:18:in `call'
+  activesupport (4.2.0) lib/active_support/cache/strategy/local_cache_middleware.rb:28:in `call'
+  rack (1.6.0) lib/rack/lock.rb:17:in `call'
+  actionpack (4.2.0) lib/action_dispatch/middleware/static.rb:113:in `call'
+  rack (1.6.0) lib/rack/sendfile.rb:113:in `call'
+  railties (4.2.0) lib/rails/engine.rb:518:in `call'
+  railties (4.2.0) lib/rails/application.rb:164:in `call'
+  rack (1.6.0) lib/rack/lock.rb:17:in `call'
+  rack (1.6.0) lib/rack/content_length.rb:15:in `call'
+  rack (1.6.0) lib/rack/handler/webrick.rb:89:in `service'
+  /usr/local/lib/ruby/2.1.0/webrick/httpserver.rb:138:in `service'
+  /usr/local/lib/ruby/2.1.0/webrick/httpserver.rb:94:in `run'
+  /usr/local/lib/ruby/2.1.0/webrick/server.rb:295:in `block in start_thread'
+
+
+
+ActionController::RoutingError (No route matches [GET] "/fonts/bootstrap/glyphicons-halflings-regular.ttf"):
+  web-console (2.0.0) lib/action_dispatch/debug_exceptions.rb:22:in `middleware_call'
+  web-console (2.0.0) lib/action_dispatch/debug_exceptions.rb:13:in `call'
+  actionpack (4.2.0) lib/action_dispatch/middleware/show_exceptions.rb:30:in `call'
+  railties (4.2.0) lib/rails/rack/logger.rb:38:in `call_app'
+  railties (4.2.0) lib/rails/rack/logger.rb:20:in `block in call'
+  activesupport (4.2.0) lib/active_support/tagged_logging.rb:68:in `block in tagged'
+  activesupport (4.2.0) lib/active_support/tagged_logging.rb:26:in `tagged'
+  activesupport (4.2.0) lib/active_support/tagged_logging.rb:68:in `tagged'
+  railties (4.2.0) lib/rails/rack/logger.rb:20:in `call'
+  actionpack (4.2.0) lib/action_dispatch/middleware/request_id.rb:21:in `call'
+  rack (1.6.0) lib/rack/methodoverride.rb:22:in `call'
+  rack (1.6.0) lib/rack/runtime.rb:18:in `call'
+  activesupport (4.2.0) lib/active_support/cache/strategy/local_cache_middleware.rb:28:in `call'
+  rack (1.6.0) lib/rack/lock.rb:17:in `call'
+  actionpack (4.2.0) lib/action_dispatch/middleware/static.rb:113:in `call'
+  rack (1.6.0) lib/rack/sendfile.rb:113:in `call'
+  railties (4.2.0) lib/rails/engine.rb:518:in `call'
+  railties (4.2.0) lib/rails/application.rb:164:in `call'
+  rack (1.6.0) lib/rack/lock.rb:17:in `call'
+  rack (1.6.0) lib/rack/content_length.rb:15:in `call'
+  rack (1.6.0) lib/rack/handler/webrick.rb:89:in `service'
+  /usr/local/lib/ruby/2.1.0/webrick/httpserver.rb:138:in `service'
+  /usr/local/lib/ruby/2.1.0/webrick/httpserver.rb:94:in `run'
+  /usr/local/lib/ruby/2.1.0/webrick/server.rb:295:in `block in start_thread'
+
+
+
+ActionController::RoutingError (No route matches [GET] "/fonts/bootstrap/glyphicons-halflings-regular.woff"):
+  web-console (2.0.0) lib/action_dispatch/debug_exceptions.rb:22:in `middleware_call'
+  web-console (2.0.0) lib/action_dispatch/debug_exceptions.rb:13:in `call'
+  actionpack (4.2.0) lib/action_dispatch/middleware/show_exceptions.rb:30:in `call'
+  railties (4.2.0) lib/rails/rack/logger.rb:38:in `call_app'
+  railties (4.2.0) lib/rails/rack/logger.rb:20:in `block in call'
+  activesupport (4.2.0) lib/active_support/tagged_logging.rb:68:in `block in tagged'
+  activesupport (4.2.0) lib/active_support/tagged_logging.rb:26:in `tagged'
+  activesupport (4.2.0) lib/active_support/tagged_logging.rb:68:in `tagged'
+  railties (4.2.0) lib/rails/rack/logger.rb:20:in `call'
+  actionpack (4.2.0) lib/action_dispatch/middleware/request_id.rb:21:in `call'
+  rack (1.6.0) lib/rack/methodoverride.rb:22:in `call'
+  rack (1.6.0) lib/rack/runtime.rb:18:in `call'
+  activesupport (4.2.0) lib/active_support/cache/strategy/local_cache_middleware.rb:28:in `call'
+  rack (1.6.0) lib/rack/lock.rb:17:in `call'
+  actionpack (4.2.0) lib/action_dispatch/middleware/static.rb:113:in `call'
+  rack (1.6.0) lib/rack/sendfile.rb:113:in `call'
+  railties (4.2.0) lib/rails/engine.rb:518:in `call'
+  railties (4.2.0) lib/rails/application.rb:164:in `call'
+  rack (1.6.0) lib/rack/lock.rb:17:in `call'
+  rack (1.6.0) lib/rack/content_length.rb:15:in `call'
+  rack (1.6.0) lib/rack/handler/webrick.rb:89:in `service'
+  /usr/local/lib/ruby/2.1.0/webrick/httpserver.rb:138:in `service'
+  /usr/local/lib/ruby/2.1.0/webrick/httpserver.rb:94:in `run'
+  /usr/local/lib/ruby/2.1.0/webrick/server.rb:295:in `block in start_thread'
+
+
+
+ActionController::RoutingError (No route matches [GET] "/fonts/bootstrap/glyphicons-halflings-regular.ttf"):
+  web-console (2.0.0) lib/action_dispatch/debug_exceptions.rb:22:in `middleware_call'
+  web-console (2.0.0) lib/action_dispatch/debug_exceptions.rb:13:in `call'
+  actionpack (4.2.0) lib/action_dispatch/middleware/show_exceptions.rb:30:in `call'
+  railties (4.2.0) lib/rails/rack/logger.rb:38:in `call_app'
+  railties (4.2.0) lib/rails/rack/logger.rb:20:in `block in call'
+  activesupport (4.2.0) lib/active_support/tagged_logging.rb:68:in `block in tagged'
+  activesupport (4.2.0) lib/active_support/tagged_logging.rb:26:in `tagged'
+  activesupport (4.2.0) lib/active_support/tagged_logging.rb:68:in `tagged'
+  railties (4.2.0) lib/rails/rack/logger.rb:20:in `call'
+  actionpack (4.2.0) lib/action_dispatch/middleware/request_id.rb:21:in `call'
+  rack (1.6.0) lib/rack/methodoverride.rb:22:in `call'
+  rack (1.6.0) lib/rack/runtime.rb:18:in `call'
+  activesupport (4.2.0) lib/active_support/cache/strategy/local_cache_middleware.rb:28:in `call'
+  rack (1.6.0) lib/rack/lock.rb:17:in `call'
+  actionpack (4.2.0) lib/action_dispatch/middleware/static.rb:113:in `call'
+  rack (1.6.0) lib/rack/sendfile.rb:113:in `call'
+  railties (4.2.0) lib/rails/engine.rb:518:in `call'
+  railties (4.2.0) lib/rails/application.rb:164:in `call'
+  rack (1.6.0) lib/rack/lock.rb:17:in `call'
+  rack (1.6.0) lib/rack/content_length.rb:15:in `call'
+  rack (1.6.0) lib/rack/handler/webrick.rb:89:in `service'
+  /usr/local/lib/ruby/2.1.0/webrick/httpserver.rb:138:in `service'
+  /usr/local/lib/ruby/2.1.0/webrick/httpserver.rb:94:in `run'
+  /usr/local/lib/ruby/2.1.0/webrick/server.rb:295:in `block in start_thread'
+
+
+
+ActionController::RoutingError (No route matches [GET] "/fonts/bootstrap/glyphicons-halflings-regular.woff"):
+  web-console (2.0.0) lib/action_dispatch/debug_exceptions.rb:22:in `middleware_call'
+  web-console (2.0.0) lib/action_dispatch/debug_exceptions.rb:13:in `call'
+  actionpack (4.2.0) lib/action_dispatch/middleware/show_exceptions.rb:30:in `call'
+  railties (4.2.0) lib/rails/rack/logger.rb:38:in `call_app'
+  railties (4.2.0) lib/rails/rack/logger.rb:20:in `block in call'
+  activesupport (4.2.0) lib/active_support/tagged_logging.rb:68:in `block in tagged'
+  activesupport (4.2.0) lib/active_support/tagged_logging.rb:26:in `tagged'
+  activesupport (4.2.0) lib/active_support/tagged_logging.rb:68:in `tagged'
+  railties (4.2.0) lib/rails/rack/logger.rb:20:in `call'
+  actionpack (4.2.0) lib/action_dispatch/middleware/request_id.rb:21:in `call'
+  rack (1.6.0) lib/rack/methodoverride.rb:22:in `call'
+  rack (1.6.0) lib/rack/runtime.rb:18:in `call'
+  activesupport (4.2.0) lib/active_support/cache/strategy/local_cache_middleware.rb:28:in `call'
+  rack (1.6.0) lib/rack/lock.rb:17:in `call'
+  actionpack (4.2.0) lib/action_dispatch/middleware/static.rb:113:in `call'
+  rack (1.6.0) lib/rack/sendfile.rb:113:in `call'
+  railties (4.2.0) lib/rails/engine.rb:518:in `call'
+  railties (4.2.0) lib/rails/application.rb:164:in `call'
+  rack (1.6.0) lib/rack/lock.rb:17:in `call'
+  rack (1.6.0) lib/rack/content_length.rb:15:in `call'
+  rack (1.6.0) lib/rack/handler/webrick.rb:89:in `service'
+  /usr/local/lib/ruby/2.1.0/webrick/httpserver.rb:138:in `service'
+  /usr/local/lib/ruby/2.1.0/webrick/httpserver.rb:94:in `run'
+  /usr/local/lib/ruby/2.1.0/webrick/server.rb:295:in `block in start_thread'
+
+
+
+ActionController::RoutingError (No route matches [GET] "/fonts/bootstrap/glyphicons-halflings-regular.ttf"):
+  web-console (2.0.0) lib/action_dispatch/debug_exceptions.rb:22:in `middleware_call'
+  web-console (2.0.0) lib/action_dispatch/debug_exceptions.rb:13:in `call'
+  actionpack (4.2.0) lib/action_dispatch/middleware/show_exceptions.rb:30:in `call'
+  railties (4.2.0) lib/rails/rack/logger.rb:38:in `call_app'
+  railties (4.2.0) lib/rails/rack/logger.rb:20:in `block in call'
+  activesupport (4.2.0) lib/active_support/tagged_logging.rb:68:in `block in tagged'
+  activesupport (4.2.0) lib/active_support/tagged_logging.rb:26:in `tagged'
+  activesupport (4.2.0) lib/active_support/tagged_logging.rb:68:in `tagged'
+  railties (4.2.0) lib/rails/rack/logger.rb:20:in `call'
+  actionpack (4.2.0) lib/action_dispatch/middleware/request_id.rb:21:in `call'
+  rack (1.6.0) lib/rack/methodoverride.rb:22:in `call'
+  rack (1.6.0) lib/rack/runtime.rb:18:in `call'
+  activesupport (4.2.0) lib/active_support/cache/strategy/local_cache_middleware.rb:28:in `call'
+  rack (1.6.0) lib/rack/lock.rb:17:in `call'
+  actionpack (4.2.0) lib/action_dispatch/middleware/static.rb:113:in `call'
+  rack (1.6.0) lib/rack/sendfile.rb:113:in `call'
+  railties (4.2.0) lib/rails/engine.rb:518:in `call'
+  railties (4.2.0) lib/rails/application.rb:164:in `call'
+  rack (1.6.0) lib/rack/lock.rb:17:in `call'
+  rack (1.6.0) lib/rack/content_length.rb:15:in `call'
+  rack (1.6.0) lib/rack/handler/webrick.rb:89:in `service'
+  /usr/local/lib/ruby/2.1.0/webrick/httpserver.rb:138:in `service'
+  /usr/local/lib/ruby/2.1.0/webrick/httpserver.rb:94:in `run'
+  /usr/local/lib/ruby/2.1.0/webrick/server.rb:295:in `block in start_thread'
+
+
+
+TypeError (no implicit conversion of nil into String):
+  app/controllers/arches_controller.rb:171:in `+'
+  app/controllers/arches_controller.rb:171:in `update'
+
+
+
+Ldp::HttpError (STATUS: 503 ...):
+  ldp (0.2.3) lib/ldp/client/methods.rb:107:in `block in check_for_errors'
+  ldp (0.2.3) lib/ldp/client/methods.rb:105:in `tap'
+  ldp (0.2.3) lib/ldp/client/methods.rb:105:in `check_for_errors'
+  ldp (0.2.3) lib/ldp/client/methods.rb:24:in `head'
+  active-fedora (9.0.2) lib/active_fedora/fedora.rb:37:in `init_base_path'
+  active-fedora (9.0.2) lib/active_fedora/fedora.rb:5:in `initialize'
+  active-fedora (9.0.2) lib/active_fedora.rb:202:in `new'
+  active-fedora (9.0.2) lib/active_fedora.rb:202:in `fedora'
+  active-fedora (9.0.2) lib/active_fedora/ldp_cache.rb:40:in `reset_cache_settings'
+  active-fedora (9.0.2) lib/active_fedora/ldp_cache.rb:33:in `rescue in call'
+  active-fedora (9.0.2) lib/active_fedora/ldp_cache.rb:24:in `call'
+  activerecord (4.2.0) lib/active_record/migration.rb:378:in `call'
+  actionpack (4.2.0) lib/action_dispatch/middleware/callbacks.rb:29:in `block in call'
+  activesupport (4.2.0) lib/active_support/callbacks.rb:88:in `call'
+  activesupport (4.2.0) lib/active_support/callbacks.rb:88:in `_run_callbacks'
+  activesupport (4.2.0) lib/active_support/callbacks.rb:734:in `_run_call_callbacks'
+  activesupport (4.2.0) lib/active_support/callbacks.rb:81:in `run_callbacks'
+  actionpack (4.2.0) lib/action_dispatch/middleware/callbacks.rb:27:in `call'
+  actionpack (4.2.0) lib/action_dispatch/middleware/reloader.rb:73:in `call'
+  actionpack (4.2.0) lib/action_dispatch/middleware/remote_ip.rb:78:in `call'
+  web-console (2.0.0) lib/action_dispatch/debug_exceptions.rb:18:in `middleware_call'
+  web-console (2.0.0) lib/action_dispatch/debug_exceptions.rb:13:in `call'
+  actionpack (4.2.0) lib/action_dispatch/middleware/show_exceptions.rb:30:in `call'
+  railties (4.2.0) lib/rails/rack/logger.rb:38:in `call_app'
+  railties (4.2.0) lib/rails/rack/logger.rb:20:in `block in call'
+  activesupport (4.2.0) lib/active_support/tagged_logging.rb:68:in `block in tagged'
+  activesupport (4.2.0) lib/active_support/tagged_logging.rb:26:in `tagged'
+  activesupport (4.2.0) lib/active_support/tagged_logging.rb:68:in `tagged'
+  railties (4.2.0) lib/rails/rack/logger.rb:20:in `call'
+  actionpack (4.2.0) lib/action_dispatch/middleware/request_id.rb:21:in `call'
+  rack (1.6.0) lib/rack/methodoverride.rb:22:in `call'
+  rack (1.6.0) lib/rack/runtime.rb:18:in `call'
+  activesupport (4.2.0) lib/active_support/cache/strategy/local_cache_middleware.rb:28:in `call'
+  rack (1.6.0) lib/rack/lock.rb:17:in `call'
+  actionpack (4.2.0) lib/action_dispatch/middleware/static.rb:113:in `call'
+  rack (1.6.0) lib/rack/sendfile.rb:113:in `call'
+  railties (4.2.0) lib/rails/engine.rb:518:in `call'
+  railties (4.2.0) lib/rails/application.rb:164:in `call'
+  rack (1.6.0) lib/rack/lock.rb:17:in `call'
+  rack (1.6.0) lib/rack/content_length.rb:15:in `call'
+  rack (1.6.0) lib/rack/handler/webrick.rb:89:in `service'
+  /usr/local/lib/ruby/2.1.0/webrick/httpserver.rb:138:in `service'
+  /usr/local/lib/ruby/2.1.0/webrick/httpserver.rb:94:in `run'
+  /usr/local/lib/ruby/2.1.0/webrick/server.rb:295:in `block in start_thread'
+
+
+
+Ldp::HttpError (STATUS: 503 ...):
+  ldp (0.2.3) lib/ldp/client/methods.rb:107:in `block in check_for_errors'
+  ldp (0.2.3) lib/ldp/client/methods.rb:105:in `tap'
+  ldp (0.2.3) lib/ldp/client/methods.rb:105:in `check_for_errors'
+  ldp (0.2.3) lib/ldp/client/methods.rb:24:in `head'
+  active-fedora (9.0.2) lib/active_fedora/fedora.rb:37:in `init_base_path'
+  active-fedora (9.0.2) lib/active_fedora/fedora.rb:5:in `initialize'
+  active-fedora (9.0.2) lib/active_fedora.rb:202:in `new'
+  active-fedora (9.0.2) lib/active_fedora.rb:202:in `fedora'
+  active-fedora (9.0.2) lib/active_fedora/ldp_cache.rb:40:in `reset_cache_settings'
+  active-fedora (9.0.2) lib/active_fedora/ldp_cache.rb:33:in `rescue in call'
+  active-fedora (9.0.2) lib/active_fedora/ldp_cache.rb:24:in `call'
+  activerecord (4.2.0) lib/active_record/migration.rb:378:in `call'
+  actionpack (4.2.0) lib/action_dispatch/middleware/callbacks.rb:29:in `block in call'
+  activesupport (4.2.0) lib/active_support/callbacks.rb:88:in `call'
+  activesupport (4.2.0) lib/active_support/callbacks.rb:88:in `_run_callbacks'
+  activesupport (4.2.0) lib/active_support/callbacks.rb:734:in `_run_call_callbacks'
+  activesupport (4.2.0) lib/active_support/callbacks.rb:81:in `run_callbacks'
+  actionpack (4.2.0) lib/action_dispatch/middleware/callbacks.rb:27:in `call'
+  actionpack (4.2.0) lib/action_dispatch/middleware/reloader.rb:73:in `call'
+  actionpack (4.2.0) lib/action_dispatch/middleware/remote_ip.rb:78:in `call'
+  web-console (2.0.0) lib/action_dispatch/debug_exceptions.rb:18:in `middleware_call'
+  web-console (2.0.0) lib/action_dispatch/debug_exceptions.rb:13:in `call'
+  actionpack (4.2.0) lib/action_dispatch/middleware/show_exceptions.rb:30:in `call'
+  railties (4.2.0) lib/rails/rack/logger.rb:38:in `call_app'
+  railties (4.2.0) lib/rails/rack/logger.rb:20:in `block in call'
+  activesupport (4.2.0) lib/active_support/tagged_logging.rb:68:in `block in tagged'
+  activesupport (4.2.0) lib/active_support/tagged_logging.rb:26:in `tagged'
+  activesupport (4.2.0) lib/active_support/tagged_logging.rb:68:in `tagged'
+  railties (4.2.0) lib/rails/rack/logger.rb:20:in `call'
+  actionpack (4.2.0) lib/action_dispatch/middleware/request_id.rb:21:in `call'
+  rack (1.6.0) lib/rack/methodoverride.rb:22:in `call'
+  rack (1.6.0) lib/rack/runtime.rb:18:in `call'
+  activesupport (4.2.0) lib/active_support/cache/strategy/local_cache_middleware.rb:28:in `call'
+  rack (1.6.0) lib/rack/lock.rb:17:in `call'
+  actionpack (4.2.0) lib/action_dispatch/middleware/static.rb:113:in `call'
+  rack (1.6.0) lib/rack/sendfile.rb:113:in `call'
+  railties (4.2.0) lib/rails/engine.rb:518:in `call'
+  railties (4.2.0) lib/rails/application.rb:164:in `call'
+  rack (1.6.0) lib/rack/lock.rb:17:in `call'
+  rack (1.6.0) lib/rack/content_length.rb:15:in `call'
+  rack (1.6.0) lib/rack/handler/webrick.rb:89:in `service'
+  /usr/local/lib/ruby/2.1.0/webrick/httpserver.rb:138:in `service'
+  /usr/local/lib/ruby/2.1.0/webrick/httpserver.rb:94:in `run'
+  /usr/local/lib/ruby/2.1.0/webrick/server.rb:295:in `block in start_thread'
+
+
+
+Faraday::ConnectionFailed (Connection refused - connect(2) for "127.0.0.1" port 8983):
+  /usr/local/lib/ruby/2.1.0/net/http.rb:879:in `initialize'
+  /usr/local/lib/ruby/2.1.0/net/http.rb:879:in `open'
+  /usr/local/lib/ruby/2.1.0/net/http.rb:879:in `block in connect'
+  /usr/local/lib/ruby/2.1.0/timeout.rb:76:in `timeout'
+  /usr/local/lib/ruby/2.1.0/net/http.rb:878:in `connect'
+  /usr/local/lib/ruby/2.1.0/net/http.rb:863:in `do_start'
+  /usr/local/lib/ruby/2.1.0/net/http.rb:852:in `start'
+  /usr/local/lib/ruby/2.1.0/net/http.rb:1369:in `request'
+  faraday (0.9.1) lib/faraday/adapter/net_http.rb:82:in `perform_request'
+  faraday (0.9.1) lib/faraday/adapter/net_http.rb:40:in `block in call'
+  faraday (0.9.1) lib/faraday/adapter/net_http.rb:87:in `with_net_http_connection'
+  faraday (0.9.1) lib/faraday/adapter/net_http.rb:32:in `call'
+  faraday (0.9.1) lib/faraday/request/url_encoded.rb:15:in `call'
+  faraday (0.9.1) lib/faraday/rack_builder.rb:139:in `build_response'
+  faraday (0.9.1) lib/faraday/connection.rb:377:in `run_request'
+  faraday (0.9.1) lib/faraday/connection.rb:140:in `head'
+  ldp (0.2.3) lib/ldp/client/methods.rb:18:in `head'
+  active-fedora (9.0.2) lib/active_fedora/fedora.rb:37:in `init_base_path'
+  active-fedora (9.0.2) lib/active_fedora/fedora.rb:5:in `initialize'
+  active-fedora (9.0.2) lib/active_fedora.rb:202:in `new'
+  active-fedora (9.0.2) lib/active_fedora.rb:202:in `fedora'
+  active-fedora (9.0.2) lib/active_fedora/ldp_cache.rb:40:in `reset_cache_settings'
+  active-fedora (9.0.2) lib/active_fedora/ldp_cache.rb:33:in `rescue in call'
+  active-fedora (9.0.2) lib/active_fedora/ldp_cache.rb:24:in `call'
+  activerecord (4.2.0) lib/active_record/migration.rb:378:in `call'
+  actionpack (4.2.0) lib/action_dispatch/middleware/callbacks.rb:29:in `block in call'
+  activesupport (4.2.0) lib/active_support/callbacks.rb:88:in `call'
+  activesupport (4.2.0) lib/active_support/callbacks.rb:88:in `_run_callbacks'
+  activesupport (4.2.0) lib/active_support/callbacks.rb:734:in `_run_call_callbacks'
+  activesupport (4.2.0) lib/active_support/callbacks.rb:81:in `run_callbacks'
+  actionpack (4.2.0) lib/action_dispatch/middleware/callbacks.rb:27:in `call'
+  actionpack (4.2.0) lib/action_dispatch/middleware/reloader.rb:73:in `call'
+  actionpack (4.2.0) lib/action_dispatch/middleware/remote_ip.rb:78:in `call'
+  web-console (2.0.0) lib/action_dispatch/debug_exceptions.rb:18:in `middleware_call'
+  web-console (2.0.0) lib/action_dispatch/debug_exceptions.rb:13:in `call'
+  actionpack (4.2.0) lib/action_dispatch/middleware/show_exceptions.rb:30:in `call'
+  railties (4.2.0) lib/rails/rack/logger.rb:38:in `call_app'
+  railties (4.2.0) lib/rails/rack/logger.rb:20:in `block in call'
+  activesupport (4.2.0) lib/active_support/tagged_logging.rb:68:in `block in tagged'
+  activesupport (4.2.0) lib/active_support/tagged_logging.rb:26:in `tagged'
+  activesupport (4.2.0) lib/active_support/tagged_logging.rb:68:in `tagged'
+  railties (4.2.0) lib/rails/rack/logger.rb:20:in `call'
+  actionpack (4.2.0) lib/action_dispatch/middleware/request_id.rb:21:in `call'
+  rack (1.6.0) lib/rack/methodoverride.rb:22:in `call'
+  rack (1.6.0) lib/rack/runtime.rb:18:in `call'
+  activesupport (4.2.0) lib/active_support/cache/strategy/local_cache_middleware.rb:28:in `call'
+  rack (1.6.0) lib/rack/lock.rb:17:in `call'
+  actionpack (4.2.0) lib/action_dispatch/middleware/static.rb:113:in `call'
+  rack (1.6.0) lib/rack/sendfile.rb:113:in `call'
+  railties (4.2.0) lib/rails/engine.rb:518:in `call'
+  railties (4.2.0) lib/rails/application.rb:164:in `call'
+  rack (1.6.0) lib/rack/lock.rb:17:in `call'
+  rack (1.6.0) lib/rack/content_length.rb:15:in `call'
+  rack (1.6.0) lib/rack/handler/webrick.rb:89:in `service'
+  /usr/local/lib/ruby/2.1.0/webrick/httpserver.rb:138:in `service'
+  /usr/local/lib/ruby/2.1.0/webrick/httpserver.rb:94:in `run'
+  /usr/local/lib/ruby/2.1.0/webrick/server.rb:295:in `block in start_thread'
+
+
+
+Faraday::ConnectionFailed (Connection refused - connect(2) for "127.0.0.1" port 8983):
+  /usr/local/lib/ruby/2.1.0/net/http.rb:879:in `initialize'
+  /usr/local/lib/ruby/2.1.0/net/http.rb:879:in `open'
+  /usr/local/lib/ruby/2.1.0/net/http.rb:879:in `block in connect'
+  /usr/local/lib/ruby/2.1.0/timeout.rb:76:in `timeout'
+  /usr/local/lib/ruby/2.1.0/net/http.rb:878:in `connect'
+  /usr/local/lib/ruby/2.1.0/net/http.rb:863:in `do_start'
+  /usr/local/lib/ruby/2.1.0/net/http.rb:852:in `start'
+  /usr/local/lib/ruby/2.1.0/net/http.rb:1369:in `request'
+  faraday (0.9.1) lib/faraday/adapter/net_http.rb:82:in `perform_request'
+  faraday (0.9.1) lib/faraday/adapter/net_http.rb:40:in `block in call'
+  faraday (0.9.1) lib/faraday/adapter/net_http.rb:87:in `with_net_http_connection'
+  faraday (0.9.1) lib/faraday/adapter/net_http.rb:32:in `call'
+  faraday (0.9.1) lib/faraday/request/url_encoded.rb:15:in `call'
+  faraday (0.9.1) lib/faraday/rack_builder.rb:139:in `build_response'
+  faraday (0.9.1) lib/faraday/connection.rb:377:in `run_request'
+  faraday (0.9.1) lib/faraday/connection.rb:140:in `head'
+  ldp (0.2.3) lib/ldp/client/methods.rb:18:in `head'
+  active-fedora (9.0.2) lib/active_fedora/fedora.rb:37:in `init_base_path'
+  active-fedora (9.0.2) lib/active_fedora/fedora.rb:5:in `initialize'
+  active-fedora (9.0.2) lib/active_fedora.rb:202:in `new'
+  active-fedora (9.0.2) lib/active_fedora.rb:202:in `fedora'
+  active-fedora (9.0.2) lib/active_fedora/ldp_cache.rb:40:in `reset_cache_settings'
+  active-fedora (9.0.2) lib/active_fedora/ldp_cache.rb:33:in `rescue in call'
+  active-fedora (9.0.2) lib/active_fedora/ldp_cache.rb:24:in `call'
+  activerecord (4.2.0) lib/active_record/migration.rb:378:in `call'
+  actionpack (4.2.0) lib/action_dispatch/middleware/callbacks.rb:29:in `block in call'
+  activesupport (4.2.0) lib/active_support/callbacks.rb:88:in `call'
+  activesupport (4.2.0) lib/active_support/callbacks.rb:88:in `_run_callbacks'
+  activesupport (4.2.0) lib/active_support/callbacks.rb:734:in `_run_call_callbacks'
+  activesupport (4.2.0) lib/active_support/callbacks.rb:81:in `run_callbacks'
+  actionpack (4.2.0) lib/action_dispatch/middleware/callbacks.rb:27:in `call'
+  actionpack (4.2.0) lib/action_dispatch/middleware/reloader.rb:73:in `call'
+  actionpack (4.2.0) lib/action_dispatch/middleware/remote_ip.rb:78:in `call'
+  web-console (2.0.0) lib/action_dispatch/debug_exceptions.rb:18:in `middleware_call'
+  web-console (2.0.0) lib/action_dispatch/debug_exceptions.rb:13:in `call'
+  actionpack (4.2.0) lib/action_dispatch/middleware/show_exceptions.rb:30:in `call'
+  railties (4.2.0) lib/rails/rack/logger.rb:38:in `call_app'
+  railties (4.2.0) lib/rails/rack/logger.rb:20:in `block in call'
+  activesupport (4.2.0) lib/active_support/tagged_logging.rb:68:in `block in tagged'
+  activesupport (4.2.0) lib/active_support/tagged_logging.rb:26:in `tagged'
+  activesupport (4.2.0) lib/active_support/tagged_logging.rb:68:in `tagged'
+  railties (4.2.0) lib/rails/rack/logger.rb:20:in `call'
+  actionpack (4.2.0) lib/action_dispatch/middleware/request_id.rb:21:in `call'
+  rack (1.6.0) lib/rack/methodoverride.rb:22:in `call'
+  rack (1.6.0) lib/rack/runtime.rb:18:in `call'
+  activesupport (4.2.0) lib/active_support/cache/strategy/local_cache_middleware.rb:28:in `call'
+  rack (1.6.0) lib/rack/lock.rb:17:in `call'
+  actionpack (4.2.0) lib/action_dispatch/middleware/static.rb:113:in `call'
+  rack (1.6.0) lib/rack/sendfile.rb:113:in `call'
+  railties (4.2.0) lib/rails/engine.rb:518:in `call'
+  railties (4.2.0) lib/rails/application.rb:164:in `call'
+  rack (1.6.0) lib/rack/lock.rb:17:in `call'
+  rack (1.6.0) lib/rack/content_length.rb:15:in `call'
+  rack (1.6.0) lib/rack/handler/webrick.rb:89:in `service'
+  /usr/local/lib/ruby/2.1.0/webrick/httpserver.rb:138:in `service'
+  /usr/local/lib/ruby/2.1.0/webrick/httpserver.rb:94:in `run'
+  /usr/local/lib/ruby/2.1.0/webrick/server.rb:295:in `block in start_thread'
+
+
+
+Ldp::HttpError (STATUS: 503 ...):
+  ldp (0.2.3) lib/ldp/client/methods.rb:107:in `block in check_for_errors'
+  ldp (0.2.3) lib/ldp/client/methods.rb:105:in `tap'
+  ldp (0.2.3) lib/ldp/client/methods.rb:105:in `check_for_errors'
+  ldp (0.2.3) lib/ldp/client/methods.rb:24:in `head'
+  active-fedora (9.0.2) lib/active_fedora/fedora.rb:37:in `init_base_path'
+  active-fedora (9.0.2) lib/active_fedora/fedora.rb:5:in `initialize'
+  active-fedora (9.0.2) lib/active_fedora.rb:202:in `new'
+  active-fedora (9.0.2) lib/active_fedora.rb:202:in `fedora'
+  active-fedora (9.0.2) lib/active_fedora/ldp_cache.rb:40:in `reset_cache_settings'
+  active-fedora (9.0.2) lib/active_fedora/ldp_cache.rb:33:in `rescue in call'
+  active-fedora (9.0.2) lib/active_fedora/ldp_cache.rb:24:in `call'
+  activerecord (4.2.0) lib/active_record/migration.rb:378:in `call'
+  actionpack (4.2.0) lib/action_dispatch/middleware/callbacks.rb:29:in `block in call'
+  activesupport (4.2.0) lib/active_support/callbacks.rb:88:in `call'
+  activesupport (4.2.0) lib/active_support/callbacks.rb:88:in `_run_callbacks'
+  activesupport (4.2.0) lib/active_support/callbacks.rb:734:in `_run_call_callbacks'
+  activesupport (4.2.0) lib/active_support/callbacks.rb:81:in `run_callbacks'
+  actionpack (4.2.0) lib/action_dispatch/middleware/callbacks.rb:27:in `call'
+  actionpack (4.2.0) lib/action_dispatch/middleware/reloader.rb:73:in `call'
+  actionpack (4.2.0) lib/action_dispatch/middleware/remote_ip.rb:78:in `call'
+  web-console (2.0.0) lib/action_dispatch/debug_exceptions.rb:18:in `middleware_call'
+  web-console (2.0.0) lib/action_dispatch/debug_exceptions.rb:13:in `call'
+  actionpack (4.2.0) lib/action_dispatch/middleware/show_exceptions.rb:30:in `call'
+  railties (4.2.0) lib/rails/rack/logger.rb:38:in `call_app'
+  railties (4.2.0) lib/rails/rack/logger.rb:20:in `block in call'
+  activesupport (4.2.0) lib/active_support/tagged_logging.rb:68:in `block in tagged'
+  activesupport (4.2.0) lib/active_support/tagged_logging.rb:26:in `tagged'
+  activesupport (4.2.0) lib/active_support/tagged_logging.rb:68:in `tagged'
+  railties (4.2.0) lib/rails/rack/logger.rb:20:in `call'
+  actionpack (4.2.0) lib/action_dispatch/middleware/request_id.rb:21:in `call'
+  rack (1.6.0) lib/rack/methodoverride.rb:22:in `call'
+  rack (1.6.0) lib/rack/runtime.rb:18:in `call'
+  activesupport (4.2.0) lib/active_support/cache/strategy/local_cache_middleware.rb:28:in `call'
+  rack (1.6.0) lib/rack/lock.rb:17:in `call'
+  actionpack (4.2.0) lib/action_dispatch/middleware/static.rb:113:in `call'
+  rack (1.6.0) lib/rack/sendfile.rb:113:in `call'
+  railties (4.2.0) lib/rails/engine.rb:518:in `call'
+  railties (4.2.0) lib/rails/application.rb:164:in `call'
+  rack (1.6.0) lib/rack/lock.rb:17:in `call'
+  rack (1.6.0) lib/rack/content_length.rb:15:in `call'
+  rack (1.6.0) lib/rack/handler/webrick.rb:89:in `service'
+  /usr/local/lib/ruby/2.1.0/webrick/httpserver.rb:138:in `service'
+  /usr/local/lib/ruby/2.1.0/webrick/httpserver.rb:94:in `run'
+  /usr/local/lib/ruby/2.1.0/webrick/server.rb:295:in `block in start_thread'
+
+
+
+Ldp::HttpError (STATUS: 503 ...):
+  ldp (0.2.3) lib/ldp/client/methods.rb:107:in `block in check_for_errors'
+  ldp (0.2.3) lib/ldp/client/methods.rb:105:in `tap'
+  ldp (0.2.3) lib/ldp/client/methods.rb:105:in `check_for_errors'
+  ldp (0.2.3) lib/ldp/client/methods.rb:24:in `head'
+  active-fedora (9.0.2) lib/active_fedora/fedora.rb:37:in `init_base_path'
+  active-fedora (9.0.2) lib/active_fedora/fedora.rb:5:in `initialize'
+  active-fedora (9.0.2) lib/active_fedora.rb:202:in `new'
+  active-fedora (9.0.2) lib/active_fedora.rb:202:in `fedora'
+  active-fedora (9.0.2) lib/active_fedora/ldp_cache.rb:40:in `reset_cache_settings'
+  active-fedora (9.0.2) lib/active_fedora/ldp_cache.rb:33:in `rescue in call'
+  active-fedora (9.0.2) lib/active_fedora/ldp_cache.rb:24:in `call'
+  activerecord (4.2.0) lib/active_record/migration.rb:378:in `call'
+  actionpack (4.2.0) lib/action_dispatch/middleware/callbacks.rb:29:in `block in call'
+  activesupport (4.2.0) lib/active_support/callbacks.rb:88:in `call'
+  activesupport (4.2.0) lib/active_support/callbacks.rb:88:in `_run_callbacks'
+  activesupport (4.2.0) lib/active_support/callbacks.rb:734:in `_run_call_callbacks'
+  activesupport (4.2.0) lib/active_support/callbacks.rb:81:in `run_callbacks'
+  actionpack (4.2.0) lib/action_dispatch/middleware/callbacks.rb:27:in `call'
+  actionpack (4.2.0) lib/action_dispatch/middleware/reloader.rb:73:in `call'
+  actionpack (4.2.0) lib/action_dispatch/middleware/remote_ip.rb:78:in `call'
+  web-console (2.0.0) lib/action_dispatch/debug_exceptions.rb:18:in `middleware_call'
+  web-console (2.0.0) lib/action_dispatch/debug_exceptions.rb:13:in `call'
+  actionpack (4.2.0) lib/action_dispatch/middleware/show_exceptions.rb:30:in `call'
+  railties (4.2.0) lib/rails/rack/logger.rb:38:in `call_app'
+  railties (4.2.0) lib/rails/rack/logger.rb:20:in `block in call'
+  activesupport (4.2.0) lib/active_support/tagged_logging.rb:68:in `block in tagged'
+  activesupport (4.2.0) lib/active_support/tagged_logging.rb:26:in `tagged'
+  activesupport (4.2.0) lib/active_support/tagged_logging.rb:68:in `tagged'
+  railties (4.2.0) lib/rails/rack/logger.rb:20:in `call'
+  actionpack (4.2.0) lib/action_dispatch/middleware/request_id.rb:21:in `call'
+  rack (1.6.0) lib/rack/methodoverride.rb:22:in `call'
+  rack (1.6.0) lib/rack/runtime.rb:18:in `call'
+  activesupport (4.2.0) lib/active_support/cache/strategy/local_cache_middleware.rb:28:in `call'
+  rack (1.6.0) lib/rack/lock.rb:17:in `call'
+  actionpack (4.2.0) lib/action_dispatch/middleware/static.rb:113:in `call'
+  rack (1.6.0) lib/rack/sendfile.rb:113:in `call'
+  railties (4.2.0) lib/rails/engine.rb:518:in `call'
+  railties (4.2.0) lib/rails/application.rb:164:in `call'
+  rack (1.6.0) lib/rack/lock.rb:17:in `call'
+  rack (1.6.0) lib/rack/content_length.rb:15:in `call'
+  rack (1.6.0) lib/rack/handler/webrick.rb:89:in `service'
+  /usr/local/lib/ruby/2.1.0/webrick/httpserver.rb:138:in `service'
+  /usr/local/lib/ruby/2.1.0/webrick/httpserver.rb:94:in `run'
+  /usr/local/lib/ruby/2.1.0/webrick/server.rb:295:in `block in start_thread'
+
+
+
+Ldp::HttpError (STATUS: 503 ...):
+  ldp (0.2.3) lib/ldp/client/methods.rb:107:in `block in check_for_errors'
+  ldp (0.2.3) lib/ldp/client/methods.rb:105:in `tap'
+  ldp (0.2.3) lib/ldp/client/methods.rb:105:in `check_for_errors'
+  ldp (0.2.3) lib/ldp/client/methods.rb:24:in `head'
+  active-fedora (9.0.2) lib/active_fedora/fedora.rb:37:in `init_base_path'
+  active-fedora (9.0.2) lib/active_fedora/fedora.rb:5:in `initialize'
+  active-fedora (9.0.2) lib/active_fedora.rb:202:in `new'
+  active-fedora (9.0.2) lib/active_fedora.rb:202:in `fedora'
+  active-fedora (9.0.2) lib/active_fedora/ldp_cache.rb:40:in `reset_cache_settings'
+  active-fedora (9.0.2) lib/active_fedora/ldp_cache.rb:33:in `rescue in call'
+  active-fedora (9.0.2) lib/active_fedora/ldp_cache.rb:24:in `call'
+  activerecord (4.2.0) lib/active_record/migration.rb:378:in `call'
+  actionpack (4.2.0) lib/action_dispatch/middleware/callbacks.rb:29:in `block in call'
+  activesupport (4.2.0) lib/active_support/callbacks.rb:88:in `call'
+  activesupport (4.2.0) lib/active_support/callbacks.rb:88:in `_run_callbacks'
+  activesupport (4.2.0) lib/active_support/callbacks.rb:734:in `_run_call_callbacks'
+  activesupport (4.2.0) lib/active_support/callbacks.rb:81:in `run_callbacks'
+  actionpack (4.2.0) lib/action_dispatch/middleware/callbacks.rb:27:in `call'
+  actionpack (4.2.0) lib/action_dispatch/middleware/reloader.rb:73:in `call'
+  actionpack (4.2.0) lib/action_dispatch/middleware/remote_ip.rb:78:in `call'
+  web-console (2.0.0) lib/action_dispatch/debug_exceptions.rb:18:in `middleware_call'
+  web-console (2.0.0) lib/action_dispatch/debug_exceptions.rb:13:in `call'
+  actionpack (4.2.0) lib/action_dispatch/middleware/show_exceptions.rb:30:in `call'
+  railties (4.2.0) lib/rails/rack/logger.rb:38:in `call_app'
+  railties (4.2.0) lib/rails/rack/logger.rb:20:in `block in call'
+  activesupport (4.2.0) lib/active_support/tagged_logging.rb:68:in `block in tagged'
+  activesupport (4.2.0) lib/active_support/tagged_logging.rb:26:in `tagged'
+  activesupport (4.2.0) lib/active_support/tagged_logging.rb:68:in `tagged'
+  railties (4.2.0) lib/rails/rack/logger.rb:20:in `call'
+  actionpack (4.2.0) lib/action_dispatch/middleware/request_id.rb:21:in `call'
+  rack (1.6.0) lib/rack/methodoverride.rb:22:in `call'
+  rack (1.6.0) lib/rack/runtime.rb:18:in `call'
+  activesupport (4.2.0) lib/active_support/cache/strategy/local_cache_middleware.rb:28:in `call'
+  rack (1.6.0) lib/rack/lock.rb:17:in `call'
+  actionpack (4.2.0) lib/action_dispatch/middleware/static.rb:113:in `call'
+  rack (1.6.0) lib/rack/sendfile.rb:113:in `call'
+  railties (4.2.0) lib/rails/engine.rb:518:in `call'
+  railties (4.2.0) lib/rails/application.rb:164:in `call'
+  rack (1.6.0) lib/rack/lock.rb:17:in `call'
+  rack (1.6.0) lib/rack/content_length.rb:15:in `call'
+  rack (1.6.0) lib/rack/handler/webrick.rb:89:in `service'
+  /usr/local/lib/ruby/2.1.0/webrick/httpserver.rb:138:in `service'
+  /usr/local/lib/ruby/2.1.0/webrick/httpserver.rb:94:in `run'
+  /usr/local/lib/ruby/2.1.0/webrick/server.rb:295:in `block in start_thread'
+
+
+
+Errno::ENOENT (No such file or directory @ rb_sysopen - /vagrant/myFiles/rails_projects/hydra-demo/app/assets/ontologies/borthwick/lists/language):
+  app/models/read_auth.rb:8:in `lookup'
+  app/controllers/arches_controller.rb:61:in `new'
+
+
+
+Errno::ENOENT (No such file or directory @ rb_sysopen - /vagrant/myFiles/rails_projects/hydra-demo/app/assets/ontologies/borthwick/lists/language):
+  app/models/read_auth.rb:8:in `lookup'
+  app/controllers/arches_controller.rb:61:in `new'
+
+
+
+TypeError (no implicit conversion of nil into String):
+  app/controllers/entries_controller.rb:164:in `readlines'
+  app/controllers/entries_controller.rb:164:in `get_folios'
+  app/controllers/entries_controller.rb:239:in `get_first_and_last_folio'
+  app/controllers/entries_controller.rb:47:in `login'
+
+
+
+TypeError (no implicit conversion of nil into String):
+  app/controllers/entries_controller.rb:164:in `readlines'
+  app/controllers/entries_controller.rb:164:in `get_folios'
+  app/controllers/entries_controller.rb:239:in `get_first_and_last_folio'
+  app/controllers/entries_controller.rb:47:in `login'
+
+
+
+TypeError (no implicit conversion of nil into String):
+  app/controllers/entries_controller.rb:164:in `readlines'
+  app/controllers/entries_controller.rb:164:in `get_folios'
+  app/controllers/entries_controller.rb:239:in `get_first_and_last_folio'
+  app/controllers/entries_controller.rb:47:in `login'
+
+
+
+TypeError (no implicit conversion of nil into String):
+  app/controllers/entries_controller.rb:164:in `readlines'
+  app/controllers/entries_controller.rb:164:in `get_folios'
+  app/controllers/entries_controller.rb:239:in `get_first_and_last_folio'
+  app/controllers/entries_controller.rb:47:in `login'
+
+
+
+Errno::ENOENT (No such file or directory @ rb_sysopen - ):
+  app/controllers/entries_controller.rb:164:in `readlines'
+  app/controllers/entries_controller.rb:164:in `get_folios'
+  app/controllers/entries_controller.rb:239:in `get_first_and_last_folio'
+  app/controllers/entries_controller.rb:47:in `login'
+
+
+
+ActionView::Template::Error (undefined local variable or method `logout_path' for #<#<Class:0xb55e7170>:0xb584ad2c>):
+    59:   </div>
+    60: 
+    61:   <div style="float: right; margin-right: 10px">
+    62:     <%= button_to 'Logout', logout_path, :method => 'get', :data => {:confirm => 'Are you sure you want to logout?'} %>
+    63:   </div>
+    64: 
+    65:   <div style="clear: both"></div>
+  app/views/layouts/entries.html.erb:62:in `_app_views_layouts_entries_html_erb___129092426__624803028'
+
+
+
+ActionView::Template::Error (undefined local variable or method `logout_path' for #<#<Class:0xb56e1dc8>:0xb516b164>):
+    59:   </div>
+    60: 
+    61:   <div style="float: right; margin-right: 10px">
+    62:     <%= button_to 'Logout', logout_path, :method => 'get', :data => {:confirm => 'Are you sure you want to logout?'} %>
+    63:   </div>
+    64: 
+    65:   <div style="clear: both"></div>
+  app/views/layouts/entries.html.erb:62:in `_app_views_layouts_entries_html_erb___903478927__628406538'
+
+

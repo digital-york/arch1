@@ -21,7 +21,7 @@
 
     <!-- Enables a transaction log, used for real-time get, durability, and
          and solr cloud replica recovery.  The log can grow as big as
-         uncommitted changes to the index, so use of a hard autoCommit
+         uncommitted changes to the login, so use of a hard autoCommit
          is recommended (see below).
          "dir" - the target directory for transaction logs, defaults to the
                 solr data directory.  --> 
@@ -43,7 +43,7 @@
          maxTime - Maximum amount of time in ms that is allowed to pass
                    since a document was added before automatically
                    triggering a new commit. 
-         openSearcher - if false, the commit causes recent index changes
+         openSearcher - if false, the commit causes recent login changes
            to be flushed to stable storage, but does not cause a new
            searcher to be opened to make those changes visible.
 

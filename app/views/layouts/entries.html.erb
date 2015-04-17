@@ -1,0 +1,81 @@
+<html lang="en" class="no-js">
+
+<head>
+  <meta charset="utf-8"/>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+  <title>Archbishops&#39; Registers</title>
+  <%= stylesheet_link_tag "application", media: "all" %>
+  <%= javascript_include_tag "application" %>
+  <script>
+      //$(function () {
+      //    $("#datepicker").datepicker();
+      //});
+ 
+  </script>
+</head>
+
+<body>
+
+<!-- Put this tag in because there was an exception sending the authenticity token with a link_to -->
+<!-- Not sure why it works and not sure if I need it anymore - text later on -->
+<%= csrf_meta_tag %>
+
+<div id="header" style="border-bottom: 1px solid #805E5E">
+
+  <div id="header_text" style="width: 100%">
+    <%= link_to "Archbishops&#39; Registers Editing Tool".html_safe, entry_path("default") %></a>
+  </div>
+</div>
+
+<div id="register_menu">
+
+  <div style="float: left">
+
+    <form name="myForm" onsubmit="return validateForm()">
+
+      <%# Had to add autocomplete off for Firefox otherwise doesn't select the correct value in the select box as chosen by the user %>
+      <select name="register_choice" autocomplete="off" onchange="">
+        <option value="">--- Register ---</option>
+        <option value="12"
+                <% if session[:register_choice] == '12' %>selected
+                <% end %>>Register 12
+        </option>
+      </select>
+
+      <select name="folio_choice" autocomplete="off" onchange="" style="width: 140px">
+        <option value="">--- Folio ---</option>
+        <% @folios.each do |folio| %>
+            <option value="<%= folio %>"
+                    <% if session[:folio_choice] == folio %>selected
+                    <% end %>><%= folio %></option>
+        <% end %>
+      </select>
+
+      <%# following line not working properly - why? %>
+      <%#= hidden_field :go, :value => "true" %>
+      <input type="hidden" name="go" value="true"/>
+
+      <input type="submit" value="Go"/>
+    </form>
+  </div>
+
+  <div style="float: right; margin-right: 10px">
+    <%= button_to 'Logout', logout_path, :method => 'get', :data => {:confirm => 'Are you sure you want to logout?'} %>
+  </div>
+
+  <div style="clear: both"></div>
+</div>
+
+<div id="container">
+
+  <%= yield %>
+
+  <div style="clear: both"></div>
+
+</div>
+
+<div style="clear: both"></div>
+
+</body>
+</html>
+

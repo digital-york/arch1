@@ -1,12 +1,21 @@
 Rails.application.routes.draw do
-  root :to => "catalog#index"
+
+  mount Qa::Engine => '/qa'
+
+  resources :entries
+
+  get 'image_zoom' => 'image_zoom#index'
+
+  root 'entries#login'
+
+  #root :to => "catalog#login"
   blacklight_for :catalog
   devise_for :users
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
 
   # You can have the root of your site routed with "root"
-  # root 'welcome#index'
+  # root 'welcome#login'
 
   # Example of regular route:
   #   get 'products/:id' => 'catalog#view'

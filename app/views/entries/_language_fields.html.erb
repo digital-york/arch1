@@ -1,0 +1,10 @@
+<div class="nested-fields nested_single">
+  <%
+     @language_list = @read_language.collect { |l| [l["label"]] }
+     @language_list.unshift(["--- select ---", ""])
+  %>
+
+  <%= f.select :language, @language_list %>
+
+  <%= link_to_remove_association image_tag("delete.png", :class => "deleteIconSelect"), f %>
+</div>

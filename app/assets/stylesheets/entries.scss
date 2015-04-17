@@ -1,0 +1,460 @@
+// Place all the styles related to the Entries controller here.
+// They will automatically be included in application.css.
+// You can use Sass (SCSS) here: http://sass-lang.com/
+
+label {
+  font-weight: normal;
+}
+
+table {
+  font-size: 0.8em;
+  table-layout: fixed;
+}
+
+th, td {
+  padding: 7px 8px;
+  padding: 7px 8px;
+}
+
+th {
+  font-weight: normal;
+  text-align: left;
+}
+
+.tab1 {
+  float: left
+}
+
+.tab1 table {
+  border-right: 1px solid #ACADB7;
+  border-bottom: 1px solid #ACADB7;
+}
+
+.tab1 td, .tab1 th {
+  border-top: 1px solid #ACADB7;
+  border-left: 1px solid #ACADB7;
+}
+
+.tab1 th {
+  background-color: #E1E1E1;
+}
+
+.tab1 td {
+  background-color: #F2F0F0;
+}
+
+.tab2 table {
+  font-size: 1em;
+  border: 1px solid silver;
+  width: 96%;
+  float: left;
+  margin: 3px 3px 7px 0px;
+}
+
+.tab2 td, .tab2 th {
+  border: none;
+}
+
+.tab2 td {
+  background-color: white;
+}
+
+input[type="text"] {
+  width: 96%
+}
+
+.td_center td {
+  text-align: center;
+}
+
+.plusIcon {
+  /*font-size: 0.8em;
+  background-color: #CCCBCB;
+  padding: 1px 5px;
+  border-radius: 3px;
+  border: 1px solid #777373;
+  text-decoration: none;*/
+  position: relative;
+  top: 3px;
+}
+
+html, body {
+  height: 100%;
+}
+
+body {
+  font-family: Verdana, Arial;
+  /*font-size: 100%;*/
+  background-color: #fff3de;
+  margin: 0px;
+  font-size: 0.8em;
+}
+#header_text {
+  color: #FFFFFF;
+  font-size: 1.7em;
+  font-weight: bold;
+  padding-top: 8px;
+  padding-left: 10px;
+}
+
+#header_text a {
+  color: #FFFFFF;
+}
+
+#container {
+  /*margin: 0 auto;*/
+  width: 100%;
+  padding-bottom: 30px;
+}
+
+#register_menu {
+  font-size: 1.2em;
+  height: 32px;
+  margin-top: 5px;
+  padding: 5px 0px 25px 40px;
+  /*background-color: #706a6d;*/
+  /*width: 330px;*/
+}
+
+#register_menu select {
+  width: 120px;
+}
+
+#main {
+  font-size: 1.25em;
+  font-family: Arial;
+  color: #000000;
+  width: 1280px;
+  //margin: 0 auto;
+}
+
+#left_frame {
+  float: left;
+  width: 300px;
+  margin-left: 40px;
+  padding-top: 2px;
+}
+
+#right_frame {
+  padding-left: 30px;
+  float: left;
+  width: 900px;
+}
+
+#location {
+  height: 300px;
+  width: 280px;
+  padding: 10px;
+}
+
+#entry_menu {
+  /*float: left;*/
+  height: 32px;
+  margin-top: 2px;
+  padding-top: 7px;
+  width: 900px;
+  /*height: 35px;*/
+  background-color: #706a6d;
+  /*background-color: #4d4d4d;*/
+  /*border-bottom: 1px solid #828080;*/
+}
+
+#entry_menu ul {
+  background: none repeat scroll 0 0 rgba(0, 0, 0, 0);
+  /*float: left;*/
+  margin: 0;
+  padding: 0;
+}
+
+#entry_menu li {
+  /*background: none repeat scroll 0 0 transparent;*/
+  display: inline-block;
+  float: left;
+  font-size: 1.1em;
+  list-style: outside none none;
+  margin: 0;
+  padding: 4px 0 5px;
+  margin-left: 2px;
+  /*background-color: white;*/
+}
+
+#entry_menubar {
+  /*float: left;
+  border-left: 1px solid #acadb7;
+  border-right: 1px solid #acadb7;
+  width: 900px;*/
+  height: 20px;
+  background-color: #e1e1e1;
+}
+
+a, a:hover, a:focus {
+  color: #9C6B17;
+  text-decoration: none;
+}
+
+a:hover {
+  /*font-weight: bold;*/
+}
+
+.highlight {
+  background-color: #e1e1e1;
+  border-radius: 6px 6px 0 0;
+  padding: 6px 10px 6px 12px;
+}
+
+.highlight a {
+  color: #9C6B17;
+  text-decoration: none;
+}
+
+.nohighlight {
+  background-color: #C5C5C5;
+  border-radius: 6px 6px 0 0;
+  padding: 6px 10px 4px 12px;
+}
+
+.nohighlight a {
+  color: #888888;
+  text-decoration: none;
+}
+
+.nohighlight a:hover {
+  color: #9C6B17;
+  text-decoration: none;
+}
+
+#header_menubar {
+  padding: 8px;
+  font-size: 1.2em;
+  /*background-color: #d7c7a2;
+  border-bottom: 1px solid #805E5E;
+  line-height: 1;*/
+}
+
+.editButton {
+  float: right;
+  margin-top: 3px;
+  font-size: 1.2em;
+}
+
+.noth th {
+  padding: 0px;
+}
+
+.button_to {
+  float: left;
+  margin-bottom: 0px;
+}
+
+#image_frame {
+  float: left;
+  /*width: 300px;*/
+  /*padding: 30px 60px 10px 60px;*/
+  background-color: #403C35;
+  //border: 1px solid silver;
+}
+
+#image_frame a {
+  text-decoration: none;
+}
+
+#imageFrame a:hover {
+  text-decoration: underline;
+}
+
+#image_header {
+  font-size: 1em;
+  float: left;
+  height: 28px;
+  background-color: grey;
+  width: 100%;
+  padding-top: 5px;
+  color: #F7F4EE;
+  text-align: center;
+}
+
+#image_main {
+  float: left;
+  width: 100%;
+  padding: 15px 0px;
+}
+
+#image_main_left {
+  float: left;
+  width: 30px;
+  vertical-align: middle;
+}
+
+#image_main_center {
+  float: left;
+  width: 200px;
+}
+
+#image_main_right {
+  float: left;
+  width: 30px;
+  vertical-align: middle;
+}
+
+#image_footer {
+  float: left;
+  width: 100%;
+  height: 36px;
+  background-color: grey;
+}
+
+// Just to make the height of the view page elements match that of the edit elements
+// Doesn't work so well for multi elements though
+.tab1 th {
+  height: 38px;
+}
+
+.backgroundGray th {
+  background-color: #F2F0F0;
+}
+
+.tab2 th {
+  background-color: #FFFFFF;
+  width: 115px;
+}
+
+.tab2 td {
+  height: 38px;
+}
+
+.deleteIcon {
+  float: right;
+  position: relative;
+  top: 2px;
+  right: 3px;
+}
+
+.deleteIconSelect {
+  position: relative;
+  top: 2px;
+  right: 3px;
+  margin-left: 10px;
+}
+
+.nested_single {
+  padding: 4px 0px;
+}
+
+.nested_single2 {
+  padding: 7px 0px;
+}
+
+.tab3 input[type="text"] {
+  width: 94%;
+}
+
+.backgroundGray, .tab3 td {
+  background-color: #f2f0f0;
+}
+
+.tab3 td {
+  height: 38px;
+}
+
+#header {
+  background: url('/assets/header.jpg') repeat-x scroll 0 50% #000000;
+  height: 100px;
+  border-bottom: 1px solid #805E5E;
+}
+.ui-datepicker-trigger {
+  margin-left: 5px;
+}
+
+.blank {
+  color: transparent;
+}
+
+.login table {
+  border: 1px solid #ACADB7;
+}
+
+.login td, .login th {
+  //border-top: 1px solid #ACADB7;
+  //border-left: 1px solid #ACADB7;
+  height: 50px;
+}
+
+.login th {
+  background-color: #F2F0F0;
+}
+
+.login td {
+  background-color: #F2F0F0;
+}
+
+.login input[type="text"], .login input[type="password"] {
+  width: 200px;
+}
+
+.bubble
+{
+  position: relative;
+  width: 375px;
+  height: 32px;
+  padding: 14px 10px 0px 10px;
+  background: #76736C;
+  color: white;
+  -webkit-border-radius: 10px;
+  -moz-border-radius: 10px;
+  border-radius: 10px;
+  font-size: 1.3em;
+}
+
+/*.bubble:after
+{
+  content: '';
+  position: absolute;
+  border-style: solid;
+  border-width: 0 19px 19px;
+  border-color: #76736C transparent;
+  display: block;
+  width: 0;
+  z-index: 1;
+  top: -19px;
+  left: 120px;
+}*/
+
+.timed_out .bubble:after
+{
+  left: 30px;
+}
+
+.message {
+  position: relative;
+  //width: 375px;
+  height: 45px;
+  padding: 16px 10px 0px 10px;
+  background: #76736C;
+  color: white;
+  font-size: 1.4em;
+  border-radius: 10px;
+}
+
+//.error {
+//  padding: 10px 0px 10px 0px;
+//  color: red;
+//  width: 300px;
+//}
+
+.message2 {
+  background-color: #D74A4A;
+  width: auto;
+  margin-bottom: 20px;
+  font-size: 1.2em;
+  height: auto;
+  color: white;
+  padding: 10px 10px 5px 10px;
+}
+
+.error {
+  background-color: #D74A4A;
+}
+
+.timeout {
+  background-color: green;
+}

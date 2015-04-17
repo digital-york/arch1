@@ -1,0 +1,36 @@
+<html lang="en" class="no-js">
+
+<head>
+  <meta charset="utf-8"/>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+  <title>Archbishops&#39; Registers</title>
+  <%= stylesheet_link_tag "application", media: "all" %>
+  <%= javascript_include_tag "application" %>
+  </head>
+
+<body>
+
+<!-- Put this tag in because there was an exception sending the authenticity token with a link_to -->
+<!-- Not sure why it works and not sure if I need it anymore - text later on -->
+<%= csrf_meta_tag %>
+
+<div id="header" style="border-bottom: 1px solid #805E5E">
+
+  <div id="header_text" style="width: 100%">
+    Archbishops&#39; Registers Editing Tool
+  </div>
+</div>
+
+<div id="container">
+
+  <%= yield %>
+
+  <div style="clear: both"></div>
+
+</div>
+
+<div style="clear: both"></div>
+
+</body>
+</html>
+

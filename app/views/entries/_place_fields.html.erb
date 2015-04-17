@@ -1,0 +1,63 @@
+
+
+<div class="nested-fields">
+
+  <table cellspacing="0">
+
+    <tr>
+      <th>Place as Written*</th>
+      <td>
+        <table cellspacing="0" class="tab3">
+          <tr>
+            <td class="tab2">
+              <%= f.fields_for :place_as_writtens do |place_as_written| %>
+                <%= render "place_as_written_fields", :f => place_as_written %>
+              <% end %>
+			  <%= link_to_add_association image_tag('plus_sign2.png', :class => 'plusIcon'), f, :place_as_writtens, :data => { 'association-insertion-node' => 'this', 'association-insertion-position' => 'before' } %>
+			</td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+
+    <tr>
+      <th>Additional Type</th>
+      <td>
+        <table cellspacing="0" class="tab3">
+          <tr>
+            <td class="tab2">
+			  <%= f.fields_for :place_additional_types do |place_additional_type| %>
+                <%= render 'place_additional_type_fields', :f => place_additional_type %>
+              <% end %>
+              <%= link_to_add_association image_tag('plus_sign2.png', :class => 'plusIcon'), f, :place_additional_types, :data => { 'association-insertion-node' => 'this', 'association-insertion-position' => 'before' } %>
+			</td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+
+    <tr>
+      <th>Place Authority*</th>
+      <td><%= f.text_field :place_authority %></td>
+    </tr>
+
+    <tr>
+      <th>Note</th>
+      <td>
+        <table cellspacing="0" class="tab3">
+          <tr>
+            <td class="tab2">
+              <%= f.fields_for :place_notes do |place_note| %>
+                <%= render "place_note_fields", :f => place_note %>
+              <% end %>
+              <%= link_to_add_association image_tag('plus_sign2.png', :class => 'plusIcon'), f, :place_notes, :data => { 'association-insertion-node' => 'this', 'association-insertion-position' => 'before' } %>
+		    </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+
+  </table>
+  <div class="deleteIcon"><%= link_to_remove_association image_tag("delete.png", :class => "deleteIcon"), f %></div>
+
+</div>

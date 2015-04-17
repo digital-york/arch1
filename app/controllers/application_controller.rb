@@ -4,9 +4,14 @@ class ApplicationController < ActionController::Base
   # Please be sure to impelement current_user and user_session. Blacklight depends on 
   # these methods in order to perform user specific actions. 
 
-  layout 'blacklight'
+  #layout 'blacklight'
 
   # Prevent CSRF attacks by raising an exception.
   # For APIs, you may want to use :null_session instead.
-  protect_from_forgery with: :exception
+  # Note: py changed this from :exception to null_session 17/04/2015
+  protect_from_forgery with: :null_session
+  
+  include Validation
+  include Folio
+  include AuthorityList
 end

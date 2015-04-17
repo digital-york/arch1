@@ -1,0 +1,315 @@
+<div class='tab1'>
+
+  <% if @errors != nil && @errors != '' %>
+    <div class='message2 error' style="font-size: 1em">
+	  <%
+	    err = @errors.split('|')
+	    err.each do |e|
+		  if e != ''
+		    if e =~ /Length/
+			  e2 = e.split('_')[0]
+			  max_length = e.split('_')[1]
+			  max_length = max_length.sub 'Length', ''
+	  %>
+	          <div style='margin-bottom: 6px'>'<%= e2 %>' exceeds maximum length (<%= max_length %>)</div>
+	  <%		
+			else
+      %>			
+	        <div style='margin-bottom: 6px'>Please enter a value for '<%= e %>'</div>
+	  <%
+	        end
+	      end
+	    end
+	  %>	
+	</div>
+  <% end %>
+
+  <%= form_for @entry do |f| %>
+      
+	  <%= f.hidden_field :register, :value => session[:register_choice] %>
+      <%= f.hidden_field :folio, :value => session[:folio] %>
+      <%= f.hidden_field :folio_face, :value => session[:folio_face] %>
+      
+	  <div class='field'>
+        
+		<table cellspacing='0'>
+
+          <tr class='noth'>
+            <th colspan='2' id='entry_menu'>
+              <% i = 0 %>
+              <ul>
+                <li style='margin-left: 5px'></li>
+                <% if @entry.new_record? %>
+                    <% @entries.each do |entry| %>
+                        <% i = i + 1 %>
+                        <li>
+					  <span class='nohighlight' style='color: #888888'>
+					    <%= link_to entry.entry_no, entry_path(entry) %>
+					  </span>
+                        </li>
+                    <% end %>
+                    <li>
+                      <span class='highlight' style='color: #9C6B17'>
+					    New Entry
+					  </span>
+                    </li>
+                <% else %>
+                    <% @entries.each do |entry| %>
+                        <% i = i + 1 %>
+                        <li>
+                          <% if entry.id == @entry.id %>
+						  <span class='highlight' style='color: #9C6B17'>
+						    <%= entry.entry_no %>
+						  </span>
+                          <% else %>
+						  <span class='nohighlight' style='color: #888888'>
+						    <%= link_to entry.entry_no, edit_entry_path(entry) %>
+						  </span>
+                          <% end %>
+                        </li>
+                    <% end %>
+                    <li>
+                    <span class='nohighlight' style='color: #9F9F9F'>
+				      <%= link_to 'New Entry', new_entry_path, {:title => 'Create new entry'} %>
+					</span>
+                    </li>
+                <% end %>
+              </ul>
+            </th>
+          </tr>
+
+          <tr>
+            <th colspan='2'>
+              <div id='entry_menubar'>
+                <span class='editButton'>
+				<% if @entry.new_record? %>
+				<%= f.submit 'Submit' %>
+                      <a href='<%= entries_path %>'><input type='button' value='Back' style='color: black'/></a>
+				<% else %>
+				<%= f.submit 'Update' %>
+                      <a href='<%= entry_path(@entry) %>'><input type='button' value='Back to View' style='color: black'/></a>
+				<% end %>
+				</span>
+              </div>
+            </th>
+          </tr>
+
+          <%# Entry No (is this the Entry Reference?) %>
+          <tr>
+            <th style="width: 150px">Entry No*</th>
+            <td>
+              <%= f.text_field :entry_no %>
+            </td>
+          </tr>
+
+		  <%# Editorial Note %>
+          <tr>
+            <th class='links'>Editorial Note
+              <%= link_to_add_association image_tag('plus_sign2.png', class: 'plusIcon'), f, :editorial_notes, :data => { 'association-insertion-node' => '#addEditorialNote', 'association-insertion-position' => 'append' } %>
+			</th>
+            <td class='tab2'>
+              <div id='addEditorialNote'>
+                <%= f.fields_for :editorial_notes do |editorial_note| %>
+                    <%= render 'editorial_note_fields', :f => editorial_note %>
+                <% end %>
+              </div>
+            </td>
+          </tr>
+
+          <%# Access Provided By %>
+          <tr>
+            <th>Access Provided By*</th>
+            <td>
+              <%= f.text_field :access_provided_by %>
+            </td>
+          </tr>
+
+          <%# Entry Reference %>
+          <tr>
+            <th>Entry Reference</th>
+            <td class='tab2'>
+              <table cellspacing='0'>
+                <tr>
+                  <th>Document*</th>
+                  <td>
+                    <%= f.text_field :document %>
+                  </td>
+                </tr>
+                <tr>
+                  <td>Document Part</td>
+                  <td><%= f.text_field :document_part %></td>
+                </tr>
+                <tr>
+                  <th>Folio Type*</th>
+                  <td>
+                    <%
+                       @folio_type_list = @read_folio_type.collect { |l| [l['label']] }
+                       @folio_type_list.unshift(['--- select ---', ''])
+                    %>
+                    <%= f.select :folio_type, @folio_type_list %>
+                  </td>
+                </tr>
+                <tr>
+                  <th>Folio Face*</th>
+                  <td>
+                    <%
+                       @folio_face_list = @read_folio_face.collect { |l| [l['label']] }
+                       @folio_face_list.unshift(['--- select ---', ''])
+                    %>
+                    <%= f.select :folio_face_temp, @folio_face_list %>
+                  </td>
+                </tr>
+                <tr>
+                  <th>Entry Part</th>
+                  <td><%= f.text_field :entry_part %></td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+
+          <%# Format %>
+          <tr>
+            <th class='links'>Format
+              <%= link_to_add_association image_tag('plus_sign2.png', class: 'plusIcon'), f, :formats, :data => { 'association-insertion-node' => '#addFormat', 'association-insertion-position' => 'append' } %>
+			</th>
+            <td class='tab2'>
+              <div id='addFormat'>
+                <%= f.fields_for :formats do |format| %>
+                  <%= render 'format_fields', :f => format %>
+                <% end %>
+              </div>
+            </td>
+          </tr>
+
+          <%# Marginal Note %>
+          <tr>
+            <th class='links'>Marginal Note
+              <%= link_to_add_association image_tag('plus_sign2.png', class: 'plusIcon'), f, :marginal_notes, :data => { 'association-insertion-node' => '#addMarginalNote', 'association-insertion-position' => 'append' } %>
+			</th>
+            <td class='tab2'>
+              <div id='addMarginalNote'>
+                <%= f.fields_for :marginal_notes do |marginal_note| %>
+                  <%= render 'marginal_note_fields', :f => marginal_note %>
+                <% end %>
+              </div>
+            </td>
+          </tr>
+
+          <%# Is Referenced By %>
+          <tr>
+            <th class='links'>Is Referenced By
+              <%= link_to_add_association image_tag('plus_sign2.png', class: 'plusIcon'), f, :is_referenced_bies, :data => { 'association-insertion-node' => '#addIsReferencedBy', 'association-insertion-position' => 'append' } %>
+			</th>
+            <td class='tab2'>
+              <div id='addIsReferencedBy'>
+                <%= f.fields_for :is_referenced_bies do |is_referenced_by| %>
+                    <%= render 'is_referenced_by_fields', :f => is_referenced_by %>
+                <% end %>
+              </div>
+            </td>
+          </tr>
+
+          <%# Language %>
+          <tr>
+            <th class='links'>Language
+              <%= link_to_add_association image_tag('plus_sign2.png', class: 'plusIcon'), f, :languages, :data => { 'association-insertion-node' => '#addLanguage', 'association-insertion-position' => 'append' } %>
+			</th>
+            <td class='tab2'>
+              <div id='addLanguage'>
+                <%= f.fields_for :languages do |language| %>
+                  <%= render 'language_fields', :f => language %>
+                <% end %>
+              </div>
+            </td>
+          </tr>
+
+          <%# Note %>
+          <tr>
+            <th class='links'>Note
+              <%= link_to_add_association image_tag('plus_sign2.png', class: 'plusIcon'), f, :notes, :data => { 'association-insertion-node' => '#addNote', 'association-insertion-position' => 'append' } %>
+			</th>
+            <td class='tab2'>
+              <div id='addNote'>
+                <%= f.fields_for :notes do |note| %>
+                  <%= render 'note_fields', :f => note %>
+                <% end %>
+              </div>
+            </td>
+          </tr>
+
+          <%# Date %>
+          <tr>
+            <th class='links'>Date
+              <%= link_to_add_association image_tag('plus_sign2.png', class: 'plusIcon'), f, :entry_dates, :data => {'association-insertion-node' => '#addEntryDate', 'association-insertion-position' => 'append' } %>
+            </th>
+            <td class='tab2'>
+              <div id='addEntryDate'>
+                <%= f.fields_for :entry_dates do |entry_date| %>
+                    <%= render 'entry_date_fields', :f => entry_date %>
+                <% end %>
+              </div>
+            </td>
+          </tr>
+
+          <%# Person %>
+          <tr>
+            <th class='links'>Person:
+              <%= link_to_add_association image_tag('plus_sign2.png', class: 'plusIcon'), f, :people, :data => { 'association-insertion-node' => '#addPerson', 'association-insertion-position' => 'append' } %>
+			</th>
+            <td class='tab2'>
+              <div id='addPerson'>
+                <%= f.fields_for :people do |person| %>
+                    <%= render 'person_fields', :f => person %>
+                <% end %>
+              </div>
+            </td>
+          </tr>
+
+          <%# Place %>
+          <tr>
+            <th class='links'>Place:
+              <%= link_to_add_association image_tag('plus_sign2.png', class: 'plusIcon'), f, :places, :data => { 'association-insertion-node' => '#addPlace', 'association-insertion-position' => 'append' } %>
+			</th>
+            <td class='tab2'>
+              <div id='addPlace'>
+                <%= f.fields_for :places do |place| %>
+				  <%= render 'place_fields', :f => place %>
+                <% end %>
+              </div>
+            </td>
+          </tr>
+
+          <%# Subject %>
+          <tr>
+            <th class='links'>Subject:
+              <%= link_to_add_association image_tag('plus_sign2.png', class: 'plusIcon'), f, :subjects, :data => { 'association-insertion-node' => '#addSubject', 'association-insertion-position' => 'append' } %>
+			</th>
+            <td class='tab2'>
+              <div id='addSubject'>
+                <%= f.fields_for :subjects do |subject| %>
+                    <%= render 'subject_fields', :f => subject %>
+                <% end %>
+              </div>
+            </td>
+          </tr>
+
+          <tr>
+            <th colspan='2'>
+              <div id='entry_menubar'>
+                <span class='editButton'>
+				<% if @entry.new_record? %>
+				<%= f.submit 'Submit' %>
+                      <a href='<%= entries_path %>'><input type='button' value='Back' style='color: black'/></a>
+				<% else %>
+				<%= f.submit 'Update' %>
+                      <a href='<%= entry_path(@entry) %>'><input type='button' value='Back to View' style='color: black'/></a>
+				<% end %>
+				</span>
+              </div>
+            </th>
+          </tr>
+        </table>
+      </div>
+  <% end %>
+</div>
+<div style='clear: both'></div>

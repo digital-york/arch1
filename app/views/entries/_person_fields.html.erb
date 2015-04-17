@@ -1,0 +1,124 @@
+<div class="nested-fields">
+
+  <table cellspacing="0">
+
+    <%# Name as Written %>
+    <tr>
+      <th>Name As Written*</th>
+      <td>
+        <table cellspacing="0" class="tab3">
+          <tr>
+            <td class="tab2">
+              <%= f.fields_for :name_as_writtens do |name_as_written| %>
+                <%= render "name_as_written_fields", :f => name_as_written %>
+              <% end %>
+			  <%= link_to_add_association image_tag('plus_sign2.png', :class => 'plusIcon'), f, :name_as_writtens, :data => { 'association-insertion-node' => 'this', 'association-insertion-position' => 'before' } %>
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+
+    <%# Role Name %>
+    <tr>
+      <th>Role Name*</th>
+      <td>
+        <table cellspacing="0" class="tab3">
+          <tr>
+            <td class="tab2">
+              <%= f.fields_for :role_names do |role_name| %>
+                <%= render "role_name_fields", :f => role_name %>
+              <% end %>
+              <%= link_to_add_association image_tag('plus_sign2.png', :class => 'plusIcon'), f, :role_names, :data => { 'association-insertion-node' => 'this', 'association-insertion-position' => 'before' } %>
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+
+    <%# Note %>
+    <tr>
+      <th>Note</th>
+      <td><%= f.text_field :note %></td>
+    </tr>
+
+    <%# Age %>
+    <tr>
+      <th>Age</th>
+      <td>
+	    <%= f.text_field :age %>  
+	  </td>
+    </tr>
+
+    <%# Gender %>
+    <tr>
+      <th>Gender</th>
+      <td>
+	  <%
+        @date_type_list2 = [['--- select ---', ''], ['Male', 'Male'], ['Female', 'Female']]
+	  %>
+		<%= f.select :gender, @date_type_list2 %>
+	  </td>
+    </tr>
+
+    <%# Name Authority %>
+    <tr>
+      <th>Name Authority*</th>
+      <td><%= f.text_field :name_authority %></td>
+    </tr>
+
+    <%# Occupation %>
+    <tr>
+      <th>Occupation</th>
+      <td>
+        <table cellspacing="0" class="tab3">
+          <tr>
+            <td class="tab2">
+              <%= f.fields_for :occupations do |occupation| %>
+                <%= render "occupation_fields", :f => occupation %>
+              <% end %>
+			  <%= link_to_add_association image_tag('plus_sign2.png', :class => 'plusIcon'), f, :occupations, :data => { 'association-insertion-node' => 'this', 'association-insertion-position' => 'before' } %>
+			</td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+
+    <%# Status %>
+    <tr>
+      <th>Status</th>
+      <td>
+        <table cellspacing="0" class="tab3">
+          <tr>
+            <td class="tab2">
+           	  <%= f.fields_for :statuses do |status| %>
+                <%= render "status_fields", :f => status %>
+              <% end %>
+              <%= link_to_add_association image_tag('plus_sign2.png', :class => 'plusIcon'), f, :statuses, :data => { 'association-insertion-node' => 'this', 'association-insertion-position' => 'before' } %>
+		    </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+
+    <%# Qualification %>
+    <tr>
+      <th>Qualification</th>
+      <td>
+        <table cellspacing="0" class="tab3">
+          <tr>
+            <td class="tab2">
+		      <%= f.fields_for :qualifications do |qualification| %>
+                <%= render "qualification_fields", :f => qualification %>
+              <% end %>
+              <%= link_to_add_association image_tag('plus_sign2.png', :class => 'plusIcon'), f, :qualifications, :data => { 'association-insertion-node' => 'this', 'association-insertion-position' => 'before' } %>
+		    </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+
+  </table>
+  <div class="deleteIcon"><%= link_to_remove_association image_tag("delete.png", :class => "deleteIcon"), f %></div>
+
+</div>
