@@ -9,6 +9,7 @@ label {
 table {
   font-size: 0.8em;
   table-layout: fixed;
+  margin: auto;
 }
 
 th, td {
@@ -391,37 +392,8 @@ a:hover {
   width: 200px;
 }
 
-.bubble
-{
-  position: relative;
-  width: 375px;
-  height: 32px;
-  padding: 14px 10px 0px 10px;
-  background: #76736C;
-  color: white;
-  -webkit-border-radius: 10px;
-  -moz-border-radius: 10px;
-  border-radius: 10px;
-  font-size: 1.3em;
-}
-
-/*.bubble:after
-{
-  content: '';
-  position: absolute;
-  border-style: solid;
-  border-width: 0 19px 19px;
-  border-color: #76736C transparent;
-  display: block;
-  width: 0;
-  z-index: 1;
-  top: -19px;
-  left: 120px;
-}*/
-
-.timed_out .bubble:after
-{
-  left: 30px;
+.timed_out {
+  text-align: center;
 }
 
 .message {
