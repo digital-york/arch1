@@ -1,9 +1,13 @@
 module Validation
 
+  # Check for mandatory fields and field length
+  # Also check if the field is empty - in this case, make '_destroy = 1' so that the field is deleted in Fedora
+  # Build up a string called 'errors' which stores each error delimited by a '|'
   def validate(entry_params)
 
     errors = ''
 
+    # Check single fields, i.e. those which do not have a '+' button
     errors = errors + validate_field_mandatory(entry_params[:entry_no], 'Entry No', 10)
     errors = errors + validate_field_mandatory(entry_params[:access_provided_by], 'Access Provided By', 100)
     errors = errors + validate_field_mandatory(entry_params[:document], 'Document', 100)
@@ -298,6 +302,7 @@ module Validation
     return errors
   end
 
+  # Validate field length
   def validate_field(entry, entry_name, max_length)
     #puts entry.inspect + ", " + entry.length.to_s + ", " + entry_name + '_Length' + max_length.to_s + '|'
     if entry.length > max_length
@@ -307,6 +312,7 @@ module Validation
     end
   end
 
+  # Validate field length and mandatory field
   def validate_field_mandatory(entry, entry_name, max_length)
     if entry == ''
       return entry_name + '|'

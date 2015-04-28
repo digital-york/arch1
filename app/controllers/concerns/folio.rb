@@ -29,10 +29,12 @@ module Folio
     session[:image] = 'Reg_12_' + session[:folio] + '_' + session[:folio_face] + '.jp2'
   end
 
-  def get_next_image(type)
+  # Get the next image and set the session variables when the '> or '<' buttons are clicked'
+  def get_next_image(button_action)
 
     folio_all_lines = get_folios # Basically an array of all the lines in the text file, i.e. all the folio names
 
+    # 'Reg_12_' will need changing later on
     current_folio = 'Reg_12_' + session[:folio] + '_' + session[:folio_face].sub('_', ' ') + '.jp2'
 
     # Iterate over all the folios
@@ -43,7 +45,7 @@ module Folio
       # If the current folio matches with the line, find out the next folio name
       if folio_line == current_folio
 
-        if type == '+'
+        if button_action == 'forward'
           next_folio = folio_all_lines[index + 1]
         else
           next_folio = folio_all_lines[index - 1]

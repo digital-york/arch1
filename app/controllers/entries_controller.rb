@@ -66,8 +66,8 @@ class EntriesController < ApplicationController
     if session[:register_choice] != '' && session[:folio_choice] != ''
 
       # Get the next folio if the '<' or '>' buttons are clicked
-      if params[:change_folio] != nil
-        get_next_image(params[:change_folio])
+      if params[:button_action] != nil
+        get_next_image(params[:button_action])
       end
 
       # Get the first entry for the folio if there isn't an id, else get the entry with the appropriate id

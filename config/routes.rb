@@ -4,7 +4,8 @@ Rails.application.routes.draw do
 
   resources :entries
 
-  get 'image_zoom' => 'image_zoom#index'
+  get 'image_zoom_large' => 'image_zoom_large#index'
+  get 'logout' => 'entries#login'
 
   root 'entries#login'
 
