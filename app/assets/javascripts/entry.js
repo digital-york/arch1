@@ -1,3 +1,4 @@
+// DatePickler function
 $(function() {
         $('.datePicker').datepicker({
             showOn: "button",
@@ -8,12 +9,14 @@ $(function() {
         });
 });
 
+// Not being used at present
 $(function() {
 	$(this).datepicker();
 });	
 
 
-function addPageInfo(page) {
+// Display the image zoom popup
+function image_zoom_large_popup(page) {
     var popupWidth=1200;
     var popupHeight=800;
     var top = 0;
@@ -21,10 +24,7 @@ function addPageInfo(page) {
     window.open(page, "myWindow", "status = 1, top = " + top + ", left = " + left + ", height = " + popupHeight + ", width = " + popupWidth + ", scrollbars=yes");
 }
 
-function testAlert() {
-    alert("hello world");
-}
-
+// Not being used at present
 function validateForm() {
 	// <%= form_for @entry, :html=>{:name=>"myForm",:onsubmit=>"return validateForm();"} do |f| %>
 	var v = document.getElementsByName("myForm");
