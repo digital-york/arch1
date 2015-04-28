@@ -1,0 +1,48 @@
+<% if session[:register_choice] != '' %>
+
+    <div id="image_header" style='width: 300px'>
+      <%= session[:folio_choice] %>
+    </div>
+
+    <div id="image_frame" style="text-align: center">
+
+      <div id="location" style="background-color: black"></div>
+
+      <div id="image_footer">
+
+        <div style="float: left; padding-left: 120px; padding-top: 6px">
+
+          <% current_folio = 'Reg_' + session[:register_choice] + '_' + session[:folio] + '_' + session[:folio_face] %>
+
+          <% if current_folio == session[:first_folio] %>
+              <%= button_to "<", {}, :style => 'margin-right: 5px', :disabled => 'true' %>
+          <% else %>
+              <%= button_to "<", entries_path, :method => "get", params: { :button_action => 'back'}, :style => 'margin-right: 5px', :title => 'previous image' %>
+          <% end %>
+
+          <% if current_folio == session[:last_folio] %>
+              <%= button_to ">", {}, :disabled => 'true' %>
+          <% else %>
+              <%= button_to ">", entries_path, :method => "get", params: { :button_action => 'forward'}, :title => 'next image' %>
+          <% end %>
+        </div>
+
+        <div style="float: left; margin-left: 72px"><%= link_to image_tag("magnifying_glass.png", :alt => "register", :class => "icon", :style => "position: relative; top: 7px", :title => 'Open new window'),  "#", :onclick => "image_zoom_large_popup('/image_zoom_large')", :title => "" %></div>
+
+        <div style="clear: both"></div>
+      </div>
+
+      <div style="clear: both"></div>
+    </div>
+
+<% end %>
+
+<script type="text/javascript">
+    var viewer = OpenSeadragon({
+        id: "location",
+        prefixUrl: "assets/seadragonImages/",
+        autoResize: true,
+        tileSources: "http://dlib.york.ac.uk/cgi-bin/iipsrv.fcgi?DeepZoom=/usr/digilib-webdocs/digilibImages/ArchbishopsRegisters/reg12/JP2/<%= session[:image] %>.dzi",
+        showNavigationControl: false
+    });
+</script>
