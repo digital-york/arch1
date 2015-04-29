@@ -24,6 +24,7 @@ class EntriesController < ApplicationController
   # LOGOUT
   # Make sure the session variables are all made equal to '' and redirect to the login page
   def logout
+    reset_session_variables
     redirect_to root_path, :layout => 'login'
   end
 

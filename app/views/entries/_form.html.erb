@@ -1,38 +1,41 @@
 <div class='tab1'>
 
   <% if @errors != nil && @errors != '' %>
-    <div class='message2 error' style="font-size: 1em">
-	  <%
-	    err = @errors.split('|')
-	    err.each do |e|
-		  if e != ''
-		    if e =~ /Length/
-			  e2 = e.split('_')[0]
-			  max_length = e.split('_')[1]
-			  max_length = max_length.sub 'Length', ''
-	  %>
-	          <div style='margin-bottom: 6px'>'<%= e2 %>' exceeds maximum length (<%= max_length %>)</div>
-	  <%		
-			else
-      %>			
-	        <div style='margin-bottom: 6px'>Please enter a value for '<%= e %>'</div>
-	  <%
-	        end
-	      end
-	    end
-	  %>	
-	</div>
+      <div class='message2 error' style="font-size: 1em">
+        <%
+           # Split the error string by '|' to get the individual errors
+           # If the error includes the text 'Length' display the maximum length error
+           # else display the mandatory field error
+           err = @errors.split('|')
+           err.each do |e|
+             if e != ''
+               if e =~ /Length/
+                 e2 = e.split('_')[0]
+                 max_length = e.split('_')[1]
+                 max_length = max_length.sub 'Length', ''
+        %>
+                    <div style='margin-bottom: 6px'>'<%= e2 %>' exceeds maximum length (<%= max_length %>)</div>
+                <%
+                   else
+                %>
+                    <div style='margin-bottom: 6px'>Please enter a value for '<%= e %>'</div>
+                <%
+                   end
+                   end
+                   end
+                %>
+      </div>
   <% end %>
 
   <%= form_for @entry do |f| %>
-      
-	  <%= f.hidden_field :register, :value => session[:register_choice] %>
+
+      <%= f.hidden_field :register, :value => session[:register_choice] %>
       <%= f.hidden_field :folio, :value => session[:folio] %>
       <%= f.hidden_field :folio_face, :value => session[:folio_face] %>
-      
-	  <div class='field'>
-        
-		<table cellspacing='0'>
+
+      <div class='field'>
+
+        <table cellspacing='0'>
 
           <tr class='noth'>
             <th colspan='2' id='entry_menu'>
@@ -102,11 +105,11 @@
             </td>
           </tr>
 
-		  <%# Editorial Note %>
+          <%# Editorial Note %>
           <tr>
             <th class='links'>Editorial Note
-              <%= link_to_add_association image_tag('plus_sign2.png', class: 'plusIcon'), f, :editorial_notes, :data => { 'association-insertion-node' => '#addEditorialNote', 'association-insertion-position' => 'append' } %>
-			</th>
+              <%= link_to_add_association image_tag('plus_sign2.png', class: 'plusIcon'), f, :editorial_notes, :data => {'association-insertion-node' => '#addEditorialNote', 'association-insertion-position' => 'append'} %>
+            </th>
             <td class='tab2'>
               <div id='addEditorialNote'>
                 <%= f.fields_for :editorial_notes do |editorial_note| %>
@@ -170,12 +173,12 @@
           <%# Format %>
           <tr>
             <th class='links'>Format
-              <%= link_to_add_association image_tag('plus_sign2.png', class: 'plusIcon'), f, :formats, :data => { 'association-insertion-node' => '#addFormat', 'association-insertion-position' => 'append' } %>
-			</th>
+              <%= link_to_add_association image_tag('plus_sign2.png', class: 'plusIcon'), f, :formats, :data => {'association-insertion-node' => '#addFormat', 'association-insertion-position' => 'append'} %>
+            </th>
             <td class='tab2'>
               <div id='addFormat'>
                 <%= f.fields_for :formats do |format| %>
-                  <%= render 'format_fields', :f => format %>
+                    <%= render 'format_fields', :f => format %>
                 <% end %>
               </div>
             </td>
@@ -184,12 +187,12 @@
           <%# Marginal Note %>
           <tr>
             <th class='links'>Marginal Note
-              <%= link_to_add_association image_tag('plus_sign2.png', class: 'plusIcon'), f, :marginal_notes, :data => { 'association-insertion-node' => '#addMarginalNote', 'association-insertion-position' => 'append' } %>
-			</th>
+              <%= link_to_add_association image_tag('plus_sign2.png', class: 'plusIcon'), f, :marginal_notes, :data => {'association-insertion-node' => '#addMarginalNote', 'association-insertion-position' => 'append'} %>
+            </th>
             <td class='tab2'>
               <div id='addMarginalNote'>
                 <%= f.fields_for :marginal_notes do |marginal_note| %>
-                  <%= render 'marginal_note_fields', :f => marginal_note %>
+                    <%= render 'marginal_note_fields', :f => marginal_note %>
                 <% end %>
               </div>
             </td>
@@ -198,8 +201,8 @@
           <%# Is Referenced By %>
           <tr>
             <th class='links'>Is Referenced By
-              <%= link_to_add_association image_tag('plus_sign2.png', class: 'plusIcon'), f, :is_referenced_bies, :data => { 'association-insertion-node' => '#addIsReferencedBy', 'association-insertion-position' => 'append' } %>
-			</th>
+              <%= link_to_add_association image_tag('plus_sign2.png', class: 'plusIcon'), f, :is_referenced_bies, :data => {'association-insertion-node' => '#addIsReferencedBy', 'association-insertion-position' => 'append'} %>
+            </th>
             <td class='tab2'>
               <div id='addIsReferencedBy'>
                 <%= f.fields_for :is_referenced_bies do |is_referenced_by| %>
@@ -212,12 +215,12 @@
           <%# Language %>
           <tr>
             <th class='links'>Language
-              <%= link_to_add_association image_tag('plus_sign2.png', class: 'plusIcon'), f, :languages, :data => { 'association-insertion-node' => '#addLanguage', 'association-insertion-position' => 'append' } %>
-			</th>
+              <%= link_to_add_association image_tag('plus_sign2.png', class: 'plusIcon'), f, :languages, :data => {'association-insertion-node' => '#addLanguage', 'association-insertion-position' => 'append'} %>
+            </th>
             <td class='tab2'>
               <div id='addLanguage'>
                 <%= f.fields_for :languages do |language| %>
-                  <%= render 'language_fields', :f => language %>
+                    <%= render 'language_fields', :f => language %>
                 <% end %>
               </div>
             </td>
@@ -226,12 +229,12 @@
           <%# Note %>
           <tr>
             <th class='links'>Note
-              <%= link_to_add_association image_tag('plus_sign2.png', class: 'plusIcon'), f, :notes, :data => { 'association-insertion-node' => '#addNote', 'association-insertion-position' => 'append' } %>
-			</th>
+              <%= link_to_add_association image_tag('plus_sign2.png', class: 'plusIcon'), f, :notes, :data => {'association-insertion-node' => '#addNote', 'association-insertion-position' => 'append'} %>
+            </th>
             <td class='tab2'>
               <div id='addNote'>
                 <%= f.fields_for :notes do |note| %>
-                  <%= render 'note_fields', :f => note %>
+                    <%= render 'note_fields', :f => note %>
                 <% end %>
               </div>
             </td>
@@ -240,7 +243,7 @@
           <%# Date %>
           <tr>
             <th class='links'>Date
-              <%= link_to_add_association image_tag('plus_sign2.png', class: 'plusIcon'), f, :entry_dates, :data => {'association-insertion-node' => '#addEntryDate', 'association-insertion-position' => 'append' } %>
+              <%= link_to_add_association image_tag('plus_sign2.png', class: 'plusIcon'), f, :entry_dates, :data => {'association-insertion-node' => '#addEntryDate', 'association-insertion-position' => 'append'} %>
             </th>
             <td class='tab2'>
               <div id='addEntryDate'>
@@ -254,8 +257,8 @@
           <%# Person %>
           <tr>
             <th class='links'>Person:
-              <%= link_to_add_association image_tag('plus_sign2.png', class: 'plusIcon'), f, :people, :data => { 'association-insertion-node' => '#addPerson', 'association-insertion-position' => 'append' } %>
-			</th>
+              <%= link_to_add_association image_tag('plus_sign2.png', class: 'plusIcon'), f, :people, :data => {'association-insertion-node' => '#addPerson', 'association-insertion-position' => 'append'} %>
+            </th>
             <td class='tab2'>
               <div id='addPerson'>
                 <%= f.fields_for :people do |person| %>
@@ -268,12 +271,12 @@
           <%# Place %>
           <tr>
             <th class='links'>Place:
-              <%= link_to_add_association image_tag('plus_sign2.png', class: 'plusIcon'), f, :places, :data => { 'association-insertion-node' => '#addPlace', 'association-insertion-position' => 'append' } %>
-			</th>
+              <%= link_to_add_association image_tag('plus_sign2.png', class: 'plusIcon'), f, :places, :data => {'association-insertion-node' => '#addPlace', 'association-insertion-position' => 'append'} %>
+            </th>
             <td class='tab2'>
               <div id='addPlace'>
                 <%= f.fields_for :places do |place| %>
-				  <%= render 'place_fields', :f => place %>
+                    <%= render 'place_fields', :f => place %>
                 <% end %>
               </div>
             </td>
@@ -282,8 +285,8 @@
           <%# Subject %>
           <tr>
             <th class='links'>Subject:
-              <%= link_to_add_association image_tag('plus_sign2.png', class: 'plusIcon'), f, :subjects, :data => { 'association-insertion-node' => '#addSubject', 'association-insertion-position' => 'append' } %>
-			</th>
+              <%= link_to_add_association image_tag('plus_sign2.png', class: 'plusIcon'), f, :subjects, :data => {'association-insertion-node' => '#addSubject', 'association-insertion-position' => 'append'} %>
+            </th>
             <td class='tab2'>
               <div id='addSubject'>
                 <%= f.fields_for :subjects do |subject| %>
@@ -318,13 +321,13 @@
     console.log("here!");
     function walkDom(main) {
         var arr = [];
-        var loop = function(main) {
+        var loop = function (main) {
             do {
-                if(main.nodeType == 1) {
+                if (main.nodeType == 1) {
                     arr.push(main);
                     console.log(main);
                 }
-                if(main.hasChildNodes()) {
+                if (main.hasChildNodes()) {
                     loop(main.firstChild);
                     console.log(main);
                 }
