@@ -24,6 +24,10 @@ class EntriesController < ApplicationController
   # LOGOUT
   # Make sure the session variables are all made equal to '' and redirect to the login page
   def logout
+    redirect_to root_path, :layout => 'login'
+  end
+
+  def reset_session_variables
     session[:register_choice] = ''
     session[:folio_choice] = ''
     session[:folio] = ''
@@ -31,7 +35,6 @@ class EntriesController < ApplicationController
     session[:login] = ''
     session[:first_folio] = ''
     session[:last_folio] = ''
-    redirect_to login_path, :layout => 'login'
   end
 
   # LOGIN
@@ -42,6 +45,7 @@ class EntriesController < ApplicationController
 
       # Simple test for username/password (hard-coded - this will be changed to proper authorisation later on)
       if params[:username] == 'test' && params[:password] == 'test'
+        reset_session_variables # Reset the session variables first
         session[:login] = 'true' # This is the session login token which we can test in the 'before_filter' method at the top
         get_first_and_last_folio # This is needed for the image '<' and '>' buttons
         redirect_to :action => 'index'
@@ -60,7 +64,7 @@ class EntriesController < ApplicationController
 
     # Set the appropriate session variables when the register, folio and folio face are chosen and the 'Go' button is clicked
     if params[:go] == 'true'
-      get_folio
+      get_current_folio
     end
 
     if session[:register_choice] != '' && session[:folio_choice] != ''
@@ -72,8 +76,10 @@ class EntriesController < ApplicationController
 
       # Get the first entry for the folio if there isn't an id, else get the entry with the appropriate id
       if params[:id] == nil || params[:id] == ''
+        # NOTE - the command below returns an error when there is a space in the 'folio_face', e.g. 'Insert a'; therefore saving to Fedora with an underscore
+        # UPDATE - have had a problem with underscores on the opal server - e.g. 'Insert_a' returns an error but 'Insert_b' works - not sure what is going on here!
+        # Anyway, changing from underscore to hyphen because that seems more stable
         @entry = Entry.where(:folio => session[:folio]).where(:folio_face => session[:folio_face]).first
-        # NOTE - had real problems with the above when there was a space in the 'folio_face', e.g. 'Insert a'; therefore saving to Fedora with an underscore
       else
         @entry = Entry.find(params[:id])
       end
@@ -94,7 +100,7 @@ class EntriesController < ApplicationController
 
     # This code sets the new session variables and redirects to index if the 'Go' button is clicked on the new page
     if params[:go] == 'true'
-      get_folio
+      get_current_folio
       redirect_to :action => 'index'
     end
 
@@ -108,7 +114,7 @@ class EntriesController < ApplicationController
 
     # This code sets the new session variables and redirects to index if the 'Go' button is clicked on the edit page
     if params[:go] == 'true'
-      get_folio
+      get_current_folio
       redirect_to :action => 'index'
     end
 
@@ -138,6 +144,8 @@ class EntriesController < ApplicationController
 
   # UPDATE
   def update
+
+    puts entry_params
 
     # See validation.rb in /concerns
     @errors = validate(entry_params)
