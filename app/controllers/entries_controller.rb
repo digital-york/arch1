@@ -146,8 +146,6 @@ class EntriesController < ApplicationController
   # UPDATE
   def update
 
-    puts entry_params
-
     # See validation.rb in /concerns
     @errors = validate(entry_params)
 

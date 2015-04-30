@@ -36,7 +36,7 @@ module Folio
 
     # 'Reg_12_' will need changing later on
     current_folio = 'Reg_12_' + session[:folio] + '_' + session[:folio_face].sub('Insert', 'Insert ') + '.jp2'
-   
+
     # Iterate over all the folios
     folio_all_lines.each_with_index do |folio_line, index|
 

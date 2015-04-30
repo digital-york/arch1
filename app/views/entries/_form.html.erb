@@ -317,25 +317,8 @@
 </div>
 <div style='clear: both'></div>
 
-<script type="text/javascript">
-    console.log("here!");
-    function walkDom(main) {
-        var arr = [];
-        var loop = function (main) {
-            do {
-                if (main.nodeType == 1) {
-                    arr.push(main);
-                    console.log(main);
-                }
-                if (main.hasChildNodes()) {
-                    loop(main.firstChild);
-                    console.log(main);
-                }
-            }
-            while (main = main.nextSibling);
-        }
-        loop(main);
-        return arr;
-    }
-    walkDom(document.body);
-</script>
+<% if @errors != nil && @errors != '' %>
+    <script type="text/javascript">
+        hide_elements_when_errors()
+    </script>
+<% end %>
