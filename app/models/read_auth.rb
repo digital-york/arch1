@@ -7,7 +7,6 @@ class ReadAuth
 		#DOESN'T WORK IN DEV MODE
 		source = open(ENV["QA_DIR"] + authority).read
 		authfile = JSON.parse(source)
-		#puts authfile
-		authfile
+		return authfile
 	end
 end
