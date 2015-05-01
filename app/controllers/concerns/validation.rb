@@ -117,41 +117,111 @@ module Validation
         if t[:_destroy] != '1' && t[:_destroy] != 'true'
 
           # If all date fields are empty, do not have to validate - just delete the date
-          if if t[:id] && t[:date_type] == '' && t[:date_as_written] == '' && t[:date_span] == '' && t[:date_certainty] == '' && t[:date] == '' && t[:note] == ''
+          if t[:id] && t[:date_type] == '' && t[:date_as_written] == '' && t[:date_span] == '' && t[:date_certainty] == '' && t[:date] == '' && t[:note] == ''
 
-               t[:_destroy] = '1'
+            t[:_destroy] = '1'
 
           else
-               # Check the field length of date_type, date_as_written, date_span, date_certainty, date and date_note
-               # Note that we don't check for mandatory fields here but in the code below
-               errors = errors + get_errors(t[:date_type], 'Date Type', 20, '')
-               errors = errors + get_errors(t[:date_as_written], 'Date As Written', MEDIUM_FIELD, '')
-               errors = errors + get_errors(t[:date_span], 'Date Span', MEDIUM_FIELD, '')
-               errors = errors + get_errors(t[:date_certainty], 'Date Certainty', MEDIUM_FIELD, '')
-               errors = errors + get_errors(t[:date], 'Date', MEDIUM_FIELD, '')
-               errors = errors + get_errors(t[:note], 'Date Note', LARGE_FIELD, '')
+            # Check the field length of date_type, date_as_written, date_span, date_certainty, date and date_note
+            # Note that we don't check for mandatory fields here but in the code below
+            errors = errors + get_errors(t[:date_type], 'Date Type', 20, '')
+            errors = errors + get_errors(t[:date_as_written], 'Date As Written', MEDIUM_FIELD, '')
+            errors = errors + get_errors(t[:date_span], 'Date Span', MEDIUM_FIELD, '')
+            errors = errors + get_errors(t[:date_certainty], 'Date Certainty', MEDIUM_FIELD, '')
+            errors = errors + get_errors(t[:date], 'Date', MEDIUM_FIELD, '')
+            errors = errors + get_errors(t[:note], 'Date Note', LARGE_FIELD, '')
 
-               # Check mandatory field 'data_type' exists
-               if t[:date_type] == '' && (t[:date_as_written] != '' || t[:date_span] != '' || t[:date_certainty] != '' || t[:date] != '' || t[:note] != '')
-                 errors = errors + 'Date Type' + '|'
-               end
+            # Check mandatory field 'data_type' exists
+            if t[:date_type] == '' && (t[:date_as_written] != '' || t[:date_span] != '' || t[:date_certainty] != '' || t[:date] != '' || t[:note] != '')
+              errors = errors + 'Date Type' + '|'
+            end
 
-               # Check mandatory field 'date_as_written' exists
-               if t[:date_as_written] == '' && (t[:date_type] != '' || t[:date_span] != '' || t[:date_certainty] != '' || t[:date] != '' || t[:note] != '')
-                 errors = errors + 'Date As Written' + '|'
-               end
+            # Check mandatory field 'date_as_written' exists
+            if t[:date_as_written] == '' && (t[:date_type] != '' || t[:date_span] != '' || t[:date_certainty] != '' || t[:date] != '' || t[:note] != '')
+              errors = errors + 'Date As Written' + '|'
+            end
 
-               # Check mandatory field 'date_span' exists
-               if t[:date_span] == '' && (t[:date_type] != '' || t[:date_as_written] != '' || t[:date_certainty] != '' || t[:date] != '' || t[:note] != '')
-                 errors = errors + 'Date Span' + '|'
-               end
+            # Check mandatory field 'date_span' exists
+            if t[:date_span] == '' && (t[:date_type] != '' || t[:date_as_written] != '' || t[:date_certainty] != '' || t[:date] != '' || t[:note] != '')
+              errors = errors + 'Date Span' + '|'
+            end
 
-               # Check mandatory field 'date' exists
-               if t[:date] == '' && (t[:date_type] != '' || t[:date_as_written] != '' || t[:date_span] != '' || t[:date_certainty] != '' || t[:note] != '')
-                 errors = errors + 'Date' + '|'
-               end
-             end
+            # Check mandatory field 'date' exists
+            if t[:date] == '' && (t[:date_type] != '' || t[:date_as_written] != '' || t[:date_span] != '' || t[:date_certainty] != '' || t[:note] != '')
+              errors = errors + 'Date' + '|'
+            end
           end
+        end
+      end
+    end
+
+    # Place
+    if entry_params[:places_attributes] != nil
+
+      # Iterate over the place elements
+      entry_params[:places_attributes].values.each do |t|
+
+        # Only validate the place if the delete icon hasn't been clicked
+        if t[:_destroy] != '1' && t[:_destroy] != 'true'
+
+          local_errors = ''
+          place_as_written = ''
+          additional_type = ''
+          place_note = ''
+
+          # Check if any 'place_as_written' fields exist and validate the length
+          if t[:place_as_writtens_attributes] != nil
+            t[:place_as_writtens_attributes].values.each do |tt|
+              if tt[:place_as_written] != ''
+                place_as_written = 'true'
+                local_errors = local_errors + get_errors(tt[:place_as_written], 'Place As Written', MEDIUM_FIELD, '')
+                break
+              end
+            end
+          end
+
+          # Check if any 'additional_type' fields exist and validate the length
+          if t[:place_additional_types_attributes] != nil
+            t[:place_additional_types_attributes].values.each do |tt|
+              if tt[:additional_type] != ''
+                additional_type = 'true'
+                local_errors = local_errors + get_errors(tt[:additional_type], 'Additional Type', MEDIUM_FIELD, '')
+                break
+              end
+            end
+          end
+
+          # Check field length of 'place_authority'
+          errors = errors + get_errors(t[:place_authority], 'Place Authority', MEDIUM_FIELD, '')
+
+          # Check if 'place_note' exists and validate the length
+          if t[:place_notes_attributes] != nil
+            t[:place_notes_attributes].values.each do |tt|
+              if tt[:place_note] != ''
+                place_note = 'true'
+                local_errors = local_errors + get_errors(tt[:place_note], 'Place Note', LARGE_FIELD, '')
+                break
+              end
+            end
+          end
+
+          # Check mandatory field 'place_as_written' exists (if other fields exist)
+          if place_as_written == '' && (additional_type != '' || t[:place_authority] != '' || place_note != '')
+            local_errors = local_errors + 'Place As Written' + '|'
+          end
+
+          # Check mandatory field 'place_authority' exists (if other fields exist)
+          if t[:place_authority] == '' && (place_as_written != '' || additional_type != '' || place_note != '')
+            local_errors = local_errors + 'Place Authority' + '|'
+          end
+
+          # If all fields are empty, just remove the entry (some of the code above will therefore be redundant - might look at a better way to do this later on)
+          if t[:id] && place_as_written == '' && additional_type == '' && t[:place_authority] == '' && place_note == ''
+            t[:_destroy] = '1'
+          else
+            errors = errors + local_errors
+          end
+
         end
       end
     end
