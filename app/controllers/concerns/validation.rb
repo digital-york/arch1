@@ -7,7 +7,8 @@ module Validation
 
   # Check for mandatory fields and field length
   # Build up a string called 'errors' which stores each error delimited by a '|'
-  # Note that a check is made to see if the field is empty - if so, make '_destroy = 1' so that the field is deleted in Fedora
+  # Note - a check is made to see if the field is empty - if so, make '_destroy = 1' so that the field is deleted in Fedora
+  # Note - 'M' checks for a mandatory field
   def validate(entry_params)
 
     errors = ''
