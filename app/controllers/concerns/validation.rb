@@ -108,6 +108,54 @@ module Validation
       end
     end
 
+    # Date
+    if entry_params[:entry_dates_attributes] != nil
+
+      # Iterate over the date elements
+      entry_params[:entry_dates_attributes].values.each do |t|
+
+        if t[:_destroy] != '1' && t[:_destroy] != 'true'
+
+          # If all date fields are empty, do not have to validate - just delete the date
+          if if t[:id] && t[:date_type] == '' && t[:date_as_written] == '' && t[:date_span] == '' && t[:date_certainty] == '' && t[:date] == '' && t[:note] == ''
+
+               t[:_destroy] = '1'
+
+          else
+               # Check the field length of date_type, date_as_written, date_span, date_certainty, date and date_note
+               # Note that we don't check for mandatory fields here but in the code below
+               errors = errors + get_errors(t[:date_type], 'Date Type', 20, '')
+               errors = errors + get_errors(t[:date_as_written], 'Date As Written', MEDIUM_FIELD, '')
+               errors = errors + get_errors(t[:date_span], 'Date Span', MEDIUM_FIELD, '')
+               errors = errors + get_errors(t[:date_certainty], 'Date Certainty', MEDIUM_FIELD, '')
+               errors = errors + get_errors(t[:date], 'Date', MEDIUM_FIELD, '')
+               errors = errors + get_errors(t[:note], 'Date Note', LARGE_FIELD, '')
+
+               # Check mandatory field 'data_type' exists
+               if t[:date_type] == '' && (t[:date_as_written] != '' || t[:date_span] != '' || t[:date_certainty] != '' || t[:date] != '' || t[:note] != '')
+                 errors = errors + 'Date Type' + '|'
+               end
+
+               # Check mandatory field 'date_as_written' exists
+               if t[:date_as_written] == '' && (t[:date_type] != '' || t[:date_span] != '' || t[:date_certainty] != '' || t[:date] != '' || t[:note] != '')
+                 errors = errors + 'Date As Written' + '|'
+               end
+
+               # Check mandatory field 'date_span' exists
+               if t[:date_span] == '' && (t[:date_type] != '' || t[:date_as_written] != '' || t[:date_certainty] != '' || t[:date] != '' || t[:note] != '')
+                 errors = errors + 'Date Span' + '|'
+               end
+
+               # Check mandatory field 'date' exists
+               if t[:date] == '' && (t[:date_type] != '' || t[:date_as_written] != '' || t[:date_span] != '' || t[:date_certainty] != '' || t[:note] != '')
+                 errors = errors + 'Date' + '|'
+               end
+             end
+          end
+        end
+      end
+    end
+
     return errors
 
   end

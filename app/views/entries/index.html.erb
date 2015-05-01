@@ -77,7 +77,7 @@
                       <% if @entry.editorial_notes.count != 0 %>
                           <% @entry.editorial_notes.each do |editorial_note| %>
                               <div class='nested_single2'>
-                                * <%= editorial_note.editorial_note %>
+                                <%= editorial_note.editorial_note %>
                               </div>
                           <% end %>
                       <% else %>
