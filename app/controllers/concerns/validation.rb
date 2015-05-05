@@ -248,9 +248,9 @@ module Validation
             local_errors = local_errors + 'Name Authority' + '|'
           end
 
-          # If all fields are empty, just remove the entry (some of the code above will therefore be redundant - might look at a better way to do this later on)
+          # If the data has been already been saved in Fedora and all fields are empty, just remove the entry (some of the code above will therefore be redundant - might look at a better way to do this later on)
           # Note that this code checks that an id exists because we don't want to make '_destroy=1' if the user has added a blank field (see Editorial Note comments above)
-          if t[:id] && name_as_written == '' && role_name == '' && t[:note] == '' && t[:age] == '' && t[:gender] == '' && t[:name_authority] == '' && occupation == '' && t[:status] == '' && t[:qualification] == ''
+          if t[:id] && name_as_written == '' && role_name == '' && t[:note] == '' && t[:age] == '' && t[:gender] == '' && t[:name_authority] == '' && occupation == '' && status == '' && qualification == ''
             t[:_destroy] = '1'
           else
             errors = errors + local_errors
@@ -320,7 +320,7 @@ module Validation
             local_errors = local_errors + 'Place Authority' + '|'
           end
 
-          ## If all fields are empty, just remove the entry (some of the code above will therefore be redundant - might look at a better way to do this later on)
+          # If the data has been already been saved in Fedora and all fields are empty, just remove the entry (some of the code above will therefore be redundant - might look at a better way to do this later on)
           # Note that this code checks that an id exists because we don't want to make '_destroy=1' if the user has added a blank field (see Editorial Note comments above)
           if t[:id] && place_as_written == '' && additional_type == '' && t[:place_authority] == '' && place_note == ''
             t[:_destroy] = '1'
