@@ -156,6 +156,110 @@ module Validation
       end
     end
 
+    # Person
+    if entry_params[:people_attributes] != nil
+
+      # Iterate over the people elements
+      entry_params[:people_attributes].values.each do |t|
+
+        # Only validate the person if the delete icon hasn't been clicked
+        if t[:_destroy] != '1' && t[:_destroy] != 'true'
+
+          local_errors = ''
+          name_as_written = ''
+          role_name = ''
+          occupation = ''
+          status = ''
+          qualification = ''
+
+          # Check if any 'name_as_written' fields exist and validate the length
+          if t[:name_as_writtens_attributes] != nil
+            t[:name_as_writtens_attributes].values.each do |tt|
+              if tt[:name_as_written] != ''
+                name_as_written = 'true'
+                local_errors = local_errors + get_errors(tt[:name_as_written], 'Name As Written', MEDIUM_FIELD, '')
+                break
+              end
+            end
+          end
+
+          # Check if any 'role_name' fields exist and validate the length
+          if t[:role_names_attributes] != nil
+            t[:role_names_attributes].values.each do |tt|
+              if tt[:role_name] != ''
+                role_name = 'true'
+                local_errors = local_errors + get_errors(tt[:role_name], 'Role Name', MEDIUM_FIELD, '')
+                break
+              end
+            end
+          end
+
+          # Check field lengths of person_note, age, gender and name_authority
+          errors = errors + get_errors(t[:note], 'Person Note', LARGE_FIELD, '')
+          errors = errors + get_errors(t[:age], 'Age', MEDIUM_FIELD, '')
+          errors = errors + get_errors(t[:gender], 'Gender', SMALL_FIELD, '')
+          errors = errors + get_errors(t[:name_authority], 'Name Authority', MEDIUM_FIELD, 'M')
+
+          # Check if any 'occupation' fields exist and validate the length
+          if t[:occupations_attributes] != nil
+            t[:occupations_attributes].values.each do |tt|
+              if tt[:occupation_name] != ''
+                occupation = 'true'
+                local_errors = local_errors + get_errors(tt[:occupation_name], 'Occupation', MEDIUM_FIELD, '')
+                break
+              end
+            end
+          end
+
+          # Check if any 'status' fields exist and validate the length
+          if t[:statuses_attributes] != nil
+            t[:statuses_attributes].values.each do |tt|
+              if tt[:status_name] != ''
+                status = 'true'
+                local_errors = local_errors + get_errors(tt[:status_name], 'Status', MEDIUM_FIELD, '')
+                break
+              end
+            end
+          end
+
+          # Check any 'qualification' fields exist and validate the length
+          if t[:qualifications_attributes] != nil
+            t[:qualifications_attributes].values.each do |tt|
+              if tt[:qualification_name] != ''
+                qualification = 'true'
+                local_errors = local_errors + get_errors(tt[:qualification_name], 'Qualification', MEDIUM_FIELD, '')
+                break
+              end
+            end
+          end
+
+          # Check mandatory field 'name_as_written' exists (if other fields exist)
+          if name_as_written == '' && (role_name != '' || t[:note] != '' || t[:age] != '' || t[:gender] != '' || t[:name_authority] != '' || occupation != '' || status != '' || qualification != '')
+            errors = errors + 'Name As Written' + '|'
+          end
+
+          # Check mandatory field 'role_name' exists (if other fields exist)
+          if role_name == '' && (name_as_written != '' || t[:note] != '' || t[:age] != '' || t[:gender] != '' || t[:name_authority] != '' || occupation != '' || status != '' || qualification != '')
+            errors = errors + 'Role Name' + '|'
+          end
+
+          # Check mandatory field 'name_authority' exists (if other fields exist)
+          if t[:name_authority] == '' && (name_as_written != '' || role_name != '' || t[:note] != '' || t[:age] != '' || t[:gender] != '' || occupation != '' || status != '' || qualification != '')
+            errors = errors + 'Name Authority' + '|'
+          end
+
+          # If all fields are empty, just remove the entry (some of the code above will therefore be redundant - might look at a better way to do this later on)
+          # Note that this code checks that an id exists because we don't want to make '_destroy=1' if the user has added a blank field (see Editorial Note comments above)
+          if t[:id] && name_as_written == '' && role_name == '' && t[:note] == '' && t[:age] == '' && t[:gender] == '' && t[:name_authority] == '' && occupation == '' && t[:status] == '' && t[:qualification] == ''
+            t[:_destroy] = '1'
+          else
+            errors = errors + local_errors
+          end
+
+        end
+      end
+    end
+
     # Place
     if entry_params[:places_attributes] != nil
 
@@ -195,7 +299,7 @@ module Validation
           # Check field length of 'place_authority'
           errors = errors + get_errors(t[:place_authority], 'Place Authority', MEDIUM_FIELD, '')
 
-          # Check if 'place_note' exists and validate the length
+          # Check if if any 'place_note' fields exist and validate the length
           if t[:place_notes_attributes] != nil
             t[:place_notes_attributes].values.each do |tt|
               if tt[:place_note] != ''
@@ -216,7 +320,8 @@ module Validation
             local_errors = local_errors + 'Place Authority' + '|'
           end
 
-          # If all fields are empty, just remove the entry (some of the code above will therefore be redundant - might look at a better way to do this later on)
+          ## If all fields are empty, just remove the entry (some of the code above will therefore be redundant - might look at a better way to do this later on)
+          # Note that this code checks that an id exists because we don't want to make '_destroy=1' if the user has added a blank field (see Editorial Note comments above)
           if t[:id] && place_as_written == '' && additional_type == '' && t[:place_authority] == '' && place_note == ''
             t[:_destroy] = '1'
           else
