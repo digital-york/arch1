@@ -198,7 +198,7 @@ module Validation
           errors = errors + get_errors(t[:note], 'Person Note', LARGE_FIELD, '')
           errors = errors + get_errors(t[:age], 'Age', MEDIUM_FIELD, '')
           errors = errors + get_errors(t[:gender], 'Gender', SMALL_FIELD, '')
-          errors = errors + get_errors(t[:name_authority], 'Name Authority', MEDIUM_FIELD, 'M')
+          errors = errors + get_errors(t[:name_authority], 'Name Authority', MEDIUM_FIELD, '')
 
           # Check if any 'occupation' fields exist and validate the length
           if t[:occupations_attributes] != nil
@@ -235,17 +235,17 @@ module Validation
 
           # Check mandatory field 'name_as_written' exists (if other fields exist)
           if name_as_written == '' && (role_name != '' || t[:note] != '' || t[:age] != '' || t[:gender] != '' || t[:name_authority] != '' || occupation != '' || status != '' || qualification != '')
-            errors = errors + 'Name As Written' + '|'
+            local_errors = local_errors + 'Name As Written' + '|'
           end
 
           # Check mandatory field 'role_name' exists (if other fields exist)
           if role_name == '' && (name_as_written != '' || t[:note] != '' || t[:age] != '' || t[:gender] != '' || t[:name_authority] != '' || occupation != '' || status != '' || qualification != '')
-            errors = errors + 'Role Name' + '|'
+            local_errors = local_errors + 'Role Name' + '|'
           end
 
           # Check mandatory field 'name_authority' exists (if other fields exist)
           if t[:name_authority] == '' && (name_as_written != '' || role_name != '' || t[:note] != '' || t[:age] != '' || t[:gender] != '' || occupation != '' || status != '' || qualification != '')
-            errors = errors + 'Name Authority' + '|'
+            local_errors = local_errors + 'Name Authority' + '|'
           end
 
           # If all fields are empty, just remove the entry (some of the code above will therefore be redundant - might look at a better way to do this later on)
