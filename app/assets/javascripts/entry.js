@@ -17,16 +17,12 @@ $(function() {
 // Hide any elements which have been removed by the user
 // as they will reappear on the page if an error occurs
 function hide_elements_when_errors() {
-    console.log("start");
     $("input").each(function(index) {
-        console.log(index);
         if (this.type === "hidden" && this.value === "true") {
             var parentTag = $(this).parent().get(0).tagName;
             $(this).parent().parent().css("display", "none");
-            //console.log("MATCH: id=" + this.id + ": name=" + this.name + ": value=" + this.value + ": type=" + this.type + ": parent=" + parentTag);
         }
     });
-    console.log("end");
 }
 
 // Display the image zoom popup

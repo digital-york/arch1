@@ -6,5 +6,5 @@
 
   <%= f.select :language, @language_list %>
 
-  <%= link_to_remove_association image_tag("delete.png", :class => "deleteIconSelect"), f %>
+  <%= link_to_remove_association image_tag("delete.png", :class => "deleteIconSelect"), f, :tabIndex => "-1" %>
 </div>
