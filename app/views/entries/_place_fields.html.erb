@@ -13,7 +13,7 @@
               <%= f.fields_for :place_as_writtens do |place_as_written| %>
                 <%= render "place_as_written_fields", :f => place_as_written %>
               <% end %>
-			  <%= link_to_add_association image_tag('plus_sign2.png', :class => 'plusIcon'), f, :place_as_writtens, :data => { 'association-insertion-node' => 'this', 'association-insertion-position' => 'before' } %>
+			  <%= link_to_add_association image_tag('plus_sign2.png', :class => 'plusIcon'), f, :place_as_writtens, :data => { 'association-insertion-node' => 'this', 'association-insertion-position' => 'before' }, :tabIndex => "-1" %>
 			</td>
           </tr>
         </table>
@@ -29,7 +29,7 @@
 			  <%= f.fields_for :place_additional_types do |place_additional_type| %>
                 <%= render 'place_additional_type_fields', :f => place_additional_type %>
               <% end %>
-              <%= link_to_add_association image_tag('plus_sign2.png', :class => 'plusIcon'), f, :place_additional_types, :data => { 'association-insertion-node' => 'this', 'association-insertion-position' => 'before' } %>
+              <%= link_to_add_association image_tag('plus_sign2.png', :class => 'plusIcon'), f, :place_additional_types, :data => { 'association-insertion-node' => 'this', 'association-insertion-position' => 'before' }, :tabIndex => "-1" %>
 			</td>
           </tr>
         </table>
@@ -50,7 +50,7 @@
               <%= f.fields_for :place_notes do |place_note| %>
                 <%= render "place_note_fields", :f => place_note %>
               <% end %>
-              <%= link_to_add_association image_tag('plus_sign2.png', :class => 'plusIcon'), f, :place_notes, :data => { 'association-insertion-node' => 'this', 'association-insertion-position' => 'before' } %>
+              <%= link_to_add_association image_tag('plus_sign2.png', :class => 'plusIcon'), f, :place_notes, :data => { 'association-insertion-node' => 'this', 'association-insertion-position' => 'before' }, :tabIndex => "-1" %>
 		    </td>
           </tr>
         </table>
@@ -58,6 +58,6 @@
     </tr>
 
   </table>
-  <div class="deleteIcon"><%= link_to_remove_association image_tag("delete.png", :class => "deleteIcon"), f %></div>
+  <div class="deleteIcon"><%= link_to_remove_association image_tag("delete.png", :class => "deleteIcon"), f, :tabIndex => "-1" %></div>
 
 </div>

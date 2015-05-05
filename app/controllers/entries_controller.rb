@@ -5,7 +5,7 @@ class EntriesController < ApplicationController
   before_action :get_folios, only: [:index, :show, :new, :edit, :create, :update, :destroy]
   before_filter :session_timed_out, except: [:login]
 
-  # NOTE - want to display folio with a space, e.g. 'Insert a' but save the field as 'Insert_a' because
+  # NOTE - we want to display folio with a space or underscore, e.g. 'Insert a' but save the field as 'Inserta' because
   # there was a problem with the 'Entry.where' statement when a space occurred - not sure why
 
   # Check the :login variable in the session to see if the session has timed out
@@ -79,7 +79,8 @@ class EntriesController < ApplicationController
       if params[:id] == nil || params[:id] == ''
         # NOTE - the command below returns an error when there is a space in the 'folio_face', e.g. 'Insert a'; therefore saving to Fedora with an underscore
         # UPDATE - have had a problem with underscores on the opal server - e.g. 'Insert_a' returns an error but 'Insert_b' works - not sure what is going on here!
-        # Anyway, changing from underscore to hyphen because that seems more stable
+        # Anyway, now saved without any char in-between, e.g. 'Inserta'
+        puts session[:folio_face]
         @entry = Entry.where(:folio => session[:folio]).where(:folio_face => session[:folio_face]).first
       else
         @entry = Entry.find(params[:id])
