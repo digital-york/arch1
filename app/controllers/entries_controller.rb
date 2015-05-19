@@ -1,7 +1,7 @@
 class EntriesController < ApplicationController
 
   # Set the entry number, get the folio list (for the drop-down) and check if the session is timed out before calling the appropriate methods
-  before_action :set_entry, only: [:index, :show, :edit, :update]
+  before_action :set_entry, only: [:index, :show, :update]
   before_action :get_folios, only: [:index, :show, :new, :edit, :create, :update, :destroy]
   before_filter :session_timed_out, except: [:login]
 
@@ -80,7 +80,6 @@ class EntriesController < ApplicationController
         # NOTE - the command below returns an error when there is a space in the 'folio_face', e.g. 'Insert a'; therefore saving to Fedora with an underscore
         # UPDATE - have had a problem with underscores on the opal server - e.g. 'Insert_a' returns an error but 'Insert_b' works - not sure what is going on here!
         # Anyway, now saved without any char in-between, e.g. 'Inserta'
-        puts session[:folio_face]
         @entry = Entry.where(:folio => session[:folio]).where(:folio_face => session[:folio_face]).first
       else
         @entry = Entry.find(params[:id])
@@ -88,6 +87,8 @@ class EntriesController < ApplicationController
 
       # Get all the entries which match with the chosen register, folio and folio face
       @entries = Entry.where(:folio => session[:folio]).where(:folio_face => session[:folio_face])
+
+      set_entry
     end
   end
 
@@ -95,6 +96,8 @@ class EntriesController < ApplicationController
   def show
     @entries = Entry.all.where(:folio => session[:folio]).where(:folio_face => session[:folio_face])
     redirect_to :action => 'index', :id => params[:id]
+
+    set_entry
   end
 
   # NEW
@@ -107,8 +110,12 @@ class EntriesController < ApplicationController
     end
 
     @entry = Entry.new
+    #add_blank_fields_to_array
+
     @entries = Entry.where(:folio => session[:folio]).where(:folio_face => session[:folio_face])
+
     get_authority_lists
+
   end
 
   # EDIT
@@ -122,13 +129,16 @@ class EntriesController < ApplicationController
 
     @entries = Entry.all.where(:folio => session[:folio]).where(:folio_face => session[:folio_face])
     get_authority_lists
+
+    set_entry
+
   end
 
   # CREATE
   def create
 
     # See validation.rb in /concerns
-    @errors = validate(entry_params)
+    #@errors = validate(entry_params)
 
     # Get a new entry and replace values with the form parameters
     @entry = Entry.new(entry_params)
@@ -139,6 +149,7 @@ class EntriesController < ApplicationController
       get_authority_lists
       render 'new'
     else
+      # Remove multi-value fields which are empty
       @entry.save
       redirect_to :action => 'index', :id => @entry.id
     end
@@ -148,16 +159,20 @@ class EntriesController < ApplicationController
   def update
 
     # See validation.rb in /concerns
-    @errors = validate(entry_params)
+    #@errors = validate(entry_params)
+    @entry.attributes = entry_params
 
     # If there are errors, render the go back to the 'edit' page and display the errors, else go to the 'index' page
     if @errors != '' && @errors != nil
       @entries = Entry.where(:folio => session[:folio]).where(:folio_face => session[:folio_face])
       get_authority_lists
-      @entry.attributes = entry_params # Updates the @entry with the appropriate attributes before rendering the 'edit' page
+      #@entry.attributes = entry_params # Updates the @entry with the appropriate attributes before rendering the 'edit' page
+      set_entry
       render 'edit'
     else
-      @entry.update(entry_params)
+      remove_multivalue_blanks
+      @entry.save
+      set_entry
       redirect_to :action => 'index', :id => @entry.id
     end
   end
@@ -185,4 +200,44 @@ class EntriesController < ApplicationController
     #params.require(:entry).permit(:entry_no, :access_provided_by, editorial_notes_attributes: [:id, :editorial_note, :_destroy], people_attributes: [:id, :name_as_written, :note, :age, :gender, :name_authority, :_destroy])
   end
 
+  # Remove multi-value fields which are empty
+  # Note that there was an error when submitting a form with no multi-value elements
+  # Therefore, instead of just removing elements when the user clicks on the 'remove' icon, the elements are hidden and the value set to ''
+  # The code below will then remove the element(s) from Fedora
+  # Note also thjat you have to check that size is greater than 0 because an empty array is passed when the the 'edit' button is clicked
+  # (i.e. if there are no elements) and we don't want to check if tehe elements are blank if none exist, otherwise an error occurs
+  def remove_multivalue_blanks
+
+    if @entry.language.size > 0
+      @entry.language = params[:entry][:language].select { |element| element.present? }
+    end
+
+    if @entry.note.size > 0
+      @entry.note = params[:entry][:note].select { |element| element.present? }
+    end
+
+    if @entry.editorial_note.size > 0
+      @entry.editorial_note = params[:entry][:editorial_note].select { |element| element.present? }
+    end
+
+    if @entry.marginal_note.size > 0
+      @entry.marginal_note = params[:entry][:marginal_note].select { |element| element.present? }
+    end
+
+    if @entry.is_referenced_by.size > 0
+      @entry.is_referenced_by = params[:entry][:is_referenced_by].select { |element| element.present? }
+    end
+
+    if @entry.subject.size > 0
+      @entry.subject = params[:entry][:subject].select { |element| element.present? }
+    end
+
+    @entry.related_places.each_with_index do |related_place, index|
+      #puts params.inspect
+      #puts params[:entry][:related_place]
+      #puts params[:entry][:related_places_attributes][1]
+      #@entry.related_place.place_as_written = related_place.place_as_written.select { |element| element.present? }
+      @entry.related_places[index].place_as_written = related_place.place_as_written.select { |element| element.present? };
+    end
+  end
 end

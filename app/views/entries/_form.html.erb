@@ -84,7 +84,7 @@
           <tr>
             <th colspan='2'>
               <div id='entry_menubar'>
-                <span class='editButton'>
+                <span class='edit_button'>
 				<% if @entry.new_record? %>
 				<%= f.submit 'Submit' %>
                       <a href='<%= entries_path %>'><input type='button' value='Back' style='color: black'/></a>
@@ -105,122 +105,60 @@
             </td>
           </tr>
 
-          <%# Editorial Note %>
-          <tr>
-            <th class='links'>Editorial Note
-              <%= link_to_add_association image_tag('plus_sign2.png', class: 'plusIcon'), f, :editorial_notes, :data => {'association-insertion-node' => '#addEditorialNote', 'association-insertion-position' => 'append'}, :tabIndex => "-1" %>
-            </th>
-            <td class='tab2'>
-              <div id='addEditorialNote'>
-                <%= f.fields_for :editorial_notes do |editorial_note| %>
-                    <%= render 'editorial_note_fields', :f => editorial_note %>
-                <% end %>
-              </div>
-            </td>
-          </tr>
-
           <%# Access Provided By %>
           <tr>
-            <th>Access Provided By*</th>
+            <th>Access Provided By</th>
             <td>
               <%= f.text_field :access_provided_by %>
             </td>
           </tr>
 
-          <%# Entry Reference %>
+          <%# Entry Part %>
           <tr>
-            <th>Entry Reference</th>
-            <td class='tab2'>
-              <table cellspacing='0'>
-                <tr>
-                  <th>Document*</th>
-                  <td>
-                    <%= f.text_field :document %>
-                  </td>
-                </tr>
-                <tr>
-                  <td>Document Part</td>
-                  <td><%= f.text_field :document_part %></td>
-                </tr>
-                <tr>
-                  <th>Folio Type*</th>
-                  <td>
-                    <%
-                       @folio_type_list = @read_folio_type.collect { |l| [l['label']] }
-                       @folio_type_list.unshift(['--- select ---', ''])
-                    %>
-                    <%= f.select :folio_type, @folio_type_list %>
-                  </td>
-                </tr>
-                <tr>
-                  <th>Folio Face*</th>
-                  <td>
-                    <%
-                       @folio_face_list = @read_folio_face.collect { |l| [l['label']] }
-                       @folio_face_list.unshift(['--- select ---', ''])
-                    %>
-                    <%= f.select :folio_face_temp, @folio_face_list %>
-                  </td>
-                </tr>
-                <tr>
-                  <th>Entry Part</th>
-                  <td><%= f.text_field :entry_part %></td>
-                </tr>
-              </table>
+            <th>Entry Part</th>
+            <td>
+              <%= f.text_field :entry_part %>
+            </td>
+          </tr>
+
+          <%# Is Blank %>
+          <tr>
+            <th>Is Blank*</th>
+            <td>
+              <%
+                 @is_blank_list = [['--- select ---', ''], ['yes', 'yes'], ['no', 'no']]
+              %>
+              <%= f.select :is_blank, @is_blank_list %>
             </td>
           </tr>
 
           <%# Format %>
           <tr>
-            <th class='links'>Format
-              <%= link_to_add_association image_tag('plus_sign2.png', class: 'plusIcon'), f, :formats, :data => {'association-insertion-node' => '#addFormat', 'association-insertion-position' => 'append'}, :tabIndex => "-1" %>
-            </th>
-            <td class='tab2'>
-              <div id='addFormat'>
-                <%= f.fields_for :formats do |format| %>
-                    <%= render 'format_fields', :f => format %>
-                <% end %>
-              </div>
-            </td>
-          </tr>
-
-          <%# Marginal Note %>
-          <tr>
-            <th class='links'>Marginal Note
-              <%= link_to_add_association image_tag('plus_sign2.png', class: 'plusIcon'), f, :marginal_notes, :data => {'association-insertion-node' => '#addMarginalNote', 'association-insertion-position' => 'append'}, :tabIndex => "-1" %>
-            </th>
-            <td class='tab2'>
-              <div id='addMarginalNote'>
-                <%= f.fields_for :marginal_notes do |marginal_note| %>
-                    <%= render 'marginal_note_fields', :f => marginal_note %>
-                <% end %>
-              </div>
-            </td>
-          </tr>
-
-          <%# Is Referenced By %>
-          <tr>
-            <th class='links'>Is Referenced By
-              <%= link_to_add_association image_tag('plus_sign2.png', class: 'plusIcon'), f, :is_referenced_bies, :data => {'association-insertion-node' => '#addIsReferencedBy', 'association-insertion-position' => 'append'}, :tabIndex => "-1" %>
-            </th>
-            <td class='tab2'>
-              <div id='addIsReferencedBy'>
-                <%= f.fields_for :is_referenced_bies do |is_referenced_by| %>
-                    <%= render 'is_referenced_by_fields', :f => is_referenced_by %>
-                <% end %>
-              </div>
+            <th>Format</th>
+            <td>
+              <%
+                 @format_list = @read_format.collect { |element| [element['label']] }
+                 @format_list.unshift(['--- select ---', ''])
+              %>
+              <%= f.select :format, @format_list %>
             </td>
           </tr>
 
           <%# Language %>
           <tr>
-            <th class='links'>Language
-              <%= link_to_add_association image_tag('plus_sign2.png', class: 'plusIcon'), f, :languages, :data => {'association-insertion-node' => '#addLanguage', 'association-insertion-position' => 'append'}, :tabIndex => "-1" %>
+            <th>Language
+              <img src="/assets/plus_sign.png" class="plus_icon add_field" code_template="<div style='padding: 4px 0px' class='field_single'>
+                      <input type='text' class='input_class' value='' name='entry[language][]'>
+                      <img alt='Delete icon' src='/assets/delete.png' class='delete_icon remove_field'>
+                    </div>"/>
             </th>
-            <td class='tab2'>
-              <div id='addLanguage'>
-                <%= f.fields_for :languages do |language| %>
-                    <%= render 'language_fields', :f => language %>
+            <td>
+              <div class="field_group">
+                <% @entry.language.each do |language| %>
+                    <div class="field_single" style="padding: 4px 0px">
+                      <%= text_field_tag "entry[language][]", language, id: nil, class: 'input_class' %>
+                      <img alt='Delete icon' src='/assets/delete.png' class='delete_icon remove_field'>
+                    </div>
                 <% end %>
               </div>
             </td>
@@ -228,55 +166,79 @@
 
           <%# Note %>
           <tr>
-            <th class='links'>Note
-              <%= link_to_add_association image_tag('plus_sign2.png', class: 'plusIcon'), f, :notes, :data => {'association-insertion-node' => '#addNote', 'association-insertion-position' => 'append'}, :tabIndex => "-1" %>
+            <th>Note
+              <img src="/assets/plus_sign.png" class="plus_icon add_field" code_template="<div style='padding: 4px 0px' class='field_single'>
+                      <input type='text' class='input_class' value='' name='entry[note][]'>
+                      <img alt='Delete icon' src='/assets/delete.png' class='delete_icon remove_field'>
+                    </div>"/>
             </th>
-            <td class='tab2'>
-              <div id='addNote'>
-                <%= f.fields_for :notes do |note| %>
-                    <%= render 'note_fields', :f => note %>
+            <td>
+              <div class="field_group">
+                <% @entry.note.each do |note| %>
+                    <div class="field_single" style="padding: 4px 0px">
+                      <%= text_field_tag "entry[note][]", note, class: 'input_box', id: '' %>
+                      <%= image_tag('delete.png', class: 'delete_icon remove_field') %>
+                    </div>
                 <% end %>
               </div>
             </td>
           </tr>
 
-          <%# Date %>
+          <%# Editorial Note %>
           <tr>
-            <th class='links'>Date
-              <%= link_to_add_association image_tag('plus_sign2.png', class: 'plusIcon'), f, :entry_dates, :data => {'association-insertion-node' => '#addEntryDate', 'association-insertion-position' => 'append'}, :tabIndex => "-1" %>
+            <th>Editorial Note
+              <img src="/assets/plus_sign.png" class="plus_icon add_field" code_template="<div style='padding: 4px 0px' class='field_single'>
+                      <input type='text' class='input_class' value='' name='entry[editorial_note][]'>
+                      <img alt='Delete icon' src='/assets/delete.png' class='delete_icon remove_field'>
+                    </div>"/>
             </th>
-            <td class='tab2'>
-              <div id='addEntryDate'>
-                <%= f.fields_for :entry_dates do |entry_date| %>
-                    <%= render 'entry_date_fields', :f => entry_date %>
+            <td>
+              <div class="field_group">
+                <% @entry.editorial_note.each do |editorial_note| %>
+                    <div class="field_single" style="padding: 4px 0px">
+                      <%= text_field_tag "entry[editorial_note][]", editorial_note, class: 'input_box', id: '' %>
+                      <%= image_tag('delete.png', class: 'delete_icon remove_field') %>
+                    </div>
                 <% end %>
               </div>
             </td>
           </tr>
 
-          <%# Person %>
+          <%# Marginal Note %>
           <tr>
-            <th class='links'>Person:
-              <%= link_to_add_association image_tag('plus_sign2.png', class: 'plusIcon'), f, :people, :data => {'association-insertion-node' => '#addPerson', 'association-insertion-position' => 'append'}, :tabIndex => "-1" %>
+            <th>Marginal Note
+              <img src="/assets/plus_sign.png" class="plus_icon add_field" code_template="<div style='padding: 4px 0px' class='field_single'>
+                      <input type='text' class='input_class' value='' name='entry[marginal_note][]'>
+                      <img alt='Delete icon' src='/assets/delete.png' class='delete_icon remove_field'>
+                    </div>"/>
             </th>
-            <td class='tab2'>
-              <div id='addPerson'>
-                <%= f.fields_for :people do |person| %>
-                    <%= render 'person_fields', :f => person %>
+            <td>
+              <div class="field_group">
+                <% @entry.marginal_note.each do |marginal_note| %>
+                    <div class="field_single" style="padding: 4px 0px">
+                      <%= text_field_tag "entry[marginal_note][]", marginal_note, class: 'input_box', id: '' %>
+                      <%= image_tag('delete.png', class: 'delete_icon remove_field') %>
+                    </div>
                 <% end %>
               </div>
             </td>
           </tr>
 
-          <%# Place %>
+          <%# Is Referenced By %>
           <tr>
-            <th class='links'>Place:
-              <%= link_to_add_association image_tag('plus_sign2.png', class: 'plusIcon'), f, :places, :data => {'association-insertion-node' => '#addPlace', 'association-insertion-position' => 'append'}, :tabIndex => "-1" %>
+            <th>Is Referenced By
+              <img src="/assets/plus_sign.png" class="plus_icon add_field" code_template="<div style='padding: 4px 0px' class='field_single'>
+                      <input type='text' class='input_class' value='' name='entry[is_referenced_by][]'>
+                      <img alt='Delete icon' src='/assets/delete.png' class='delete_icon remove_field'>
+                    </div>"/>
             </th>
-            <td class='tab2'>
-              <div id='addPlace'>
-                <%= f.fields_for :places do |place| %>
-                    <%= render 'place_fields', :f => place %>
+            <td>
+              <div class="field_group">
+                <% @entry.is_referenced_by.each do |is_referenced_by| %>
+                    <div class="field_single" style="padding: 4px 0px">
+                      <%= text_field_tag "entry[is_referenced_by][]", is_referenced_by, class: 'input_box', id: '' %>
+                      <%= image_tag('delete.png', class: 'delete_icon remove_field') %>
+                    </div>
                 <% end %>
               </div>
             </td>
@@ -284,13 +246,132 @@
 
           <%# Subject %>
           <tr>
-            <th class='links'>Subject:
-              <%= link_to_add_association image_tag('plus_sign2.png', class: 'plusIcon'), f, :subjects, :data => {'association-insertion-node' => '#addSubject', 'association-insertion-position' => 'append'}, :tabIndex => "-1" %>
+            <th>Subject
+              <img src="/assets/plus_sign.png" class="plus_icon add_field" code_template="<div style='padding: 4px 0px' class='field_single'>
+                      <input type='text' class='input_class' value='' name='entry[subject][]'>
+                      <img alt='Delete icon' src='/assets/delete.png' class='delete_icon remove_field'>
+                    </div>"/>
             </th>
-            <td class='tab2'>
-              <div id='addSubject'>
-                <%= f.fields_for :subjects do |subject| %>
-                    <%= render 'subject_fields', :f => subject %>
+            <td>
+              <div class="field_group">
+                <% @entry.subject.each do |subject| %>
+                    <div class="field_single" style="padding: 4px 0px">
+                      <%= text_field_tag "entry[subject][]", subject, class: 'input_box', id: '' %>
+                      <%= image_tag('delete.png', class: 'delete_icon remove_field') %>
+                    </div>
+                <% end %>
+              </div>
+            </td>
+          </tr>
+
+          <%# Related Place %>
+          <tr>
+
+            <th>Place:
+              <img src="/assets/plus_sign.png" class="plus_icon add_field_2" code_template="<div class='field_single'>
+                <table class='tab3' cellspacing='0'>
+                  <tr>
+                    <th style='width: 130px'>Place As Written*&nbsp;<img src='/assets/plus_sign.png' class='plus_icon add_field_3'
+                    code_template='
+                    <div style=&quot;padding: 4px 0px&quot; class=&quot;field_single&quot;>
+                    <input type=&quot;text&quot; class=&quot;input_class&quot; value=&quot;&quot; name=&quot;entry[related_places_attributes][INDEX][place_as_written][]&quot;>
+                    <img alt=&quot;Delete icon&quot; src=&quot;/assets/delete.png&quot; class=&quot;delete_icon remove_field&quot;>
+                    </div>
+                    '/>
+                    </th>
+                    <td><div class='field_group background_gray' style='padding: 4px 5px; border: 1px solid silver; min-height: 18px'></div></td>
+                  </tr>
+                  <tr><th>Same As*</th><td><input type='text' style='width: 100%' class='input_box' value='' id='' name='entry[related_places_attributes][INDEX][place_same_as]'></td></tr>
+                </table>
+                <img src='/assets/delete.png' alt='Delete icon' class='delete_icon remove_field_2'>
+              </div>"/>
+            </th>
+
+            <td class="tab2">
+
+              <div class="field_group">
+
+                <% @entry.related_places.each_with_index do |related_place, index1| %>
+
+                    <div class="field_single">
+
+                      <table cellspacing="0" class="tab3">
+
+                        <tr>
+                          <th style="width: 130px">
+                            Place As Written*
+                            <img src="/assets/plus_sign.png" class="plus_icon add_field_3" code_template="<div style='padding: 4px 0px' class='field_single'>
+                            <input type='text' class='input_class' value='' name='entry[related_places_attributes][<%= index1 %>][place_as_written][]'>
+                            &nbsp;<img alt='Delete icon' src='/assets/delete.png' class='delete_icon remove_field'>
+                            </div>"/>
+                          </th>
+                          <td>
+                            <div class="field_group background_gray" style="padding: 4px 5px; border: 1px solid silver; min-height: 18px">
+                              <% related_place.place_as_written.each_with_index do |place_as_written, index2| %>
+                                  <div class="field_single" style="padding: 4px 0px">
+                                    <%= text_field_tag "entry[related_places_attributes][" + index1.to_s + "][place_as_written][]", place_as_written, class: 'input_box', id: '' %>
+                                    &nbsp;<img src='/assets/delete.png' alt='Delete icon' class='delete_icon remove_field'>
+                                  </div>
+                              <% end %>
+                            </div>
+                          </td>
+                        </tr>
+
+                        <tr>
+                          <th style="width: 130px">
+                            Place Type
+                            <img src="/assets/plus_sign.png" class="plus_icon add_field_3" code_template="<div style='padding: 4px 0px' class='field_single'>
+                            <input type='text' class='input_class' value='' name='entry[related_places_attributes][<%= index1 %>][place_type][]'>
+                            &nbsp;<img alt='Delete icon' src='/assets/delete.png' class='delete_icon remove_field'>
+                            </div>"/>
+                          </th>
+                          <td>
+                            <div class="field_group background_gray" style="padding: 4px 5px; border: 1px solid silver; min-height: 18px">
+                              <% related_place.place_type.each_with_index do |place_type, index2| %>
+                                  <div class="field_single" style="padding: 4px 0px">
+                                    <%= text_field_tag "entry[related_places_attributes][" + index1.to_s + "][place_type][]", place_type, class: 'input_box', id: '' %>
+                                    &nbsp;<img src='/assets/delete.png' alt='Delete icon' class='delete_icon remove_field'>
+                                  </div>
+                              <% end %>
+                            </div>
+                          </td>
+                        </tr>
+
+                        <tr>
+                          <th>Same As*</th>
+                          <td>
+                            <%= text_field_tag "entry[related_places_attributes][" + index1.to_s + "][place_same_as]", related_place.place_same_as, class: 'input_box', id: '', style: 'width: 100%' %>
+                          </td>
+                        </tr>
+
+                        <tr>
+                          <th style="width: 130px">
+                            Note
+                            <img src="/assets/plus_sign.png" class="plus_icon add_field_3" code_template="<div style='padding: 4px 0px' class='field_single'>
+                            <input type='text' class='input_class' value='' name='entry[related_places_attributes][<%= index1 %>][place_note][]'>
+                            &nbsp;<img alt='Delete icon' src='/assets/delete.png' class='delete_icon remove_field'>
+                            </div>"/>
+                          </th>
+                          <td>
+                            <div class="field_group background_gray" style="padding: 4px 5px; border: 1px solid silver; min-height: 18px">
+                              <% related_place.place_note.each_with_index do |place_note, index2| %>
+                                  <div class="field_single" style="padding: 4px 0px">
+                                    <%= text_field_tag "entry[related_places_attributes][" + index1.to_s + "][place_note][]", place_note, class: 'input_box', id: '' %>
+                                    &nbsp;<img src='/assets/delete.png' alt='Delete icon' class='delete_icon remove_field'>
+                                  </div>
+                              <% end %>
+                            </div>
+                          </td>
+                        </tr>
+
+
+                      </table>
+
+                      <img src='/assets/delete.png' class='delete_icon remove_field_2' alt='Delete icon'>
+
+                      <input type="hidden" id="hidden_field" name="entry[related_places_attributes][<%= index1.to_s %>][id]" value="<%= related_place.id %>">
+                    </div>
+
                 <% end %>
               </div>
             </td>
@@ -311,6 +392,7 @@
               </div>
             </th>
           </tr>
+
         </table>
       </div>
   <% end %>

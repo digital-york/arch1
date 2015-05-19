@@ -68,7 +68,7 @@ input[type="text"] {
   text-align: center;
 }
 
-.plusIcon {
+.plus_icon {
   /*font-size: 0.8em;
   background-color: #CCCBCB;
   padding: 1px 5px;
@@ -232,7 +232,7 @@ a:hover {
   line-height: 1;*/
 }
 
-.editButton {
+.edit_button {
   float: right;
   margin-top: 3px;
   font-size: 1.2em;
@@ -257,10 +257,6 @@ a:hover {
 
 #image_frame a {
   text-decoration: none;
-}
-
-#imageFrame a:hover {
-  text-decoration: underline;
 }
 
 #image_header {
@@ -310,10 +306,6 @@ a:hover {
   height: 38px;
 }
 
-.backgroundGray th {
-  background-color: #F2F0F0;
-}
-
 .tab2 th {
   background-color: #FFFFFF;
   width: 115px;
@@ -323,7 +315,7 @@ a:hover {
   height: 38px;
 }
 
-.deleteIcon {
+.delete_icon {
   float: right;
   position: relative;
   top: 2px;
@@ -345,16 +337,23 @@ a:hover {
   padding: 7px 0px;
 }
 
+.tab3 td {
+  //height: 38px;
+}
 .tab3 input[type="text"] {
   width: 94%;
 }
 
-.backgroundGray, .tab3 td {
+.tab3 td {
+  //background-color: #f2f0f0;
+}
+
+.background_gray {
   background-color: #f2f0f0;
 }
 
-.tab3 td {
-  height: 38px;
+.background_gray th {
+  background-color: #F2F0F0;
 }
 
 #header {
@@ -420,7 +419,7 @@ a:hover {
   font-size: 1.2em;
   height: auto;
   color: white;
-  padding: 10px 10px 5px 10px;
+  padding: 10px 10px 7px 10px;
 }
 
 .error {
@@ -428,5 +427,6 @@ a:hover {
 }
 
 .timeout {
-  background-color: #477446;
+  border-radius: 3px;
+  background-color: #B7A17C;
 }

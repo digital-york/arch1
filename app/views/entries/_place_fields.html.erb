@@ -4,19 +4,37 @@
 
   <table cellspacing="0">
 
-    <tr>
-      <th>Place as Written*</th>
+    <!--<tr>
+      <th>RelatedPlace as Written*</th>
       <td>
         <table cellspacing="0" class="tab3">
           <tr>
-            <td class="tab2">
-              <%= f.fields_for :place_as_writtens do |place_as_written| %>
-                <%= render "place_as_written_fields", :f => place_as_written %>
-              <% end %>
-			  <%= link_to_add_association image_tag('plus_sign2.png', :class => 'plusIcon'), f, :place_as_writtens, :data => { 'association-insertion-node' => 'this', 'association-insertion-position' => 'before' }, :tabIndex => "-1" %>
-			</td>
+            <td class="tab2">-->
+              <%#= f.fields_for :place_as_writtens do |place_as_written| %>
+                <%#= render "place_as_written_fields", :f => place_as_written %>
+              <%# end %>
+			  <%#= link_to_add_association image_tag('plus_sign.png', :class => 'plus_icon'), f, :place_as_writtens, :data => { 'association-insertion-node' => 'this', 'association-insertion-position' => 'before' }, :tabIndex => "-1" %>
+			<!--</td>
           </tr>
         </table>
+      </td>
+    </tr>-->
+
+    <tr>
+      <th>
+        Place As Written*
+        <%= image_tag('plus_sign.png', class: 'plus_icon', id: 'add_place_as_written') %>
+      </th>
+      <td>
+        <div id=place_as_written_group">
+          <% @entry.places.each_with_index do |place, index1| %>
+            <% place.place_as_written.each_with_index do |place_as_written, index2| %>
+              <div style="padding: 4px 0px">
+                <%= text_field_tag "entry[places_attributes][" + index1.to_s + "][place_as_written][]", place_as_written, id: "textbox" + index1.to_s + index2.to_s %>
+              </div>
+            <% end %>
+          <% end %>
+        </div>
       </td>
     </tr>
 
@@ -29,7 +47,7 @@
 			  <%= f.fields_for :place_additional_types do |place_additional_type| %>
                 <%= render 'place_additional_type_fields', :f => place_additional_type %>
               <% end %>
-              <%= link_to_add_association image_tag('plus_sign2.png', :class => 'plusIcon'), f, :place_additional_types, :data => { 'association-insertion-node' => 'this', 'association-insertion-position' => 'before' }, :tabIndex => "-1" %>
+              <%= link_to_add_association image_tag('plus_sign.png', :class => 'plus_icon'), f, :place_additional_types, :data => { 'association-insertion-node' => 'this', 'association-insertion-position' => 'before' }, :tabIndex => "-1" %>
 			</td>
           </tr>
         </table>
@@ -50,7 +68,7 @@
               <%= f.fields_for :place_notes do |place_note| %>
                 <%= render "place_note_fields", :f => place_note %>
               <% end %>
-              <%= link_to_add_association image_tag('plus_sign2.png', :class => 'plusIcon'), f, :place_notes, :data => { 'association-insertion-node' => 'this', 'association-insertion-position' => 'before' }, :tabIndex => "-1" %>
+              <%= link_to_add_association image_tag('plus_sign.png', :class => 'plus_icon'), f, :place_notes, :data => { 'association-insertion-node' => 'this', 'association-insertion-position' => 'before' }, :tabIndex => "-1" %>
 		    </td>
           </tr>
         </table>
@@ -58,6 +76,6 @@
     </tr>
 
   </table>
-  <div class="deleteIcon"><%= link_to_remove_association image_tag("delete.png", :class => "deleteIcon"), f, :tabIndex => "-1" %></div>
+  <div class="delete_icon"><%= link_to_remove_association image_tag("delete.png", :class => "delete_icon"), f, :tabIndex => "-1" %></div>
 
 </div>

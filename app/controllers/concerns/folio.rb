@@ -28,7 +28,6 @@ module Folio
     # 'Reg_12' will need changing eventually when there are more registers
     #session[:image] = 'Reg_12_' + session[:folio] + '_' + session[:folio_face].sub('Insert', 'Insert_') + '.jp2' # Note that Insert has an underscore after it in order to get the correct url, e.g. 'Inserta' -> 'Insert_a'
     session[:image] = 'Reg_12_' + session[:folio] + '_' + session[:folio_face].sub(' ', '_') + '.jp2' # Note that Insert has an underscore after it in order to get the correct url, e.g. 'Inserta' -> 'Insert_a'
-    puts session[:image]
   end
 
   # Get the next image and set the session variables when the '> or '<' buttons are clicked'

@@ -260,81 +260,10 @@ module Validation
       end
     end
 
-    # Place
-    if entry_params[:places_attributes] != nil
-
-      # Iterate over the place elements
-      entry_params[:places_attributes].values.each do |t|
-
-        # Only validate the place if the delete icon hasn't been clicked
-        if t[:_destroy] != '1' && t[:_destroy] != 'true'
-
-          local_errors = ''
-          place_as_written = ''
-          additional_type = ''
-          place_note = ''
-
-          # Check if any 'place_as_written' fields exist and validate the length
-          if t[:place_as_writtens_attributes] != nil
-            t[:place_as_writtens_attributes].values.each do |tt|
-              if tt[:place_as_written] != ''
-                place_as_written = 'true'
-                local_errors = local_errors + get_errors(tt[:place_as_written], 'Place As Written', MEDIUM_FIELD, '')
-                break
-              end
-            end
-          end
-
-          # Check if any 'additional_type' fields exist and validate the length
-          if t[:place_additional_types_attributes] != nil
-            t[:place_additional_types_attributes].values.each do |tt|
-              if tt[:additional_type] != ''
-                additional_type = 'true'
-                local_errors = local_errors + get_errors(tt[:additional_type], 'Additional Type', MEDIUM_FIELD, '')
-                break
-              end
-            end
-          end
-
-          # Check field length of 'place_authority'
-          errors = errors + get_errors(t[:place_authority], 'Place Authority', MEDIUM_FIELD, '')
-
-          # Check if if any 'place_note' fields exist and validate the length
-          if t[:place_notes_attributes] != nil
-            t[:place_notes_attributes].values.each do |tt|
-              if tt[:place_note] != ''
-                place_note = 'true'
-                local_errors = local_errors + get_errors(tt[:place_note], 'Place Note', LARGE_FIELD, '')
-                break
-              end
-            end
-          end
-
-          # Check mandatory field 'place_as_written' exists (if other fields exist)
-          if place_as_written == '' && (additional_type != '' || t[:place_authority] != '' || place_note != '')
-            local_errors = local_errors + 'Place As Written' + '|'
-          end
-
-          # Check mandatory field 'place_authority' exists (if other fields exist)
-          if t[:place_authority] == '' && (place_as_written != '' || additional_type != '' || place_note != '')
-            local_errors = local_errors + 'Place Authority' + '|'
-          end
-
-          # If the data has been already been saved in Fedora and all fields are empty, just remove the entry (some of the code above will therefore be redundant - might look at a better way to do this later on)
-          # Note that this code checks that an id exists because we don't want to make '_destroy=1' if the user has added a blank field (see Editorial Note comments above)
-          if t[:id] && place_as_written == '' && additional_type == '' && t[:place_authority] == '' && place_note == ''
-            t[:_destroy] = '1'
-          else
-            errors = errors + local_errors
-          end
-
-        end
-      end
-    end
-
     return errors
 
   end
+
 
   # Check for field length and mandatory field errors
   # 'M' checks for a mandatory field

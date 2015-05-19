@@ -1,4 +1,4 @@
-class Person < ActiveFedora::Base
+class RelatedPerson < ActiveFedora::Base
 
   belongs_to :entry, predicate: ActiveFedora::RDF::Fcrepo::RelsExt.isPartOf
 
