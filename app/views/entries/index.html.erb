@@ -247,6 +247,45 @@
                     </td>
                   </tr>
 
+                  <%# Related Person %>
+                  <tr>
+
+                    <th>Person:</th>
+
+                    <td class="tab2">
+
+                      <% @entry.related_people.each do |related_person| %>
+
+                          <div class="field_group">
+
+                            <div class="field_single">
+
+                              <table cellspacing="0" class="tab3">
+
+                                <tr>
+                                  <th style="width: 130px">
+                                    Person As Written*
+                                  </th>
+                                  <td>
+                                    <div style="padding: 4px 0px; min-height: 18px" class="field_group">
+
+                                      <% related_person.person_as_written.each do |person_as_written| %>
+                                          <div class="field_single" style="padding: 4px 0px">
+                                            <%= person_as_written %>
+                                          </div>
+                                      <% end %>
+
+                                    </div>
+                                  </td>
+                                </tr>
+                              </table>
+                            </div>
+
+                          </div>
+                      <% end %>
+                    </td>
+                  </tr>
+
                   <%# Display Edit and Delete buttons %>
                   <tr>
                     <th colspan='2'>
