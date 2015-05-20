@@ -1,8 +1,5 @@
 class Auth < ActiveFedora::Base
-
-  property :title, predicate: ::RDF::DC.title, multiple: false do |index|
-    index.as :stored_searchable
-  end
+  include Title,RdfType,Identifier
 
   property :authlabel, predicate: ::RDF::Vocab::MADS.authoritativeLabel, multiple: false do |index|
     index.as :stored_searchable
@@ -11,9 +8,6 @@ class Auth < ActiveFedora::Base
   #http://www.loc.gov/standards/mads/rdf/v1.html#Authority
   #http://www.loc.gov/standards/mads/rdf/v1.html#PersonalName
   #http://www.w3.org/2009/08/skos-reference/skos.html#Concept
-  property :rdftype, predicate: ::RDF::RDFV.type, multiple: true do |index|
-    index.as :stored_searchable
-  end
 
   property :hasvariant, predicate: ::RDF::Vocab::MADS.hasVariant, multiple: true do |index|
     index.as :stored_searchable

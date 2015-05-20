@@ -1,14 +1,8 @@
 class Variant < ActiveFedora::Base
-
-  property :title, predicate: ::RDF::DC.title, multiple: false do |index|
-    index.as :stored_searchable
-  end
+  include Title,RdfType,Identifier
 
   #http://www.loc.gov/standards/mads/rdf/v1.html#Variant
   #http://www.loc.gov/standards/mads/rdf/v1.html#PersonalName
-  property :rdftype, predicate: ::RDF::RDFV.type, multiple: true do |index|
-    index.as :stored_searchable
-  end
 
   property :relauth, predicate: ::RDF::Vocab::MADS.hasRelatedAuthority, multiple: true do |index|
     index.as :stored_searchable

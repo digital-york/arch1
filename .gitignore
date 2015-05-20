@@ -20,3 +20,9 @@
 
 # Ignore rubyMine IDE
 .idea
+
+# Ignore intellij .iml file
+.iml
+
+#ignore minter state file
+/config/noid-minter-state
