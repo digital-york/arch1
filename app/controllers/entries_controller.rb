@@ -233,9 +233,9 @@ class EntriesController < ApplicationController
     end
 
     # Note:
-    # Adding blank Place and updating - is removed and doesn't go into following code - equals [] - why?
-    # Adding blank place, then removing with 'x' icon - don't disappear and goes into the following code
-    # However, if exists in Fedora nd remove with 'x' then disappears!
+    # Adding blank Place and updating - element is removed and doesn't go into following code - equals [] - why?
+    # Adding blank Place, then removing with 'x' icon - don't disappear and goes into the following code
+    # However, if exists in Fedora and remove with 'x' then disappears!
     # Note solved the above problem by not passing '_destroy' = '1' if the element was blank but did not exist in Fedora
     @entry.related_places.each_with_index do |related_place, index|
       #puts params.inspect
