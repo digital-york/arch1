@@ -1,20 +1,4 @@
 
-// Datepicker
-$(function () {
-    $('.datePicker').datepicker({
-        showOn: 'button',
-        buttonImage: '/assets/calendar.gif',
-        buttonImageOnly: true,
-        buttonText: 'Select date',
-        dateFormat: 'dd-mm-yy'
-    });
-});
-
-// Not being used at present
-$(function () {
-    $(this).datepicker();
-});
-
 // This code is used if an error occurs and the form is shown again
 // Hide any elements which have been removed by the user
 // as they will reappear on the page if an error occurs
@@ -39,6 +23,22 @@ function image_zoom_large_popup(page) {
 
 // Methods which add/remove elements to the form
 $(document).ready(function () {
+
+    // Datepicker
+    $('.datePicker').datepicker({
+            showOn: 'button',
+            buttonImage: '/assets/calendar.gif',
+            buttonImageOnly: true,
+            buttonText: 'Select date',
+            dateFormat: 'dd-mm-yy'
+    });
+
+    // Not being used at present
+    //$(this).datepicker();
+
+    function test() {
+        alert("hello world");
+    }
 
     function get_code_template_multiple_select(jq_languages) {
 
@@ -121,6 +121,28 @@ $(document).ready(function () {
             var field_group_div = $(this).parent('th').next('td').find('>:first-child');
             var jq_index = field_group_div.children().length;
             var new_code_block = get_code_template_place(jq_index);
+            field_group_div.append(new_code_block);
+        } catch (err) {
+            alert(err);
+        }
+    });
+
+    function get_code_template_person(jq_index) {
+        return "<div class='field_single'>\
+         <table class='tab3' cellspacing='0'>"
+            + get_code_template_place_2("related_people_attributes", jq_index, "person_as_written", "As Written*") +
+            "</table>\
+            <img src='/assets/delete.png' alt='Delete icon' class='delete_icon remove_field_2' params_type='related_people'>\
+            </div>";
+    }
+
+    $('body').on('click', '.add_field_person', function (e) {
+
+        try {
+            e.preventDefault(); // I think this prevents other events firing?
+            var field_group_div = $(this).parent('th').next('td').find('>:first-child');
+            var jq_index = field_group_div.children().length;
+            var new_code_block = get_code_template_person(jq_index);
             field_group_div.append(new_code_block);
         } catch (err) {
             alert(err);

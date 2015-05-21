@@ -285,7 +285,7 @@
                         </tr>
 
                         <tr>
-                          <th style="width: 130px">
+                          <th>
                             Place Type
                             <img src="/assets/plus_sign.png" class="plus_icon add_field_3" jq_attributes="related_places_attributes" jq_index="<%=index1%>" jq_type="place_type"  />
                           </th>
@@ -309,7 +309,7 @@
                         </tr>
 
                         <tr>
-                          <th style="width: 130px">
+                          <th>
                             Note
                             <img src="/assets/plus_sign.png" class="plus_icon add_field_3" jq_attributes="related_places_attributes" jq_index="<%=index1%>" jq_type="place_note" />
                           </th>
@@ -324,7 +324,6 @@
                             </div>
                           </td>
                         </tr>
-
 
                       </table>
 
@@ -341,23 +340,8 @@
           <%# Related Person %>
           <tr>
 
-            <th>Person:
-              <img src="/assets/plus_sign.png" class="plus_icon add_field_2" code_template="<div class='field_single'>
-                <table class='tab3' cellspacing='0'>
-                  <tr>
-                    <th style='width: 130px'>Person As Written*&nbsp;<img src='/assets/plus_sign.png' class='plus_icon add_field_3'
-                    code_template='
-                    <div style=&quot;padding: 4px 0px&quot; class=&quot;field_single&quot;>
-                    <input type=&quot;text&quot; class=&quot;input_class&quot; value=&quot;&quot; name=&quot;entry[related_people_attributes][INDEX][person_as_written][]&quot;>
-                    <img alt=&quot;Delete icon&quot; src=&quot;/assets/delete.png&quot; class=&quot;delete_icon remove_field&quot;>
-                    </div>
-                    '/>
-                    </th>
-                    <td><div class='field_group background_gray' style='padding: 4px 5px; border: 1px solid silver; min-height: 18px'></div></td>
-                  </tr>
-                </table>
-                <img src='/assets/delete.png' alt='Delete icon' class='delete_icon remove_field_2' params_type='related_people'>
-              </div>"/>
+            <th>Place:
+              <img src="/assets/plus_sign.png" class="plus_icon add_field_person" />
             </th>
 
             <td class="tab2">
@@ -371,12 +355,9 @@
                       <table cellspacing="0" class="tab3">
 
                         <tr>
-                          <th style="width: 130px">
-                            Person As Written*
-                            <img src="/assets/plus_sign.png" class="plus_icon add_field_3" code_template="<div style='padding: 4px 0px' class='field_single'>
-                            <input type='text' class='input_class' value='' name='entry[related_people_attributes][<%= index1 %>][person_as_written][]'>
-                            &nbsp;<img alt='Delete icon' src='/assets/delete.png' class='delete_icon remove_field'>
-                            </div>"/>
+                          <th style="width: 100px">
+                            As Written*
+                            <img src="/assets/plus_sign.png" class="plus_icon add_field_3" jq_attributes="related_people_attributes" jq_index="<%=index1%>" jq_type="person_as_written" />
                           </th>
                           <td>
                             <div class="field_group background_gray" style="padding: 4px 5px; border: 1px solid silver; min-height: 18px">
@@ -389,6 +370,7 @@
                             </div>
                           </td>
                         </tr>
+
                       </table>
 
                       <img src='/assets/delete.png' class='delete_icon remove_field_2' params_type='related_people' alt='Delete icon'>

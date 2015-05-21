@@ -113,7 +113,6 @@ class EntriesController < ApplicationController
     #add_blank_fields_to_array
 
     @entries = Entry.where(:folio => session[:folio]).where(:folio_face => session[:folio_face])
-
     get_authority_lists
 
   end
