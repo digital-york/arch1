@@ -11,11 +11,14 @@
 // about supported directives.
 //
 //= require jquery
+// require jquery.turbolinks
 //= require jquery_ujs
-//= require turbolinks
 //
 // Required by Blacklight
 //= require blacklight/blacklight
 //= require_tree .
-//= require cocoon
+//
 //= require jquery-ui/datepicker
+//
+// commented out turblinks because jquery wasn't working properly on the 'new' page
+// require turbolinks
