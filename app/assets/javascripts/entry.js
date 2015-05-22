@@ -181,8 +181,8 @@ $(document).ready(function () {
             var field_group_div = $(this).parent('th').next('td').find('>:first-child');
             var jq_index = field_group_div.children().length;
             var options = "<option value=''>--- select ---</option>";
-            for (i = 0; i < list_array.length; i++) {
-                options = options + "<option value='" + list_array[i] + "'>" + list_array[i] + "</option/>";
+            for (i = 0; i < jq_date_type_array.length; i++) {
+                options = options + "<option value='" + jq_date_type_array[i] + "'>" + jq_date_type_array[i] + "</option/>";
             }
             var new_code_block = "<div class='field_single'>\
                 <table class='tab3' cellspacing='0'>" +
