@@ -6,6 +6,8 @@ gem 'cocoon'
 gem 'qa'
 gem 'jquery-ui-rails'
 gem 'hydra', '9.0.0'
+gem 'active_fedora-noid'
+gem 'nokogiri'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '4.2.0'
