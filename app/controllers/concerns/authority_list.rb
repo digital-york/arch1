@@ -8,6 +8,9 @@ module AuthorityList
     @read_folio_type = read_auth.lookup('folio-type')
     @read_folio_face = read_auth.lookup('folio-face-type')
     @read_format = read_auth.lookup('format')
+    @read_role = read_auth.lookup('role')
+    @read_qualification = read_auth.lookup('qualification')
+    @read_date_type = read_auth.lookup('date-type')
   end
 
 end
