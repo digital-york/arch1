@@ -68,8 +68,7 @@ $(document).ready(function () {
             e.preventDefault(); // I think this prevents other events firing?
             var field_group_div = $(this).parent('th').next('td').find('>:first-child');
             var options = "<option value=''>--- select ---</option>";
-            var list_array = "";
-            jq_language_array;
+            var list_array = jq_language_array;
             for (i = 0; i < list_array.length; i++) {
                 var options = options + "<option value='" + list_array[i] + "'>" + list_array[i] + "</option/>";
             }
