@@ -120,6 +120,8 @@ class EntriesController < ApplicationController
   # EDIT
   def edit
 
+    #puts entry_params
+
     # This code sets the new session variables and redirects to index if the 'Go' button is clicked on the edit page
     if params[:go] == 'true'
       get_current_folio
@@ -245,6 +247,12 @@ class EntriesController < ApplicationController
       @entry.related_places[index].place_note = related_place.place_note.select { |element| element.present? };
       #puts @entry.related_places[index].place_as_written.size;
       #puts @entry.related_places[index].place_as_written;
+    end
+
+    @entry.related_people.each_with_index do |related_person, index|
+      @entry.related_people[index].person_as_written = related_person.person_as_written.select { |element| element.present? };
+      @entry.related_people[index].person_role = related_person.person_role.select { |element| element.present? };
+      @entry.related_people[index].person_qualification = related_person.person_qualification.select { |element| element.present? };
     end
   end
 end

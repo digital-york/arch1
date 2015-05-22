@@ -22,7 +22,15 @@ class RelatedPerson < ActiveFedora::Base
     index.as :stored_searchable
   end
 
-  property :person_note, predicate: ::RDF::URI.new('http://dlib.york.ac.uk/entry#person_note'), multiple: false do |index|
+  property :person_related_place, predicate: ::RDF::URI.new('http://dlib.york.ac.uk/entry#person_related_place'), multiple: true do |index|
+    index.as :stored_searchable
+  end
+
+  property :person_place_of_residence, predicate: ::RDF::URI.new('http://dlib.york.ac.uk/entry#person_place_of_residence'), multiple: true do |index|
+    index.as :stored_searchable
+  end
+
+  property :person_note, predicate: ::RDF::URI.new('http://dlib.york.ac.uk/entry#person_note'), multiple: true do |index|
     index.as :stored_searchable
   end
 

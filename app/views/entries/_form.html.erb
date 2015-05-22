@@ -151,14 +151,14 @@
           <%# Language %>
           <tr>
             <th>Language
-              <img src="/assets/plus_sign.png" class="plus_icon add_field" jq_type="language" jq_languages="<%=@language_list%>"/>
+              <img src="/assets/plus_sign.png" class="plus_icon add_field_level1_select" jq_type="language" />
             </th>
             <td>
               <div class="field_group">
                 <% @entry.language.each do |language| %>
                     <div class="field_single" style="padding: 4px 0px">
                       <%= select_tag 'entry[language][]', options_for_select(@language_list.collect{ |element| [element[0]] }.insert(0, ["--- select ---", ""]), language) %>
-                      <img alt="Delete icon" src="/assets/delete.png" class="delete_icon remove_field" jq_tag_type="select">
+                      <img alt="Delete icon" src="/assets/delete.png" class="delete_icon_select remove_field_level1" jq_tag_type="select">
                     </div>
                 <% end %>
               </div>
@@ -168,14 +168,14 @@
           <%# Note %>
           <tr>
             <th>Note
-              <img src="/assets/plus_sign.png" class="plus_icon add_field" jq_type="note" />
+              <img src="/assets/plus_sign.png" class="plus_icon add_field_level1_multiple" jq_type="note" />
             </th>
             <td>
               <div class="field_group">
                 <% @entry.note.each do |note| %>
                     <div class="field_single" style="padding: 4px 0px">
                       <%= text_field_tag "entry[note][]", note, class: 'input_box', id: '' %>
-                      <%= image_tag('delete.png', class: 'delete_icon remove_field') %>
+                      <%= image_tag('delete.png', class: 'delete_icon remove_field_level1') %>
                     </div>
                 <% end %>
               </div>
@@ -185,14 +185,14 @@
           <%# Editorial Note %>
           <tr>
             <th>Editorial Note
-              <img src="/assets/plus_sign.png" class="plus_icon add_field" jq_type="editorial_note" />
+              <img src="/assets/plus_sign.png" class="plus_icon add_field_level1_multiple" jq_type="editorial_note" />
             </th>
             <td>
               <div class="field_group">
                 <% @entry.editorial_note.each do |editorial_note| %>
                     <div class="field_single" style="padding: 4px 0px">
                       <%= text_field_tag "entry[editorial_note][]", editorial_note, class: 'input_box', id: '' %>
-                      <%= image_tag('delete.png', class: 'delete_icon remove_field') %>
+                      <%= image_tag('delete.png', class: 'delete_icon remove_field_level1') %>
                     </div>
                 <% end %>
               </div>
@@ -202,14 +202,14 @@
           <%# Marginal Note %>
           <tr>
             <th>Marginal Note
-              <img src="/assets/plus_sign.png" class="plus_icon add_field" jq_type="marginal_note" />
+              <img src="/assets/plus_sign.png" class="plus_icon add_field_level1_multiple" jq_type="marginal_note" />
             </th>
             <td>
               <div class="field_group">
                 <% @entry.marginal_note.each do |marginal_note| %>
                     <div class="field_single" style="padding: 4px 0px">
                       <%= text_field_tag "entry[marginal_note][]", marginal_note, class: 'input_box', id: '' %>
-                      <%= image_tag('delete.png', class: 'delete_icon remove_field') %>
+                      <%= image_tag('delete.png', class: 'delete_icon remove_field_level1') %>
                     </div>
                 <% end %>
               </div>
@@ -219,14 +219,14 @@
           <%# Is Referenced By %>
           <tr>
             <th>Is Referenced By
-              <img src="/assets/plus_sign.png" class="plus_icon add_field" jq_type="is_referenced_by" />
+              <img src="/assets/plus_sign.png" class="plus_icon add_field_level1_multiple" jq_type="is_referenced_by" />
             </th>
             <td>
               <div class="field_group">
                 <% @entry.is_referenced_by.each do |is_referenced_by| %>
                     <div class="field_single" style="padding: 4px 0px">
                       <%= text_field_tag "entry[is_referenced_by][]", is_referenced_by, class: 'input_box', id: '' %>
-                      <%= image_tag('delete.png', class: 'delete_icon remove_field') %>
+                      <%= image_tag('delete.png', class: 'delete_icon remove_field_level1') %>
                     </div>
                 <% end %>
               </div>
@@ -236,14 +236,14 @@
           <%# Subject %>
           <tr>
             <th>Subject
-              <img src="/assets/plus_sign.png" class="plus_icon add_field" jq_type="subject"/>
+              <img src="/assets/plus_sign.png" class="plus_icon add_field_level1_multiple" jq_type="subject"/>
             </th>
             <td>
               <div class="field_group">
                 <% @entry.subject.each do |subject| %>
                     <div class="field_single" style="padding: 4px 0px">
                       <%= text_field_tag "entry[subject][]", subject, class: 'input_box', id: '' %>
-                      <%= image_tag('delete.png', class: 'delete_icon remove_field') %>
+                      <%= image_tag('delete.png', class: 'delete_icon remove_field_level1') %>
                     </div>
                 <% end %>
               </div>
@@ -254,7 +254,7 @@
           <tr>
 
             <th>Place:
-              <img src="/assets/plus_sign.png" class="plus_icon add_field_place" />
+              <img src="/assets/plus_sign.png" class="plus_icon add_field_level1_place" />
             </th>
 
             <td class="tab2">
@@ -268,16 +268,16 @@
                       <table cellspacing="0" class="tab3">
 
                         <tr>
-                          <th style="width: 100px">
+                          <th style="width: 110px">
                             As Written*
-                            <img src="/assets/plus_sign.png" class="plus_icon add_field_3" jq_attributes="related_places_attributes" jq_index="<%=index1%>" jq_type="place_as_written" />
+                            <img src="/assets/plus_sign.png" class="plus_icon add_field_level2_multiple" jq_attributes="related_places_attributes" jq_index="<%=index1%>" jq_type="place_as_written" />
                           </th>
                           <td>
                             <div class="field_group background_gray" style="padding: 4px 5px; border: 1px solid silver; min-height: 18px">
                               <% related_place.place_as_written.each_with_index do |place_as_written, index2| %>
                                   <div class="field_single" style="padding: 4px 0px">
                                     <%= text_field_tag "entry[related_places_attributes][" + index1.to_s + "][place_as_written][]", place_as_written, class: 'input_box', id: '' %>
-                                    &nbsp;<img src='/assets/delete.png' alt='Delete icon' class='delete_icon remove_field'>
+                                    &nbsp;<img src='/assets/delete.png' alt='Delete icon' class='delete_icon remove_field_level1'>
                                   </div>
                               <% end %>
                             </div>
@@ -287,14 +287,14 @@
                         <tr>
                           <th>
                             Place Type
-                            <img src="/assets/plus_sign.png" class="plus_icon add_field_3" jq_attributes="related_places_attributes" jq_index="<%=index1%>" jq_type="place_type"  />
+                            <img src="/assets/plus_sign.png" class="plus_icon add_field_level2_multiple" jq_attributes="related_places_attributes" jq_index="<%=index1%>" jq_type="place_type"  />
                           </th>
                           <td>
                             <div class="field_group background_gray" style="padding: 4px 5px; border: 1px solid silver; min-height: 18px">
                               <% related_place.place_type.each_with_index do |place_type, index2| %>
                                   <div class="field_single" style="padding: 4px 0px">
                                     <%= text_field_tag "entry[related_places_attributes][" + index1.to_s + "][place_type][]", place_type, class: 'input_box', id: '' %>
-                                    &nbsp;<img src='/assets/delete.png' alt='Delete icon' class='delete_icon remove_field'>
+                                    &nbsp;<img src='/assets/delete.png' alt='Delete icon' class='delete_icon remove_field_level1'>
                                   </div>
                               <% end %>
                             </div>
@@ -311,14 +311,14 @@
                         <tr>
                           <th>
                             Note
-                            <img src="/assets/plus_sign.png" class="plus_icon add_field_3" jq_attributes="related_places_attributes" jq_index="<%=index1%>" jq_type="place_note" />
+                            <img src="/assets/plus_sign.png" class="plus_icon add_field_level2_multiple" jq_attributes="related_places_attributes" jq_index="<%=index1%>" jq_type="place_note" />
                           </th>
                           <td>
                             <div class="field_group background_gray" style="padding: 4px 5px; border: 1px solid silver; min-height: 18px">
                               <% related_place.place_note.each_with_index do |place_note, index2| %>
                                   <div class="field_single" style="padding: 4px 0px">
                                     <%= text_field_tag "entry[related_places_attributes][" + index1.to_s + "][place_note][]", place_note, class: 'input_box', id: '' %>
-                                    &nbsp;<img src='/assets/delete.png' alt='Delete icon' class='delete_icon remove_field'>
+                                    &nbsp;<img src='/assets/delete.png' alt='Delete icon' class='delete_icon remove_field_level1'>
                                   </div>
                               <% end %>
                             </div>
@@ -327,7 +327,7 @@
 
                       </table>
 
-                      <img src='/assets/delete.png' class='delete_icon remove_field_2' params_type='related_places' alt='Delete icon'>
+                      <img src='/assets/delete.png' class='delete_icon remove_field_level2' params_type='related_places' alt='Delete icon'>
 
                       <input type="hidden" id="hidden_field" name="entry[related_places_attributes][<%= index1.to_s %>][id]" value="<%= related_place.id %>">
                     </div>
@@ -340,8 +340,8 @@
           <%# Related Person %>
           <tr>
 
-            <th>Place:
-              <img src="/assets/plus_sign.png" class="plus_icon add_field_person" />
+            <th>Person:
+              <img src="/assets/plus_sign.png" class="plus_icon add_field_level1_person" />
             </th>
 
             <td class="tab2">
@@ -355,16 +355,121 @@
                       <table cellspacing="0" class="tab3">
 
                         <tr>
-                          <th style="width: 100px">
+                          <th style="width: 110px">
                             As Written*
-                            <img src="/assets/plus_sign.png" class="plus_icon add_field_3" jq_attributes="related_people_attributes" jq_index="<%=index1%>" jq_type="person_as_written" />
+                            <img src="/assets/plus_sign.png" class="plus_icon add_field_level2_multiple" jq_attributes="related_people_attributes" jq_index="<%=index1%>" jq_type="person_as_written" />
                           </th>
                           <td>
                             <div class="field_group background_gray" style="padding: 4px 5px; border: 1px solid silver; min-height: 18px">
                               <% related_person.person_as_written.each_with_index do |person_as_written, index2| %>
                                   <div class="field_single" style="padding: 4px 0px">
                                     <%= text_field_tag "entry[related_people_attributes][" + index1.to_s + "][person_as_written][]", person_as_written, class: 'input_box', id: '' %>
-                                    &nbsp;<img src='/assets/delete.png' alt='Delete icon' class='delete_icon remove_field'>
+                                    &nbsp;<img src='/assets/delete.png' alt='Delete icon' class='delete_icon remove_field_level1'>
+                                  </div>
+                              <% end %>
+                            </div>
+                          </td>
+                        </tr>
+
+                        <%
+                           @role_list = @read_role.collect { |l| [l["label"]] }
+                        %>
+
+                        <tr>
+                          <th>Role
+                            <img src="/assets/plus_sign.png" class="plus_icon add_field_level2_select" jq_attributes="related_people_attributes" jq_index="<%=index1%>" jq_type="person_role" />
+                          </th>
+                          <td>
+                            <div class="field_group background_gray" style="padding: 4px 5px; border: 1px solid silver; min-height: 18px">
+                              <% related_person.person_role.each_with_index do |person_role, index2| %>
+                                  <div class="field_single" style="padding: 4px 0px">
+                                    <%= select_tag "entry[related_people_attributes][" + index1.to_s + "][person_role][]", options_for_select(@role_list.collect { |element| [element[0]] }.insert(0, ["--- select ---", ""]), person_role) %>
+                                    <img alt="Delete icon" src="/assets/delete.png" class="delete_icon_select remove_field_level1" jq_tag_type="select">
+                                  </div>
+                              <% end %>
+                            </div>
+                          </td>
+                        </tr>
+
+                        <%
+                           @qualification_list = @read_qualification.collect { |l| [l["label"]] }
+                        %>
+
+                        <tr>
+                          <th>Qualification
+                            <img src="/assets/plus_sign.png" class="plus_icon add_field_level2_select" jq_attributes="related_people_attributes" jq_index="<%=index1%>" jq_type="person_qualification" />
+                          </th>
+                          <td>
+                            <div class="field_group background_gray" style="padding: 4px 5px; border: 1px solid silver; min-height: 18px">
+                              <% related_person.person_qualification.each_with_index do |person_qualification, index2| %>
+                                  <div class="field_single" style="padding: 4px 0px">
+                                    <%= select_tag "entry[related_people_attributes][" + index1.to_s + "][person_qualification][]", options_for_select(@qualification_list.collect { |element| [element[0]] }.insert(0, ["--- select ---", ""]), person_qualification) %>
+                                    <img alt="Delete icon" src="/assets/delete.png" class="delete_icon_select remove_field_level1" jq_tag_type="select">
+                                  </div>
+                              <% end %>
+                            </div>
+                          </td>
+                        </tr>
+
+                        <tr>
+                          <th>Gender</th>
+                          <td>
+                            <%= select_tag "entry[related_people_attributes][" + index1.to_s + "][person_gender]", options_for_select(["--- select ---", "Male", "Female", "Undefined"], related_person.person_gender) %>
+                          </td>
+                        </tr>
+
+                        <tr>
+                          <th>Same As*</th>
+                          <td>
+                            <%= text_field_tag "entry[related_people_attributes][" + index1.to_s + "][person_same_as]", related_person.person_same_as, class: 'input_box', id: '', style: 'width: 100%' %>
+                          </td>
+                        </tr>
+
+                        <tr>
+                          <th>
+                            Note
+                            <img src="/assets/plus_sign.png" class="plus_icon add_field_level2_multiple" jq_attributes="related_people_attributes" jq_index="<%=index1%>" jq_type="person_note" />
+                          </th>
+                          <td>
+                            <div class="field_group background_gray" style="padding: 4px 5px; border: 1px solid silver; min-height: 18px">
+                              <% related_person.person_note.each_with_index do |person_note, index2| %>
+                                  <div class="field_single" style="padding: 4px 0px">
+                                    <%= text_field_tag "entry[related_people_attributes][" + index1.to_s + "][person_note][]", person_note, class: 'input_box', id: '' %>
+                                    &nbsp;<img src='/assets/delete.png' alt='Delete icon' class='delete_icon remove_field_level1'>
+                                  </div>
+                              <% end %>
+                            </div>
+                          </td>
+                        </tr>
+
+                        <tr>
+                          <th>
+                            Related Place
+                            <img src="/assets/plus_sign.png" class="plus_icon add_field_level2_multiple" jq_attributes="related_people_attributes" jq_index="<%=index1%>" jq_type="person_related_place" />
+                          </th>
+                          <td>
+                            <div class="field_group background_gray" style="padding: 4px 5px; border: 1px solid silver; min-height: 18px">
+                              <% related_person.person_related_place.each_with_index do |person_related_place, index2| %>
+                                  <div class="field_single" style="padding: 4px 0px">
+                                    <%= text_field_tag "entry[related_people_attributes][" + index1.to_s + "][person_related_place][]", person_related_place, class: 'input_box', id: '' %>
+                                    &nbsp;<img src='/assets/delete.png' alt='Delete icon' class='delete_icon remove_field_level1'>
+                                  </div>
+                              <% end %>
+                            </div>
+                          </td>
+                        </tr>
+
+                        <tr>
+                          <th>
+                            Residence
+                            <img src="/assets/plus_sign.png" class="plus_icon add_field_level2_multiple" jq_attributes="related_people_attributes" jq_index="<%=index1%>" jq_type="person_place_of_residence" />
+                          </th>
+                          <td>
+                            <div class="field_group background_gray" style="padding: 4px 5px; border: 1px solid silver; min-height: 18px">
+                              <% related_person.person_place_of_residence.each_with_index do |person_place_of_residence, index2| %>
+                                  <div class="field_single" style="padding: 4px 0px">
+                                    <%= text_field_tag "entry[related_people_attributes][" + index1.to_s + "][person_place_of_residence][]", person_place_of_residence, class: 'input_box', id: '' %>
+                                    &nbsp;<img src='/assets/delete.png' alt='Delete icon' class='delete_icon remove_field_level1'>
                                   </div>
                               <% end %>
                             </div>
@@ -373,9 +478,64 @@
 
                       </table>
 
-                      <img src='/assets/delete.png' class='delete_icon remove_field_2' params_type='related_people' alt='Delete icon'>
+                      <img src='/assets/delete.png' class='delete_icon remove_field_level2' params_type='related_people' alt='Delete icon'>
 
                       <input type="hidden" id="hidden_field" name="entry[related_people_attributes][<%= index1.to_s %>][id]" value="<%= related_person.id %>">
+                    </div>
+
+                <% end %>
+              </div>
+            </td>
+          </tr>
+
+          <%# Entry Date %>
+          <tr>
+
+            <th>Date:
+              <img src="/assets/plus_sign.png" class="plus_icon add_field_level1_date" />
+            </th>
+
+            <td class="tab2">
+
+              <div class="field_group">
+
+                <% @entry.entry_dates.each_with_index do |entry_date, index1| %>
+
+                    <div class="field_single">
+
+                      <table cellspacing="0" class="tab3">
+
+                        <tr>
+                          <th>As Written</th>
+                          <td>
+                            <%= text_field_tag "entry[entry_dates_attributes][" + index1.to_s + "][date_as_written]", entry_date.date_as_written, class: 'input_box', id: '', style: 'width: 100%' %>
+                          </td>
+                        </tr>
+
+                        <tr>
+                          <th>Note</th>
+                          <td>
+                            <%= text_field_tag "entry[entry_dates_attributes][" + index1.to_s + "][date_note]", entry_date.date_note, class: 'input_box', id: '', style: 'width: 100%' %>
+                          </td>
+                        </tr>
+
+                        <%
+                           @date_type_list = @read_date_type.collect { |l| [l["label"]] }
+                        %>
+
+                        <tr>
+                          <th>Date Type</th>
+                          <td>
+                            <%= select_tag "entry[entry_dates_attributes][" + index1.to_s + "][date_type]", options_for_select(@date_type_list.collect{ |element| [element[0]] }.insert(0, ["--- select ---", ""]), entry_date.date_type) %>
+                          </td>
+                        </tr>
+
+
+                      </table>
+
+                      <img src='/assets/delete.png' class='delete_icon remove_field_level2' params_type='entry_dates' alt='Delete icon'>
+
+                      <input type="hidden" id="hidden_field" name="entry[entry_dates_attributes][<%= index1.to_s %>][id]" value="<%= entry_date.id %>">
                     </div>
 
                 <% end %>
