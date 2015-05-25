@@ -12,7 +12,8 @@ class TGN < Qa::Authorities::Base
 
     def build_query_url q
       query = URI.escape(sparql(untaint(q)))
-      "http://concept_scheme.getty.edu/sparql.json?query=#{URI.escape(sparql(q))}&_implicit=false&implicit=true&_equivalent=false&_form=%2Fsparql"
+      "http://vocab.getty.edu/sparql.json?query=#{query}&_implicit=false&implicit=true&_equivalent=false&_form=%2Fsparql"
+
     end
 
     def sparql(q)
@@ -20,7 +21,7 @@ class TGN < Qa::Authorities::Base
       # The full text index matches on fields besides the term, so we filter to ensure the match is in the term.
       sparql = "SELECT ?s ?name ?par {
               ?s a skos:Concept; luc:term \"#{search}\";
-                 skos:inScheme <http://concept_scheme.getty.edu/tgn/> ;
+                 skos:inScheme <http://vocab.getty.edu/tgn/> ;
                  gvp:prefLabelGVP [skosxl:literalForm ?name] ;
                   gvp:parentString ?par .
               FILTER regex(?name, \"#{search}\", \"i\") .
@@ -36,7 +37,7 @@ class TGN < Qa::Authorities::Base
     end
 
     def find_url id
-      "http://concept_scheme.getty.edu/tgn/#{id}.json"
+      "http://vocab.getty.edu/tgn/#{id}.json"
     end
 
     def request_options
