@@ -3,8 +3,8 @@ source 'https://rubygems.org'
 gem 'dotenv-rails', :groups => [:development, :test]
 
 gem 'cocoon'
-#gem 'qa'
-gem 'qa', :path => "/home/geekscruff/Dropbox/code/rails/questioning_authority"
+gem 'qa'
+#gem 'qa', :path => "LOCALPATH"
 gem 'jquery-ui-rails'
 gem 'hydra', '9.0.0'
 gem 'active_fedora-noid'

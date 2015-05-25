@@ -1,6 +1,11 @@
 class TGN < Qa::Authorities::Base
     include Qa::Authorities::WebServiceBase
 
+    attr_reader :subauthority
+    def initialize(subauthority)
+      @subauthority = subauthority
+    end
+
     def search q
       parse_authority_response(json(build_query_url(q)))
     end

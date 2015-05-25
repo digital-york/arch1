@@ -1,5 +1,10 @@
 class Terms
 
+  attr_reader :subauthority
+  def initialize(subauthority)
+    @subauthority = subauthority
+  end
+
   def terms_id
     parse_terms_id_response(SolrQuery.new.solr_query(q='rdftype_tesim:http://www.w3.org/2004/02/skos/core#ConceptScheme AND title_tesim:"' + terms_list + '"'))
   end
@@ -11,6 +16,10 @@ class Terms
 
   def find id
     parse_authority_response(SolrQuery.new.solr_query(q='inScheme_ssim:"' + terms_id + '" AND id:"' + id + '"',fl='id,preflabel_tesim'))
+  end
+
+  def search q
+    parse_authority_response(SolrQuery.new.solr_query(q='inScheme_ssim:"' + terms_id + '" AND preflabel_tesim:"' + q + '"',fl='id,preflabel_tesim'))
   end
 
   private
