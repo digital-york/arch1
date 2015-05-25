@@ -1,8 +1,7 @@
 class ConceptScheme < ActiveFedora::Base
-  include RdfType,Identifier,Title
+  include RdfType,DCTerms,AssignId
 
   has_many :concepts
-  has_many :collections
   belongs_to :collection, predicate: ::RDF::URI.new('http://fedora.info/definitions/v4/repository#hasParent')
 
   # skos:ConceptScheme
