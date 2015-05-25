@@ -182,8 +182,8 @@
                               <table cellspacing="0" class="tab3">
 
                                 <tr>
-                                  <th style="width: 130px">
-                                    Place As Written*
+                                  <th style="width: 100px">
+                                    As Written*
                                   </th>
                                   <td>
                                     <div style="padding: 4px 0px; min-height: 18px" class="field_group">
@@ -199,7 +199,7 @@
                                 </tr>
 
                                 <tr>
-                                  <th style="width: 130px">
+                                  <th>
                                     Place Type
                                   </th>
                                   <td>
@@ -223,7 +223,7 @@
                                 </tr>
 
                                 <tr>
-                                  <th style="width: 130px">
+                                  <th>
                                     Note*
                                   </th>
                                   <td>
@@ -263,8 +263,8 @@
                               <table cellspacing="0" class="tab3">
 
                                 <tr>
-                                  <th style="width: 130px">
-                                    Person As Written*
+                                  <th style="width: 100px">
+                                    As Written*
                                   </th>
                                   <td>
                                     <div style="padding: 4px 0px; min-height: 18px" class="field_group">
@@ -278,9 +278,153 @@
                                     </div>
                                   </td>
                                 </tr>
+
+                                <tr>
+                                  <th style="width: 100px">
+                                    Role
+                                  </th>
+                                  <td>
+                                    <div style="padding: 4px 0px; min-height: 18px" class="field_group">
+
+                                      <% related_person.person_role.each do |person_role| %>
+                                          <div class="field_single" style="padding: 4px 0px">
+                                            <%= person_role %>
+                                          </div>
+                                      <% end %>
+
+                                    </div>
+                                  </td>
+                                </tr>
+
+                                <tr>
+                                  <th style="width: 100px">
+                                    Qualification
+                                  </th>
+                                  <td>
+                                    <div style="padding: 4px 0px; min-height: 18px" class="field_group">
+
+                                      <% related_person.person_qualification.each do |person_qualification| %>
+                                          <div class="field_single" style="padding: 4px 0px">
+                                            <%= person_qualification %>
+                                          </div>
+                                      <% end %>
+
+                                    </div>
+                                  </td>
+                                </tr>
+
+                                <tr>
+                                  <th>Gender</th>
+                                  <td>
+                                    <%= related_person.person_gender %>
+                                  </td>
+                                </tr>
+
+                                <tr>
+                                  <th>Same As*</th>
+                                  <td>
+                                    <%= related_person.person_same_as %>
+                                  </td>
+                                </tr>
+
+                                <tr>
+                                  <th style="width: 100px">
+                                    Related Place
+                                  </th>
+                                  <td>
+                                    <div style="padding: 4px 0px; min-height: 18px" class="field_group">
+
+                                      <% related_person.person_related_place.each do |person_related_place| %>
+                                          <div class="field_single" style="padding: 4px 0px">
+                                            <%= person_related_place %>
+                                          </div>
+                                      <% end %>
+
+                                    </div>
+                                  </td>
+                                </tr>
+
+                                <tr>
+                                  <th style="width: 100px">
+                                    Residence
+                                  </th>
+                                  <td>
+                                    <div style="padding: 4px 0px; min-height: 18px" class="field_group">
+
+                                      <% related_person.person_place_of_residence.each do |person_place_of_residence| %>
+                                          <div class="field_single" style="padding: 4px 0px">
+                                            <%= person_place_of_residence %>
+                                          </div>
+                                      <% end %>
+
+                                    </div>
+                                  </td>
+                                </tr>
+
+                                <tr>
+                                  <th style="width: 100px">
+                                    Note
+                                  </th>
+                                  <td>
+                                    <div style="padding: 4px 0px; min-height: 18px" class="field_group">
+
+                                      <% related_person.person_qualification.each do |person_qualification| %>
+                                          <div class="field_single" style="padding: 4px 0px">
+                                            <%= person_qualification %>
+                                          </div>
+                                      <% end %>
+
+                                    </div>
+                                  </td>
+                                </tr>
+
                               </table>
                             </div>
 
+                          </div>
+                      <% end %>
+                    </td>
+                  </tr>
+
+                  <%# Entry Date %>
+                  <tr>
+
+                    <th>Date:</th>
+
+                    <td class="tab2">
+
+                      <%# @entry.related_people.each do |related_person| %>
+                      <% @entry.entry_dates.each do |entry_date| %>
+
+                          <div class="field_group">
+
+                            <div class="field_single">
+
+                              <table cellspacing="0" class="tab3">
+
+                                <tr>
+                                  <th>Same As</th>
+                                  <td>
+                                    <%= entry_date.date_as_written %>
+                                  </td>
+                                </tr>
+
+                                <tr>
+                                  <th>Note</th>
+                                  <td>
+                                    <%= entry_date.date_note %>
+                                  </td>
+                                </tr>
+
+                                <tr>
+                                  <th>Date Type</th>
+                                  <td>
+                                    <%= entry_date.date_type %>
+                                  </td>
+                                </tr>
+
+                              </table>
+                            </div>
                           </div>
                       <% end %>
                     </td>
