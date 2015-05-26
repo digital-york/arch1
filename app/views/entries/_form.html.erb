@@ -414,7 +414,7 @@
                         <tr>
                           <th>Gender</th>
                           <td>
-                            <%= select_tag "entry[related_people_attributes][" + index1.to_s + "][person_gender]", options_for_select(["--- select ---", "Male", "Female", "Undefined"], related_person.person_gender) %>
+                            <%= select_tag "entry[related_people_attributes][" + index1.to_s + "][person_gender]", options_for_select([["--- select ---", ""], "Male", "Female", "Undefined"], related_person.person_gender) %>
                           </td>
                         </tr>
 
