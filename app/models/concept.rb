@@ -1,16 +1,12 @@
 require 'active_fedora/noid'
 
 class Concept < ActiveFedora::Base
-  include Identifier,RdfType,FormerId,AssignId,SameAs
+  include RdfType,FormerId,AssignId,SameAs,PrefLabel,DCTerms
 
   belongs_to :concept_scheme, predicate: ::RDF::SKOS.inScheme
 
   # skos:Concept
   # http://fedora.info/definitions/v4/indexing#Indexable
-
-  property :preflabel, predicate: ::RDF::SKOS.prefLabel, multiple: false do |index|
-    index.as :stored_searchable
-  end
 
   property :altlabel, predicate: ::RDF::SKOS.altLabel, multiple: true do |index|
     index.as :stored_searchable
