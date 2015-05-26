@@ -3,225 +3,308 @@ namespace :arch1 do
   task loadsubjects: :environment do
 
     #This task processes the existing subject headings scheme for the borthwick registers into Fedora objects
-    #Creates a Collection object for 'subjects' (unless it already exists)
-    #Creates a ConceptScheme object for the scheme (unless it already exists)
-    #Creates Subject Headings objects for each subject using the noid template (ie. unique pids)
+    #Creates a ConceptScheme object for the scheme
+    #Creates Subject Headings objects
     #Updates subject headings with broader and narrower terms
+
+    # If it fails to complete (java heap space error in fedora), it's setup to recover,
+    # the only manual step is to comment out as indicated below and and add in a where query
+    # for the correct fedora object
 
     require 'open-uri'
     require 'nokogiri'
+    require 'csv'
 
-    f = File.open("/home/geekscruff/tmp/subjects.xml")
-    @doc = Nokogiri::XML(f)
-    f.close
+    puts 'Starting ... '
 
-    #@doc = Nokogiri::XML(open('http://dlib.york.ac.uk/ontologies/borthwick/subjects.xml')) do |config|
-    #  config.strict.nonet
-    #end
+    #for testing
+    #f = File.open("/home/geekscruff/tmp/subjects.xml")
+    #@doc = Nokogiri::XML(f)
+    #f.close
 
-    @subs_id = 'subjects'
-    @scheme_id = 'york:borthwick-registers-subject-headings'
-    @cons_id = 'concepts'
-
-    begin
-      puts 'Creating the Subjects collection'
-      c = Collection.new(@subs_id)
-      c.title = 'Subjects'
-      c.rdftype += ['http://fedora.info/definitions/v4/indexing#Indexable']
-      c.save
-      c.identifier = c.id
-      c.save
-      c.update_index
-    rescue
-      puts 'Subjects collection exists, skipping to next step'
+    @doc = Nokogiri::XML(open('http://dlib.york.ac.uk/ontologies/borthwick/subjects.xml')) do |config|
+      config.strict.nonet
     end
 
     puts 'Creating the Subjects Scheme'
 
+    @path = '/home/geekscruff/Dropbox/code/rails/arch1/lib/tasks/' # SET THE PATH
+    @skip = false # run broader / narrower
     @scheme # the scheme (parent) record id
-    @concepts #the concepts container
     @subjects = {} # subject record ids
     begin
-      @scheme = ConceptScheme.new(@subs_id + '/' + @scheme_id)
-      @scheme.title = @doc.css('rdf|description rdf|label').text
-      @scheme.rdftype += ['http://fedora.info/definitions/v4/indexing#Indexable', 'http://www.w3.org/2004/02/skos/core#ConceptScheme']
-      @scheme.save
-      @scheme.identifier = @scheme.id.split('/').last
-      @scheme.save
-      @scheme.update_index
-    rescue
-      puts 'Scheme exists, assigning to local variable'
-      @scheme = ConceptScheme.where(id: @subs_id + '/' + @scheme_id).first
-    end
-
-    begin
-      puts 'Creating the Concepts Container'
-      @concepts = Collection.new(@subs_id + '/' + @scheme_id + '/' + @cons_id)
-      @concepts.title = 'Concepts'
-      @concepts.rdftype += ['http://fedora.info/definitions/v4/indexing#Indexable']
-      # add a ldp:DirectContainer directly in Fedora; doing it here does not add the mixin type
-      # direct contains support is coming in AF I am bleeding edge!
-      # Oh, I don't really think this is necessary now
-      #@concepts.memresource = @scheme
-      #@concepts.memrelation = 'http://www.w3.org/2004/02/skos/core#inScheme'
-      @concepts.save
-      @concepts.identifier = c.id.split('/').last
-      @concepts.save
-      @concepts.update_index
+      # == COMMENT OUT WHEN RUNNING A RECOVERY ==
+      # @scheme = ConceptScheme.new
+      # @scheme.title = @doc.css('rdf|description rdf|label').text
+      # @scheme.description = @doc.css('rdf|description rdf|label').text + ". Produced from data created during the Archbishop's Registers Pilot project, funded by the Mellon Foundation."
+      # @scheme.rdftype += ['http://fedora.info/definitions/v4/indexing#Indexable', 'http://www.w3.org/2004/02/skos/core#ConceptScheme']
+      # @scheme.save
+      # @scheme.identifier = @scheme.id
+      # @scheme.save
+      # @scheme.update_index
+      # == END  ==
+      # == UNCOMMENT WHEN RUNNING A RECOVERY AND ADD IN THE RIGHT ID ==
+      @scheme = ConceptScheme.where(id: 'yorkabp:457').first
+      # == END  ==
+      puts 'Created ' + @scheme.id
     rescue
       puts $!
-      puts 'Concepts collection exists, skipping to next step'
-      @concepts = Collection.where(id: @subs_id + '/' + @scheme_id + '/' + @cons_id).first
     end
 
     puts 'Processing subject headings. This may take some time ... '
 
-    @doc.css('rdf|description').each do |i|
-      if i.css('skos|prefLabel').text != ''
-        h = Concept.new
-        h.set_id_path(@subs_id + '/' + @scheme_id + '/' + @cons_id)
-        h.concept_scheme = @scheme
-        h.rdftype += ['http://www.w3.org/2004/02/skos/core#Concept', 'http://fedora.info/definitions/v4/indexing#Indexable']
-        h.preflabel = i.css('skos|prefLabel').text
-        if i.css('skos|altLabel')
-          i.css('skos|altLabel').each do |i|
-            h.altlabel += [i.text]
-          end
-        end
-        if i.css('skos|definition').text != ''
-          h.definition = i.css('skos|definition').text
-        end
-        h.save
-        if i.css('skos|broader').text == ''
-          h.istopconcept = 'true'
-          @scheme.topconcept += [h]
-          @scheme.save
-        end
-        h.identifier = h.id.split('/').last
-        h.former_id = i.values
-        h.save
-        @subjects[i.values] = h.id
-        h.update_index
-      end
+    @tmp = {}
+
+    if File.exists?(@path + 'headings.csv')
+      f = File.open(@path + 'headings.csv', 'rb')
+      @tmp = eval(f.read) # a hash
     end
 
-    puts 'Adding broader and narrower terms. This may take some time ... '
+    # this isn't needed any more but can be useful if you lose the headings list
+    # generate a list from a solr query, turn into an array
+    # arr = CSV.read(@path + 'headings1.csv')
+    # arr.each do | key, value |
+    #   @tmp[[key]] = value
+    # end
 
-    @doc.css('rdf|description').each_with_index do |i |
-      if i.css('skos|prefLabel').text != ''
-        m = Concept.where(id: @subjects[i.values]).first
-        if i.css('skos|narrower')
-          i.css('skos|narrower').each do |i|
-            begin
-              a = [i.text]
-              n = Concept.where(id: @subjects[a]).first
-              m.narrower += [n]
-            rescue
-              puts 'ERROR with adding narrower :',i.text
-              puts 'to object pid: ',m.id
+    begin
+      f = File.open(@path + 'headings.csv', 'w')
+      @doc.css('rdf|description').each do |i|
+        if i.css('skos|prefLabel').text != ''
+          if @tmp != nil and @tmp.has_key?(i.values)
+            @subjects[i.values] = @tmp[i.values]
+            #puts 'skipping ' + @tmp[i.values]
+          else
+
+            h = Concept.new
+            h.rdftype += ['http://www.w3.org/2004/02/skos/core#Concept', 'http://fedora.info/definitions/v4/indexing#Indexable']
+            h.preflabel = i.css('skos|prefLabel').text
+            h.concept_scheme = @scheme
+            if i.css('skos|altLabel')
+              i.css('skos|altLabel').each do |i|
+                h.altlabel += [i.text]
+              end
+            end
+            if i.css('skos|definition').text != ''
+              h.definition = i.css('skos|definition').text
+            end
+            h.save
+            if i.css('skos|broader').text == ''
+              h.istopconcept = 'true'
+              @scheme.topconcept += [h]
+              @scheme.save
+            end
+            h.identifier = h.id
+            h.former_id = i.values
+            h.save
+            h.update_index
+            @subjects[i.values] = h.id
+
+          end
+        end
+      end
+    rescue
+      f.write(@subjects)
+      f.close
+      @skip = true
+      puts $!
+    end
+
+    # need them in case bn fails
+    f.write(@subjects)
+    f.close
+
+    if @skip == false
+      puts 'Adding broader and narrower terms. This may take some time ... '
+
+      @tmp_bn = []
+
+      if File.exists?(@path + 'headings_bn.csv')
+        ff = File.open(@path + 'headings_bn.csv', 'rb')
+        @tmp_bn = eval(ff.read) # an array
+      end
+
+      begin
+        ff = File.open(@path + 'headings_bn.csv', 'w')
+        @doc.css('rdf|description').each do | i |
+          if i.css('skos|prefLabel').text != ''
+
+            if @tmp_bn != nil and @tmp_bn.include?(i.values)
+              #puts 'skipping b/n '
+            else
+              m = Concept.where(id: @subjects[i.values]).first
+              if i.css('skos|narrower')
+                i.css('skos|narrower').each do |i|
+                  begin
+                    a = [i.text]
+                    n = Concept.where(id: @subjects[a]).first
+                    m.narrower += [n]
+                  rescue
+                    puts 'ERROR with adding narrower :', i.text
+                    puts 'to object pid: ', m.id
+                  end
+                end
+              end
+              if i.css('skos|broader')
+                i.css('skos|broader').each do |i|
+                  begin
+                    a = [i.text]
+                    b = Concept.where(id: @subjects[a]).first
+                    m.broader = [b]
+                  rescue
+                    puts 'ERROR with adding broader :', i.text
+                    puts 'to object pid: ', m.id
+                  end
+                end
+              end
+              m.save
+              m.update_index
+              @tmp_bn += i.values
+              puts 'done object: ', m.id
             end
           end
         end
-        if i.css('skos|broader')
-          i.css('skos|broader').each do |i|
-            begin
-              a = [i.text]
-              b = Concept.where(id: @subjects[a]).first
-              m.broader = [b]
-            rescue
-              puts 'ERROR with adding broader :',i.text
-              puts 'to object pid: ',m.id
-            end
-          end
-        end
-        m.save
-        m.update_index
+      rescue
+        ff.write(@tmp_bn)
+        ff.close
+        puts $!
       end
     end
     puts 'Finished!'
+  end
+
+  task readterms: :environment do
+
+    list = ['folio-faces','folios', 'currencies', 'date-types', 'certainty', 'qualifications', 'place-types', 'statuses', 'roles']
+
+    list.each do | l |
+      arr = CSV.read('/home/geekscruff/tmp/abs/' + l + '.csv')
+      arr = arr.uniq
+      arr = arr.sort!
+
+      newarr = []
+      arr.each do | i |
+        if i[0] != nil
+          #remove brackets and question marks, strip out leading / trailing whitespace
+          newarr += [i[0].gsub('[','').gsub(']','').gsub('?','').strip]
+        end
+      end
+
+      f = File.open('/home/geekscruff/Dropbox/code/rails/arch1/lib/tasks/' + l + '.csv', 'w')
+      newarr.uniq.each do | i |
+        if i != nil
+          f.write(i + "\n")
+        end
+      end
+
+      f.close
+    end
+
   end
 
   task loadterms: :environment do
 
     require 'csv'
 
-    list = ['place-types','statuses', 'roles', 'qualifications','folio-faces','folios','currencies','languages','date-types','certainty']
+    @path = '/home/geekscruff/Dropbox/code/rails/arch1/lib/tasks/' # SET THE PATH
 
-    list.each do | i |
+    # .csv files should exist in the specified path
+    list = ['folio-faces','folios', 'currencies', 'date-types', 'certainty', 'qualifications','place-types', 'statuses', 'roles']
 
-      # let's load the statuses, roles and qualifications
+    list.each do |i|
 
-      @subs_id = 'terms'
-      @scheme_id = 'york:borthwick-registers-' + i
-      @cons_id = 'concepts'
-
-      begin
-        puts 'Creating the collection'
-        c = Collection.new(@subs_id)
-        c.title = 'Subjects'
-        c.rdftype += ['http://fedora.info/definitions/v4/indexing#Indexable']
-        c.save
-        c.identifier = c.id
-        c.save
-        c.update_index
-      rescue
-        puts 'Subjects collection exists, skipping to next step'
+      if i != 'folio-faces' and i != 'folios' and i != 'folios' and i != 'currencies' and i != 'date-types' and i != 'certainty' and i != 'qualifications'
+        puts 'Sleeping between the long ones'
+        sleep 60
       end
 
-      puts 'Creating the Subjects Scheme'
+      puts 'Creating the Concept Scheme'
 
-      @scheme # the scheme (parent) record id
-      @concepts #the concepts container
-      begin
-        @scheme = ConceptScheme.new(@subs_id + '/' + @scheme_id)
-        @scheme.title = i
-        @scheme.rdftype += ['http://fedora.info/definitions/v4/indexing#Indexable', 'http://www.w3.org/2004/02/skos/core#ConceptScheme']
-        @scheme.save
-        @scheme.identifier = @scheme.id.split('/').last
-        @scheme.save
-        @scheme.update_index
-      rescue
-        puts 'Scheme exists, assigning to local variable'
-        @scheme = ConceptScheme.where(id: @subs_id + '/' + @scheme_id).first
+      @arr = []
+      if File.exists?(@path + i + '_list.csv')
+        arr = CSV.read(@path + i + '_list.csv')
+        a = File.open(@path + i + '_list_processing.csv', 'w')
+        arr.each do | i |
+          a.write(i[0] + "\n")
+        end
+        a.close
+        @arr = CSV.read(@path + i + '_list_processing.csv')
       end
 
+        f = File.open(@path + i + '_list.csv', 'w')
+
       begin
-        puts 'Creating the Concepts Container'
-        @concepts = Collection.new(@subs_id + '/' + @scheme_id + '/' + @cons_id)
-        @concepts.title = 'Concepts'
-        @concepts.rdftype += ['http://fedora.info/definitions/v4/indexing#Indexable']
-        @concepts.save
-        @concepts.identifier = c.id.split('/').last
-        @concepts.save
-        @concepts.update_index
+
+        if @arr != []
+          @scheme = ConceptScheme.where(id: @arr[0]).first
+          puts @scheme.id + ' exists, using it'
+
+        else
+
+          @scheme = ConceptScheme.new
+          @scheme.title = i
+          @scheme.description = 'Terms for ' + i + " produced from data created during the Archbishop's Registers Pilot project, funded by the Mellon Foundation."
+          @scheme.rdftype += ['http://fedora.info/definitions/v4/indexing#Indexable', 'http://www.w3.org/2004/02/skos/core#ConceptScheme']
+          @scheme.save
+          @scheme.identifier = @scheme.id
+          @scheme.save
+          @scheme.update_index
+          f.write(@scheme.id + "\n")
+
+        end
       rescue
         puts $!
-        puts 'Concepts collection exists, skipping to next step'
-        @concepts = Collection.where(id: @subs_id + '/' + @scheme_id + '/' + @cons_id).first
       end
 
       puts 'Processing ' + i + '. This may take some time ... '
 
-      arr = CSV.read("/home/geekscruff/tmp/abs/" + i + ".csv")
+      arr = CSV.read(@path + i + '.csv')
       arr = arr.uniq
 
-      arr.each_with_index do | c, index |
-        puts index.to_s + ' of ' + arr.length.to_s
-        c.each do | b |
-          h = Concept.new
-          h.set_id_path(@subs_id + '/' + @scheme_id + '/' + @cons_id)
-          h.concept_scheme = @scheme
-          h.rdftype += ['http://www.w3.org/2004/02/skos/core#Concept', 'http://fedora.info/definitions/v4/indexing#Indexable']
-          h.preflabel = b.strip
-          h.save
-          h.identifier = h.id.split('/').last
-          h.save
-          h.update_index
+      arr.each_with_index do |c,index|
+        c.each do |b|
+          begin
 
+            if i != 'folio-faces' and i != 'folios' and i != 'currencies' and i != 'date-types' and i != 'certainty' and i != 'qualifications'
+              sleep 5
+              puts index
+            end
+
+            if @arr != []
+              if @arr.include? [b.strip]
+                puts 'skipping ' + b.strip
+              else
+                h = Concept.new
+                h.rdftype += ['http://www.w3.org/2004/02/skos/core#Concept', 'http://fedora.info/definitions/v4/indexing#Indexable']
+                h.preflabel = b.strip
+                h.concept_scheme = @scheme
+                h.save
+                h.identifier = h.id
+                h.save
+                h.update_index
+                f.write(h.preflabel + "\n")
+              end
+            else
+              h = Concept.new
+              h.rdftype += ['http://www.w3.org/2004/02/skos/core#Concept', 'http://fedora.info/definitions/v4/indexing#Indexable']
+              h.preflabel = b.strip
+              h.concept_scheme = @scheme
+              h.save
+              h.identifier = h.id
+              h.save
+              h.update_index
+              f.write(h.preflabel + "\n")
+            end
+          rescue
+            f.close
+            puts $!
+          end
         end
       end
-
+      f.close
+      File.delete(@path + i + '_list.csv')
     end
-
+    puts 'Finished!'
   end
+
 end
