@@ -1,5 +1,3 @@
-require 'active_fedora/noid'
-
 class Concept < ActiveFedora::Base
   include RdfType,FormerId,AssignId,SameAs,PrefLabel,DCTerms
 

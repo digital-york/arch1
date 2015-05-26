@@ -1,12 +1,14 @@
 module AssignId
   extend ActiveSupport::Concern
 
-  # included do
-  #   @id_path = ''
-  # end
+  included do
+    require 'active_fedora/noid'
+    # @id_path = ''
+  end
 
   def assign_id
-    # commented out line will create a date-based 'pairtree' structure in fedora
+
+    # LEGACY CODE FROM FIDDLING WITH CONTAINERS
     # @id_path + Time.now.strftime("%Y/%m/%d/%H/%M/") + noid_service.mint
     # this can also be done with NOID automagically, see NOID documentation
     # if @id_path.nil?
@@ -19,6 +21,7 @@ module AssignId
 
   end
 
+  # LEGACY CODE FROM FIDDLING WITH CONTAINERS
   # def set_id_path(p)
   #   p.gsub(/\s+/, "") # remove whitespace
   #   if p.end_with?('/')
