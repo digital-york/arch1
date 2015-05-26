@@ -22,7 +22,7 @@
 .idea
 
 # Ignore intellij .iml file
-.iml
+*.iml
 
 #ignore minter state file
 /config/noid-minter-state
