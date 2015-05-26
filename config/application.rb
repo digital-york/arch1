@@ -30,7 +30,7 @@ module Arch1
     config.active_record.raise_in_transactional_callbacks = true
 
     #Load sub-directories of app/models
-    #config.autoload_paths += Dir[Rails.root.join('app', 'models', '{**/}')]
+    config.autoload_paths += Dir[Rails.root.join('models', '{**/}')]
 
   end
 end
