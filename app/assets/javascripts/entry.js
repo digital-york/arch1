@@ -142,7 +142,7 @@ $(document).ready(function () {
                 + get_template_level1_level2_select("related_people_attributes", jq_index, "person_role", "Role")
                 + get_template_level1_level2_select("related_people_attributes", jq_index, "person_qualification", "Qualification") +
                 "<tr><th>Gender</th><td><select name='entry[related_people_attributes][" + jq_index + "][person_gender]'><option>--- select ---</option><option>Male</option><option>Female</option><option>Undefined</option></select></td></tr>" +
-                "<tr><th>Same As*</th><td><input type='text' style='width: 100%' class='input_box' value='' id='' name='entry[related_people_attributes][" + jq_index + "][person_same_as]'></td></tr>" +
+                "<tr><th>Same As*</th><td><input type='text' style='width: 100%' class='input_box' value='' id='' name='entry[related_people_attributes][" + jq_index + "][person_same_as]'></td></tr>"
                 + get_template_level1_level2_multiple("related_people_attributes", jq_index, "person_related_place", "Related Place")
                 + get_template_level1_level2_multiple("related_people_attributes", jq_index, "person_place_of_residence", "Residence")
                 + get_template_level1_level2_multiple("related_people_attributes", jq_index, "person_note", "Note") +
