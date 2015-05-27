@@ -1,30 +1,30 @@
 class Entry < ActiveFedora::Base
 
-  property :register, predicate: ::RDF::URI.new('http://dlib.york.ac.uk/entry#register'), multiple: false do |index|
+  property :register, predicate: ::RDF::URI.new('http://dlib.york.ac.uk/ontologies/borthwick-registers#register'), multiple: false do |index|
     index.as :stored_searchable
   end
 
-  property :folio, predicate: ::RDF::URI.new('http://dlib.york.ac.uk/entry#folio'), multiple: false do |index|
+  property :entry_no, predicate: ::RDF::URI.new('http://dlib.york.ac.uk/ontologies/borthwick-registers#entryNo'), multiple: false do |index|
     index.as :stored_searchable
   end
 
-  property :folio_face, predicate: ::RDF::URI.new('http://dlib.york.ac.uk/entry#folioFace'), multiple: false do |index|
+  property :folio, predicate: ::RDF::URI.new('http://dlib.york.ac.uk/ontologies/borthwick-registers#folio'), multiple: false do |index|
     index.as :stored_searchable
   end
 
-  property :access_provided_by, predicate: ::RDF::URI.new('http://dlib.york.ac.uk/entry#access_provided_by'), multiple: false do |index|
+  property :folio_face, predicate: ::RDF::URI.new('http://dlib.york.ac.uk/ontologies/borthwick-registers#folioFace'), multiple: false do |index|
     index.as :stored_searchable
   end
 
-  property :entry_no, predicate: ::RDF::URI.new('http://dlib.york.ac.uk/entry#entryNo'), multiple: false do |index|
+  property :access_provided_by, predicate: ::RDF::URI.new('http://data.archiveshub.ac.uk/def/accessProvidedBy'), multiple: false do |index|
     index.as :stored_searchable
   end
 
-  property :entry_part, predicate: ::RDF::URI.new('http://dlib.york.ac.uk/entry#entryPart'), multiple: false do |index|
+  property :entry_part, predicate: ::RDF::URI.new('http://dlib.york.ac.uk/ontologies/borthwick-registers#entryPart'), multiple: false do |index|
     index.as :stored_searchable
   end
 
-  property :is_blank, predicate: ::RDF::URI.new('http://dlib.york.ac.uk/entry#isBlank'), multiple: false do |index|
+  property :is_blank, predicate: ::RDF::URI.new('http://dlib.york.ac.uk/ontologies/borthwick-registers#isBlank'), multiple: false do |index|
     index.as :stored_searchable
   end
 
@@ -32,27 +32,27 @@ class Entry < ActiveFedora::Base
     index.as :stored_searchable
   end
 
-  property :language, predicate: ::RDF::URI.new('http://dlib.york.ac.uk/entry#language'), multiple: true do |index|
+  property :language, predicate: ::RDF::URI.new('http://purl.org/dc/terms/language'), multiple: true do |index|
     index.as :stored_searchable
   end
 
-  property :note, predicate: ::RDF::URI.new('http://dlib.york.ac.uk/entry#note'), multiple: true do |index|
+  property :note, predicate: ::RDF::URI.new('hhttp://dlib.york.ac.uk/ontologies/borthwick-registers#note'), multiple: true do |index|
     index.as :stored_searchable
   end
 
-  property :editorial_note, predicate: ::RDF::URI.new('http://dlib.york.ac.uk/entry#editorial_note'), multiple: true do |index|
+  property :editorial_note, predicate: ::RDF::URI.new('http://dlib.york.ac.uk/ontologies/borthwick-registers#editorial_note'), multiple: true do |index|
     index.as :stored_searchable
   end
 
-  property :marginal_note, predicate: ::RDF::URI.new('http://dlib.york.ac.uk/entry#marginal_note'), multiple: true do |index|
+  property :marginal_note, predicate: ::RDF::URI.new('http://dlib.york.ac.uk/ontologies/borthwick-registers#marginal_note'), multiple: true do |index|
     index.as :stored_searchable
   end
 
-  property :is_referenced_by, predicate: ::RDF::URI.new('http://dlib.york.ac.uk/entry#is_referenced_by'), multiple: true do |index|
+  property :is_referenced_by, predicate: ::RDF::URI.new('http://purl.org/dc/terms/is_referenced_by'), multiple: true do |index|
     index.as :stored_searchable
   end
 
-  property :subject, predicate: ::RDF::URI.new('http://dlib.york.ac.uk/entry#subject'), multiple: true do |index|
+  property :subject, predicate: ::RDF::URI.new('http://purl.org/dc/terms/subject'), multiple: true do |index|
     index.as :stored_searchable
   end
 
