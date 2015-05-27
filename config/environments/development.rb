@@ -9,6 +9,10 @@ Rails.application.configure do
   # Do not eager load code on boot.
   config.eager_load = false
 
+  #See http://stackoverflow.com/questions/21605318/how-can-i-serve-requests-concurrently-with-rails-4
+  # Allow multiple threads in dev mode
+  config.middleware.delete Rack::Lock
+
   # Show full error reports and disable caching.
   config.consider_all_requests_local       = true
   config.action_controller.perform_caching = false
