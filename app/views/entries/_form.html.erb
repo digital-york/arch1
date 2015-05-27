@@ -87,10 +87,10 @@
                 <span class='edit_button'>
 				<% if @entry.new_record? %>
 				<%= f.submit 'Submit' %>
-                      <a href='<%= entries_path %>'><input type='button' value='Back' style='color: black'/></a>
+                      <a href='<%= entries_path %>'><input type='button' value='Back' style=''/></a>
 				<% else %>
 				<%= f.submit 'Update' %>
-                      <a href='<%= entry_path(@entry) %>'><input type='button' value='Back to View' style='color: black'/></a>
+                      <a href='<%= entry_path(@entry) %>'><input type='button' value='Back to View' style=''/></a>
 				<% end %>
 				</span>
               </div>
@@ -549,10 +549,10 @@
                 <span class='editButton'>
 				<% if @entry.new_record? %>
 				<%= f.submit 'Submit' %>
-                      <a href='<%= entries_path %>'><input type='button' value='Back' style='color: black'/></a>
+                      <a href='<%= entries_path %>'><input type='button' value='Back' style=''/></a>
 				<% else %>
 				<%= f.submit 'Update' %>
-                      <a href='<%= entry_path(@entry) %>'><input type='button' value='Back to View' style='color: black'/></a>
+                      <a href='<%= entry_path(@entry) %>'><input type='button' value='Back to View' style=''/></a>
 				<% end %>
 				</span>
               </div>

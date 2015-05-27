@@ -120,8 +120,6 @@ class EntriesController < ApplicationController
   # EDIT
   def edit
 
-    #puts entry_params
-
     # This code sets the new session variables and redirects to index if the 'Go' button is clicked on the edit page
     if params[:go] == 'true'
       get_current_folio
@@ -158,8 +156,6 @@ class EntriesController < ApplicationController
 
   # UPDATE
   def update
-
-    puts entry_params
 
     # See validation.rb in /concerns
     #@errors = validate(entry_params)
