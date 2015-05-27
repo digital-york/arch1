@@ -10,7 +10,6 @@ class Terms
   end
 
   def all
-    puts 'inScheme_ssim:"' + terms_id + '"'
     parse_authority_response(SolrQuery.new.solr_query(q='inScheme_ssim:"' + terms_id + '"',fl='id,preflabel_tesim',rows=1000,sort='preflabel_si asc'))
   end
 
