@@ -14,7 +14,6 @@ table {
 
 th, td {
   padding: 7px 8px;
-  padding: 7px 8px;
 }
 
 th {
@@ -202,7 +201,8 @@ a:hover {
 }
 
 .highlight {
-  background-color: #e1e1e1;
+  color: #9c6b17;
+  background-color: #E1E1E1;
   border-radius: 6px 6px 0 0;
   padding: 6px 10px 6px 12px;
 }
@@ -433,4 +433,23 @@ a:hover {
 .timeout {
   border-radius: 3px;
   background-color: #B7A17C;
+}
+
+.gray_box {
+  background-color: #F2F0F0;
+  padding: 4px 5px;
+  border: 1px solid silver;
+  min-height: 18px;
+}
+
+.field_single {
+  padding: 4px 0px;
+}
+
+.no_padding {
+  padding: 0px;
+}
+
+.input_single input[type="text"] {
+  width: 100%;
 }

@@ -46,13 +46,13 @@
                     <% @entries.each do |entry| %>
                         <% i = i + 1 %>
                         <li>
-					  <span class='nohighlight' style='color: #888888'>
+					  <span class='nohighlight'>
 					    <%= link_to entry.entry_no, entry_path(entry) %>
 					  </span>
                         </li>
                     <% end %>
                     <li>
-                      <span class='highlight' style='color: #9C6B17'>
+                      <span class='highlight'>
 					    New Entry
 					  </span>
                     </li>
@@ -61,18 +61,18 @@
                         <% i = i + 1 %>
                         <li>
                           <% if entry.id == @entry.id %>
-						  <span class='highlight' style='color: #9C6B17'>
+						  <span class='highlight'>
 						    <%= entry.entry_no %>
 						  </span>
                           <% else %>
-						  <span class='nohighlight' style='color: #888888'>
+						  <span class='nohighlight'>
 						    <%= link_to entry.entry_no, edit_entry_path(entry) %>
 						  </span>
                           <% end %>
                         </li>
                     <% end %>
                     <li>
-                    <span class='nohighlight' style='color: #9F9F9F'>
+                    <span class='nohighlight'>
 				      <%= link_to 'New Entry', new_entry_path, {:title => 'Create new entry'} %>
 					</span>
                     </li>
@@ -87,10 +87,10 @@
                 <span class='edit_button'>
 				<% if @entry.new_record? %>
 				<%= f.submit 'Submit' %>
-                      <a href='<%= entries_path %>'><input type='button' value='Back' style=''/></a>
+                      <a href='<%= entries_path %>'><input type='button' value='Back' /></a>
 				<% else %>
 				<%= f.submit 'Update' %>
-                      <a href='<%= entry_path(@entry) %>'><input type='button' value='Back to View' style=''/></a>
+                      <a href='<%= entry_path(@entry) %>'><input type='button' value='Back to View' /></a>
 				<% end %>
 				</span>
               </div>
@@ -156,7 +156,7 @@
             <td>
               <div class="field_group">
                 <% @entry.language.each do |language| %>
-                    <div class="field_single" style="padding: 4px 0px">
+                    <div class="field_single">
                       <%= select_tag 'entry[language][]', options_for_select(@language_list.collect{ |element| [element[0]] }.insert(0, ["--- select ---", ""]), language) %>
                       <img alt="Delete icon" src="/assets/delete.png" class="delete_icon_select remove_field_level1" jq_tag_type="select">
                     </div>
@@ -173,7 +173,7 @@
             <td>
               <div class="field_group">
                 <% @entry.note.each do |note| %>
-                    <div class="field_single" style="padding: 4px 0px">
+                    <div class="field_single">
                       <%= text_field_tag "entry[note][]", note, class: 'input_box', id: '' %>
                       <%= image_tag('delete.png', class: 'delete_icon remove_field_level1') %>
                     </div>
@@ -190,7 +190,7 @@
             <td>
               <div class="field_group">
                 <% @entry.editorial_note.each do |editorial_note| %>
-                    <div class="field_single" style="padding: 4px 0px">
+                    <div class="field_single">
                       <%= text_field_tag "entry[editorial_note][]", editorial_note, class: 'input_box', id: '' %>
                       <%= image_tag('delete.png', class: 'delete_icon remove_field_level1') %>
                     </div>
@@ -207,7 +207,7 @@
             <td>
               <div class="field_group">
                 <% @entry.marginal_note.each do |marginal_note| %>
-                    <div class="field_single" style="padding: 4px 0px">
+                    <div class="field_single">
                       <%= text_field_tag "entry[marginal_note][]", marginal_note, class: 'input_box', id: '' %>
                       <%= image_tag('delete.png', class: 'delete_icon remove_field_level1') %>
                     </div>
@@ -224,7 +224,7 @@
             <td>
               <div class="field_group">
                 <% @entry.is_referenced_by.each do |is_referenced_by| %>
-                    <div class="field_single" style="padding: 4px 0px">
+                    <div class="field_single">
                       <%= text_field_tag "entry[is_referenced_by][]", is_referenced_by, class: 'input_box', id: '' %>
                       <%= image_tag('delete.png', class: 'delete_icon remove_field_level1') %>
                     </div>
@@ -241,7 +241,7 @@
             <td>
               <div class="field_group">
                 <% @entry.subject.each do |subject| %>
-                    <div class="field_single" style="padding: 4px 0px">
+                    <div class="field_single">
                       <%= text_field_tag "entry[subject][]", subject, class: 'input_box', id: '' %>
                       <%= image_tag('delete.png', class: 'delete_icon remove_field_level1') %>
                     </div>
@@ -263,7 +263,7 @@
 
                 <% @entry.related_places.each_with_index do |related_place, index1| %>
 
-                    <div class="field_single">
+                    <div class="field_single no_padding">
 
                       <table cellspacing="0" class="tab3">
 
@@ -273,9 +273,9 @@
                             <img src="/assets/plus_sign.png" class="plus_icon add_field_level2_multiple" jq_attributes="related_places_attributes" jq_index="<%=index1%>" jq_type="place_as_written" />
                           </th>
                           <td>
-                            <div class="field_group background_gray" style="padding: 4px 5px; border: 1px solid silver; min-height: 18px">
+                            <div class="field_group gray_box">
                               <% related_place.place_as_written.each_with_index do |place_as_written, index2| %>
-                                  <div class="field_single" style="padding: 4px 0px">
+                                  <div class="field_single">
                                     <%= text_field_tag "entry[related_places_attributes][" + index1.to_s + "][place_as_written][]", place_as_written, class: 'input_box', id: '' %>
                                     &nbsp;<img src='/assets/delete.png' alt='Delete icon' class='delete_icon remove_field_level1'>
                                   </div>
@@ -290,9 +290,9 @@
                             <img src="/assets/plus_sign.png" class="plus_icon add_field_level2_multiple" jq_attributes="related_places_attributes" jq_index="<%=index1%>" jq_type="place_type"  />
                           </th>
                           <td>
-                            <div class="field_group background_gray" style="padding: 4px 5px; border: 1px solid silver; min-height: 18px">
+                            <div class="field_group gray_box">
                               <% related_place.place_type.each_with_index do |place_type, index2| %>
-                                  <div class="field_single" style="padding: 4px 0px">
+                                  <div class="field_single">
                                     <%= text_field_tag "entry[related_places_attributes][" + index1.to_s + "][place_type][]", place_type, class: 'input_box', id: '' %>
                                     &nbsp;<img src='/assets/delete.png' alt='Delete icon' class='delete_icon remove_field_level1'>
                                   </div>
@@ -303,8 +303,8 @@
 
                         <tr>
                           <th>Same As*</th>
-                          <td>
-                            <%= text_field_tag "entry[related_places_attributes][" + index1.to_s + "][place_same_as]", related_place.place_same_as, class: 'input_box', id: '', style: 'width: 100%' %>
+                          <td class="input_single">
+                            <%= text_field_tag "entry[related_places_attributes][" + index1.to_s + "][place_same_as]", related_place.place_same_as, class: 'input_box', id: '' %>
                           </td>
                         </tr>
 
@@ -314,9 +314,9 @@
                             <img src="/assets/plus_sign.png" class="plus_icon add_field_level2_multiple" jq_attributes="related_places_attributes" jq_index="<%=index1%>" jq_type="place_note" />
                           </th>
                           <td>
-                            <div class="field_group background_gray" style="padding: 4px 5px; border: 1px solid silver; min-height: 18px">
+                            <div class="field_group gray_box">
                               <% related_place.place_note.each_with_index do |place_note, index2| %>
-                                  <div class="field_single" style="padding: 4px 0px">
+                                  <div class="field_single">
                                     <%= text_field_tag "entry[related_places_attributes][" + index1.to_s + "][place_note][]", place_note, class: 'input_box', id: '' %>
                                     &nbsp;<img src='/assets/delete.png' alt='Delete icon' class='delete_icon remove_field_level1'>
                                   </div>
@@ -350,7 +350,7 @@
 
                 <% @entry.related_people.each_with_index do |related_person, index1| %>
 
-                    <div class="field_single">
+                    <div class="field_single no_padding">
 
                       <table cellspacing="0" class="tab3">
 
@@ -360,9 +360,9 @@
                             <img src="/assets/plus_sign.png" class="plus_icon add_field_level2_multiple" jq_attributes="related_people_attributes" jq_index="<%=index1%>" jq_type="person_as_written" />
                           </th>
                           <td>
-                            <div class="field_group background_gray" style="padding: 4px 5px; border: 1px solid silver; min-height: 18px">
+                            <div class="field_group gray_box">
                               <% related_person.person_as_written.each_with_index do |person_as_written, index2| %>
-                                  <div class="field_single" style="padding: 4px 0px">
+                                  <div class="field_single">
                                     <%= text_field_tag "entry[related_people_attributes][" + index1.to_s + "][person_as_written][]", person_as_written, class: 'input_box', id: '' %>
                                     &nbsp;<img src='/assets/delete.png' alt='Delete icon' class='delete_icon remove_field_level1'>
                                   </div>
@@ -380,9 +380,9 @@
                             <img src="/assets/plus_sign.png" class="plus_icon add_field_level2_select" jq_attributes="related_people_attributes" jq_index="<%=index1%>" jq_type="person_role" />
                           </th>
                           <td>
-                            <div class="field_group background_gray" style="padding: 4px 5px; border: 1px solid silver; min-height: 18px">
+                            <div class="field_group gray_box">
                               <% related_person.person_role.each_with_index do |person_role, index2| %>
-                                  <div class="field_single" style="padding: 4px 0px">
+                                  <div class="field_single">
                                     <%= select_tag "entry[related_people_attributes][" + index1.to_s + "][person_role][]", options_for_select(@role_list.collect { |element| [element[0]] }.insert(0, ["--- select ---", ""]), person_role) %>
                                     <img alt="Delete icon" src="/assets/delete.png" class="delete_icon_select remove_field_level1" jq_tag_type="select">
                                   </div>
@@ -400,9 +400,9 @@
                             <img src="/assets/plus_sign.png" class="plus_icon add_field_level2_select" jq_attributes="related_people_attributes" jq_index="<%=index1%>" jq_type="person_qualification" />
                           </th>
                           <td>
-                            <div class="field_group background_gray" style="padding: 4px 5px; border: 1px solid silver; min-height: 18px">
+                            <div class="field_group gray_box">
                               <% related_person.person_qualification.each_with_index do |person_qualification, index2| %>
-                                  <div class="field_single" style="padding: 4px 0px">
+                                  <div class="field_single">
                                     <%= select_tag "entry[related_people_attributes][" + index1.to_s + "][person_qualification][]", options_for_select(@qualification_list.collect { |element| [element[0]] }.insert(0, ["--- select ---", ""]), person_qualification) %>
                                     <img alt="Delete icon" src="/assets/delete.png" class="delete_icon_select remove_field_level1" jq_tag_type="select">
                                   </div>
@@ -420,8 +420,8 @@
 
                         <tr>
                           <th>Same As*</th>
-                          <td>
-                            <%= text_field_tag "entry[related_people_attributes][" + index1.to_s + "][person_same_as]", related_person.person_same_as, class: 'input_box', id: '', style: 'width: 100%' %>
+                          <td class="input_single">
+                            <%= text_field_tag "entry[related_people_attributes][" + index1.to_s + "][person_same_as]", related_person.person_same_as, class: 'input_box', id: '' %>
                           </td>
                         </tr>
 
@@ -431,9 +431,9 @@
                             <img src="/assets/plus_sign.png" class="plus_icon add_field_level2_multiple" jq_attributes="related_people_attributes" jq_index="<%=index1%>" jq_type="person_related_place" />
                           </th>
                           <td>
-                            <div class="field_group background_gray" style="padding: 4px 5px; border: 1px solid silver; min-height: 18px">
+                            <div class="field_group gray_box">
                               <% related_person.person_related_place.each_with_index do |person_related_place, index2| %>
-                                  <div class="field_single" style="padding: 4px 0px">
+                                  <div class="field_single">
                                     <%= text_field_tag "entry[related_people_attributes][" + index1.to_s + "][person_related_place][]", person_related_place, class: 'input_box', id: '' %>
                                     &nbsp;<img src='/assets/delete.png' alt='Delete icon' class='delete_icon remove_field_level1'>
                                   </div>
@@ -448,9 +448,9 @@
                             <img src="/assets/plus_sign.png" class="plus_icon add_field_level2_multiple" jq_attributes="related_people_attributes" jq_index="<%=index1%>" jq_type="person_place_of_residence" />
                           </th>
                           <td>
-                            <div class="field_group background_gray" style="padding: 4px 5px; border: 1px solid silver; min-height: 18px">
+                            <div class="field_group gray_box">
                               <% related_person.person_place_of_residence.each_with_index do |person_place_of_residence, index2| %>
-                                  <div class="field_single" style="padding: 4px 0px">
+                                  <div class="field_single">
                                     <%= text_field_tag "entry[related_people_attributes][" + index1.to_s + "][person_place_of_residence][]", person_place_of_residence, class: 'input_box', id: '' %>
                                     &nbsp;<img src='/assets/delete.png' alt='Delete icon' class='delete_icon remove_field_level1'>
                                   </div>
@@ -465,9 +465,9 @@
                             <img src="/assets/plus_sign.png" class="plus_icon add_field_level2_multiple" jq_attributes="related_people_attributes" jq_index="<%=index1%>" jq_type="person_note" />
                           </th>
                           <td>
-                            <div class="field_group background_gray" style="padding: 4px 5px; border: 1px solid silver; min-height: 18px">
+                            <div class="field_group gray_box">
                               <% related_person.person_note.each_with_index do |person_note, index2| %>
-                                  <div class="field_single" style="padding: 4px 0px">
+                                  <div class="field_single">
                                     <%= text_field_tag "entry[related_people_attributes][" + index1.to_s + "][person_note][]", person_note, class: 'input_box', id: '' %>
                                     &nbsp;<img src='/assets/delete.png' alt='Delete icon' class='delete_icon remove_field_level1'>
                                   </div>
@@ -500,21 +500,21 @@
 
                 <% @entry.entry_dates.each_with_index do |entry_date, index1| %>
 
-                    <div class="field_single">
+                    <div class="field_single  no_padding">
 
                       <table cellspacing="0" class="tab3">
 
                         <tr>
                           <th>As Written</th>
-                          <td>
-                            <%= text_field_tag "entry[entry_dates_attributes][" + index1.to_s + "][date_as_written]", entry_date.date_as_written, class: 'input_box', id: '', style: 'width: 100%' %>
+                          <td class="input_single">
+                            <%= text_field_tag "entry[entry_dates_attributes][" + index1.to_s + "][date_as_written]", entry_date.date_as_written, class: 'input_box', id: '' %>
                           </td>
                         </tr>
 
                         <tr>
                           <th>Note</th>
-                          <td>
-                            <%= text_field_tag "entry[entry_dates_attributes][" + index1.to_s + "][date_note]", entry_date.date_note, class: 'input_box', id: '', style: 'width: 100%' %>
+                          <td class="input_single">
+                            <%= text_field_tag "entry[entry_dates_attributes][" + index1.to_s + "][date_note]", entry_date.date_note, class: 'input_box', id: '' %>
                           </td>
                         </tr>
 
@@ -548,10 +548,10 @@
                 <span class='edit_button'>
 				<% if @entry.new_record? %>
 				<%= f.submit 'Submit' %>
-                      <a href='<%= entries_path %>'><input type='button' value='Back' style=''/></a>
+                      <a href='<%= entries_path %>'><input type='button' value='Back' /></a>
 				<% else %>
 				<%= f.submit 'Update' %>
-                      <a href='<%= entry_path(@entry) %>'><input type='button' value='Back to View' style=''/></a>
+                      <a href='<%= entry_path(@entry) %>'><input type='button' value='Back to View' /></a>
 				<% end %>
 				</span>
               </div>
