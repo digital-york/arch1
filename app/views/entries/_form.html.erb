@@ -427,23 +427,6 @@
 
                         <tr>
                           <th>
-                            Note
-                            <img src="/assets/plus_sign.png" class="plus_icon add_field_level2_multiple" jq_attributes="related_people_attributes" jq_index="<%=index1%>" jq_type="person_note" />
-                          </th>
-                          <td>
-                            <div class="field_group background_gray" style="padding: 4px 5px; border: 1px solid silver; min-height: 18px">
-                              <% related_person.person_note.each_with_index do |person_note, index2| %>
-                                  <div class="field_single" style="padding: 4px 0px">
-                                    <%= text_field_tag "entry[related_people_attributes][" + index1.to_s + "][person_note][]", person_note, class: 'input_box', id: '' %>
-                                    &nbsp;<img src='/assets/delete.png' alt='Delete icon' class='delete_icon remove_field_level1'>
-                                  </div>
-                              <% end %>
-                            </div>
-                          </td>
-                        </tr>
-
-                        <tr>
-                          <th>
                             Related Place
                             <img src="/assets/plus_sign.png" class="plus_icon add_field_level2_multiple" jq_attributes="related_people_attributes" jq_index="<%=index1%>" jq_type="person_related_place" />
                           </th>
@@ -476,6 +459,22 @@
                           </td>
                         </tr>
 
+                        <tr>
+                          <th>
+                            Note
+                            <img src="/assets/plus_sign.png" class="plus_icon add_field_level2_multiple" jq_attributes="related_people_attributes" jq_index="<%=index1%>" jq_type="person_note" />
+                          </th>
+                          <td>
+                            <div class="field_group background_gray" style="padding: 4px 5px; border: 1px solid silver; min-height: 18px">
+                              <% related_person.person_note.each_with_index do |person_note, index2| %>
+                                  <div class="field_single" style="padding: 4px 0px">
+                                    <%= text_field_tag "entry[related_people_attributes][" + index1.to_s + "][person_note][]", person_note, class: 'input_box', id: '' %>
+                                    &nbsp;<img src='/assets/delete.png' alt='Delete icon' class='delete_icon remove_field_level1'>
+                                  </div>
+                              <% end %>
+                            </div>
+                          </td>
+                        </tr>
                       </table>
 
                       <img src='/assets/delete.png' class='delete_icon remove_field_level2' params_type='related_people' alt='Delete icon'>
