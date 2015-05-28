@@ -68,12 +68,6 @@ input[type="text"] {
 }
 
 .plus_icon {
-  /*font-size: 0.8em;
-  background-color: #CCCBCB;
-  padding: 1px 5px;
-  border-radius: 3px;
-  border: 1px solid #777373;
-  text-decoration: none;*/
   position: relative;
   top: 3px;
 }
@@ -88,7 +82,6 @@ html, body {
 
 body {
   font-family: Verdana, Arial;
-  /*font-size: 100%;*/
   background-color: #fff3de;
   margin: 0px;
   font-size: 0.8em;
@@ -106,7 +99,6 @@ body {
 }
 
 #container {
-  /*margin: 0 auto;*/
   width: 100%;
   padding-bottom: 30px;
 }
@@ -116,8 +108,6 @@ body {
   height: 32px;
   margin-top: 5px;
   padding: 5px 0px 25px 40px;
-  /*background-color: #706a6d;*/
-  /*width: 330px;*/
 }
 
 #register_menu select {
@@ -129,7 +119,6 @@ body {
   font-family: Arial;
   color: #000000;
   width: 1280px;
-  //margin: 0 auto;
 }
 
 #left_frame {
@@ -152,26 +141,21 @@ body {
 }
 
 #entry_menu {
-  /*float: left;*/
   height: 32px;
   margin-top: 2px;
   padding-top: 7px;
   width: 900px;
-  /*height: 35px;*/
   background-color: #706a6d;
-  /*background-color: #4d4d4d;*/
-  /*border-bottom: 1px solid #828080;*/
+
 }
 
 #entry_menu ul {
   background: none repeat scroll 0 0 rgba(0, 0, 0, 0);
-  /*float: left;*/
   margin: 0;
   padding: 0;
 }
 
 #entry_menu li {
-  /*background: none repeat scroll 0 0 transparent;*/
   display: inline-block;
   float: left;
   font-size: 1.1em;
@@ -179,14 +163,9 @@ body {
   margin: 0;
   padding: 4px 0 5px;
   margin-left: 2px;
-  /*background-color: white;*/
 }
 
 #entry_menubar {
-  /*float: left;
-  border-left: 1px solid #acadb7;
-  border-right: 1px solid #acadb7;
-  width: 900px;*/
   height: 20px;
   background-color: #e1e1e1;
 }
@@ -194,10 +173,6 @@ body {
 a, a:hover, a:focus {
   color: #9C6B17;
   text-decoration: none;
-}
-
-a:hover {
-  /*font-weight: bold;*/
 }
 
 .highlight {
@@ -231,9 +206,6 @@ a:hover {
 #header_menubar {
   padding: 8px;
   font-size: 1.2em;
-  /*background-color: #d7c7a2;
-  border-bottom: 1px solid #805E5E;
-  line-height: 1;*/
 }
 
 .edit_button {
@@ -253,10 +225,7 @@ a:hover {
 
 #image_frame {
   float: left;
-  /*width: 300px;*/
-  /*padding: 30px 60px 10px 60px;*/
   background-color: #403C35;
-  //border: 1px solid silver;
 }
 
 #image_frame a {
@@ -342,14 +311,9 @@ a:hover {
 }
 
 .tab3 td {
-  //height: 38px;
 }
 .tab3 input[type="text"] {
   width: 94%;
-}
-
-.tab3 td {
-  //background-color: #f2f0f0;
 }
 
 .background_gray {
@@ -378,8 +342,6 @@ a:hover {
 }
 
 .login td, .login th {
-  //border-top: 1px solid #ACADB7;
-  //border-left: 1px solid #ACADB7;
   height: 50px;
 }
 
@@ -400,23 +362,6 @@ a:hover {
 }
 
 .message {
-  position: relative;
-  //width: 375px;
-  height: 45px;
-  padding: 16px 10px 0px 10px;
-  background: #76736C;
-  color: white;
-  font-size: 1.4em;
-  border-radius: 10px;
-}
-
-//.error {
-//  padding: 10px 0px 10px 0px;
-//  color: red;
-//  width: 300px;
-//}
-
-.message2 {
   background-color: #D74A4A;
   width: auto;
   margin-bottom: 20px;
