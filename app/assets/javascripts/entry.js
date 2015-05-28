@@ -158,7 +158,7 @@ $(document).ready(function () {
     // ADD FIELD LEVEL1 / LEVEL2 MULTIPLE
     // Used in Person / Place
     function get_template_level1_level2_multiple(jq_attributes, jq_index, jq_type, jq_label) {
-        return "<tr><th style='width: 100px'>" + jq_label +
+        return "<tr><th style='width: 110px'>" + jq_label +
             "&nbsp;<img jq_type='" + jq_type + "' jq_index='" + jq_index + "' jq_attributes='" + jq_attributes + "' class='plus_icon add_field_level2_multiple' src='/assets/plus_sign.png'>\
         </th><td><div style='padding: 4px 5px; border: 1px solid silver; min-height: 18px' class='field_group background_gray'></div>\
         </td></tr>";
@@ -167,7 +167,7 @@ $(document).ready(function () {
     // ADD FIELD LEVEL1 / LEVEL2 SELECT
     // Used in Person
     function get_template_level1_level2_select(jq_attributes, jq_index, jq_type, jq_label) {
-        return "<tr><th style='width: 100px'>" + jq_label +
+        return "<tr><th style='width: 110px'>" + jq_label +
             "&nbsp;<img jq_type='" + jq_type + "' jq_index='" + jq_index + "' jq_attributes='" + jq_attributes + "' class='plus_icon add_field_level2_select' src='/assets/plus_sign.png'>\
         </th><td><div style='padding: 4px 5px; border: 1px solid silver; min-height: 18px' class='field_group background_gray'></div>\
         </td></tr>";

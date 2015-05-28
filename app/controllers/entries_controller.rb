@@ -96,7 +96,6 @@ class EntriesController < ApplicationController
   def show
     @entries = Entry.all.where(:folio => session[:folio]).where(:folio_face => session[:folio_face])
     redirect_to :action => 'index', :id => params[:id]
-
     set_entry
   end
 
@@ -110,7 +109,6 @@ class EntriesController < ApplicationController
     end
 
     @entry = Entry.new
-    #add_blank_fields_to_array
 
     @entries = Entry.where(:folio => session[:folio]).where(:folio_face => session[:folio_face])
     get_authority_lists

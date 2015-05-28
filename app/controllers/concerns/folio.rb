@@ -20,14 +20,14 @@ module Folio
     if register_params != ''
       folio_array = register_params.split '-'
       folio = folio_array[0].sub('Folio ', '').strip
-      folio_face = folio_array[1].strip#.sub(' ', '') # replacing space with '' in e.g. 'Insert a' because there seem to be problems storing ' ' and '_' in Fedora (ActiveFedora problem?)
+      folio_face = folio_array[1].strip.sub(' ', '') # replacing space with '' in e.g. 'Insert a' because there seem to be problems storing ' ' and '_' in Fedora (ActiveFedora problem?)
       session[:folio] = folio # This is the 'folio' stored in Fedora
       session[:folio_face] = folio_face # This is the 'folio_face' stored in Fedora
     end
     # The image session variable defines the name of the jp2 image file in dlib
     # 'Reg_12' will need changing eventually when there are more registers
-    #session[:image] = 'Reg_12_' + session[:folio] + '_' + session[:folio_face].sub('Insert', 'Insert_') + '.jp2' # Note that Insert has an underscore after it in order to get the correct url, e.g. 'Inserta' -> 'Insert_a'
-    session[:image] = 'Reg_12_' + session[:folio] + '_' + session[:folio_face].sub(' ', '_') + '.jp2' # Note that Insert has an underscore after it in order to get the correct url, e.g. 'Inserta' -> 'Insert_a'
+    session[:image] = 'Reg_12_' + session[:folio] + '_' + session[:folio_face].sub('Insert', 'Insert_') + '.jp2' # Note that Insert has an underscore after it in order to get the correct url, e.g. 'Inserta' -> 'Insert_a'
+    #session[:image] = 'Reg_12_' + session[:folio] + '_' + session[:folio_face].sub(' ', '_') + '.jp2' # Note that Insert has an underscore after it in order to get the correct url, e.g. 'Inserta' -> 'Insert_a'
   end
 
   # Get the next image and set the session variables when the '> or '<' buttons are clicked'
@@ -36,8 +36,8 @@ module Folio
     folio_all_lines = get_folios # Basically an array of all the lines in the text file, i.e. all the folio names
 
     # 'Reg_12_' will need changing later on
-    #current_folio = 'Reg_12_' + session[:folio] + '_' + session[:folio_face].sub('Insert', 'Insert ') + '.jp2'
-    current_folio = 'Reg_12_' + session[:folio] + '_' + session[:folio_face] + '.jp2'
+    current_folio = 'Reg_12_' + session[:folio] + '_' + session[:folio_face].sub('Insert', 'Insert ') + '.jp2'
+    #current_folio = 'Reg_12_' + session[:folio] + '_' + session[:folio_face] + '.jp2'
 
     # Iterate over all the folios
     folio_all_lines.each_with_index do |folio_line, index|
@@ -62,7 +62,7 @@ module Folio
         temp = next_folio.sub('Reg_12_', '').sub('.jp2', '')
         temp_array = temp.split("_")
         folio = temp_array[0].strip
-        folio_face = temp_array[1]#.strip.sub(' ', '') # replacing space with '' in e.g. 'Insert a' because there seem to be problems storing ' ' and '_' in Fedora (ActiveFedora problem?)
+        folio_face = temp_array[1].strip.sub(' ', '') # replacing space with '' in e.g. 'Insert a' because there seem to be problems storing ' ' and '_' in Fedora (ActiveFedora problem?)
         session[:folio] = folio
         session[:folio_face] = folio_face
         session[:folio_choice] = 'Folio ' + folio + ' - ' + temp_array[1].strip
