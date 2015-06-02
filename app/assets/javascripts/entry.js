@@ -39,6 +39,9 @@ $(document).ready(function () {
     var jq_role_array = ["role 1", "role 2", "role 3"];
     var jq_qualification_array = ["qualification 1", "qualification 2", "qualification 3"];
     var jq_date_type_array = ["recited date", "court date"];
+    var jq_status_array = ["Status 1", "Status 2", "Status 3"];
+    var jq_date_certainty_array = ["Certainty 1", "Certainty 2", "Certainty 3"];
+    var jq_date_type2_array = ["Datetype 1", "Datetype 2", "Datetype 3"];
 
     /*******************************/
     /***** ADD ELEMENT METHODS *****/
@@ -104,12 +107,7 @@ $(document).ready(function () {
 
     // ADD FIELD LEVEL1 / LEVEL2 MULTIPLE
     // Used in Person / Place
-    //function get_template_level1_level2_multiple(jq_attributes, jq_index, jq_type, jq_label) {
-    //    return "<tr><th style='width: 100px'>" + jq_label +
-    //        "&nbsp;<img jq_type='" + jq_type + "' jq_index='" + jq_index + "' jq_attributes='" + jq_attributes + "' class='plus_icon add_field_level2_multiple' src='/assets/plus_sign.png'>\
-    //    </th><td><div style='padding: 4px 5px; border: 1px solid silver; min-height: 18px' class='field_group background_gray'></div>\
-    //    </td></tr>";
-    //}
+    // SEE CODE BELOW
 
     // ADD FIELD LEVEL2 (MULTIPLE)
     $('body').on('click', '.add_field_level2_multiple', function (e) {
@@ -141,10 +139,10 @@ $(document).ready(function () {
                 + get_template_level1_level2_multiple("related_people_attributes", jq_index, "person_as_written", "As Written*")
                 + get_template_level1_level2_select("related_people_attributes", jq_index, "person_role", "Role")
                 + get_template_level1_level2_select("related_people_attributes", jq_index, "person_qualification", "Qualification") +
-                "<tr><th>Gender</th><td><select name='entry[related_people_attributes][" + jq_index + "][person_gender]'><option>--- select ---</option><option>Male</option><option>Female</option><option>Undefined</option></select></td></tr>" +
+                "<tr><th>Status</th><td><select name='entry[related_people_attributes][" + jq_index + "][person_status]'><option value=''>--- select ---</option><option value='Status 1'>Status 1</option><option value='Status 2'>Status 2</option><option value='Status 3'>Status 3</option></select></td></tr>" +
+                "<tr><th>Gender</th><td><select name='entry[related_people_attributes][" + jq_index + "][person_gender]'><option value=''>--- select ---</option><option value='Male'>Male</option><option value='Female'>Female</option><option value='Undefined'>Undefined</option></select></td></tr>" +
                 "<tr><th>Same As*</th><td><input type='text' style='width: 100%' class='input_box' value='' id='' name='entry[related_people_attributes][" + jq_index + "][person_same_as]'></td></tr>"
                 + get_template_level1_level2_multiple("related_people_attributes", jq_index, "person_related_place", "Related Place")
-                + get_template_level1_level2_multiple("related_people_attributes", jq_index, "person_place_of_residence", "Residence")
                 + get_template_level1_level2_multiple("related_people_attributes", jq_index, "person_note", "Note") +
                 "</table>\
                 <img src='/assets/delete.png' alt='Delete icon' class='delete_icon remove_field_level2' params_type='related_people'>\
@@ -184,15 +182,49 @@ $(document).ready(function () {
             for (i = 0; i < jq_date_type_array.length; i++) {
                 options = options + "<option value='" + jq_date_type_array[i] + "'>" + jq_date_type_array[i] + "</option/>";
             }
-            var new_code_block = "<div class='field_single'>\
+            var new_code_block = "<div class='field_single no_padding'>\
                 <table class='tab3' cellspacing='0'>" +
-                "<tr><th>As Written</th><td><input type='text' style='width: 100%' class='input_box' value='' id='' name='entry[entry_dates_attributes][" + jq_index + "][date_as_written]'></td></tr>" +
+                "<tr><th style='width: 110px'>As Written</th><td><input type='text' style='width: 100%' class='input_box' value='' id='' name='entry[entry_dates_attributes][" + jq_index + "][date_as_written]'></td></tr>" +
                 "<tr><th>Note</th><td><input type='text' style='width: 100%' class='input_box' value='' id='' name='entry[entry_dates_attributes][" + jq_index + "][date_note]'></td></tr>" +
                 "<tr><th>Date Type</th><td><select name='entry[entry_dates_attributes][" + jq_index + "][date_type]'>" + options + "</select></td></tr>" +
-                "</table>\
-                <img src='/assets/delete.png' alt='Delete icon' class='delete_icon remove_field_level2' params_type='related_places'>\
-                </div>";
+                "<tr><th>Date&nbsp;<img jq_index='" + jq_index + "' class='plus_icon add_field_level2_date' src='/assets/plus_sign.png'></th><td><div class='field_group'></div></td></tr>" +
+                "</table>" +
+                "<img src='/assets/delete.png' alt='Delete icon' class='delete_icon remove_field_level2' params_type='related_places'>" +
+                "</div>";
             field_group_div.append(new_code_block);
+        } catch (err) {
+            alert(err);
+        }
+    });
+
+    // ADD FIELD LEVEL2 (SINGLE_DATE)
+    $('body').on('click', '.add_field_level2_date', function (e) {
+
+        try {
+            e.preventDefault(); // I think this prevents other events firing?
+            var jq_index = $(this).attr('jq_index');
+            var field_group_div = $(this).parent('th').next('td').find('>:first-child');
+            var jq_index2 = field_group_div.children().length;
+            var options1 = "<option value=''>--- select ---</option>";
+            for (i = 0; i < jq_date_certainty_array.length; i++) {
+                options1 = options1 + "<option value='" + jq_date_certainty_array[i] + "'>" + jq_date_certainty_array[i] + "</option/>";
+            }
+            var options2 = "<option value=''>--- select ---</option>";
+            for (i = 0; i < jq_date_type2_array.length; i++) {
+                options2 = options2 + "<option value='" + jq_date_type2_array[i] + "'>" + jq_date_type2_array[i] + "</option/>";
+            }
+            var new_code_block = "<div class='field_single' style='margin: 5px 0px'>" +
+            "<table class='tab4' cellspacing='0' border='0' style='width: 94%'>" +
+            "<tr><th style='width: 60px'>Certainty:</th>" +
+            "<td><select name='entry[entry_dates_attributes][" + jq_index + "][single_dates_attributes][" + jq_index2 + "][date_certainty]'>" + options1 + "</select></td>" +
+            "<tr><th>Date:</th>" +
+            "<td><input id='' class='input_box' type='text' name='entry[entry_dates_attributes][" + jq_index + "][single_dates_attributes][" + jq_index2 + "][date]'></td>" +
+            "<tr><th>Type:</th>" +
+            "<td><select name='entry[entry_dates_attributes][" + jq_index + "][single_dates_attributes][" + jq_index2 + "][date_type]'>" + options2 + "</select></td>" +
+            "</table>" +
+            "<img alt='Delete icon' src='/assets/delete.png' class='delete_icon remove_field_date' jq_index1='" + jq_index2 + "'>" +
+            "<div style='clear: both'></div></div>";
+            $(this).parent('th').next('td').find('.field_group').append(new_code_block);
         } catch (err) {
             alert(err);
         }
@@ -224,9 +256,9 @@ $(document).ready(function () {
         }
     });
 
-    /*******************************/
+    /**********************************/
     /***** REMOVE ELEMENT METHODS *****/
-    /******************************/
+    /**********************************/
 
     // Find the 'field_single' div and make 'display' = 'none' in order to hide it, then set the
     // value to '' so that it is deleted by the controller code (see the 'remove_multivalue_blanks' method)
@@ -235,7 +267,7 @@ $(document).ready(function () {
         try {
             e.preventDefault(); // I think this prevents other events firing?
             var field_single_div = $(this).parent('div');
-            field_single_div.css({'border': '1px solid red'});
+            //field_single_div.css({'border': '1px solid red'});
             field_single_div.css({'display': 'none'});
             // If the tag type is not null it must be 'select' otherwise it must be 'input'
             // There could be more types later on though
@@ -257,7 +289,7 @@ $(document).ready(function () {
         try {
             e.preventDefault(); // I think this prevents other events firing?
             var field_single_div = $(this).parent('div');
-            var field_group_div = field_single_div.parent('div');
+            //var field_group_div = field_single_div.parent('div');
             field_single_div.css({'display': 'none'});
             // If there is a hidden input element with an 'id', add a '_destroy' = '1' hidden element to make sure
             // that it is deleted from Fedora but don't do it for elements without an 'id' otherwise the element is added to Fedora!
@@ -275,15 +307,48 @@ $(document).ready(function () {
         }
     });
 
+    // Remove date
+    $('body').on('click', '.remove_field_date', function (e) {
+
+        try {
+            e.preventDefault(); // I think this prevents other events firing?
+            var field_single_div = $(this).parent('div');
+            //var field_group_div = field_single_div.parent('div');
+            var jq_index1 = $(this).attr('jq_index1');
+            field_single_div.css({'display': 'none'});
+            // If there is a hidden input element with an 'id', add a '_destroy' = '1' hidden element to make sure
+            // that it is deleted from Fedora but don't do it for elements without an 'id' otherwise the element is added to Fedora!
+            // Note that the uses the Place 'Same As' input field to get the index - maybe there is a better way to do this?
+            var input_tag_hidden = field_single_div.find('#hidden_field');
+            if (input_tag_hidden.length > 0) { // i.e. if there is a hidden field, it must be an 'id'
+                var params_type = $(this).attr('params_type');
+                var input_tag = field_single_div.find('input');
+                var name = input_tag.attr('name');
+                name = name.substring(name.indexOf('single_dates_attributes')); // This removes the first index from the 'name' as we want the seond number
+                var jq_index2 = get_index(name);
+                field_single_div.append("<input type='hidden' name='entry[entry_dates_attributes][" + jq_index1 + "][single_dates_attributes][" + jq_index2 + "][_destroy]' value='1'>");
+            }
+        } catch (err) {
+            alert(err);
+        }
+    });
+
     function get_index(attr) {
 
         try {
             return attr.match(/[0-9]+/);
-            ;
         } catch (err) {
             alert(err);
         }
+    }
 
+    function get_last_index(attr) {
+
+        try {
+            return attr.match(/[0-9]+/);
+        } catch (err) {
+            alert(err);
+        }
     }
 
     function increment_index(attr) {

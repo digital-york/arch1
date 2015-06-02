@@ -76,12 +76,6 @@
                     <td><%= @entry.access_provided_by %>&nbsp;</td>
                   </tr>
 
-                  <%# Entry Part %>
-                  <tr>
-                    <th>Entry Part</th>
-                    <td><%= @entry.entry_part %>&nbsp;</td>
-                  </tr>
-
                   <%# Is Blank?* %>
                   <tr>
                     <th>Is Blank*</th>
@@ -169,7 +163,7 @@
                   <%# Related Place %>
                   <tr>
 
-                    <th>Place:</th>
+                    <th>Place</th>
 
                     <td class="tab2">
 
@@ -250,7 +244,7 @@
                   <%# Related Person %>
                   <tr>
 
-                    <th>Person:</th>
+                    <th>Person</th>
 
                     <td class="tab2">
 
@@ -313,6 +307,14 @@
                                   </td>
                                 </tr>
 
+                                <%# Status %>
+                                <tr>
+                                  <th>Status</th>
+                                  <td>
+                                    <%= related_person.person_status %>
+                                  </td>
+                                </tr>
+
                                 <tr>
                                   <th>Gender</th>
                                   <td>
@@ -324,40 +326,6 @@
                                   <th>Same As*</th>
                                   <td>
                                     <%= related_person.person_same_as %>
-                                  </td>
-                                </tr>
-
-                                <tr>
-                                  <th>
-                                    Related Place
-                                  </th>
-                                  <td>
-                                    <div style="padding: 4px 0px; min-height: 18px" class="field_group">
-
-                                      <% related_person.person_related_place.each do |person_related_place| %>
-                                          <div class="field_single" style="padding: 4px 0px">
-                                            <%= person_related_place %>
-                                          </div>
-                                      <% end %>
-
-                                    </div>
-                                  </td>
-                                </tr>
-
-                                <tr>
-                                  <th>
-                                    Residence
-                                  </th>
-                                  <td>
-                                    <div style="padding: 4px 0px; min-height: 18px" class="field_group">
-
-                                      <% related_person.person_place_of_residence.each do |person_place_of_residence| %>
-                                          <div class="field_single" style="padding: 4px 0px">
-                                            <%= person_place_of_residence %>
-                                          </div>
-                                      <% end %>
-
-                                    </div>
                                   </td>
                                 </tr>
 
@@ -378,6 +346,23 @@
                                   </td>
                                 </tr>
 
+                                <tr>
+                                  <th>
+                                    Related Place
+                                  </th>
+                                  <td>
+                                    <div style="padding: 4px 0px; min-height: 18px" class="field_group">
+
+                                      <% related_person.person_related_place.each do |person_related_place| %>
+                                          <div class="field_single" style="padding: 4px 0px">
+                                            <%= person_related_place %>
+                                          </div>
+                                      <% end %>
+
+                                    </div>
+                                  </td>
+                                </tr>
+
                               </table>
                             </div>
 
@@ -389,11 +374,10 @@
                   <%# Entry Date %>
                   <tr>
 
-                    <th>Date:</th>
+                    <th>Date</th>
 
                     <td class="tab2">
 
-                      <%# @entry.related_people.each do |related_person| %>
                       <% @entry.entry_dates.each do |entry_date| %>
 
                           <div class="field_group">
@@ -403,23 +387,56 @@
                               <table cellspacing="0" class="tab3">
 
                                 <tr>
-                                  <th>Same As</th>
+                                  <th>As Written:</th>
                                   <td>
                                     <%= entry_date.date_as_written %>
                                   </td>
                                 </tr>
 
                                 <tr>
-                                  <th>Note</th>
+                                  <th>Note:</th>
                                   <td>
                                     <%= entry_date.date_note %>
                                   </td>
                                 </tr>
 
                                 <tr>
-                                  <th>Date Type</th>
+                                  <th>Date Type:</th>
                                   <td>
                                     <%= entry_date.date_type %>
+                                  </td>
+                                </tr>
+
+                                <tr>
+                                  <th>
+                                    Date:
+                                  </th>
+                                  <td>
+                                    <div style="min-height: 18px" class="field_group">
+
+                                      <% entry_date.single_dates.each do |single_date| %>
+
+                                        <div class="field_single no_padding">
+
+                                          <table border="0" cellspacing="0" class="tab4">
+                                            <tr>
+                                              <th style="width: 60px">Certainty:</th>
+                                              <td><%= single_date.date_certainty %></td>
+                                            </tr>
+                                            <tr>
+                                              <th>Date:</th>
+                                              <td><%= single_date.date %></td>
+                                            </tr>
+                                            <tr>
+                                              <th>Type:</th>
+                                              <td><%= single_date.date_type %></td>
+                                            </tr>
+                                          </table>
+                                          <div style="clear: both"></div>
+                                        </div>
+                                      <% end %>
+
+                                    </div>
                                   </td>
                                 </tr>
 

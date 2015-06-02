@@ -310,8 +310,14 @@ a, a:hover, a:focus {
   padding: 7px 0px;
 }
 
-.tab3 td {
+.tab4 td, .tab4 th {
+  background-color: #f2f0f0;
 }
+
+.tab4 input[type="text"] {
+  width: 94%;
+}
+
 .tab3 input[type="text"] {
   width: 94%;
 }

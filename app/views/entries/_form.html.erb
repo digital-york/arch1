@@ -113,14 +113,6 @@
             </td>
           </tr>
 
-          <%# Entry Part %>
-          <tr>
-            <th>Entry Part</th>
-            <td>
-              <%= f.text_field :entry_part %>
-            </td>
-          </tr>
-
           <%# Is Blank %>
           <tr>
             <th>Is Blank*</th>
@@ -411,6 +403,14 @@
                           </td>
                         </tr>
 
+                        <%# Status %>
+                        <tr>
+                          <th>Status</th>
+                          <td>
+                            <%= select_tag "entry[related_people_attributes][" + index1.to_s + "][person_status]", options_for_select([["--- select ---", ""], "Status 1", "Status 2", "Status 3"], related_person.person_status) %>
+                          </td>
+                        </tr>
+
                         <tr>
                           <th>Gender</th>
                           <td>
@@ -422,6 +422,23 @@
                           <th>Same As*</th>
                           <td class="input_single">
                             <%= text_field_tag "entry[related_people_attributes][" + index1.to_s + "][person_same_as]", related_person.person_same_as, class: 'input_box', id: '' %>
+                          </td>
+                        </tr>
+
+                        <tr>
+                          <th>
+                            Note
+                            <img src="/assets/plus_sign.png" class="plus_icon add_field_level2_multiple" jq_attributes="related_people_attributes" jq_index="<%=index1%>" jq_type="person_note" />
+                          </th>
+                          <td>
+                            <div class="field_group gray_box">
+                              <% related_person.person_note.each_with_index do |person_note, index2| %>
+                                  <div class="field_single">
+                                    <%= text_field_tag "entry[related_people_attributes][" + index1.to_s + "][person_note][]", person_note, class: 'input_box', id: '' %>
+                                    &nbsp;<img src='/assets/delete.png' alt='Delete icon' class='delete_icon remove_field_level1'>
+                                  </div>
+                              <% end %>
+                            </div>
                           </td>
                         </tr>
 
@@ -442,39 +459,6 @@
                           </td>
                         </tr>
 
-                        <tr>
-                          <th>
-                            Residence
-                            <img src="/assets/plus_sign.png" class="plus_icon add_field_level2_multiple" jq_attributes="related_people_attributes" jq_index="<%=index1%>" jq_type="person_place_of_residence" />
-                          </th>
-                          <td>
-                            <div class="field_group gray_box">
-                              <% related_person.person_place_of_residence.each_with_index do |person_place_of_residence, index2| %>
-                                  <div class="field_single">
-                                    <%= text_field_tag "entry[related_people_attributes][" + index1.to_s + "][person_place_of_residence][]", person_place_of_residence, class: 'input_box', id: '' %>
-                                    &nbsp;<img src='/assets/delete.png' alt='Delete icon' class='delete_icon remove_field_level1'>
-                                  </div>
-                              <% end %>
-                            </div>
-                          </td>
-                        </tr>
-
-                        <tr>
-                          <th>
-                            Note
-                            <img src="/assets/plus_sign.png" class="plus_icon add_field_level2_multiple" jq_attributes="related_people_attributes" jq_index="<%=index1%>" jq_type="person_note" />
-                          </th>
-                          <td>
-                            <div class="field_group gray_box">
-                              <% related_person.person_note.each_with_index do |person_note, index2| %>
-                                  <div class="field_single">
-                                    <%= text_field_tag "entry[related_people_attributes][" + index1.to_s + "][person_note][]", person_note, class: 'input_box', id: '' %>
-                                    &nbsp;<img src='/assets/delete.png' alt='Delete icon' class='delete_icon remove_field_level1'>
-                                  </div>
-                              <% end %>
-                            </div>
-                          </td>
-                        </tr>
                       </table>
 
                       <img src='/assets/delete.png' class='delete_icon remove_field_level2' params_type='related_people' alt='Delete icon'>
@@ -505,14 +489,14 @@
                       <table cellspacing="0" class="tab3">
 
                         <tr>
-                          <th>As Written</th>
+                          <th style="width: 110px">As Written:</th>
                           <td class="input_single">
                             <%= text_field_tag "entry[entry_dates_attributes][" + index1.to_s + "][date_as_written]", entry_date.date_as_written, class: 'input_box', id: '' %>
                           </td>
                         </tr>
 
                         <tr>
-                          <th>Note</th>
+                          <th>Note:</th>
                           <td class="input_single">
                             <%= text_field_tag "entry[entry_dates_attributes][" + index1.to_s + "][date_note]", entry_date.date_note, class: 'input_box', id: '' %>
                           </td>
@@ -523,12 +507,47 @@
                         %>
 
                         <tr>
-                          <th>Date Type</th>
+                          <th>Date Type:</th>
                           <td>
                             <%= select_tag "entry[entry_dates_attributes][" + index1.to_s + "][date_type]", options_for_select(@date_type_list.collect{ |element| [element[0]] }.insert(0, ["--- select ---", ""]), entry_date.date_type) %>
                           </td>
                         </tr>
 
+                        <%
+                           @date_certainty_list = @read_date_certainty.collect { |l| [l["label"]] }
+                           @date_type2_list = @read_date_type2.collect { |l| [l["label"]] }
+                        %>
+
+                        <tr>
+                          <th>Date
+                            <img src="/assets/plus_sign.png" class="plus_icon add_field_level2_date" jq_index="<%=index1%>" />
+                          </th>
+                          <td>
+                            <div class="field_group">
+                            <% entry_date.single_dates.each_with_index do |single_date, index2| %>
+                              <div class="field_single" style="margin: 5px 0px">
+                                <table border="0" cellspacing="0" class="tab4" style="width: 94%">
+                                  <tr>
+                                    <th style="width: 60px">Certainty:</th>
+                                    <td><%= select_tag "entry[entry_dates_attributes][" + index1.to_s + "][single_dates_attributes][" + index2.to_s + "][date_certainty]", options_for_select(@date_certainty_list.collect{ |element| [element[0]] }.insert(0, ["--- select ---", ""]), single_date.date_certainty) %></td>
+                                  </tr>
+                                  <tr>
+                                    <th>Date:</th>
+                                    <td><%= text_field_tag "entry[entry_dates_attributes][" + index1.to_s + "][single_dates_attributes][" + index2.to_s + "][date]", single_date.date, class: 'input_box', id: '' %></td>
+                                  </tr>
+                                  <tr>
+                                    <th>Type:</th>
+                                    <td><%= select_tag "entry[entry_dates_attributes][" + index1.to_s + "][single_dates_attributes][" + index2.to_s + "][date_type]", options_for_select(@date_type2_list.collect{ |element| [element[0]] }.insert(0, ["--- select ---", ""]), single_date.date_type) %></td>
+                                  </tr>
+                                  </table>
+                                  &nbsp;<img src='/assets/delete.png' alt='Delete icon' class='delete_icon remove_field_date' jq_index1="<%= index1 %>">
+                                  <input type="hidden" id="hidden_field" name="entry[entry_dates_attributes][<%= index1.to_s %>][single_dates_attributes][<%= index2.to_s %>][id]" value="<%= single_date.id %>">
+                                <div style="clear: both"></div>
+                              </div>
+                            <% end %>
+                            </div>
+                          </td>
+                        </tr>
 
                       </table>
 

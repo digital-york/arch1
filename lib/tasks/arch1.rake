@@ -28,23 +28,24 @@ namespace :arch1 do
 
     puts 'Creating the Subjects Scheme'
 
-    @path = '/home/geekscruff/Dropbox/code/rails/arch1/lib/tasks/' # SET THE PATH
+    #@path = '/home/geekscruff/Dropbox/code/rails/arch1/lib/tasks/' # SET THE PATH
+    @path = '/home/py523/rails_projects/arch1/lib/tasks/' # SET THE PATH
     @skip = false # run broader / narrower
     @scheme # the scheme (parent) record id
     @subjects = {} # subject record ids
     begin
       # == COMMENT OUT WHEN RUNNING A RECOVERY ==
-      # @scheme = ConceptScheme.new
-      # @scheme.title = @doc.css('rdf|description rdf|label').text
-      # @scheme.description = @doc.css('rdf|description rdf|label').text + ". Produced from data created during the Archbishop's Registers Pilot project, funded by the Mellon Foundation."
-      # @scheme.rdftype += ['http://fedora.info/definitions/v4/indexing#Indexable', 'http://www.w3.org/2004/02/skos/core#ConceptScheme']
-      # @scheme.save
-      # @scheme.identifier = @scheme.id
-      # @scheme.save
-      # @scheme.update_index
+       @scheme = ConceptScheme.new
+       @scheme.title = @doc.css('rdf|description rdf|label').text
+       @scheme.description = @doc.css('rdf|description rdf|label').text + ". Produced from data created during the Archbishop's Registers Pilot project, funded by the Mellon Foundation."
+       @scheme.rdftype += ['http://fedora.info/definitions/v4/indexing#Indexable', 'http://www.w3.org/2004/02/skos/core#ConceptScheme']
+       @scheme.save
+       @scheme.identifier = @scheme.id
+       @scheme.save
+       @scheme.update_index
       # == END  ==
       # == UNCOMMENT WHEN RUNNING A RECOVERY AND ADD IN THE RIGHT ID ==
-      @scheme = ConceptScheme.where(id: 'yorkabp:457').first
+      #@scheme = ConceptScheme.where(id: 'yorkabp:457').first
       # == END  ==
       puts 'Created ' + @scheme.id
     rescue
@@ -206,7 +207,8 @@ namespace :arch1 do
 
     require 'csv'
 
-    @path = '/home/geekscruff/Dropbox/code/rails/arch1/lib/tasks/' # SET THE PATH
+    #@path = '/home/geekscruff/Dropbox/code/rails/arch1/lib/tasks/' # SET THE PATH
+    @path = '/home/py523/rails_projects/arch1/lib/tasks/' # SET THE PATH
 
     # .csv files should exist in the specified path
     list = ['folio-faces','folios', 'currencies', 'date-types', 'certainty', 'qualifications','place-types', 'statuses', 'roles']

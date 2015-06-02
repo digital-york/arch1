@@ -1,5 +1,7 @@
 class Entry < ActiveFedora::Base
 
+  include AssignId
+
   property :register, predicate: ::RDF::URI.new('http://dlib.york.ac.uk/ontologies/borthwick-registers#register'), multiple: false do |index|
     index.as :stored_searchable
   end
