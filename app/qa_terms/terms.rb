@@ -1,6 +1,7 @@
 class Terms
 
   attr_reader :subauthority
+
   def initialize(subauthority)
     @subauthority = subauthority
   end
