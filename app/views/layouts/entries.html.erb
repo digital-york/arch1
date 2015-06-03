@@ -1,3 +1,5 @@
+<!DOCTYPE html>
+
 <html lang="en" class="no-js">
 
 <head>
@@ -18,12 +20,12 @@
 
 <!-- Put this tag in because there was an exception sending the authenticity token with a link_to -->
 <!-- Not sure why it works and not sure if I need it anymore -->
-<%= csrf_meta_tag %>
+<%#= csrf_meta_tag %>
 
 <div id="header" style="border-bottom: 1px solid #805E5E">
 
   <div id="header_text" style="width: 100%">
-    <%= link_to "Archbishops&#39; Registers Editing Tool".html_safe, entry_path("default") %></a>
+    <%= link_to "Archbishops&#39; Registers Editing Tool".html_safe, entry_path("default") %>
   </div>
 </div>
 
@@ -34,8 +36,8 @@
     <form name="myForm" onsubmit="return validateForm()">
 
       <%# Had to add autocomplete off for Firefox otherwise doesn't select the correct value in the select box as chosen by the user %>
-      <%# Is this still valid? Possibly this was true for an earlier version of the code? %>
-      <select name="register_choice" autocomplete="off">
+      <%# Is this still valid? Possibly this was true for an earlier version of the code? Update - have removed it for now %>
+      <select name="register_choice">
         <option value="">--- Register ---</option>
         <option value="12"
                 <% if session[:register_choice] == '12' %>selected
@@ -43,7 +45,7 @@
         </option>
       </select>
 
-      <select name="folio_choice" autocomplete="off" style="width: 140px">
+      <select name="folio_choice" style="width: 140px">
         <option value="">--- Folio ---</option>
         <% @folios.each do |folio| %>
             <option value="<%= folio %>"

@@ -60,7 +60,7 @@ th {
 }
 
 input[type="text"] {
-  width: 96%
+  width: 94%
 }
 
 .td_center td {
@@ -141,7 +141,7 @@ body {
 }
 
 #entry_menu {
-  height: 32px;
+  height: 26px;
   margin-top: 2px;
   padding-top: 7px;
   width: 900px;
@@ -276,7 +276,7 @@ a, a:hover, a:focus {
 // Just to make the height of the view page elements match that of the edit elements
 // Doesn't work so well for multi elements though
 .tab1 th {
-  height: 38px;
+  height: 23px;
 }
 
 .tab2 th {
@@ -284,9 +284,9 @@ a, a:hover, a:focus {
   width: 115px;
 }
 
-.tab2 td {
-  height: 38px;
-}
+//.tab2 td {
+//  height: 38px;
+//}
 
 .delete_icon {
   float: right;
@@ -316,6 +316,11 @@ a, a:hover, a:focus {
 
 .tab4 input[type="text"] {
   width: 94%;
+}
+
+table {
+  border-spacing: 0px;
+  border-collapse: separate;
 }
 
 .tab3 input[type="text"] {
@@ -402,5 +407,5 @@ a, a:hover, a:focus {
 }
 
 .input_single input[type="text"] {
-  width: 100%;
+  width: 99%;
 }

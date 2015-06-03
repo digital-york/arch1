@@ -36,8 +36,8 @@ $(document).ready(function () {
     });
 
     var jq_language_array = ["english", "latin", "french", "german", "undefined"];
-    var jq_role_array = ["role 1", "role 2", "role 3"];
-    var jq_qualification_array = ["qualification 1", "qualification 2", "qualification 3"];
+    //var jq_role_array = ["role 1", "role 2", "role 3"];
+    //var jq_qualification_array = ["qualification 1", "qualification 2", "qualification 3"];
     var jq_date_type_array = ["recited date", "court date"];
     var jq_status_array = ["Status 1", "Status 2", "Status 3"];
     var jq_date_certainty_array = ["Certainty 1", "Certainty 2", "Certainty 3"];
@@ -83,6 +83,10 @@ $(document).ready(function () {
         }
     });
 
+    var jq_place_type_list = null;
+    var jq_role_list = null;
+    var jq_qualification_list = null;
+
     // ADD FIELD LEVEL1 (PLACE)
     $('body').on('click', '.add_field_level1_place', function (e) {
 
@@ -93,8 +97,8 @@ $(document).ready(function () {
             var new_code_block = "<div class='field_single'>\
                 <table class='tab3' cellspacing='0'>"
                 + get_template_level1_level2_multiple("related_places_attributes", jq_index, "place_as_written", "As Written*")
-                + get_template_level1_level2_multiple("related_places_attributes", jq_index, "place_type", "Place Type") +
-                "<tr><th>Same As*</th><td><input type='text' style='width: 100%' class='input_box' value='' id='' name='entry[related_places_attributes][" + jq_index + "][place_same_as]'></td></tr>"
+                + get_template_level1_level2_select("related_places_attributes", jq_index, "place_type", "Place Type") +
+                "<tr><th>Same As*</th><td class='input_single'><input type='text' value='' id='' name='entry[related_places_attributes][" + jq_index + "][place_same_as]'></td></tr>"
                 + get_template_level1_level2_multiple("related_places_attributes", jq_index, "place_note", "Note") +
                 "</table>\
                 <img src='/assets/delete.png' alt='Delete icon' class='delete_icon remove_field_level2' params_type='related_places'>\
@@ -141,7 +145,7 @@ $(document).ready(function () {
                 + get_template_level1_level2_select("related_people_attributes", jq_index, "person_qualification", "Qualification") +
                 "<tr><th>Status</th><td><select name='entry[related_people_attributes][" + jq_index + "][person_status]'><option value=''>--- select ---</option><option value='Status 1'>Status 1</option><option value='Status 2'>Status 2</option><option value='Status 3'>Status 3</option></select></td></tr>" +
                 "<tr><th>Gender</th><td><select name='entry[related_people_attributes][" + jq_index + "][person_gender]'><option value=''>--- select ---</option><option value='Male'>Male</option><option value='Female'>Female</option><option value='Undefined'>Undefined</option></select></td></tr>" +
-                "<tr><th>Same As*</th><td><input type='text' style='width: 100%' class='input_box' value='' id='' name='entry[related_people_attributes][" + jq_index + "][person_same_as]'></td></tr>"
+                "<tr><th>Same As*</th><td class='input_single'><input type='text' value='' id='' name='entry[related_people_attributes][" + jq_index + "][person_same_as]'></td></tr>"
                 + get_template_level1_level2_multiple("related_people_attributes", jq_index, "person_related_place", "Related Place")
                 + get_template_level1_level2_multiple("related_people_attributes", jq_index, "person_note", "Note") +
                 "</table>\
@@ -184,8 +188,8 @@ $(document).ready(function () {
             }
             var new_code_block = "<div class='field_single no_padding'>\
                 <table class='tab3' cellspacing='0'>" +
-                "<tr><th style='width: 110px'>As Written</th><td><input type='text' style='width: 100%' class='input_box' value='' id='' name='entry[entry_dates_attributes][" + jq_index + "][date_as_written]'></td></tr>" +
-                "<tr><th>Note</th><td><input type='text' style='width: 100%' class='input_box' value='' id='' name='entry[entry_dates_attributes][" + jq_index + "][date_note]'></td></tr>" +
+                "<tr><th style='width: 110px'>As Written</th><td class='input_single'><input type='text' value='' id='' name='entry[entry_dates_attributes][" + jq_index + "][date_as_written]'></td></tr>" +
+                "<tr><th>Note</th><td class='input_single'><input type='text' value='' id='' name='entry[entry_dates_attributes][" + jq_index + "][date_note]'></td></tr>" +
                 "<tr><th>Date Type</th><td><select name='entry[entry_dates_attributes][" + jq_index + "][date_type]'>" + options + "</select></td></tr>" +
                 "<tr><th>Date&nbsp;<img jq_index='" + jq_index + "' class='plus_icon add_field_level2_date' src='/assets/plus_sign.png'></th><td><div class='field_group'></div></td></tr>" +
                 "</table>" +
@@ -218,7 +222,7 @@ $(document).ready(function () {
             "<tr><th style='width: 60px'>Certainty:</th>" +
             "<td><select name='entry[entry_dates_attributes][" + jq_index + "][single_dates_attributes][" + jq_index2 + "][date_certainty]'>" + options1 + "</select></td>" +
             "<tr><th>Date:</th>" +
-            "<td><input id='' class='input_box' type='text' name='entry[entry_dates_attributes][" + jq_index + "][single_dates_attributes][" + jq_index2 + "][date]'></td>" +
+            "<td class='input_single'><input id='' type='text' name='entry[entry_dates_attributes][" + jq_index + "][single_dates_attributes][" + jq_index2 + "][date]'></td>" +
             "<tr><th>Type:</th>" +
             "<td><select name='entry[entry_dates_attributes][" + jq_index + "][single_dates_attributes][" + jq_index2 + "][date_type]'>" + options2 + "</select></td>" +
             "</table>" +
@@ -238,15 +242,18 @@ $(document).ready(function () {
             var jq_attributes = $(this).attr('jq_attributes');
             var jq_index = $(this).attr('jq_index');
             var jq_type = $(this).attr('jq_type');
-            var options = "<option value=''>--- select ---</option>";
+            var jq_place_type_list = $(this).attr('jq_place_type_list');
             var list_array = "";
+            var options = "<option value=''>--- select ---</option>";
             if (jq_type == 'person_role') {
-                list_array = jq_role_array;
-            } else {
-                list_array = jq_qualification_array;
+                var list = $.parseJSON(jq_role_list);
+            } else if (jq_type == 'person_qualification') {
+                var list = $.parseJSON(jq_qualification_list);
+            } else if (jq_type == 'place_type') {
+                var list = $.parseJSON(jq_place_type_list);
             }
-            for (i = 0; i < list_array.length; i++) {
-                options = options + "<option value='" + list_array[i] + "'>" + list_array[i] + "</option/>";
+            for (i = 0; i < list.length; i++) {
+                options = options + "<option value='" + list[i].id + "'>" + list[i].label + "</option/>";
             }
             var new_code_block = "<div style='padding: 4px 0px' class='field_single'><select name='entry[" + jq_attributes + "][" + jq_index + "][" + jq_type + "][]'>" + options +
                 "</select>&nbsp;<img alt='Delete icon' src='/assets/delete.png' class='delete_icon_select remove_field_level1' jq_tag_type='select'></div>";

@@ -204,7 +204,7 @@ class EntriesController < ApplicationController
   # Therefore, instead of just removing elements when the user clicks on the 'remove' icon, the elements are hidden and the value set to ''
   # The code below will then remove the element(s) from Fedora
   # Note also that you have to check that size is greater than 0 because an empty array is passed when the 'edit' button is clicked
-  # (i.e. if there are no elements) and we don't want to check if the elements are blank if none exist, otherwise an error occurs
+  # (i.e. if there are no elements) and we don't want to check if the elements are blank if none exist, otherwise an error will occur
   def remove_multivalue_blanks
 
     if @entry.language.size > 0

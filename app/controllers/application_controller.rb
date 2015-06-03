@@ -13,5 +13,5 @@ class ApplicationController < ActionController::Base
   
   include Validation
   include Folio
-  include AuthorityList2
+  include AuthorityList
 end

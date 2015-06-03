@@ -128,17 +128,10 @@
           <tr>
             <th>Format</th>
             <td>
-              <%
-                 @format_list = @read_format.collect { |element| [element['label']] }
-                 @format_list.unshift(['--- select ---', ''])
-              %>
-              <%= f.select :format, @format_list %>
+              <%#= f.select :format, @format_list %>
+              <%= select_tag 'entry[format]', options_for_select(@format_list.collect{ |format| [format[0]] }.insert(0, ["--- select ---", ""]), @entry.format) %>
             </td>
           </tr>
-
-          <%
-             @language_list = @read_language.collect { |l| [l["label"]] }
-          %>
 
           <%# Language %>
           <tr>
@@ -149,7 +142,7 @@
               <div class="field_group">
                 <% @entry.language.each do |language| %>
                     <div class="field_single">
-                      <%= select_tag 'entry[language][]', options_for_select(@language_list.collect{ |element| [element[0]] }.insert(0, ["--- select ---", ""]), language) %>
+                      <%= select_tag 'entry[language][]', options_for_select(@language_list.collect{ |language| [language[0]] }.insert(0, ["--- select ---", ""]), language) %>
                       <img alt="Delete icon" src="/assets/delete.png" class="delete_icon_select remove_field_level1" jq_tag_type="select">
                     </div>
                 <% end %>
@@ -257,7 +250,7 @@
 
                     <div class="field_single no_padding">
 
-                      <table cellspacing="0" class="tab3">
+                      <table class="tab3">
 
                         <tr>
                           <th style="width: 110px">
@@ -279,13 +272,14 @@
                         <tr>
                           <th>
                             Place Type
-                            <img src="/assets/plus_sign.png" class="plus_icon add_field_level2_multiple" jq_attributes="related_places_attributes" jq_index="<%=index1%>" jq_type="place_type"  />
+                            <img src="/assets/plus_sign.png" class="plus_icon add_field_level2_select" jq_attributes="related_places_attributes" jq_index="<%=index1%>" jq_type="place_type" jq_place_type_list="<%= @place_type_list.to_json %>" />
                           </th>
                           <td>
                             <div class="field_group gray_box">
                               <% related_place.place_type.each_with_index do |place_type, index2| %>
                                   <div class="field_single">
-                                    <%= text_field_tag "entry[related_places_attributes][" + index1.to_s + "][place_type][]", place_type, class: 'input_box', id: '' %>
+                                    <%= select_tag "entry[related_places_attributes][" + index1.to_s + "][place_type][]", options_for_select(@place_type_list.collect { |place_type| [place_type["label"].join(''), place_type["id"]] }.insert(0, ["--- select ---", ""]), place_type) %>
+                                    <%#= text_field_tag "entry[related_places_attributes][" + index1.to_s + "][place_type][]", place_type, class: 'input_box', id: '' %>
                                     &nbsp;<img src='/assets/delete.png' alt='Delete icon' class='delete_icon remove_field_level1'>
                                   </div>
                               <% end %>
@@ -296,7 +290,7 @@
                         <tr>
                           <th>Same As*</th>
                           <td class="input_single">
-                            <%= text_field_tag "entry[related_places_attributes][" + index1.to_s + "][place_same_as]", related_place.place_same_as, class: 'input_box', id: '' %>
+                            <%= text_field_tag "entry[related_places_attributes][" + index1.to_s + "][place_same_as]", related_place.place_same_as, id: '' %>
                           </td>
                         </tr>
 
@@ -344,7 +338,7 @@
 
                     <div class="field_single no_padding">
 
-                      <table cellspacing="0" class="tab3">
+                      <table class="tab3">
 
                         <tr>
                           <th style="width: 110px">
@@ -363,10 +357,6 @@
                           </td>
                         </tr>
 
-                        <%
-                           @role_list = @read_role.collect { |l| [l["label"]] }
-                        %>
-
                         <tr>
                           <th>Role
                             <img src="/assets/plus_sign.png" class="plus_icon add_field_level2_select" jq_attributes="related_people_attributes" jq_index="<%=index1%>" jq_type="person_role" />
@@ -375,17 +365,13 @@
                             <div class="field_group gray_box">
                               <% related_person.person_role.each_with_index do |person_role, index2| %>
                                   <div class="field_single">
-                                    <%= select_tag "entry[related_people_attributes][" + index1.to_s + "][person_role][]", options_for_select(@role_list.collect { |element| [element[0]] }.insert(0, ["--- select ---", ""]), person_role) %>
+                                    <%= select_tag "entry[related_people_attributes][" + index1.to_s + "][person_role][]", options_for_select(@role_list.collect { |role| [role["label"].join(''), role["id"]] }.insert(0, ["--- select ---", ""]), person_role) %>
                                     <img alt="Delete icon" src="/assets/delete.png" class="delete_icon_select remove_field_level1" jq_tag_type="select">
                                   </div>
                               <% end %>
                             </div>
                           </td>
                         </tr>
-
-                        <%
-                           @qualification_list = @read_qualification.collect { |l| [l["label"]] }
-                        %>
 
                         <tr>
                           <th>Qualification
@@ -395,7 +381,7 @@
                             <div class="field_group gray_box">
                               <% related_person.person_qualification.each_with_index do |person_qualification, index2| %>
                                   <div class="field_single">
-                                    <%= select_tag "entry[related_people_attributes][" + index1.to_s + "][person_qualification][]", options_for_select(@qualification_list.collect { |element| [element[0]] }.insert(0, ["--- select ---", ""]), person_qualification) %>
+                                    <%= select_tag "entry[related_people_attributes][" + index1.to_s + "][person_qualification][]", options_for_select(@qualification_list.collect { |qualification| [qualification["label"].join(''), qualification["id"]] }.insert(0, ["--- select ---", ""]), person_qualification) %>
                                     <img alt="Delete icon" src="/assets/delete.png" class="delete_icon_select remove_field_level1" jq_tag_type="select">
                                   </div>
                               <% end %>
@@ -407,21 +393,21 @@
                         <tr>
                           <th>Status</th>
                           <td>
-                            <%= select_tag "entry[related_people_attributes][" + index1.to_s + "][person_status]", options_for_select([["--- select ---", ""], "Status 1", "Status 2", "Status 3"], related_person.person_status) %>
+                            <%= select_tag "entry[related_people_attributes][" + index1.to_s + "][person_status]", options_for_select(@status_list.collect { |status| [status["label"].join(''), status["id"]] }.insert(0, ["--- select ---", ""]), related_person.person_status) %>
                           </td>
                         </tr>
 
                         <tr>
                           <th>Gender</th>
                           <td>
-                            <%= select_tag "entry[related_people_attributes][" + index1.to_s + "][person_gender]", options_for_select([["--- select ---", ""], "Male", "Female", "Undefined"], related_person.person_gender) %>
+                            <%= select_tag "entry[related_people_attributes][" + index1.to_s + "][person_gender]", options_for_select(@gender_list.collect { |gender| [gender[0]] }.insert(0, ["--- select ---", ""]), related_person.person_gender) %>
                           </td>
                         </tr>
 
                         <tr>
                           <th>Same As*</th>
                           <td class="input_single">
-                            <%= text_field_tag "entry[related_people_attributes][" + index1.to_s + "][person_same_as]", related_person.person_same_as, class: 'input_box', id: '' %>
+                            <%= text_field_tag "entry[related_people_attributes][" + index1.to_s + "][person_same_as]", related_person.person_same_as, id: '' %>
                           </td>
                         </tr>
 
@@ -486,25 +472,21 @@
 
                     <div class="field_single  no_padding">
 
-                      <table cellspacing="0" class="tab3">
+                      <table class="tab3">
 
                         <tr>
                           <th style="width: 110px">As Written:</th>
                           <td class="input_single">
-                            <%= text_field_tag "entry[entry_dates_attributes][" + index1.to_s + "][date_as_written]", entry_date.date_as_written, class: 'input_box', id: '' %>
+                            <%= text_field_tag "entry[entry_dates_attributes][" + index1.to_s + "][date_as_written]", entry_date.date_as_written, id: '' %>
                           </td>
                         </tr>
 
                         <tr>
                           <th>Note:</th>
                           <td class="input_single">
-                            <%= text_field_tag "entry[entry_dates_attributes][" + index1.to_s + "][date_note]", entry_date.date_note, class: 'input_box', id: '' %>
+                            <%= text_field_tag "entry[entry_dates_attributes][" + index1.to_s + "][date_note]", entry_date.date_note, id: '' %>
                           </td>
                         </tr>
-
-                        <%
-                           @date_type_list = @read_date_type.collect { |l| [l["label"]] }
-                        %>
 
                         <tr>
                           <th>Date Type:</th>
@@ -512,11 +494,6 @@
                             <%= select_tag "entry[entry_dates_attributes][" + index1.to_s + "][date_type]", options_for_select(@date_type_list.collect{ |element| [element[0]] }.insert(0, ["--- select ---", ""]), entry_date.date_type) %>
                           </td>
                         </tr>
-
-                        <%
-                           @date_certainty_list = @read_date_certainty.collect { |l| [l["label"]] }
-                           @date_type2_list = @read_date_type2.collect { |l| [l["label"]] }
-                        %>
 
                         <tr>
                           <th>Date
@@ -526,18 +503,22 @@
                             <div class="field_group">
                             <% entry_date.single_dates.each_with_index do |single_date, index2| %>
                               <div class="field_single" style="margin: 5px 0px">
-                                <table border="0" cellspacing="0" class="tab4" style="width: 94%">
+                                <table border="0" class="tab4" style="width: 94%">
                                   <tr>
                                     <th style="width: 60px">Certainty:</th>
-                                    <td><%= select_tag "entry[entry_dates_attributes][" + index1.to_s + "][single_dates_attributes][" + index2.to_s + "][date_certainty]", options_for_select(@date_certainty_list.collect{ |element| [element[0]] }.insert(0, ["--- select ---", ""]), single_date.date_certainty) %></td>
+                                    <td>
+                                      <%= select_tag "entry[entry_dates_attributes][" + index1.to_s + "][single_dates_attributes][" + index2.to_s + "][date_certainty]", options_for_select(@date_certainty_list.collect { |date_certainty| [date_certainty["label"].join(''), date_certainty["id"]] }.insert(0, ["--- select ---", ""]), single_date.date_certainty) %>
+                                    </td>
                                   </tr>
                                   <tr>
                                     <th>Date:</th>
-                                    <td><%= text_field_tag "entry[entry_dates_attributes][" + index1.to_s + "][single_dates_attributes][" + index2.to_s + "][date]", single_date.date, class: 'input_box', id: '' %></td>
+                                    <td class="input_single"><%= text_field_tag "entry[entry_dates_attributes][" + index1.to_s + "][single_dates_attributes][" + index2.to_s + "][date]", single_date.date, id: '' %></td>
                                   </tr>
                                   <tr>
                                     <th>Type:</th>
-                                    <td><%= select_tag "entry[entry_dates_attributes][" + index1.to_s + "][single_dates_attributes][" + index2.to_s + "][date_type]", options_for_select(@date_type2_list.collect{ |element| [element[0]] }.insert(0, ["--- select ---", ""]), single_date.date_type) %></td>
+                                    <td>
+                                      <%= select_tag "entry[entry_dates_attributes][" + index1.to_s + "][single_dates_attributes][" + index2.to_s + "][date_type]", options_for_select(@date_type_single_list.collect { |date_type_single| [date_type_single["label"].join(''), date_type_single["id"]] }.insert(0, ["--- select ---", ""]), single_date.date_type) %>
+                                    </td>
                                   </tr>
                                   </table>
                                   &nbsp;<img src='/assets/delete.png' alt='Delete icon' class='delete_icon remove_field_date' jq_index1="<%= index1 %>">
