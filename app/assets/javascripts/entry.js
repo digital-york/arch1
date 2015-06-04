@@ -20,35 +20,38 @@ function image_zoom_large_popup(page) {
     window.open(page, 'myWindow', 'status = 1, top = ' + top + ', left = ' + left + ', height = ' + popupHeight + ', width = ' + popupWidth + ', scrollbars=yes');
 }
 
+// Datepicker method
+/*$('.datePicker').datepicker({
+    showOn: 'button',
+    buttonImage: '/assets/calendar.gif',
+    buttonImageOnly: true,
+    buttonText: 'Select date',
+    dateFormat: 'dd-mm-yy'
+    // Not being used at present
+    //$(this).datepicker();
+});*/
+
 
 // Methods which add/remove elements to the form
 $(document).ready(function () {
-
-    // Datepicker method
-    $('.datePicker').datepicker({
-            showOn: 'button',
-            buttonImage: '/assets/calendar.gif',
-            buttonImageOnly: true,
-            buttonText: 'Select date',
-            dateFormat: 'dd-mm-yy'
-        // Not being used at present
-        //$(this).datepicker();
-    });
-
-    var jq_language_array = ["english", "latin", "french", "german", "undefined"];
-    //var jq_role_array = ["role 1", "role 2", "role 3"];
-    //var jq_qualification_array = ["qualification 1", "qualification 2", "qualification 3"];
-    var jq_date_type_array = ["recited date", "court date"];
-    var jq_status_array = ["Status 1", "Status 2", "Status 3"];
-    var jq_date_certainty_array = ["Certainty 1", "Certainty 2", "Certainty 3"];
-    var jq_date_type2_array = ["Datetype 1", "Datetype 2", "Datetype 3"];
 
     /*******************************/
     /***** ADD ELEMENT METHODS *****/
     /******************************/
 
-    // ADD FIELD LEVEL1 (MULTIPLE)
-    $('body').on('click', '.add_field_level1_multiple', function (e) {
+    // Note there are two types of lists which are passed as parameters to the jquery
+    // 1 - those which originate from Solr, e.g. role, status, qualification
+    // 2 - those which originate from a local file, e.g. language and gender
+    // They are handled slightly differently - the Solr are converted to JSON before being passed as a parameter
+    // whereas the local lists are already JSON and do not need to be converted
+    // e.g. a solr lists could be passed as 'role_list.jo_json' in the HTML code
+    // Note also that then the list is passed but used on the 2nd level rather than the first,
+    // there appeared to be a problem with spaces and so these were replaced with HTML code &#32;
+    // This happened specifically with 'plac e type' but is the probably the same for 'role', etc
+
+    // Click multiple field button (Level 1)
+    // e.g. Editorial Note
+    $('body').on('click', '.click_multiple_field_button', function (e) {
 
         try {
             e.preventDefault(); // I think this prevents other events firing?
@@ -56,7 +59,7 @@ $(document).ready(function () {
             var jq_type = $(this).attr('jq_type');
             var new_code_block = "<div style='padding: 4px 0px' class='field_single'>\
             <input type='text' class='input_class' value='' name='entry[" + jq_type + "][]'>\
-            <img alt='Delete icon' src='/assets/delete.png' class='delete_icon remove_field_level1'>\
+            <img alt='Delete icon' src='/assets/delete.png' class='delete_icon click_remove_field_level1'>\
             </div>";
             field_group_div.append(new_code_block);
         } catch (err) {
@@ -64,57 +67,9 @@ $(document).ready(function () {
         }
     });
 
-    // ADD FIELD LEVEL1 (SELECT)
-    $('body').on('click', '.add_field_level1_select', function (e) {
-
-        try {
-            e.preventDefault(); // I think this prevents other events firing?
-            var field_group_div = $(this).parent('th').next('td').find('>:first-child');
-            var options = "<option value=''>--- select ---</option>";
-            var list_array = jq_language_array;
-            for (i = 0; i < list_array.length; i++) {
-                var options = options + "<option value='" + list_array[i] + "'>" + list_array[i] + "</option/>";
-            }
-            var new_code_block = "<div style='padding: 4px 0px' class='field_single'><select id='entry_language_' name='entry[language][]'>" + options +
-                "</select>&nbsp;<img alt='Delete icon' src='/assets/delete.png' class='delete_icon_select remove_field_level1' jq_tag_type='select'></div>";
-            field_group_div.append(new_code_block);
-        } catch (err) {
-            alert(err);
-        }
-    });
-
-    var jq_place_type_list = null;
-    var jq_role_list = null;
-    var jq_qualification_list = null;
-
-    // ADD FIELD LEVEL1 (PLACE)
-    $('body').on('click', '.add_field_level1_place', function (e) {
-
-        try {
-            e.preventDefault(); // I think this prevents other events firing?
-            var field_group_div = $(this).parent('th').next('td').find('>:first-child');
-            var jq_index = field_group_div.children().length;
-            var new_code_block = "<div class='field_single'>\
-                <table class='tab3' cellspacing='0'>"
-                + get_template_level1_level2_multiple("related_places_attributes", jq_index, "place_as_written", "As Written*")
-                + get_template_level1_level2_select("related_places_attributes", jq_index, "place_type", "Place Type") +
-                "<tr><th>Same As*</th><td class='input_single'><input type='text' value='' id='' name='entry[related_places_attributes][" + jq_index + "][place_same_as]'></td></tr>"
-                + get_template_level1_level2_multiple("related_places_attributes", jq_index, "place_note", "Note") +
-                "</table>\
-                <img src='/assets/delete.png' alt='Delete icon' class='delete_icon remove_field_level2' params_type='related_places'>\
-                </div>";
-            field_group_div.append(new_code_block);
-        } catch (err) {
-            alert(err);
-        }
-    });
-
-    // ADD FIELD LEVEL1 / LEVEL2 MULTIPLE
-    // Used in Person / Place
-    // SEE CODE BELOW
-
-    // ADD FIELD LEVEL2 (MULTIPLE)
-    $('body').on('click', '.add_field_level2_multiple', function (e) {
+    // Click multiple field button (Level 2)
+    // e.g. 'As Written' on Person and Place
+    $('body').on('click', '.click_multiple_field_button_level2', function (e) {
 
         try {
             e.preventDefault(); // I think this prevents other events firing?
@@ -123,7 +78,7 @@ $(document).ready(function () {
             var jq_type = $(this).attr('jq_type');
             var new_code_block = "<div style='padding: 4px 0px' class='field_single'>\
             <input type='text' class='input_class' name='entry[" + jq_attributes + "][" + jq_index + "][" + jq_type + "][]'>\
-            &nbsp;<img alt='Delete icon' src='/assets/delete.png' class='delete_icon remove_field_level1'>\
+            &nbsp;<img alt='Delete icon' src='/assets/delete.png' class='delete_icon click_remove_field_level1'>\
             </div>";
             $(this).parent('th').next('td').find('.field_group').append(new_code_block);
         } catch (err) {
@@ -131,137 +86,268 @@ $(document).ready(function () {
         }
     });
 
-    // ADD FIELD LEVEL1 (PERSON)
-    $('body').on('click', '.add_field_level1_person', function (e) {
+    // Click select field button (Level 1)
+    // e.g. Language (Note: modify the code if other select lists are added here)
+    $('body').on('click', '.click_select_field_button', function (e) {
 
         try {
             e.preventDefault(); // I think this prevents other events firing?
             var field_group_div = $(this).parent('th').next('td').find('>:first-child');
-            var jq_index = field_group_div.children().length;
-            var new_code_block = "<div class='field_single'>\
-                <table class='tab3' cellspacing='0'>"
-                + get_template_level1_level2_multiple("related_people_attributes", jq_index, "person_as_written", "As Written*")
-                + get_template_level1_level2_select("related_people_attributes", jq_index, "person_role", "Role")
-                + get_template_level1_level2_select("related_people_attributes", jq_index, "person_qualification", "Qualification") +
-                "<tr><th>Status</th><td><select name='entry[related_people_attributes][" + jq_index + "][person_status]'><option value=''>--- select ---</option><option value='Status 1'>Status 1</option><option value='Status 2'>Status 2</option><option value='Status 3'>Status 3</option></select></td></tr>" +
-                "<tr><th>Gender</th><td><select name='entry[related_people_attributes][" + jq_index + "][person_gender]'><option value=''>--- select ---</option><option value='Male'>Male</option><option value='Female'>Female</option><option value='Undefined'>Undefined</option></select></td></tr>" +
-                "<tr><th>Same As*</th><td class='input_single'><input type='text' value='' id='' name='entry[related_people_attributes][" + jq_index + "][person_same_as]'></td></tr>"
-                + get_template_level1_level2_multiple("related_people_attributes", jq_index, "person_related_place", "Related Place")
-                + get_template_level1_level2_multiple("related_people_attributes", jq_index, "person_note", "Note") +
-                "</table>\
-                <img src='/assets/delete.png' alt='Delete icon' class='delete_icon remove_field_level2' params_type='related_people'>\
-                </div>";
+            var jq_language_list = $.parseJSON($(this).attr('jq_language_list'));
+
+            var language_options = "<option value=''>--- select ---</option>";
+
+            for (i = 0; i < jq_language_list.length; i++) {
+                language_options = language_options + "<option value='" + jq_language_list[i] + "'>" + jq_language_list[i] + "</option/>";
+            }
+
+            var new_code_block = "<div style='padding: 4px 0px' class='field_single'><select id='entry_language_' name='entry[language][]'>" + language_options +
+                "</select>&nbsp;<img alt='Delete icon' src='/assets/delete.png' class='delete_icon_select click_remove_field_level1' jq_tag_type='select'></div>";
+
             field_group_div.append(new_code_block);
         } catch (err) {
             alert(err);
         }
     });
 
-    // ADD FIELD LEVEL1 / LEVEL2 MULTIPLE
-    // Used in Person / Place
-    function get_template_level1_level2_multiple(jq_attributes, jq_index, jq_type, jq_label) {
-        return "<tr><th style='width: 110px'>" + jq_label +
-            "&nbsp;<img jq_type='" + jq_type + "' jq_index='" + jq_index + "' jq_attributes='" + jq_attributes + "' class='plus_icon add_field_level2_multiple' src='/assets/plus_sign.png'>\
-        </th><td><div style='padding: 4px 5px; border: 1px solid silver; min-height: 18px' class='field_group background_gray'></div>\
-        </td></tr>";
-    }
-
-    // ADD FIELD LEVEL1 / LEVEL2 SELECT
-    // Used in Person
-    function get_template_level1_level2_select(jq_attributes, jq_index, jq_type, jq_label) {
-        return "<tr><th style='width: 110px'>" + jq_label +
-            "&nbsp;<img jq_type='" + jq_type + "' jq_index='" + jq_index + "' jq_attributes='" + jq_attributes + "' class='plus_icon add_field_level2_select' src='/assets/plus_sign.png'>\
-        </th><td><div style='padding: 4px 5px; border: 1px solid silver; min-height: 18px' class='field_group background_gray'></div>\
-        </td></tr>";
-    }
-
-    // ADD FIELD LEVEL1 (DATE)
-    $('body').on('click', '.add_field_level1_date', function (e) {
-
-        try {
-            e.preventDefault(); // I think this prevents other events firing?
-            var field_group_div = $(this).parent('th').next('td').find('>:first-child');
-            var jq_index = field_group_div.children().length;
-            var options = "<option value=''>--- select ---</option>";
-            for (i = 0; i < jq_date_type_array.length; i++) {
-                options = options + "<option value='" + jq_date_type_array[i] + "'>" + jq_date_type_array[i] + "</option/>";
-            }
-            var new_code_block = "<div class='field_single no_padding'>\
-                <table class='tab3' cellspacing='0'>" +
-                "<tr><th style='width: 110px'>As Written</th><td class='input_single'><input type='text' value='' id='' name='entry[entry_dates_attributes][" + jq_index + "][date_as_written]'></td></tr>" +
-                "<tr><th>Note</th><td class='input_single'><input type='text' value='' id='' name='entry[entry_dates_attributes][" + jq_index + "][date_note]'></td></tr>" +
-                "<tr><th>Date Type</th><td><select name='entry[entry_dates_attributes][" + jq_index + "][date_type]'>" + options + "</select></td></tr>" +
-                "<tr><th>Date&nbsp;<img jq_index='" + jq_index + "' class='plus_icon add_field_level2_date' src='/assets/plus_sign.png'></th><td><div class='field_group'></div></td></tr>" +
-                "</table>" +
-                "<img src='/assets/delete.png' alt='Delete icon' class='delete_icon remove_field_level2' params_type='related_places'>" +
-                "</div>";
-            field_group_div.append(new_code_block);
-        } catch (err) {
-            alert(err);
-        }
-    });
-
-    // ADD FIELD LEVEL2 (SINGLE_DATE)
-    $('body').on('click', '.add_field_level2_date', function (e) {
-
-        try {
-            e.preventDefault(); // I think this prevents other events firing?
-            var jq_index = $(this).attr('jq_index');
-            var field_group_div = $(this).parent('th').next('td').find('>:first-child');
-            var jq_index2 = field_group_div.children().length;
-            var options1 = "<option value=''>--- select ---</option>";
-            for (i = 0; i < jq_date_certainty_array.length; i++) {
-                options1 = options1 + "<option value='" + jq_date_certainty_array[i] + "'>" + jq_date_certainty_array[i] + "</option/>";
-            }
-            var options2 = "<option value=''>--- select ---</option>";
-            for (i = 0; i < jq_date_type2_array.length; i++) {
-                options2 = options2 + "<option value='" + jq_date_type2_array[i] + "'>" + jq_date_type2_array[i] + "</option/>";
-            }
-            var new_code_block = "<div class='field_single' style='margin: 5px 0px'>" +
-            "<table class='tab4' cellspacing='0' border='0' style='width: 94%'>" +
-            "<tr><th style='width: 60px'>Certainty:</th>" +
-            "<td><select name='entry[entry_dates_attributes][" + jq_index + "][single_dates_attributes][" + jq_index2 + "][date_certainty]'>" + options1 + "</select></td>" +
-            "<tr><th>Date:</th>" +
-            "<td class='input_single'><input id='' type='text' name='entry[entry_dates_attributes][" + jq_index + "][single_dates_attributes][" + jq_index2 + "][date]'></td>" +
-            "<tr><th>Type:</th>" +
-            "<td><select name='entry[entry_dates_attributes][" + jq_index + "][single_dates_attributes][" + jq_index2 + "][date_type]'>" + options2 + "</select></td>" +
-            "</table>" +
-            "<img alt='Delete icon' src='/assets/delete.png' class='delete_icon remove_field_date' jq_index1='" + jq_index2 + "'>" +
-            "<div style='clear: both'></div></div>";
-            $(this).parent('th').next('td').find('.field_group').append(new_code_block);
-        } catch (err) {
-            alert(err);
-        }
-    });
-
-    // ADD FIELD LEVEL2 (SELECT)
-    $('body').on('click', '.add_field_level2_select', function (e) {
+    // Click select field button (Level 2)
+    // e.g. Place Type, Role, Qualification
+    $('body').on('click', '.click_select_field_button_level2', function (e) {
 
         try {
             e.preventDefault(); // I think this prevents other events firing?
             var jq_attributes = $(this).attr('jq_attributes');
             var jq_index = $(this).attr('jq_index');
             var jq_type = $(this).attr('jq_type');
-            var jq_place_type_list = $(this).attr('jq_place_type_list');
             var list_array = "";
             var options = "<option value=''>--- select ---</option>";
             if (jq_type == 'person_role') {
-                var list = $.parseJSON(jq_role_list);
+                list_array = $.parseJSON($(this).attr('jq_role_list'));
             } else if (jq_type == 'person_qualification') {
-                var list = $.parseJSON(jq_qualification_list);
+                list_array = $.parseJSON($(this).attr('jq_qualification_list'));
             } else if (jq_type == 'place_type') {
-                var list = $.parseJSON(jq_place_type_list);
+                list_array = $.parseJSON($(this).attr('jq_place_type_list'));
             }
-            for (i = 0; i < list.length; i++) {
-                options = options + "<option value='" + list[i].id + "'>" + list[i].label + "</option/>";
+            for (i = 0; i < list_array.length; i++) {
+                options = options + "<option value='" + list_array[i].id + "'>" + list_array[i].label + "</option/>";
             }
             var new_code_block = "<div style='padding: 4px 0px' class='field_single'><select name='entry[" + jq_attributes + "][" + jq_index + "][" + jq_type + "][]'>" + options +
-                "</select>&nbsp;<img alt='Delete icon' src='/assets/delete.png' class='delete_icon_select remove_field_level1' jq_tag_type='select'></div>";
+                "</select>&nbsp;<img alt='Delete icon' src='/assets/delete.png' class='delete_icon_select click_remove_field_level1' jq_tag_type='select'></div>";
             $(this).parent('th').next('td').find('.field_group').append(new_code_block);
         } catch (err) {
             alert(err);
         }
     });
+
+    // Click place button
+    $('body').on('click', '.click_place_button', function (e) {
+
+        try {
+            e.preventDefault(); // I think this prevents other events firing?
+            var field_group_div = $(this).parent('th').next('td').find('>:first-child');
+            var jq_index = field_group_div.children().length;
+            var jq_place_type_list = $(this).attr('jq_place_type_list').replace(/ /g, "&#32;"); // Appears to be a problem when list is added as a nested list, i.e. Level 2, therefore replace them here
+
+            var new_code_block = "<div class='field_single'>" +
+
+                "<table class='tab3' cellspacing='0'>" +
+
+                // As Written
+                "<tr><th style='width: 110px'>As Written*" +
+                "&nbsp;<img jq_type='place_as_written' jq_index='" + jq_index + "' jq_attributes='related_places_attributes' class='plus_icon click_multiple_field_button_level2' src='/assets/plus_sign.png'>" +
+                "</th><td><div style='padding: 4px 5px; border: 1px solid silver; min-height: 18px' class='field_group background_gray'></div></td></tr>" +
+
+                // Place Type
+                "<tr><th style='width: 110px'>Place Type&nbsp;<img jq_place_type_list=" + jq_place_type_list +
+                " jq_type='" + "place_type" + "' jq_index='" + jq_index + "' jq_attributes='related_places_attributes' class='plus_icon click_select_field_button_level2' src='/assets/plus_sign.png'>" +
+                "</th><td><div style='padding: 4px 5px; border: 1px solid silver; min-height: 18px' class='field_group background_gray'></div></td></tr>" +
+
+                // Same As
+                "<tr><th>Same As*</th><td class='input_single'><input type='text' value='' id='' name='entry[related_places_attributes][" + jq_index + "][place_same_as]'></td></tr>" +
+
+                // Note
+                "<tr><th style='width: 110px'>Note" +
+                "&nbsp;<img jq_type='place_note' jq_index='" + jq_index + "' jq_attributes='related_places_attributes' class='plus_icon click_multiple_field_button_level2' src='/assets/plus_sign.png'>" +
+                "</th><td><div style='padding: 4px 5px; border: 1px solid silver; min-height: 18px' class='field_group background_gray'></div></td></tr>" +
+
+                "</table>" +
+                "<img src='/assets/delete.png' alt='Delete icon' class='delete_icon click_remove_field_level2' params_type='related_places'>" +
+                "</div>";
+
+            field_group_div.append(new_code_block);
+
+        } catch (err) {
+            alert(err);
+        }
+    });
+
+    // Click person button
+    $('body').on('click', '.click_person_button', function (e) {
+
+        try {
+            e.preventDefault(); // I think this prevents other events firing?
+            var field_group_div = $(this).parent('th').next('td').find('>:first-child');
+            var jq_index = field_group_div.children().length;
+            var jq_role_list = $(this).attr('jq_role_list').replace(/ /g, "&#32;"); //  // Appears to be a problem when list is added as a nested list, i.e. Level 2, therefore replace them here
+            var jq_qualification_list = $(this).attr('jq_qualification_list').replace(/ /g, "&#32;"); // See note on line above
+            var jq_status_list = $.parseJSON($(this).attr('jq_status_list')); // Don't need to remove spaces because not nested like the above lists (I think)
+            var jq_gender_list = $.parseJSON($(this).attr('jq_gender_list'));
+
+            var status_options = "<option value=''>--- select ---</option>";
+
+            for (i = 0; i < jq_status_list.length; i++) {
+                status_options = status_options + "<option value='" + jq_status_list[i].id + "'>" + jq_status_list[i].label + "</option/>";
+            }
+
+            var gender_options = "<option value=''>--- select ---</option>";
+
+            for (i = 0; i < jq_gender_list.length; i++) {
+                gender_options = gender_options + "<option value='" + jq_gender_list[i] + "'>" + jq_gender_list[i] + "</option/>";
+            }
+
+            var new_code_block = "<div class='field_single'>" +
+
+                "<table class='tab3' cellspacing='0'>" +
+
+                // As Written
+                "<tr><th style='width: 110px'>As Written*" +
+                "&nbsp;<img jq_type='person_as_written' jq_index='" + jq_index + "' jq_attributes='related_people_attributes' class='plus_icon click_multiple_field_button_level2' src='/assets/plus_sign.png'>" +
+                "</th><td><div style='padding: 4px 5px; border: 1px solid silver; min-height: 18px' class='field_group background_gray'></div></td></tr>" +
+
+                // Role
+                "<tr><th style='width: 110px'>Role" +
+                "&nbsp;<img jq_role_list=" + jq_role_list + " jq_type='" + "person_role" + "' jq_index='" + jq_index + "' jq_attributes='related_people_attributes' class='plus_icon click_select_field_button_level2' src='/assets/plus_sign.png'>" +
+                "</th><td><div style='padding: 4px 5px; border: 1px solid silver; min-height: 18px' class='field_group background_gray'></div></td></tr>" +
+
+                // Qualification
+                "<tr><th style='width: 110px'>Qualification" +
+                "&nbsp;<img jq_qualification_list=" + jq_qualification_list + " jq_type='person_qualification' jq_index='" + jq_index + "' jq_attributes='related_people_attributes' class='plus_icon click_select_field_button_level2' src='/assets/plus_sign.png'>" +
+                "</th><td><div style='padding: 4px 5px; border: 1px solid silver; min-height: 18px' class='field_group background_gray'></div></td></tr>" +
+
+                // Status
+                "<tr><th>Status</th><td><select name='entry[related_people_attributes][" + jq_index + "][person_status]'>" + status_options + "</select></td></tr>" +
+
+                // Gender
+                "<tr><th>Gender</th><td><select name='entry[related_people_attributes][" + jq_index + "][person_gender]'>" + gender_options + "</select></td></tr>" +
+
+                // Same As
+                "<tr><th>Same As*</th><td class='input_single'><input type='text' value='' id='' name='entry[related_people_attributes][" + jq_index + "][person_same_as]'></td></tr>" +
+
+                // Related Place
+                "<tr><th style='width: 110px'>Related Place" +
+                "&nbsp;<img jq_type='person_related_place' jq_index='" + jq_index + "' jq_attributes='related_people_attributes' class='plus_icon click_multiple_field_button_level2' src='/assets/plus_sign.png'>" +
+                "</th><td><div style='padding: 4px 5px; border: 1px solid silver; min-height: 18px' class='field_group background_gray'></div></td></tr>" +
+
+                // Note
+                "<tr><th style='width: 110px'>Note*" +
+                "&nbsp;<img jq_type='person_note' jq_index='" + jq_index + "' jq_attributes='related_people_attributes' class='plus_icon click_multiple_field_button_level2' src='/assets/plus_sign.png'>" +
+                "</th><td><div style='padding: 4px 5px; border: 1px solid silver; min-height: 18px' class='field_group background_gray'></div></td></tr>" +
+
+                "</table>" +
+                "<img src='/assets/delete.png' alt='Delete icon' class='delete_icon click_remove_field_level2' params_type='related_people'>" +
+                "</div>";
+
+            field_group_div.append(new_code_block);
+
+        } catch (err) {
+            alert(err);
+        }
+    });
+
+    // Click date button
+    $('body').on('click', '.click_date_button', function (e) {
+
+        try {
+            e.preventDefault(); // I think this prevents other events firing?
+            var field_group_div = $(this).parent('th').next('td').find('>:first-child');
+            var jq_index = field_group_div.children().length;
+            var jq_date_type_list = $.parseJSON($(this).attr('jq_date_type_list')); // // Don't need to remove spaces because not nested like the two lists below (I think)
+            var jq_date_certainty_list = $(this).attr('jq_date_certainty_list').replace(/ /g, "&#32;");  // Appears to be a problem when list is added as a nested list, i.e. Level 2, therefore replace them here
+            var jq_date_type_single_list = $(this).attr('jq_date_type_single_list').replace(/ /g, "&#32;"); // See note on line above
+
+            var date_type_options = "<option value=''>--- select ---</option>";
+
+            for (i = 0; i < jq_date_type_list.length; i++) {
+                date_type_options = date_type_options + "<option value='" + jq_date_type_list[i] + "'>" + jq_date_type_list[i] + "</option/>";
+            }
+
+            var new_code_block = "<div class='field_single no_padding'>" +
+
+                "<table class='tab3' cellspacing='0'>" +
+
+                // As Written
+                "<tr><th style='width: 110px'>As Written</th><td class='input_single'><input type='text' value='' id='' name='entry[entry_dates_attributes][" + jq_index + "][date_as_written]'></td></tr>" +
+
+                // Note
+                "<tr><th>Note</th><td class='input_single'><input type='text' value='' id='' name='entry[entry_dates_attributes][" + jq_index + "][date_note]'></td></tr>" +
+
+                // Date Type
+                "<tr><th>Date Type</th><td><select name='entry[entry_dates_attributes][" + jq_index + "][date_type]'>" + date_type_options + "</select></td></tr>" +
+
+                // Date
+                "<tr><th>Date&nbsp;<img jq_date_certainty_list='" + jq_date_certainty_list + "' jq_date_type_single_list='" + jq_date_type_single_list + "' jq_index='" + jq_index + "' class='plus_icon click_single_date_button' src='/assets/plus_sign.png'></th><td><div class='field_group'></div></td></tr>" +
+
+                "</table>" +
+                "<img src='/assets/delete.png' alt='Delete icon' class='delete_icon click_remove_field_level2' params_type='related_places'>" +
+                "</div>";
+
+            field_group_div.append(new_code_block);
+
+        } catch (err) {
+            alert(err);
+        }
+    });
+
+    // Click single date button
+    $('body').on('click', '.click_single_date_button', function (e) {
+
+        try {
+            e.preventDefault(); // I think this prevents other events firing?
+            var jq_index = $(this).attr('jq_index');
+            var field_group_div = $(this).parent('th').next('td').find('>:first-child');
+            var jq_index2 = field_group_div.children().length;
+            var jq_date_certainty_list = $.parseJSON($(this).attr('jq_date_certainty_list')); //.replace(/ /g, "&#32;"); // Doesn't like spaces but quotes are OK?!
+            var jq_date_type_single_list = $.parseJSON($(this).attr('jq_date_type_single_list')); //.replace(/ /g, "&#32;"); // Doesn't like spaces but quotes are OK?!
+
+            var date_certainty_options = "<option value=''>--- select ---</option>";
+
+            for (i = 0; i < jq_date_certainty_list.length; i++) {
+                date_certainty_options = date_certainty_options + "<option value='" + jq_date_certainty_list[i].id + "'>" + jq_date_certainty_list[i].label + "</option/>";
+            }
+
+            var date_type_single_options = "<option value=''>--- select ---</option>";
+
+            for (i = 0; i < jq_date_type_single_list.length; i++) {
+                date_type_single_options = date_type_single_options + "<option value='" + jq_date_type_single_list[i].id + "'>" + jq_date_type_single_list[i].label + "</option/>";
+            }
+
+            var new_code_block = "<div class='field_single' style='margin: 5px 0px'>" +
+
+                "<table class='tab4' cellspacing='0' border='0' style='width: 94%'>" +
+
+                // Date Certainty
+                "<tr><th style='width: 60px'>Certainty:</th>" +
+                "<td><select name='entry[entry_dates_attributes][" + jq_index + "][single_dates_attributes][" + jq_index2 + "][date_certainty]'>" + date_certainty_options + "</select></td>" +
+
+                // Date
+                "<tr><th>Date:</th>" +
+                "<td class='input_single'><input id='' type='text' name='entry[entry_dates_attributes][" + jq_index + "][single_dates_attributes][" + jq_index2 + "][date]'></td>" +
+
+                // Type
+                "<tr><th>Type:</th>" +
+                "<td><select name='entry[entry_dates_attributes][" + jq_index + "][single_dates_attributes][" + jq_index2 + "][date_type]'>" + date_type_single_options + "</select></td>" +
+
+                "</table>" +
+                "<img alt='Delete icon' src='/assets/delete.png' class='delete_icon click_remove_field_date' jq_index1='" + jq_index2 + "'>" +
+                "<div style='clear: both'></div></div>";
+
+            $(this).parent('th').next('td').find('.field_group').append(new_code_block);
+
+        } catch (err) {
+            alert(err);
+        }
+    });
+
 
     /**********************************/
     /***** REMOVE ELEMENT METHODS *****/
@@ -269,12 +355,11 @@ $(document).ready(function () {
 
     // Find the 'field_single' div and make 'display' = 'none' in order to hide it, then set the
     // value to '' so that it is deleted by the controller code (see the 'remove_multivalue_blanks' method)
-    $('body').on('click', '.remove_field_level1', function (e) {
+    $('body').on('click', '.click_remove_field_level1', function (e) {
 
         try {
             e.preventDefault(); // I think this prevents other events firing?
             var field_single_div = $(this).parent('div');
-            //field_single_div.css({'border': '1px solid red'});
             field_single_div.css({'display': 'none'});
             // If the tag type is not null it must be 'select' otherwise it must be 'input'
             // There could be more types later on though
@@ -291,12 +376,11 @@ $(document).ready(function () {
     // This code hides Level 2 elements such as Place
     // Note that a hidden field is also added with '_destroy' = '1' - this
     // is necessary to remove associations in Fedora
-    $('body').on('click', '.remove_field_level2', function (e) {
+    $('body').on('click', '.click_remove_field_level2', function (e) {
 
         try {
             e.preventDefault(); // I think this prevents other events firing?
             var field_single_div = $(this).parent('div');
-            //var field_group_div = field_single_div.parent('div');
             field_single_div.css({'display': 'none'});
             // If there is a hidden input element with an 'id', add a '_destroy' = '1' hidden element to make sure
             // that it is deleted from Fedora but don't do it for elements without an 'id' otherwise the element is added to Fedora!
@@ -315,7 +399,7 @@ $(document).ready(function () {
     });
 
     // Remove date
-    $('body').on('click', '.remove_field_date', function (e) {
+    $('body').on('click', '.click_remove_field_date', function (e) {
 
         try {
             e.preventDefault(); // I think this prevents other events firing?
