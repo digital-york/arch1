@@ -1,4 +1,3 @@
-
 // This code is used if an error occurs and the form is shown again
 // Hide any elements which have been removed by the user
 // as they will reappear on the page if an error occurs
@@ -22,14 +21,14 @@ function image_zoom_large_popup(page) {
 
 // Datepicker method
 /*$('.datePicker').datepicker({
-    showOn: 'button',
-    buttonImage: '/assets/calendar.gif',
-    buttonImageOnly: true,
-    buttonText: 'Select date',
-    dateFormat: 'dd-mm-yy'
-    // Not being used at present
-    //$(this).datepicker();
-});*/
+ showOn: 'button',
+ buttonImage: '/assets/calendar.gif',
+ buttonImageOnly: true,
+ buttonText: 'Select date',
+ dateFormat: 'dd-mm-yy'
+ // Not being used at present
+ //$(this).datepicker();
+ });*/
 
 
 // Methods which add/remove elements to the form
@@ -152,20 +151,20 @@ $(document).ready(function () {
 
                 "<table class='tab3' cellspacing='0'>" +
 
-                // As Written
+                    // As Written
                 "<tr><th style='width: 110px'>As Written*" +
                 "&nbsp;<img jq_type='place_as_written' jq_index='" + jq_index + "' jq_attributes='related_places_attributes' class='plus_icon click_multiple_field_button_level2' src='/assets/plus_sign.png'>" +
-                "</th><td><div class='field_group gray_box'></div></td></tr>" +
+                "</th><td><div class='field_group gray_box related_place_as_written'></div></td></tr>" +
 
-                // Place Type
+                    // Place Type
                 "<tr><th>Place Type&nbsp;<img jq_place_type_list=" + jq_place_type_list +
                 " jq_type='" + "place_type" + "' jq_index='" + jq_index + "' jq_attributes='related_places_attributes' class='plus_icon click_select_field_button_level2' src='/assets/plus_sign.png'>" +
                 "</th><td><div class='field_group gray_box'></div></td></tr>" +
 
-                // Same As
+                    // Same As
                 "<tr><th>Same As*</th><td class='input_single'><input type='text' value='' id='' name='entry[related_places_attributes][" + jq_index + "][place_same_as]'></td></tr>" +
 
-                // Note
+                    // Note
                 "<tr><th>Note" +
                 "&nbsp;<img jq_type='place_note' jq_index='" + jq_index + "' jq_attributes='related_places_attributes' class='plus_icon click_multiple_field_button_level2' src='/assets/plus_sign.png'>" +
                 "</th><td><div class='field_group gray_box'></div></td></tr>" +
@@ -209,36 +208,36 @@ $(document).ready(function () {
 
                 "<table class='tab3' cellspacing='0'>" +
 
-                // As Written
+                    // As Written
                 "<tr><th style='width: 110px'>As Written*" +
                 "&nbsp;<img jq_type='person_as_written' jq_index='" + jq_index + "' jq_attributes='related_people_attributes' class='plus_icon click_multiple_field_button_level2' src='/assets/plus_sign.png'>" +
                 "</th><td><div class='field_group gray_box'></div></td></tr>" +
 
-                // Role
+                    // Role
                 "<tr><th style='width: 110px'>Role" +
                 "&nbsp;<img jq_role_list=" + jq_role_list + " jq_type='" + "person_role" + "' jq_index='" + jq_index + "' jq_attributes='related_people_attributes' class='plus_icon click_select_field_button_level2' src='/assets/plus_sign.png'>" +
                 "</th><td><div class='field_group gray_box'></div></td></tr>" +
 
-                // Qualification
+                    // Qualification
                 "<tr><th style='width: 110px'>Qualification" +
                 "&nbsp;<img jq_qualification_list=" + jq_qualification_list + " jq_type='person_qualification' jq_index='" + jq_index + "' jq_attributes='related_people_attributes' class='plus_icon click_select_field_button_level2' src='/assets/plus_sign.png'>" +
                 "</th><td><div class='field_group gray_box'></div></td></tr>" +
 
-                // Status
+                    // Status
                 "<tr><th>Status</th><td><select name='entry[related_people_attributes][" + jq_index + "][person_status]'>" + status_options + "</select></td></tr>" +
 
-                // Gender
+                    // Gender
                 "<tr><th>Gender</th><td><select name='entry[related_people_attributes][" + jq_index + "][person_gender]'>" + gender_options + "</select></td></tr>" +
 
-                // Same As
+                    // Same As
                 "<tr><th>Same As*</th><td class='input_single'><input type='text' value='' id='' name='entry[related_people_attributes][" + jq_index + "][person_same_as]'></td></tr>" +
 
-                // Related Place
+                    // Related Place
                 "<tr><th>Related Place" +
                 "&nbsp;<img jq_type='person_related_place' jq_index='" + jq_index + "' jq_attributes='related_people_attributes' class='plus_icon click_multiple_field_button_level2' src='/assets/plus_sign.png'>" +
                 "</th><td><div class='field_group gray_box'></div></td></tr>" +
 
-                // Note
+                    // Note
                 "<tr><th>Note*" +
                 "&nbsp;<img jq_type='person_note' jq_index='" + jq_index + "' jq_attributes='related_people_attributes' class='plus_icon click_multiple_field_button_level2' src='/assets/plus_sign.png'>" +
                 "</th><td><div class='field_group gray_box'></div></td></tr>" +
@@ -275,16 +274,16 @@ $(document).ready(function () {
 
                 "<table class='tab3' cellspacing='0'>" +
 
-                // As Written
+                    // As Written
                 "<tr><th style='width: 110px'>As Written</th><td class='input_single'><input type='text' value='' id='' name='entry[entry_dates_attributes][" + jq_index + "][date_as_written]'></td></tr>" +
 
-                // Note
+                    // Note
                 "<tr><th>Note</th><td class='input_single'><input type='text' value='' id='' name='entry[entry_dates_attributes][" + jq_index + "][date_note]'></td></tr>" +
 
-                // Date Type
+                    // Date Type
                 "<tr><th>Date Type</th><td><select name='entry[entry_dates_attributes][" + jq_index + "][date_type]'>" + date_type_options + "</select></td></tr>" +
 
-                // Date
+                    // Date
                 "<tr><th>Date&nbsp;<img jq_date_certainty_list='" + jq_date_certainty_list + "' jq_date_type_single_list='" + jq_date_type_single_list + "' jq_index='" + jq_index + "' class='plus_icon click_single_date_button' src='/assets/plus_sign.png'></th><td><div class='field_group gray_box single_date'></div></td></tr>" +
 
                 "</table>" +
@@ -325,15 +324,15 @@ $(document).ready(function () {
 
                 "<table>" +
 
-                // Date Certainty
+                    // Date Certainty
                 "<tr><th style='width: 60px'>Certainty:</th>" +
                 "<td><select name='entry[entry_dates_attributes][" + jq_index + "][single_dates_attributes][" + jq_index2 + "][date_certainty]'>" + date_certainty_options + "</select></td>" +
 
-                // Date
+                    // Date
                 "<tr><th>Date:</th>" +
                 "<td class='input_single'><input id='' type='text' name='entry[entry_dates_attributes][" + jq_index + "][single_dates_attributes][" + jq_index2 + "][date]'></td>" +
 
-                // Type
+                    // Type
                 "<tr><th>Type:</th>" +
                 "<td><select name='entry[entry_dates_attributes][" + jq_index + "][single_dates_attributes][" + jq_index2 + "][date_type]'>" + date_type_single_options + "</select></td>" +
 
@@ -465,5 +464,17 @@ $(document).ready(function () {
             alert(err);
         }
     }
+
+
+    //$(".related_place_as_written:input:first").css("border", "3px solid " + "orange");
+
+    $(".related_place_as_written").each(function () {
+        var d = $(this).find('input:first');
+        d.css("border", "3px solid blue");
+        $(".my_select").each(function () {
+            $(this).append('<option>' + d.val() + '</option>');
+            //$(this).css("border", "3px solid " + "orange");
+        });
+    });
 
 });

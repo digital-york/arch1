@@ -159,7 +159,7 @@
               <div class="field_group">
                 <% @entry.note.each do |note| %>
                     <div class="field_single">
-                      <%= text_field_tag "entry[note][]", note, class: 'input_box', id: '' %>
+                      <%= text_field_tag "entry[note][]", note, id: '' %>
                       <%= image_tag('delete.png', class: 'delete_icon click_remove_field_level1') %>
                     </div>
                 <% end %>
@@ -176,7 +176,7 @@
               <div class="field_group">
                 <% @entry.editorial_note.each do |editorial_note| %>
                     <div class="field_single">
-                      <%= text_field_tag "entry[editorial_note][]", editorial_note, class: 'input_box', id: '' %>
+                      <%= text_field_tag "entry[editorial_note][]", editorial_note, id: '' %>
                       <%= image_tag('delete.png', class: 'delete_icon click_remove_field_level1') %>
                     </div>
                 <% end %>
@@ -193,7 +193,7 @@
               <div class="field_group">
                 <% @entry.marginal_note.each do |marginal_note| %>
                     <div class="field_single">
-                      <%= text_field_tag "entry[marginal_note][]", marginal_note, class: 'input_box', id: '' %>
+                      <%= text_field_tag "entry[marginal_note][]", marginal_note, id: '' %>
                       <%= image_tag('delete.png', class: 'delete_icon click_remove_field_level1') %>
                     </div>
                 <% end %>
@@ -210,7 +210,7 @@
               <div class="field_group">
                 <% @entry.is_referenced_by.each do |is_referenced_by| %>
                     <div class="field_single">
-                      <%= text_field_tag "entry[is_referenced_by][]", is_referenced_by, class: 'input_box', id: '' %>
+                      <%= text_field_tag "entry[is_referenced_by][]", is_referenced_by, id: '' %>
                       <%= image_tag('delete.png', class: 'delete_icon click_remove_field_level1') %>
                     </div>
                 <% end %>
@@ -227,7 +227,7 @@
               <div class="field_group">
                 <% @entry.subject.each do |subject| %>
                     <div class="field_single">
-                      <%= text_field_tag "entry[subject][]", subject, class: 'input_box', id: '' %>
+                      <%= text_field_tag "entry[subject][]", subject, id: '' %>
                       <%= image_tag('delete.png', class: 'delete_icon click_remove_field_level1') %>
                     </div>
                 <% end %>
@@ -258,10 +258,10 @@
                             <img src="/assets/plus_sign.png" class="plus_icon click_multiple_field_button_level2" jq_attributes="related_places_attributes" jq_index="<%=index1%>" jq_type="place_as_written" />
                           </th>
                           <td>
-                            <div class="field_group gray_box">
+                            <div class="field_group gray_box related_place_as_written">
                               <% related_place.place_as_written.each_with_index do |place_as_written, index2| %>
                                   <div class="field_single">
-                                    <%= text_field_tag "entry[related_places_attributes][" + index1.to_s + "][place_as_written][]", place_as_written, class: 'input_box', id: '' %>
+                                    <%= text_field_tag "entry[related_places_attributes][" + index1.to_s + "][place_as_written][]", place_as_written, id: '' %>
                                     &nbsp;<img src='/assets/delete.png' alt='Delete icon' class='delete_icon click_remove_field_level1'>
                                   </div>
                               <% end %>
@@ -279,7 +279,7 @@
                               <% related_place.place_type.each_with_index do |place_type, index2| %>
                                   <div class="field_single">
                                     <%= select_tag "entry[related_places_attributes][" + index1.to_s + "][place_type][]", options_for_select(@place_type_list.collect { |place_type| [place_type["label"].join(''), place_type["id"]] }.insert(0, ["--- select ---", ""]), place_type) %>
-                                    <%#= text_field_tag "entry[related_places_attributes][" + index1.to_s + "][place_type][]", place_type, class: 'input_box', id: '' %>
+                                    <%#= text_field_tag "entry[related_places_attributes][" + index1.to_s + "][place_type][]", place_type, id: '' %>
                                     &nbsp;<img src='/assets/delete.png' alt='Delete icon' class='delete_icon click_remove_field_level1'>
                                   </div>
                               <% end %>
@@ -303,7 +303,7 @@
                             <div class="field_group gray_box">
                               <% related_place.place_note.each_with_index do |place_note, index2| %>
                                   <div class="field_single">
-                                    <%= text_field_tag "entry[related_places_attributes][" + index1.to_s + "][place_note][]", place_note, class: 'input_box', id: '' %>
+                                    <%= text_field_tag "entry[related_places_attributes][" + index1.to_s + "][place_note][]", place_note, id: '' %>
                                     &nbsp;<img src='/assets/delete.png' alt='Delete icon' class='delete_icon click_remove_field_level1'>
                                   </div>
                               <% end %>
@@ -349,7 +349,7 @@
                             <div class="field_group gray_box">
                               <% related_person.person_as_written.each_with_index do |person_as_written, index2| %>
                                   <div class="field_single">
-                                    <%= text_field_tag "entry[related_people_attributes][" + index1.to_s + "][person_as_written][]", person_as_written, class: 'input_box', id: '' %>
+                                    <%= text_field_tag "entry[related_people_attributes][" + index1.to_s + "][person_as_written][]", person_as_written, id: '' %>
                                     &nbsp;<img src='/assets/delete.png' alt='Delete icon' class='delete_icon click_remove_field_level1'>
                                   </div>
                               <% end %>
@@ -420,7 +420,7 @@
                             <div class="field_group gray_box">
                               <% related_person.person_note.each_with_index do |person_note, index2| %>
                                   <div class="field_single">
-                                    <%= text_field_tag "entry[related_people_attributes][" + index1.to_s + "][person_note][]", person_note, class: 'input_box', id: '' %>
+                                    <%= text_field_tag "entry[related_people_attributes][" + index1.to_s + "][person_note][]", person_note, id: '' %>
                                     &nbsp;<img src='/assets/delete.png' alt='Delete icon' class='delete_icon click_remove_field_level1'>
                                   </div>
                               <% end %>
@@ -431,25 +431,21 @@
                         <tr>
                           <th>
                             Related Place
+                            <script type="text/javascript">
+                                get_places2();
+                            </script>
                             <img src="/assets/plus_sign.png" class="plus_icon click_multiple_field_button_level2" jq_attributes="related_people_attributes" jq_index="<%=index1%>" jq_type="person_related_place" />
                           </th>
                           <td>
                             <div class="field_group gray_box">
                               <% related_person.person_related_place.each_with_index do |person_related_place, index2| %>
                                   <div class="field_single">
-                                    <%
-                                      if person_related_place == ""
-                                        person_related_place = "Please add a place and select it here..."
-                                        temp_class = "grey_text"
-                                      end
-                                    %>
-                                        <%#= text_field_tag "entry[related_people_attributes][" + index1.to_s + "][person_related_place][]", person_related_place, id: '' %>
-                                        <%#= text_field_tag "entry[related_people_attributes][" + index1.to_s + "][person_related_place][]", person_related_place, class: 'grey_text', id: '', value: "Please add a place and select it here..."%>
-                                        <select name="entry[related_people_attributes][<%= index1.to_s %>][person_related_place][]" class="<%= temp_class %>" autocomplete="off"> <!-- does not work on Firefox unless autocomplete = 'off' -->
-                                          <option value="1" <% if person_related_place == "1" %>selected="selected"<% end %>>1</option>
-                                          <option value="2" <% if person_related_place == "2" %>selected="selected"<% end %>>2</option>
-                                          <option value="3" <% if person_related_place == "3" %>selected="selected"<% end %>>3</option>
-                                        </select>
+
+                                    <%#= text_field_tag "entry[related_people_attributes][" + index1.to_s + "][person_related_place][]", person_related_place, id: '' %>
+                                    <%#= text_field_tag "entry[related_people_attributes][" + index1.to_s + "][person_related_place][]", person_related_place, class: 'grey_text', id: '', value: "Please add a place and select it here..."%>
+                                    <select name="entry[related_people_attributes][<%= index1.to_s %>][person_related_place][]" class="my_select" autocomplete="off"> <!-- does not work on Firefox unless autocomplete = 'off' -->
+                                      <option>-- select --</option>
+                                    </select>
 
                                     &nbsp;<img src='/assets/delete.png' alt='Delete icon' class='delete_icon click_remove_field_level1'>
                                   </div>
