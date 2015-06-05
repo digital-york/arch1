@@ -22,6 +22,11 @@ class Terms
     parse_authority_response(SolrQuery.new.solr_query(q='inScheme_ssim:"' + terms_id + '" AND preflabel_tesim:"' + q + '"',fl='id,preflabel_tesim'))
   end
 
+  # Dereference id into preflabel in order to display it on the form (py)
+  def get_title_from_id id
+    parse_terms_preflabel_response(SolrQuery.new.solr_query(q='id:' + id, fl='preflabel_tesim',rows='1'));
+  end
+
   private
 
   # Reformats the data received from the service
@@ -37,5 +42,13 @@ class Terms
       i = result['id']
     end
     i
+  end
+
+  def parse_terms_preflabel_response(response)
+    preflabel = ''
+    response['response']['docs'].map do |result|
+      preflabel = result['preflabel_tesim']
+    end
+    preflabel.join('') # Converts from array to string
   end
 end

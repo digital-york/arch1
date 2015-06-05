@@ -1,5 +1,10 @@
 <div id='main'>
 
+  <%
+    # This instantiates the Terms class (which is used below to dereference ids
+    terms = Terms.new('subauthority')
+  %>
+
   <% if session[:register_choice] == nil || session[:register_choice] == '' || session[:folio_choice] == nil || session[:folio_choice] == '' %>
 
       <%# Display a message here? %>
@@ -199,8 +204,8 @@
 
                                       <% related_place.place_type.each do |place_type| %>
                                           <div class="field_single" style="padding: 4px 0px">
-                                            <%= place_type %>
-                                          </div>
+                                            <%= terms.get_title_from_id(place_type) %>
+                                         </div>
                                       <% end %>
 
                                     </div>
@@ -280,7 +285,7 @@
 
                                       <% related_person.person_role.each do |person_role| %>
                                           <div class="field_single" style="padding: 4px 0px">
-                                            <%= person_role %>
+                                            <%= terms.get_title_from_id(person_role) %>
                                           </div>
                                       <% end %>
 
@@ -297,7 +302,7 @@
 
                                       <% related_person.person_qualification.each do |person_qualification| %>
                                           <div class="field_single" style="padding: 4px 0px">
-                                            <%= person_qualification %>
+                                            <%= terms.get_title_from_id(person_qualification) %>
                                           </div>
                                       <% end %>
 
@@ -309,7 +314,7 @@
                                 <tr>
                                   <th>Status</th>
                                   <td>
-                                    <%= related_person.person_status %>
+                                    <%= terms.get_title_from_id(related_person.person_status) %>
                                   </td>
                                 </tr>
 
@@ -419,7 +424,7 @@
                                             <table class="tab4">
                                               <tr>
                                                 <th style="width: 60px">Certainty:</th>
-                                                <td><%= single_date.date_certainty %></td>
+                                                <td><%= terms.get_title_from_id(single_date.date_certainty) %></td>
                                               </tr>
                                               <tr>
                                                 <th>Date:</th>
@@ -427,7 +432,7 @@
                                               </tr>
                                               <tr>
                                                 <th>Type:</th>
-                                                <td><%= single_date.date_type %></td>
+                                                <td><%= terms.get_title_from_id(single_date.date_type) %></td>
                                               </tr>
                                             </table>
                                             <div style="clear: both"></div>
