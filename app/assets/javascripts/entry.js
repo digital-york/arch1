@@ -57,7 +57,7 @@ $(document).ready(function () {
             e.preventDefault(); // I think this prevents other events firing?
             var field_group_div = $(this).parent('th').next('td').find('>:first-child');
             var jq_type = $(this).attr('jq_type');
-            var new_code_block = "<div style='padding: 4px 0px' class='field_single'>\
+            var new_code_block = "<div class='field_single'>\
             <input type='text' class='input_class' value='' name='entry[" + jq_type + "][]'>\
             <img alt='Delete icon' src='/assets/delete.png' class='delete_icon click_remove_field_level1'>\
             </div>";
@@ -76,7 +76,7 @@ $(document).ready(function () {
             var jq_attributes = $(this).attr('jq_attributes');
             var jq_index = $(this).attr('jq_index');
             var jq_type = $(this).attr('jq_type');
-            var new_code_block = "<div style='padding: 4px 0px' class='field_single'>\
+            var new_code_block = "<div class='field_single'>\
             <input type='text' class='input_class' name='entry[" + jq_attributes + "][" + jq_index + "][" + jq_type + "][]'>\
             &nbsp;<img alt='Delete icon' src='/assets/delete.png' class='delete_icon click_remove_field_level1'>\
             </div>";
@@ -101,7 +101,7 @@ $(document).ready(function () {
                 language_options = language_options + "<option value='" + jq_language_list[i] + "'>" + jq_language_list[i] + "</option/>";
             }
 
-            var new_code_block = "<div style='padding: 4px 0px' class='field_single'><select id='entry_language_' name='entry[language][]'>" + language_options +
+            var new_code_block = "<div class='field_single'><select id='entry_language_' name='entry[language][]'>" + language_options +
                 "</select>&nbsp;<img alt='Delete icon' src='/assets/delete.png' class='delete_icon_select click_remove_field_level1' jq_tag_type='select'></div>";
 
             field_group_div.append(new_code_block);
@@ -131,7 +131,7 @@ $(document).ready(function () {
             for (i = 0; i < list_array.length; i++) {
                 options = options + "<option value='" + list_array[i].id + "'>" + list_array[i].label + "</option/>";
             }
-            var new_code_block = "<div style='padding: 4px 0px' class='field_single'><select name='entry[" + jq_attributes + "][" + jq_index + "][" + jq_type + "][]'>" + options +
+            var new_code_block = "<div class='field_single'><select name='entry[" + jq_attributes + "][" + jq_index + "][" + jq_type + "][]'>" + options +
                 "</select>&nbsp;<img alt='Delete icon' src='/assets/delete.png' class='delete_icon_select click_remove_field_level1' jq_tag_type='select'></div>";
             $(this).parent('th').next('td').find('.field_group').append(new_code_block);
         } catch (err) {
@@ -155,20 +155,20 @@ $(document).ready(function () {
                 // As Written
                 "<tr><th style='width: 110px'>As Written*" +
                 "&nbsp;<img jq_type='place_as_written' jq_index='" + jq_index + "' jq_attributes='related_places_attributes' class='plus_icon click_multiple_field_button_level2' src='/assets/plus_sign.png'>" +
-                "</th><td><div style='padding: 4px 5px; border: 1px solid silver; min-height: 18px' class='field_group background_gray'></div></td></tr>" +
+                "</th><td><div class='field_group gray_box'></div></td></tr>" +
 
                 // Place Type
-                "<tr><th style='width: 110px'>Place Type&nbsp;<img jq_place_type_list=" + jq_place_type_list +
+                "<tr><th>Place Type&nbsp;<img jq_place_type_list=" + jq_place_type_list +
                 " jq_type='" + "place_type" + "' jq_index='" + jq_index + "' jq_attributes='related_places_attributes' class='plus_icon click_select_field_button_level2' src='/assets/plus_sign.png'>" +
-                "</th><td><div style='padding: 4px 5px; border: 1px solid silver; min-height: 18px' class='field_group background_gray'></div></td></tr>" +
+                "</th><td><div class='field_group gray_box'></div></td></tr>" +
 
                 // Same As
                 "<tr><th>Same As*</th><td class='input_single'><input type='text' value='' id='' name='entry[related_places_attributes][" + jq_index + "][place_same_as]'></td></tr>" +
 
                 // Note
-                "<tr><th style='width: 110px'>Note" +
+                "<tr><th>Note" +
                 "&nbsp;<img jq_type='place_note' jq_index='" + jq_index + "' jq_attributes='related_places_attributes' class='plus_icon click_multiple_field_button_level2' src='/assets/plus_sign.png'>" +
-                "</th><td><div style='padding: 4px 5px; border: 1px solid silver; min-height: 18px' class='field_group background_gray'></div></td></tr>" +
+                "</th><td><div class='field_group gray_box'></div></td></tr>" +
 
                 "</table>" +
                 "<img src='/assets/delete.png' alt='Delete icon' class='delete_icon click_remove_field_level2' params_type='related_places'>" +
@@ -212,17 +212,17 @@ $(document).ready(function () {
                 // As Written
                 "<tr><th style='width: 110px'>As Written*" +
                 "&nbsp;<img jq_type='person_as_written' jq_index='" + jq_index + "' jq_attributes='related_people_attributes' class='plus_icon click_multiple_field_button_level2' src='/assets/plus_sign.png'>" +
-                "</th><td><div style='padding: 4px 5px; border: 1px solid silver; min-height: 18px' class='field_group background_gray'></div></td></tr>" +
+                "</th><td><div class='field_group gray_box'></div></td></tr>" +
 
                 // Role
                 "<tr><th style='width: 110px'>Role" +
                 "&nbsp;<img jq_role_list=" + jq_role_list + " jq_type='" + "person_role" + "' jq_index='" + jq_index + "' jq_attributes='related_people_attributes' class='plus_icon click_select_field_button_level2' src='/assets/plus_sign.png'>" +
-                "</th><td><div style='padding: 4px 5px; border: 1px solid silver; min-height: 18px' class='field_group background_gray'></div></td></tr>" +
+                "</th><td><div class='field_group gray_box'></div></td></tr>" +
 
                 // Qualification
                 "<tr><th style='width: 110px'>Qualification" +
                 "&nbsp;<img jq_qualification_list=" + jq_qualification_list + " jq_type='person_qualification' jq_index='" + jq_index + "' jq_attributes='related_people_attributes' class='plus_icon click_select_field_button_level2' src='/assets/plus_sign.png'>" +
-                "</th><td><div style='padding: 4px 5px; border: 1px solid silver; min-height: 18px' class='field_group background_gray'></div></td></tr>" +
+                "</th><td><div class='field_group gray_box'></div></td></tr>" +
 
                 // Status
                 "<tr><th>Status</th><td><select name='entry[related_people_attributes][" + jq_index + "][person_status]'>" + status_options + "</select></td></tr>" +
@@ -234,14 +234,14 @@ $(document).ready(function () {
                 "<tr><th>Same As*</th><td class='input_single'><input type='text' value='' id='' name='entry[related_people_attributes][" + jq_index + "][person_same_as]'></td></tr>" +
 
                 // Related Place
-                "<tr><th style='width: 110px'>Related Place" +
+                "<tr><th>Related Place" +
                 "&nbsp;<img jq_type='person_related_place' jq_index='" + jq_index + "' jq_attributes='related_people_attributes' class='plus_icon click_multiple_field_button_level2' src='/assets/plus_sign.png'>" +
-                "</th><td><div style='padding: 4px 5px; border: 1px solid silver; min-height: 18px' class='field_group background_gray'></div></td></tr>" +
+                "</th><td><div class='field_group gray_box'></div></td></tr>" +
 
                 // Note
-                "<tr><th style='width: 110px'>Note*" +
+                "<tr><th>Note*" +
                 "&nbsp;<img jq_type='person_note' jq_index='" + jq_index + "' jq_attributes='related_people_attributes' class='plus_icon click_multiple_field_button_level2' src='/assets/plus_sign.png'>" +
-                "</th><td><div style='padding: 4px 5px; border: 1px solid silver; min-height: 18px' class='field_group background_gray'></div></td></tr>" +
+                "</th><td><div class='field_group gray_box'></div></td></tr>" +
 
                 "</table>" +
                 "<img src='/assets/delete.png' alt='Delete icon' class='delete_icon click_remove_field_level2' params_type='related_people'>" +
@@ -285,7 +285,7 @@ $(document).ready(function () {
                 "<tr><th>Date Type</th><td><select name='entry[entry_dates_attributes][" + jq_index + "][date_type]'>" + date_type_options + "</select></td></tr>" +
 
                 // Date
-                "<tr><th>Date&nbsp;<img jq_date_certainty_list='" + jq_date_certainty_list + "' jq_date_type_single_list='" + jq_date_type_single_list + "' jq_index='" + jq_index + "' class='plus_icon click_single_date_button' src='/assets/plus_sign.png'></th><td><div class='field_group'></div></td></tr>" +
+                "<tr><th>Date&nbsp;<img jq_date_certainty_list='" + jq_date_certainty_list + "' jq_date_type_single_list='" + jq_date_type_single_list + "' jq_index='" + jq_index + "' class='plus_icon click_single_date_button' src='/assets/plus_sign.png'></th><td><div class='field_group gray_box single_date'></div></td></tr>" +
 
                 "</table>" +
                 "<img src='/assets/delete.png' alt='Delete icon' class='delete_icon click_remove_field_level2' params_type='related_places'>" +
@@ -321,9 +321,9 @@ $(document).ready(function () {
                 date_type_single_options = date_type_single_options + "<option value='" + jq_date_type_single_list[i].id + "'>" + jq_date_type_single_list[i].label + "</option/>";
             }
 
-            var new_code_block = "<div class='field_single' style='margin: 5px 0px'>" +
+            var new_code_block = "<div class='field_single'>" +
 
-                "<table class='tab4' cellspacing='0' border='0' style='width: 94%'>" +
+                "<table>" +
 
                 // Date Certainty
                 "<tr><th style='width: 60px'>Certainty:</th>" +
