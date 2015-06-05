@@ -47,8 +47,10 @@ class Terms
   def parse_terms_preflabel_response(response)
     preflabel = ''
     response['response']['docs'].map do |result|
-      preflabel = result['preflabel_tesim']
+      if result['numFound'] != '0'
+        preflabel = result['preflabel_tesim'].join('')
+      end
     end
-    preflabel.join('') # Converts from array to string
+    preflabel
   end
 end
