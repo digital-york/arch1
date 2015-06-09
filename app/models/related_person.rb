@@ -36,4 +36,8 @@ class RelatedPerson < ActiveFedora::Base
     index.as :stored_searchable
   end
 
+  has_many :related_places, :dependent => :destroy
+
+  accepts_nested_attributes_for :related_places, :allow_destroy => true, :reject_if => :all_blank
+
  end

@@ -130,7 +130,23 @@ $(document).ready(function () {
             for (i = 0; i < list_array.length; i++) {
                 options = options + "<option value='" + list_array[i].id + "'>" + list_array[i].label + "</option/>";
             }
-            var new_code_block = "<div class='field_single'><select name='entry[" + jq_attributes + "][" + jq_index + "][" + jq_type + "][]'>" + options +
+            var new_code_block = "<div class='field_single'><select name='entry[" + jq_attributes + "][" + jq_index + "][place_as_written][0]'>" + options +
+                "</select>&nbsp;<img alt='Delete icon' src='/assets/delete.png' class='delete_icon_select click_remove_field_level1' jq_tag_type='select'></div>";
+            $(this).parent('th').next('td').find('.field_group').append(new_code_block);
+        } catch (err) {
+            alert(err);
+        }
+    });
+
+    $('body').on('click', '.click_related_place_field_button', function (e) {
+
+        try {
+            e.preventDefault(); // I think this prevents other events firing?
+            var jq_attributes = $(this).attr('jq_attributes');
+            var jq_index = $(this).attr('jq_index');
+            var jq_type = $(this).attr('jq_type');
+            var options = "<option value=''>--- select ---</option>";
+            var new_code_block = "<div class='field_single'><select class='related_place' autocomplete='off' name='entry[" + jq_attributes + "][" + jq_index + "][" + jq_type + "][]'>" + options +
                 "</select>&nbsp;<img alt='Delete icon' src='/assets/delete.png' class='delete_icon_select click_remove_field_level1' jq_tag_type='select'></div>";
             $(this).parent('th').next('td').find('.field_group').append(new_code_block);
         } catch (err) {
@@ -234,7 +250,7 @@ $(document).ready(function () {
 
                     // Related Place
                 "<tr><th>Related Place" +
-                "&nbsp;<img jq_type='person_related_place' jq_index='" + jq_index + "' jq_attributes='related_people_attributes' class='plus_icon click_multiple_field_button_level2' src='/assets/plus_sign.png'>" +
+                "&nbsp;<img jq_type='person_related_place' jq_index='" + jq_index + "' jq_attributes='related_people_attributes' class='plus_icon click_related_place_field_button' src='/assets/plus_sign.png'>" +
                 "</th><td><div class='field_group gray_box'></div></td></tr>" +
 
                     // Note
@@ -468,13 +484,61 @@ $(document).ready(function () {
 
     //$(".related_place_as_written:input:first").css("border", "3px solid " + "orange");
 
-    $(".related_place_as_written").each(function () {
-        var d = $(this).find('input:first');
-        d.css("border", "3px solid blue");
-        $(".my_select").each(function () {
-            $(this).append('<option>' + d.val() + '</option>');
-            //$(this).css("border", "3px solid " + "orange");
+    /*$(".related_place_as_written").each(function () {
+     var d = $(this).find('input:first');
+     //d.css("border", "3px solid blue");
+     $(".related_place").each(function () {
+     $(this).append('<option>' + d.val() + '</option>');
+     //$(this).css("border", "3px solid " + "orange");
+     });
+     });*/
+
+    // When the related place drop-down list is clicked
+    // this code iterates through all the 'place_as_written' terms and adds them to the list
+    $('body').on('click', '.related_place', function (e) {
+
+        var current_related_place = $(this);
+
+        $(".related_place_as_written").each(function () {
+
+            var d = $(this).find('input:first');
+            var val1 = d.val();
+
+            var is_match = "false";
+
+            //current_related_place.css("border", "3px solid purple");
+
+            $(current_related_place).children('option').each(function () {
+                //$(this).css("border", "3px solid blue");
+                var val2 = $(this).val();
+                if (val1 == val2) {
+                    is_match = true;
+                }
+            });
+
+            if (is_match == "false") {
+                current_related_place.append('<option>' + val1 + '</option>');
+            }
+
         });
     });
+
+    //$(".related_place_as_written").each(function () {
+    //var d = $(this).find('input:first');
+    //var val1 = d.val();
+    //var p = $(this).parent('select');
+    //p.css("border", "3px solid green");
+    //$(".my_select > option").each(function () {
+    //    alert($this.val());
+    //});
+    //d.css("border", "3px solid blue");
+    //$(".my_select").each(function () {
+    //    var d2 = $(this).
+    //    alert(d.val()  + "," + $(this).val());
+    //    $(this).append('<option>' + d.val() + '</option>');
+    //    //$(this).css("border", "3px solid " + "orange");
+    //});
+    //});
+
 
 });

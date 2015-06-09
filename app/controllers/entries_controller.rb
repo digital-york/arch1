@@ -124,10 +124,31 @@ class EntriesController < ApplicationController
       redirect_to :action => 'index'
     end
 
+    # Get all the entries so that they can be displayed as tabs
     @entries = Entry.all.where(:folio => session[:folio]).where(:folio_face => session[:folio_face])
-    get_authority_lists
 
-    set_entry
+    # Get the fields for the current entry
+    set_entry()
+
+    # Set the authroity lists
+    get_authority_lists()
+
+    # Define the related person list - note that this is a dynamic list which
+    # has to be initialised before editing the page
+    @related_place_list = []
+
+    # Add default select option to the related place list
+    temp = []
+    temp << '--- select ---'
+    temp << ''
+    @related_place_list << temp
+
+    # Add other elements to the related place list, i.e. using 'RelatedPlace' -> 'place_as_written'
+    @entry.related_places.each do |related_place|
+      temp = []
+      temp << related_place.place_as_written[0] # Only use the first 'place_as_written for the list
+      @related_place_list << temp
+    end
 
   end
 
@@ -155,7 +176,7 @@ class EntriesController < ApplicationController
   # UPDATE
   def update
 
-    #puts entry_params
+    puts entry_params
 
     # See validation.rb in /concerns
     #@errors = validate(entry_params)

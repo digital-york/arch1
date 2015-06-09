@@ -136,7 +136,7 @@
           <%# Language %>
           <tr>
             <th>Language
-              <img src="/assets/plus_sign.png" class="plus_icon click_select_field_button" jq_type="language" jq_language_list="<%= @language_list %>" />
+              <img src="/assets/plus_sign.png" alt="plus icon" class="plus_icon click_select_field_button" jq_type="language" jq_language_list="<%= @language_list %>" />
             </th>
             <td>
               <div class="field_group">
@@ -153,7 +153,7 @@
           <%# Note %>
           <tr>
             <th>Note
-              <img src="/assets/plus_sign.png" class="plus_icon click_multiple_field_button" jq_type="note" />
+              <img src="/assets/plus_sign.png" alt="plus icon" class="plus_icon click_multiple_field_button" jq_type="note" />
             </th>
             <td>
               <div class="field_group">
@@ -170,7 +170,7 @@
           <%# Editorial Note %>
           <tr>
             <th>Editorial Note
-              <img src="/assets/plus_sign.png" class="plus_icon click_multiple_field_button" jq_type="editorial_note" />
+              <img src="/assets/plus_sign.png" alt="plus icon" class="plus_icon click_multiple_field_button" jq_type="editorial_note" />
             </th>
             <td>
               <div class="field_group">
@@ -187,7 +187,7 @@
           <%# Marginal Note %>
           <tr>
             <th>Marginal Note
-              <img src="/assets/plus_sign.png" class="plus_icon click_multiple_field_button" jq_type="marginal_note" />
+              <img src="/assets/plus_sign.png" alt="plus icon" class="plus_icon click_multiple_field_button" jq_type="marginal_note" />
             </th>
             <td>
               <div class="field_group">
@@ -204,7 +204,7 @@
           <%# Is Referenced By %>
           <tr>
             <th>Is Referenced By
-              <img src="/assets/plus_sign.png" class="plus_icon click_multiple_field_button" jq_type="is_referenced_by" />
+              <img src="/assets/plus_sign.png" alt="plus icon" class="plus_icon click_multiple_field_button" jq_type="is_referenced_by" />
             </th>
             <td>
               <div class="field_group">
@@ -221,7 +221,7 @@
           <%# Subject %>
           <tr>
             <th>Subject
-              <img src="/assets/plus_sign.png" class="plus_icon click_multiple_field_button" jq_type="subject"/>
+              <img src="/assets/plus_sign.png" alt="plus icon" class="plus_icon click_multiple_field_button" jq_type="subject"/>
             </th>
             <td>
               <div class="field_group">
@@ -239,7 +239,7 @@
           <tr>
 
             <th>Place:
-              <img src="/assets/plus_sign.png" class="plus_icon click_place_button" jq_place_type_list="<%= @place_type_list.to_json %>" />
+              <img src="/assets/plus_sign.png" alt="plus icon" class="plus_icon click_place_button" jq_place_type_list="<%= @place_type_list.to_json %>" />
             </th>
 
             <td class="tab2">
@@ -255,13 +255,14 @@
                         <tr>
                           <th style="width: 110px">
                             As Written*
-                            <img src="/assets/plus_sign.png" class="plus_icon click_multiple_field_button_level2" jq_attributes="related_places_attributes" jq_index="<%=index1%>" jq_type="place_as_written" />
+                            <img src="/assets/plus_sign.png" alt="plus icon" class="plus_icon click_multiple_field_button_level2" jq_attributes="related_places_attributes" jq_index="<%=index1%>" jq_type="place_as_written" />
                           </th>
                           <td>
                             <div class="field_group gray_box related_place_as_written">
                               <% related_place.place_as_written.each_with_index do |place_as_written, index2| %>
                                   <div class="field_single">
-                                    <%= text_field_tag "entry[related_places_attributes][" + index1.to_s + "][place_as_written][]", place_as_written, id: '' %>
+                                    <%#= text_field_tag "entry[related_places_attributes][" + index1.to_s + "][place_as_written][]", place_as_written, id: none %>
+                                    <input type="text" name="entry[related_places_attributes][<%= index1.to_s %>][place_as_written][]" value="<%= place_as_written %>">
                                     &nbsp;<img src='/assets/delete.png' alt='Delete icon' class='delete_icon click_remove_field_level1'>
                                   </div>
                               <% end %>
@@ -272,7 +273,7 @@
                         <tr>
                           <th>
                             Place Type
-                            <img src="/assets/plus_sign.png" class="plus_icon click_select_field_button_level2" jq_attributes="related_places_attributes" jq_index="<%=index1%>" jq_type="place_type" jq_place_type_list="<%= @place_type_list.to_json %>" />
+                            <img src="/assets/plus_sign.png" alt="plus icon" class="plus_icon click_select_field_button_level2" jq_attributes="related_places_attributes" jq_index="<%=index1%>" jq_type="place_type" jq_place_type_list="<%= @place_type_list.to_json %>" />
                           </th>
                           <td>
                             <div class="field_group gray_box">
@@ -290,14 +291,15 @@
                         <tr>
                           <th>Same As*</th>
                           <td class="input_single">
-                            <%= text_field_tag "entry[related_places_attributes][" + index1.to_s + "][place_same_as]", related_place.place_same_as, id: '' %>
+                            <%#= text_field_tag "entry[related_places_attributes][" + index1.to_s + "][place_same_as]", related_place.place_same_as, id: '' %>
+                            <input type="text" name="entry[related_places_attributes][<%= index1.to_s %>][place_same_as]" value="<%= related_place.place_same_as %>">
                           </td>
                         </tr>
 
                         <tr>
                           <th>
                             Note
-                            <img src="/assets/plus_sign.png" class="plus_icon click_multiple_field_button_level2" jq_attributes="related_places_attributes" jq_index="<%=index1%>" jq_type="place_note" />
+                            <img src="/assets/plus_sign.png" alt="plus icon" class="plus_icon click_multiple_field_button_level2" jq_attributes="related_places_attributes" jq_index="<%=index1%>" jq_type="place_note" />
                           </th>
                           <td>
                             <div class="field_group gray_box">
@@ -327,7 +329,7 @@
           <tr>
 
             <th>Person:
-              <img src="/assets/plus_sign.png" class="plus_icon click_person_button" jq_role_list="<%= @role_list.to_json %>" jq_qualification_list="<%= @qualification_list.to_json %>" jq_status_list="<%= @status_list.to_json %>" jq_gender_list="<%= @gender_list %>" />
+              <img src="/assets/plus_sign.png" alt="plus icon" class="plus_icon click_person_button" jq_role_list="<%= @role_list.to_json %>" jq_qualification_list="<%= @qualification_list.to_json %>" jq_status_list="<%= @status_list.to_json %>" jq_gender_list="<%= @gender_list %>" />
             </th>
 
             <td class="tab2">
@@ -343,7 +345,7 @@
                         <tr>
                           <th style="width: 110px">
                             As Written*
-                            <img src="/assets/plus_sign.png" class="plus_icon click_multiple_field_button_level2" jq_attributes="related_people_attributes" jq_index="<%=index1%>" jq_type="person_as_written" />
+                            <img src="/assets/plus_sign.png" alt="plus icon" class="plus_icon click_multiple_field_button_level2" jq_attributes="related_people_attributes" jq_index="<%=index1%>" jq_type="person_as_written" />
                           </th>
                           <td>
                             <div class="field_group gray_box">
@@ -359,7 +361,7 @@
 
                         <tr>
                           <th>Role
-                            <img src="/assets/plus_sign.png" class="plus_icon click_select_field_button_level2" jq_attributes="related_people_attributes" jq_index="<%=index1%>" jq_type="person_role" jq_role_list="<%= @role_list.to_json %>"  />
+                            <img src="/assets/plus_sign.png" alt="plus icon" class="plus_icon click_select_field_button_level2" jq_attributes="related_people_attributes" jq_index="<%=index1%>" jq_type="person_role" jq_role_list="<%= @role_list.to_json %>"  />
                           </th>
                           <td>
                             <div class="field_group gray_box">
@@ -375,7 +377,7 @@
 
                         <tr>
                           <th>Qualification
-                            <img src="/assets/plus_sign.png" class="plus_icon click_select_field_button_level2" jq_attributes="related_people_attributes" jq_index="<%=index1%>" jq_type="person_qualification" jq_qualification_list="<%= @qualification_list.to_json %>" />
+                            <img src="/assets/plus_sign.png" alt="plus icon" class="plus_icon click_select_field_button_level2" jq_attributes="related_people_attributes" jq_index="<%=index1%>" jq_type="person_qualification" jq_qualification_list="<%= @qualification_list.to_json %>" />
                           </th>
                           <td>
                             <div class="field_group gray_box">
@@ -414,7 +416,7 @@
                         <tr>
                           <th>
                             Note
-                            <img src="/assets/plus_sign.png" class="plus_icon click_multiple_field_button_level2" jq_attributes="related_people_attributes" jq_index="<%=index1%>" jq_type="person_note" />
+                            <img src="/assets/plus_sign.png" alt="plus icon" class="plus_icon click_multiple_field_button_level2" jq_attributes="related_people_attributes" jq_index="<%=index1%>" jq_type="person_note" />
                           </th>
                           <td>
                             <div class="field_group gray_box">
@@ -432,21 +434,15 @@
                           <th>
                             Related Place
                             <script type="text/javascript">
-                                get_places2();
+                                //get_places2();
                             </script>
-                            <img src="/assets/plus_sign.png" class="plus_icon click_multiple_field_button_level2" jq_attributes="related_people_attributes" jq_index="<%=index1%>" jq_type="person_related_place" />
+                            <img src="/assets/plus_sign.png" alt="plus icon" class="plus_icon click_related_place_field_button" jq_attributes="related_people_attributes" jq_index="<%=index1%>" jq_type="person_related_place" />
                           </th>
                           <td>
                             <div class="field_group gray_box">
-                              <% related_person.person_related_place.each_with_index do |person_related_place, index2| %>
+                              <% related_person.person_related_place.each do |person_related_place| %>
                                   <div class="field_single">
-
-                                    <%#= text_field_tag "entry[related_people_attributes][" + index1.to_s + "][person_related_place][]", person_related_place, id: '' %>
-                                    <%#= text_field_tag "entry[related_people_attributes][" + index1.to_s + "][person_related_place][]", person_related_place, class: 'grey_text', id: '', value: "Please add a place and select it here..."%>
-                                    <select name="entry[related_people_attributes][<%= index1.to_s %>][person_related_place][]" class="my_select" autocomplete="off"> <!-- does not work on Firefox unless autocomplete = 'off' -->
-                                      <option>-- select --</option>
-                                    </select>
-
+                                    <%= select_tag "entry[related_people_attributes][" + index1.to_s + "][person_related_place][]", options_for_select(@related_place_list, person_related_place), class: 'related_place', id: 'rel0' %>
                                     &nbsp;<img src='/assets/delete.png' alt='Delete icon' class='delete_icon click_remove_field_level1'>
                                   </div>
                               <% end %>
@@ -470,7 +466,7 @@
           <tr>
 
             <th>Date:
-              <img src="/assets/plus_sign.png" class="plus_icon click_date_button" jq_date_type_list="<%= @date_type_list %>" jq_date_certainty_list="<%= @date_certainty_list.to_json %>" jq_date_type_single_list="<%= @date_type_single_list.to_json %>" />
+              <img src="/assets/plus_sign.png" alt="plus icon" class="plus_icon click_date_button" jq_date_type_list="<%= @date_type_list %>" jq_date_certainty_list="<%= @date_certainty_list.to_json %>" jq_date_type_single_list="<%= @date_type_single_list.to_json %>" />
             </th>
 
             <td class="tab2">
@@ -506,7 +502,7 @@
 
                         <tr>
                           <th>Date
-                            <img src="/assets/plus_sign.png" class="plus_icon click_single_date_button" jq_index="<%=index1%>" jq_date_certainty_list="<%= @date_certainty_list.to_json %>" jq_date_type_single_list="<%= @date_type_single_list.to_json %>"/>
+                            <img src="/assets/plus_sign.png" alt="plus icon" class="plus_icon click_single_date_button" jq_index="<%=index1%>" jq_date_certainty_list="<%= @date_certainty_list.to_json %>" jq_date_type_single_list="<%= @date_type_single_list.to_json %>"/>
                           </th>
                           <td>
                             <div class="field_group gray_box single_date">
@@ -560,7 +556,7 @@
                       <a href='<%= entries_path %>'><input type='button' value='Back' /></a>
 				<% else %>
 				<%= f.submit 'Update' %>
-                      <a href='<%= entry_path(@entry) %>'><input type='button' value='Back to View' /></a>
+                      <a href='<%= entry_path(@entry) %>'><input type='button' value='Back to View'></a>
 				<% end %>
 				</span>
               </div>
