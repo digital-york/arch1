@@ -283,7 +283,7 @@ $(document).ready(function () {
             var date_type_options = "<option value=''>--- select ---</option>";
 
             for (i = 0; i < jq_date_type_list.length; i++) {
-                date_type_options = date_type_options + "<option value='" + jq_date_type_list[i] + "'>" + jq_date_type_list[i] + "</option/>";
+                date_type_options = date_type_options + "<option value='" + jq_date_type_list[i].id + "'>" + jq_date_type_list[i].label + "</option/>";
             }
 
             var new_code_block = "<div class='field_single no_padding'>" +

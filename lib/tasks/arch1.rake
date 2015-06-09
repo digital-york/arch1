@@ -35,14 +35,14 @@ namespace :arch1 do
     @subjects = {} # subject record ids
     begin
       # == COMMENT OUT WHEN RUNNING A RECOVERY ==
-       @scheme = ConceptScheme.new
-       @scheme.title = @doc.css('rdf|description rdf|label').text
-       @scheme.description = @doc.css('rdf|description rdf|label').text + ". Produced from data created during the Archbishop's Registers Pilot project, funded by the Mellon Foundation."
-       @scheme.rdftype += ['http://fedora.info/definitions/v4/indexing#Indexable', 'http://www.w3.org/2004/02/skos/core#ConceptScheme']
-       @scheme.save
-       @scheme.identifier = @scheme.id
-       @scheme.save
-       @scheme.update_index
+      @scheme = ConceptScheme.new
+      @scheme.title = @doc.css('rdf|description rdf|label').text
+      @scheme.description = @doc.css('rdf|description rdf|label').text + ". Produced from data created during the Archbishop's Registers Pilot project, funded by the Mellon Foundation."
+      @scheme.rdftype += ['http://fedora.info/definitions/v4/indexing#Indexable', 'http://www.w3.org/2004/02/skos/core#ConceptScheme']
+      @scheme.save
+      @scheme.identifier = @scheme.id
+      @scheme.save
+      @scheme.update_index
       # == END  ==
       # == UNCOMMENT WHEN RUNNING A RECOVERY AND ADD IN THE RIGHT ID ==
       #@scheme = ConceptScheme.where(id: 'yorkabp:457').first
@@ -127,7 +127,7 @@ namespace :arch1 do
 
       begin
         ff = File.open(@path + 'headings_bn.csv', 'w')
-        @doc.css('rdf|description').each do | i |
+        @doc.css('rdf|description').each do |i|
           if i.css('skos|prefLabel').text != ''
 
             if @tmp_bn != nil and @tmp_bn.include?(i.values)
@@ -176,23 +176,23 @@ namespace :arch1 do
 
   task readterms: :environment do
 
-    list = ['folio-faces','folios', 'currencies', 'date-types', 'certainty', 'qualifications', 'place-types', 'statuses', 'roles']
+    list = ['folio-faces', 'folios', 'currencies', 'date-types', 'certainty', 'qualifications', 'place-types', 'statuses', 'roles']
 
-    list.each do | l |
+    list.each do |l|
       arr = CSV.read('/home/geekscruff/tmp/abs/' + l + '.csv')
       arr = arr.uniq
       arr = arr.sort!
 
       newarr = []
-      arr.each do | i |
+      arr.each do |i|
         if i[0] != nil
           #remove brackets and question marks, strip out leading / trailing whitespace
-          newarr += [i[0].gsub('[','').gsub(']','').gsub('?','').strip]
+          newarr += [i[0].gsub('[', '').gsub(']', '').gsub('?', '').strip]
         end
       end
 
       f = File.open('/home/geekscruff/Dropbox/code/rails/arch1/lib/tasks/' + l + '.csv', 'w')
-      newarr.uniq.each do | i |
+      newarr.uniq.each do |i|
         if i != nil
           f.write(i + "\n")
         end
@@ -211,11 +211,11 @@ namespace :arch1 do
     @path = '/home/py523/rails_projects/arch1/lib/tasks/' # SET THE PATH
 
     # .csv files should exist in the specified path
-    list = ['folio-faces','folios', 'currencies', 'date-types', 'certainty', 'qualifications','place-types', 'statuses', 'roles']
+    list = ['folio-faces', 'folios', 'currencies', 'date-types', 'certainty', 'qualifications', 'place-types', 'statuses', 'roles', 'formats', 'single-date-types', 'languages']
 
     list.each do |i|
 
-      if i != 'folio-faces' and i != 'folios' and i != 'folios' and i != 'currencies' and i != 'date-types' and i != 'certainty' and i != 'qualifications'
+      if i == 'place-types' or i == 'roles' or i == 'statuses'
         puts 'Sleeping between the long ones'
         sleep 60
       end
@@ -226,14 +226,14 @@ namespace :arch1 do
       if File.exists?(@path + i + '_list.csv')
         arr = CSV.read(@path + i + '_list.csv')
         a = File.open(@path + i + '_list_processing.csv', 'w')
-        arr.each do | i |
+        arr.each do |i|
           a.write(i[0] + "\n")
         end
         a.close
         @arr = CSV.read(@path + i + '_list_processing.csv')
       end
 
-        f = File.open(@path + i + '_list.csv', 'w')
+      f = File.open(@path + i + '_list.csv', 'w')
 
       begin
 
@@ -263,11 +263,11 @@ namespace :arch1 do
       arr = CSV.read(@path + i + '.csv')
       arr = arr.uniq
 
-      arr.each_with_index do |c,index|
+      arr.each_with_index do |c, index|
         c.each do |b|
           begin
 
-            if i != 'folio-faces' and i != 'folios' and i != 'currencies' and i != 'date-types' and i != 'certainty' and i != 'qualifications'
+            if i == 'place-types' or i == 'roles' or i == 'statuses'
               sleep 5
               puts index
             end
@@ -308,5 +308,102 @@ namespace :arch1 do
     end
     puts 'Finished!'
   end
+
+=begin
+  task loadregsfolios: :environment do
+
+    path = '/home/geekscruff/Dropbox/code/rails/arch1/'
+
+    f = File.open(path + 'app/assets/files/folio_list.txt', "r")
+
+    @register = Register.new
+    @register.rdftype = @register.add_rdf_types
+    @register.reg_id = 'Abp Reg 12'
+    @register.save
+
+    @foltype = FolioTerms.new('subauthority')
+    @face = FolioFaceTerms.new('subauthority')
+
+    @folios = []
+
+    puts 'Processing lines to create folios and images'
+
+    #count = 0
+
+    f.each_line do |ln|
+      #count += 1
+      #if count < 10 # testrun
+      l = ln
+      l = l.downcase.sub!('reg_12_', '')
+      fol = Folio.new
+      fol.rdftype = fol.add_rdf_types
+      fol.save
+      image = Image.new
+      image.folio = fol
+      image.rdftype = image.add_rdf_types
+      image.motivated_by = 'http://www.shared-canvas.org/ns/painting'
+      image.file = '/usr/digilib-webdocs/digilibImages/ArchbishopsRegisters/reg12/JP2/' + ln.sub("\r", '').sub("\n", '')
+      image.save
+      fol.images += [image]
+      fol.register = @register
+      @register.folios += [fol]
+      @register.has_member += [fol.id] #id or not to id, see also next / prev (USING IDs)
+      @register.save
+      @register.update_index
+
+      if l.include? 'insert'
+        fol.folio_type = @foltype.find_id('insert')
+
+        l = l.sub('insert', '')
+      else
+        fol.folio_type = @foltype.find_id('folio')
+      end
+
+      if l.include? 'recto'
+        fol.folio_face = @face.find_id('recto')
+        l = l.sub!('recto', '')
+      elsif l.include? 'verso'
+        fol.folio_face = @face.find_id('verso')
+        l = l.sub('verso', '')
+      else
+        fol.folio_face = @face.find_id('undefined')
+      end
+
+      l = l.sub('.jp2', '').sub(' ', '').sub('__', '').sub('_', '').sub("\r", '').sub("\n", '')
+      fol.folio_no = l
+
+      fol.save
+
+      @folios += [fol.id]
+      #end
+
+    end
+
+    puts 'Adding proxies'
+
+    @folios.each_with_index do |p, index|
+
+      if index == 0
+        @register.fst = Folio.where(id: p).first.id
+        @register.save
+      elsif index == @folios.length - 1
+        @register.lst = Folio.where(id: p).first.id
+        @register.save
+      else
+        pox = Proxy.new
+        pox.rdftype = pox.add_rdf_types
+        pox.folios += [Folio.where(id: p).first]
+        pox.next = Folio.where(id: @folios[index+1]).first.id
+        pox.prev = Folio.where(id: @folios[index-1]).first.id
+        pox.register = @register
+        pox.save
+      end
+
+    end
+
+    puts 'Finished'
+
+  end
+=end
 
 end

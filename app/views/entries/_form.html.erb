@@ -129,20 +129,20 @@
             <th>Format</th>
             <td>
               <%#= f.select :format, @format_list %>
-              <%= select_tag 'entry[format]', options_for_select(@format_list.collect{ |format| [format[0]] }.insert(0, ["--- select ---", ""]), @entry.format) %>
+              <%= select_tag 'entry[format]', options_for_select(@format_list.collect{ |format| [format["label"].join(''), format["id"]] }.insert(0, ["--- select ---", ""]), @entry.format) %>
             </td>
           </tr>
 
           <%# Language %>
           <tr>
             <th>Language
-              <img src="/assets/plus_sign.png" alt="plus icon" class="plus_icon click_select_field_button" jq_type="language" jq_language_list="<%= @language_list %>" />
+              <img src="/assets/plus_sign.png" alt="plus icon" class="plus_icon click_select_field_button" jq_type="language" jq_language_list="<%= @language_list.to_json %>" />
             </th>
             <td>
               <div class="field_group">
                 <% @entry.language.each do |language| %>
                     <div class="field_single">
-                      <%= select_tag 'entry[language][]', options_for_select(@language_list.collect{ |language| [language[0]] }.insert(0, ["--- select ---", ""]), language) %>
+                      <%= select_tag 'entry[language][]', options_for_select(@language_list.collect{ |language| [language["label"].join(''), language["id"]] }.insert(0, ["--- select ---", ""]), language) %>
                       <img alt="Delete icon" src="/assets/delete.png" class="delete_icon_select click_remove_field_level1" jq_tag_type="select">
                     </div>
                 <% end %>
@@ -466,7 +466,7 @@
           <tr>
 
             <th>Date:
-              <img src="/assets/plus_sign.png" alt="plus icon" class="plus_icon click_date_button" jq_date_type_list="<%= @date_type_list %>" jq_date_certainty_list="<%= @date_certainty_list.to_json %>" jq_date_type_single_list="<%= @date_type_single_list.to_json %>" />
+              <img src="/assets/plus_sign.png" alt="plus icon" class="plus_icon click_date_button" jq_date_type_list="<%= @date_type_list.to_json %>" jq_date_certainty_list="<%= @date_certainty_list.to_json %>" jq_date_type_single_list="<%= @date_type_single_list.to_json %>" />
             </th>
 
             <td class="tab2">
@@ -496,7 +496,7 @@
                         <tr>
                           <th>Date Type:</th>
                           <td>
-                            <%= select_tag "entry[entry_dates_attributes][" + index1.to_s + "][date_type]", options_for_select(@date_type_list.collect{ |element| [element[0]] }.insert(0, ["--- select ---", ""]), entry_date.date_type) %>
+                            <%= select_tag "entry[entry_dates_attributes][" + index1.to_s + "][date_type]", options_for_select(@date_type_single_list.collect{ |date_type_single| [date_type_single["label"].join(''), date_type_single["id"]] }.insert(0, ["--- select ---", ""]), entry_date.date_type) %>
                           </td>
                         </tr>
 
@@ -522,7 +522,7 @@
                                   <tr>
                                     <th>Type:</th>
                                     <td>
-                                      <%= select_tag "entry[entry_dates_attributes][" + index1.to_s + "][single_dates_attributes][" + index2.to_s + "][date_type]", options_for_select(@date_type_single_list.collect { |date_type_single| [date_type_single["label"].join(''), date_type_single["id"]] }.insert(0, ["--- select ---", ""]), single_date.date_type) %>
+                                      <%= select_tag "entry[entry_dates_attributes][" + index1.to_s + "][single_dates_attributes][" + index2.to_s + "][date_type]", options_for_select(@date_type_list.collect { |date_type| [date_type["label"].join(''), date_type["id"]] }.insert(0, ["--- select ---", ""]), single_date.date_type) %>
                                     </td>
                                   </tr>
                                   </table>
