@@ -1,8 +1,8 @@
-class RoleTerms < Terms
+class PlaceRoleTerms < Terms
   include Qa::Authorities::WebServiceBase
 
   def terms_list
-    'roles'
+    'place_roles'
   end
 
 end

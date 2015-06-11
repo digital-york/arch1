@@ -1,8 +1,8 @@
-module RdfType
+module RdfsLabel
   extend ActiveSupport::Concern
   
   included do
-    property :rdftype, predicate: ::RDF::RDFV.type, multiple: true do |index|
+    property :rdfslabel, predicate: ::RDF::RDF.label, multiple: true do |index|
       index.as :stored_searchable
     end
   end

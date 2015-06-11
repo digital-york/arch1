@@ -12,7 +12,7 @@
 
         <div style="float: left; padding-left: 120px; padding-top: 6px">
 
-          <% current_folio = 'Reg_' + session[:register_choice] + '_' + session[:folio] + '_' + session[:folio_face] %>
+          <% current_folio = session[:folio_choice] %>
 
           <% if current_folio == session[:first_folio] %>
               <%= button_to "<", {}, :style => 'margin-right: 5px', :disabled => 'true' %>
@@ -42,7 +42,7 @@
         id: "location",
         prefixUrl: "assets/seadragonImages/",
         autoResize: true,
-        tileSources: "http://dlib.york.ac.uk/cgi-bin/iipsrv.fcgi?DeepZoom=/usr/digilib-webdocs/digilibImages/ArchbishopsRegisters/reg12/JP2/<%= session[:image] %>.dzi",
+        tileSources: "http://dlib.york.ac.uk/cgi-bin/iipsrv.fcgi?DeepZoom=<%= session[:image] %>.dzi",
         showNavigationControl: false
     });
 </script>

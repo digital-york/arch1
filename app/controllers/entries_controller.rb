@@ -2,6 +2,7 @@ class EntriesController < ApplicationController
 
   # Set the entry number, get the folio list (for the drop-down) and check if the session is timed out before calling the appropriate methods
   before_action :set_entry, only: [:index, :show, :update]
+  before_action :get_registers, only: [:index, :show, :new, :edit, :create, :update, :destroy]
   before_action :get_folios, only: [:index, :show, :new, :edit, :create, :update, :destroy]
   before_filter :session_timed_out, except: [:login]
 
@@ -31,8 +32,6 @@ class EntriesController < ApplicationController
   def reset_session_variables
     session[:register_choice] = ''
     session[:folio_choice] = ''
-    session[:folio] = ''
-    session[:folio_face] = ''
     session[:login] = ''
     session[:first_folio] = ''
     session[:last_folio] = ''
@@ -80,13 +79,13 @@ class EntriesController < ApplicationController
         # NOTE - the command below returns an error when there is a space in the 'folio_face', e.g. 'Insert a'; therefore saving to Fedora with an underscore
         # UPDATE - have had a problem with underscores on the opal server - e.g. 'Insert_a' returns an error but 'Insert_b' works - not sure what is going on here!
         # Anyway, now saved without any char in-between, e.g. 'Inserta'
-        @entry = Entry.where(:folio => session[:folio]).where(:folio_face => session[:folio_face]).first
+        @entry = Entry.where(folio_ssim: session[:folio_choice]).first
       else
         @entry = Entry.find(params[:id])
       end
 
       # Get all the entries which match with the chosen register, folio and folio face
-      @entries = Entry.where(:folio => session[:folio]).where(:folio_face => session[:folio_face])
+      @entries = Entry.where(folio_ssim: session[:folio_choice])
 
       set_entry
     end
@@ -94,7 +93,7 @@ class EntriesController < ApplicationController
 
   # SHOW
   def show
-    @entries = Entry.all.where(:folio => session[:folio]).where(:folio_face => session[:folio_face])
+    @entries = Entry.all.where(folio_ssim: session[:folio_choice])
     redirect_to :action => 'index', :id => params[:id]
     set_entry
   end
@@ -110,7 +109,7 @@ class EntriesController < ApplicationController
 
     @entry = Entry.new
 
-    @entries = Entry.where(:folio => session[:folio]).where(:folio_face => session[:folio_face])
+    @entries = Entry.where(folio_ssim: session[:folio_choice])
     get_authority_lists
 
   end
@@ -125,7 +124,7 @@ class EntriesController < ApplicationController
     end
 
     # Get all the entries so that they can be displayed as tabs
-    @entries = Entry.all.where(:folio => session[:folio]).where(:folio_face => session[:folio_face])
+    @entries = Entry.all.where(folio_ssim: session[:folio_choice])
 
     # Get the fields for the current entry
     set_entry()
@@ -159,11 +158,14 @@ class EntriesController < ApplicationController
     #@errors = validate(entry_params)
 
     # Get a new entry and replace values with the form parameters
+    # Replace the folio id with the corresponding Folio object
+    f = Folio.where(id: entry_params['folio']).first
+    entry_params['folio'] = f
     @entry = Entry.new(entry_params)
 
     # If there are errors, go back to the 'new' page and display the errors, else go to the 'index' page
     if @errors != '' && @errors != nil
-      @entries = Entry.where(:folio => session[:folio]).where(:folio_face => session[:folio_face])
+      @entries = Entry.where(folio_ssim: session[:folio_choice])
       get_authority_lists
       render 'new'
     else
@@ -182,7 +184,7 @@ class EntriesController < ApplicationController
 
     # If there are errors, render the go back to the 'edit' page and display the errors, else go to the 'index' page
     if @errors != '' && @errors != nil
-      @entries = Entry.where(:folio => session[:folio]).where(:folio_face => session[:folio_face])
+      @entries = Entry.where(folio_ssim: session[:folio_choice])
       get_authority_lists
       #@entry.attributes = entry_params # Updates the @entry with the appropriate attributes before rendering the 'edit' page
       set_entry
