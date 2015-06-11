@@ -1,8 +1,8 @@
-class FolioFaceTerms < Terms
+class DateRoleTerms < Terms
   include Qa::Authorities::WebServiceBase
 
   def terms_list
-    'folio_faces'
+    'date_roles'
   end
 
 end

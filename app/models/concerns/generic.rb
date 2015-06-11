@@ -1,4 +1,4 @@
-module FormerId
+module Generic
   extend ActiveSupport::Concern
 
   included do
