@@ -57,7 +57,7 @@ $(document).ready(function () {
             var field_group_div = $(this).parent('th').next('td').find('>:first-child');
             var jq_type = $(this).attr('jq_type');
             var new_code_block = "<div class='field_single'>\
-            <input type='text' class='input_class' value='' name='entry[" + jq_type + "][]'>\
+            <input type='text' value='' name='entry[" + jq_type + "][]'>\
             <img alt='Delete icon' src='/assets/delete.png' class='delete_icon click_remove_field_level1'>\
             </div>";
             field_group_div.append(new_code_block);
@@ -75,11 +75,18 @@ $(document).ready(function () {
             var jq_attributes = $(this).attr('jq_attributes');
             var jq_index = $(this).attr('jq_index');
             var jq_type = $(this).attr('jq_type');
-            var new_code_block = "<div class='field_single'>\
-            <input type='text' class='input_class' name='entry[" + jq_attributes + "][" + jq_index + "][" + jq_type + "][]'>\
-            &nbsp;<img alt='Delete icon' src='/assets/delete.png' class='delete_icon click_remove_field_level1'>\
-            </div>";
+
+            var place_as_written_class = "";
+            if (jq_type == 'place_as_written') {
+                place_as_written_class = " place_as_written";
+            }
+
+            var new_code_block = "<div class='field_single'>"
+            + "<input type='text' class='" + place_as_written_class + "' name='entry[" + jq_attributes + "][" + jq_index + "][" + jq_type + "][]'>"
+            + "&nbsp;<img alt='Delete icon' src='/assets/delete.png' class='delete_icon click_remove_field_level1'>"
+            + "</div>";
             $(this).parent('th').next('td').find('.field_group').append(new_code_block);
+
         } catch (err) {
             alert(err);
         }
@@ -97,7 +104,7 @@ $(document).ready(function () {
             var language_options = "<option value=''>--- select ---</option>";
 
             for (i = 0; i < jq_language_list.length; i++) {
-                language_options = language_options + "<option value='" + jq_language_list[i] + "'>" + jq_language_list[i] + "</option/>";
+                language_options = language_options + "<option value='" + jq_language_list[i].id + "'>" + jq_language_list[i].label + "</option/>";
             }
 
             var new_code_block = "<div class='field_single'><select id='entry_language_' name='entry[language][]'>" + language_options +
@@ -130,7 +137,7 @@ $(document).ready(function () {
             for (i = 0; i < list_array.length; i++) {
                 options = options + "<option value='" + list_array[i].id + "'>" + list_array[i].label + "</option/>";
             }
-            var new_code_block = "<div class='field_single'><select name='entry[" + jq_attributes + "][" + jq_index + "][place_as_written][0]'>" + options +
+            var new_code_block = "<div class='field_single'><select name='entry[" + jq_attributes + "][" + jq_index + "][" + jq_type + "][]'>" + options +
                 "</select>&nbsp;<img alt='Delete icon' src='/assets/delete.png' class='delete_icon_select click_remove_field_level1' jq_tag_type='select'></div>";
             $(this).parent('th').next('td').find('.field_group').append(new_code_block);
         } catch (err) {
@@ -149,6 +156,15 @@ $(document).ready(function () {
             var new_code_block = "<div class='field_single'><select class='related_place' autocomplete='off' name='entry[" + jq_attributes + "][" + jq_index + "][" + jq_type + "][]'>" + options +
                 "</select>&nbsp;<img alt='Delete icon' src='/assets/delete.png' class='delete_icon_select click_remove_field_level1' jq_tag_type='select'></div>";
             $(this).parent('th').next('td').find('.field_group').append(new_code_block);
+
+            // Update the related place list for this element
+            // because the user has clicked on the 'plus' button to add a new one
+            var options_list = "<option value=''>--- select ---</option>"
+            $(".place_as_written").each(function() {
+                options_list += "<option value='" + $(this).val() + "'>" + $(this).val() + "</option>"
+            });
+            var select_div = $(this).parent('th').next('td').find('select');
+            select_div.append(options_list);;
         } catch (err) {
             alert(err);
         }
@@ -170,7 +186,7 @@ $(document).ready(function () {
                     // As Written
                 "<tr><th style='width: 110px'>As Written*" +
                 "&nbsp;<img jq_type='place_as_written' jq_index='" + jq_index + "' jq_attributes='related_places_attributes' class='plus_icon click_multiple_field_button_level2' src='/assets/plus_sign.png'>" +
-                "</th><td><div class='field_group gray_box related_place_as_written'></div></td></tr>" +
+                "</th><td><div class='field_group gray_box'></div></td></tr>" +
 
                     // Place Type
                 "<tr><th>Place Type&nbsp;<img jq_place_type_list=" + jq_place_type_list +
@@ -278,7 +294,7 @@ $(document).ready(function () {
             var jq_index = field_group_div.children().length;
             var jq_date_type_list = $.parseJSON($(this).attr('jq_date_type_list')); // // Don't need to remove spaces because not nested like the two lists below (I think)
             var jq_date_certainty_list = $(this).attr('jq_date_certainty_list').replace(/ /g, "&#32;");  // Appears to be a problem when list is added as a nested list, i.e. Level 2, therefore replace them here
-            var jq_date_type_single_list = $(this).attr('jq_date_type_single_list').replace(/ /g, "&#32;"); // See note on line above
+            var jq_single_date_list = $(this).attr('jq_single_date_list').replace(/ /g, "&#32;"); // See note on line above
 
             var date_type_options = "<option value=''>--- select ---</option>";
 
@@ -300,7 +316,7 @@ $(document).ready(function () {
                 "<tr><th>Date Type</th><td><select name='entry[entry_dates_attributes][" + jq_index + "][date_type]'>" + date_type_options + "</select></td></tr>" +
 
                     // Date
-                "<tr><th>Date&nbsp;<img jq_date_certainty_list='" + jq_date_certainty_list + "' jq_date_type_single_list='" + jq_date_type_single_list + "' jq_index='" + jq_index + "' class='plus_icon click_single_date_button' src='/assets/plus_sign.png'></th><td><div class='field_group gray_box single_date'></div></td></tr>" +
+                "<tr><th>Date&nbsp;<img jq_date_certainty_list='" + jq_date_certainty_list + "' jq_single_date_list='" + jq_single_date_list + "' jq_index='" + jq_index + "' class='plus_icon click_single_date_button' src='/assets/plus_sign.png'></th><td><div class='field_group gray_box single_date'></div></td></tr>" +
 
                 "</table>" +
                 "<img src='/assets/delete.png' alt='Delete icon' class='delete_icon click_remove_field_level2' params_type='related_places'>" +
@@ -322,7 +338,7 @@ $(document).ready(function () {
             var field_group_div = $(this).parent('th').next('td').find('>:first-child');
             var jq_index2 = field_group_div.children().length;
             var jq_date_certainty_list = $.parseJSON($(this).attr('jq_date_certainty_list')); //.replace(/ /g, "&#32;"); // Doesn't like spaces but quotes are OK?!
-            var jq_date_type_single_list = $.parseJSON($(this).attr('jq_date_type_single_list')); //.replace(/ /g, "&#32;"); // Doesn't like spaces but quotes are OK?!
+            var jq_single_date_list = $.parseJSON($(this).attr('jq_single_date_list')); //.replace(/ /g, "&#32;"); // Doesn't like spaces but quotes are OK?!
 
             var date_certainty_options = "<option value=''>--- select ---</option>";
 
@@ -330,10 +346,10 @@ $(document).ready(function () {
                 date_certainty_options = date_certainty_options + "<option value='" + jq_date_certainty_list[i].id + "'>" + jq_date_certainty_list[i].label + "</option/>";
             }
 
-            var date_type_single_options = "<option value=''>--- select ---</option>";
+            var single_date_options = "<option value=''>--- select ---</option>";
 
-            for (i = 0; i < jq_date_type_single_list.length; i++) {
-                date_type_single_options = date_type_single_options + "<option value='" + jq_date_type_single_list[i].id + "'>" + jq_date_type_single_list[i].label + "</option/>";
+            for (i = 0; i < jq_single_date_list.length; i++) {
+                single_date_options = single_date_options + "<option value='" + jq_single_date_list[i].id + "'>" + jq_single_date_list[i].label + "</option/>";
             }
 
             var new_code_block = "<div class='field_single'>" +
@@ -350,7 +366,7 @@ $(document).ready(function () {
 
                     // Type
                 "<tr><th>Type:</th>" +
-                "<td><select name='entry[entry_dates_attributes][" + jq_index + "][single_dates_attributes][" + jq_index2 + "][date_type]'>" + date_type_single_options + "</select></td>" +
+                "<td><select name='entry[entry_dates_attributes][" + jq_index + "][single_dates_attributes][" + jq_index2 + "][date_type]'>" + single_date_options + "</select></td>" +
 
                 "</table>" +
                 "<img alt='Delete icon' src='/assets/delete.png' class='delete_icon click_remove_field_date' jq_index1='" + jq_index2 + "'>" +
@@ -481,64 +497,51 @@ $(document).ready(function () {
         }
     }
 
+    // Calls the function below when a place_as_written is changed (or added)
+    $('body').on('change', '.place_as_written', function(e) {
 
-    //$(".related_place_as_written:input:first").css("border", "3px solid " + "orange");
+        update_related_places();
 
-    /*$(".related_place_as_written").each(function () {
-     var d = $(this).find('input:first');
-     //d.css("border", "3px solid blue");
-     $(".related_place").each(function () {
-     $(this).append('<option>' + d.val() + '</option>');
-     //$(this).css("border", "3px solid " + "orange");
-     });
-     });*/
+    });
 
-    // When the related place drop-down list is clicked
-    // this code iterates through all the 'place_as_written' terms and adds them to the list
-    $('body').on('click', '.related_place', function (e) {
+});
 
-        var current_related_place = $(this);
+// This is called if the user changes a place_as_written - it updates all the related place lists
+function update_related_places() {
 
-        $(".related_place_as_written").each(function () {
+    console.log('start');
 
-            var d = $(this).find('input:first');
-            var val1 = d.val();
+    var options_list = "<option value=''>--- select ---</option>"
 
-            var is_match = "false";
+    // Need to change this so that the elements are only removed if they no longer exist
+    // and new ones are added
 
-            //current_related_place.css("border", "3px solid purple");
+    $('.place_as_written').each(function() {
 
-            $(current_related_place).children('option').each(function () {
-                //$(this).css("border", "3px solid blue");
-                var val2 = $(this).val();
-                if (val1 == val2) {
-                    is_match = true;
+        options_list += "<option value='" + $(this).val() + "'>" + $(this).val() + "</option>"
+
+        //$(this).css("border", "3px solid green")
+
+        var place_as_written_value = $(this).val();
+
+        $('.related_place').each(function() {
+
+            $(this).css("border", "3px solid green");
+
+            $(this).find('option').each(function() {
+
+                var related_place_value = $(this).val()
+                //console.log($(this).val());
+
+                if (place_as_written_value != related_place_value) {
+                    console.log(place_as_written_value);
                 }
             });
-
-            if (is_match == "false") {
-                current_related_place.append('<option>' + val1 + '</option>');
-            }
-
         });
     });
 
-    //$(".related_place_as_written").each(function () {
-    //var d = $(this).find('input:first');
-    //var val1 = d.val();
-    //var p = $(this).parent('select');
-    //p.css("border", "3px solid green");
-    //$(".my_select > option").each(function () {
-    //    alert($this.val());
-    //});
-    //d.css("border", "3px solid blue");
-    //$(".my_select").each(function () {
-    //    var d2 = $(this).
-    //    alert(d.val()  + "," + $(this).val());
-    //    $(this).append('<option>' + d.val() + '</option>');
-    //    //$(this).css("border", "3px solid " + "orange");
-    //});
-    //});
+    console.log('end');
 
-
-});
+    //$('.related_place').find('option').remove();
+    //$('.related_place').append(options_list);
+}

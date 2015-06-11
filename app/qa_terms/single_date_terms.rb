@@ -1,8 +1,8 @@
-class SingleDateTypeTerms < Terms
+class SingleDateTerms < Terms
   include Qa::Authorities::WebServiceBase
 
   def terms_list
-    'formats'
+    'singledates'
   end
 
 end

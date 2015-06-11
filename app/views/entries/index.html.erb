@@ -74,22 +74,10 @@
                   </tr>
 
                   <%# Access Provided By %>
-                  <tr>
+                  <!--<tr>
                     <th>Access Provided By*</th>
-                    <td><%= @entry.access_provided_by %>&nbsp;</td>
-                  </tr>
-
-                  <%# Is Blank?* %>
-                  <tr>
-                    <th>Is Blank*</th>
-                    <td><%= @entry.is_blank %>&nbsp;</td>
-                  </tr>
-
-                  <%# Format %>
-                  <tr>
-                    <th>Format</th>
-                    <td><%= @entry.format %>&nbsp;</td>
-                  </tr>
+                    <td><%#= @entry.access_provided_by %>&nbsp;</td>
+                  </tr>-->
 
                   <%# Language %>
                   <tr>
@@ -97,7 +85,7 @@
                     <td>
                       <% @entry.language.each do |language| %>
                           <div style="padding: 4px 0px">
-                            <%= language %>
+                            <%= terms.get_title_from_id(language) %>
                           </div>
                       <% end %>
                     </td>
@@ -406,7 +394,7 @@
                                 <tr>
                                   <th>Date Type:</th>
                                   <td>
-                                    <%= entry_date.date_type %>
+                                    <%= terms.get_title_from_id(entry_date.date_type) %>
                                   </td>
                                 </tr>
 

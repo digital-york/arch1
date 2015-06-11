@@ -211,13 +211,14 @@ namespace :arch1 do
     @path = '/home/py523/rails_projects/arch1/lib/tasks/' # SET THE PATH
 
     # .csv files should exist in the specified path
-    list = ['folio-faces', 'folios', 'currencies', 'date-types', 'certainty', 'qualifications', 'place-types', 'statuses', 'roles', 'formats', 'single-date-types', 'languages']
+    #list = ['folio-faces', 'folios', 'currencies', 'date-types', 'certainty', 'qualifications', 'place-types', 'statuses', 'roles', 'formats', 'single-date-types', 'languages']
+    list = ['singledates']
 
     list.each do |i|
 
       if i == 'place-types' or i == 'roles' or i == 'statuses'
         puts 'Sleeping between the long ones'
-        sleep 60
+        sleep 5
       end
 
       puts 'Creating the Concept Scheme'
@@ -260,6 +261,7 @@ namespace :arch1 do
 
       puts 'Processing ' + i + '. This may take some time ... '
 
+      puts @path + i + '.csv'
       arr = CSV.read(@path + i + '.csv')
       arr = arr.uniq
 
@@ -268,7 +270,7 @@ namespace :arch1 do
           begin
 
             if i == 'place-types' or i == 'roles' or i == 'statuses'
-              sleep 5
+              sleep 1
               puts index
             end
 

@@ -35,6 +35,9 @@
 
       <div class='field'>
 
+        <%# Access Provided By %>
+        <input type="hidden" name="entry[access_provided_by]" value="http://atom.york.ac.uk/index.php/york-university-borthwick-institute-for-archives">
+
         <table cellspacing='0'>
 
           <tr class='noth'>
@@ -102,34 +105,6 @@
             <th style="width: 150px">Entry No*</th>
             <td>
               <%= f.text_field :entry_no %>
-            </td>
-          </tr>
-
-          <%# Access Provided By %>
-          <tr>
-            <th>Access Provided By</th>
-            <td>
-              <%= f.text_field :access_provided_by %>
-            </td>
-          </tr>
-
-          <%# Is Blank %>
-          <tr>
-            <th>Is Blank*</th>
-            <td>
-              <%
-                 @is_blank_list = [['--- select ---', ''], ['yes', 'yes'], ['no', 'no']]
-              %>
-              <%= f.select :is_blank, @is_blank_list %>
-            </td>
-          </tr>
-
-          <%# Format %>
-          <tr>
-            <th>Format</th>
-            <td>
-              <%#= f.select :format, @format_list %>
-              <%= select_tag 'entry[format]', options_for_select(@format_list.collect{ |format| [format["label"].join(''), format["id"]] }.insert(0, ["--- select ---", ""]), @entry.format) %>
             </td>
           </tr>
 
@@ -258,11 +233,11 @@
                             <img src="/assets/plus_sign.png" alt="plus icon" class="plus_icon click_multiple_field_button_level2" jq_attributes="related_places_attributes" jq_index="<%=index1%>" jq_type="place_as_written" />
                           </th>
                           <td>
-                            <div class="field_group gray_box related_place_as_written">
+                            <div class="field_group gray_box">
                               <% related_place.place_as_written.each_with_index do |place_as_written, index2| %>
                                   <div class="field_single">
                                     <%#= text_field_tag "entry[related_places_attributes][" + index1.to_s + "][place_as_written][]", place_as_written, id: none %>
-                                    <input type="text" name="entry[related_places_attributes][<%= index1.to_s %>][place_as_written][]" value="<%= place_as_written %>">
+                                    <input type="text" name="entry[related_places_attributes][<%= index1.to_s %>][place_as_written][]" value="<%= place_as_written %>" class="place_as_written">
                                     &nbsp;<img src='/assets/delete.png' alt='Delete icon' class='delete_icon click_remove_field_level1'>
                                   </div>
                               <% end %>
@@ -433,9 +408,6 @@
                         <tr>
                           <th>
                             Related Place
-                            <script type="text/javascript">
-                                //get_places2();
-                            </script>
                             <img src="/assets/plus_sign.png" alt="plus icon" class="plus_icon click_related_place_field_button" jq_attributes="related_people_attributes" jq_index="<%=index1%>" jq_type="person_related_place" />
                           </th>
                           <td>
@@ -466,7 +438,7 @@
           <tr>
 
             <th>Date:
-              <img src="/assets/plus_sign.png" alt="plus icon" class="plus_icon click_date_button" jq_date_type_list="<%= @date_type_list.to_json %>" jq_date_certainty_list="<%= @date_certainty_list.to_json %>" jq_date_type_single_list="<%= @date_type_single_list.to_json %>" />
+              <img src="/assets/plus_sign.png" alt="plus icon" class="plus_icon click_date_button" jq_date_type_list="<%= @date_type_list.to_json %>" jq_date_certainty_list="<%= @date_certainty_list.to_json %>" jq_single_date_list="<%= @single_date_list.to_json %>" />
             </th>
 
             <td class="tab2">
@@ -496,13 +468,13 @@
                         <tr>
                           <th>Date Type:</th>
                           <td>
-                            <%= select_tag "entry[entry_dates_attributes][" + index1.to_s + "][date_type]", options_for_select(@date_type_single_list.collect{ |date_type_single| [date_type_single["label"].join(''), date_type_single["id"]] }.insert(0, ["--- select ---", ""]), entry_date.date_type) %>
+                            <%= select_tag "entry[entry_dates_attributes][" + index1.to_s + "][date_type]", options_for_select(@date_type_list.collect{ |date_type_single| [date_type_single["label"].join(''), date_type_single["id"]] }.insert(0, ["--- select ---", ""]), entry_date.date_type) %>
                           </td>
                         </tr>
 
                         <tr>
                           <th>Date
-                            <img src="/assets/plus_sign.png" alt="plus icon" class="plus_icon click_single_date_button" jq_index="<%=index1%>" jq_date_certainty_list="<%= @date_certainty_list.to_json %>" jq_date_type_single_list="<%= @date_type_single_list.to_json %>"/>
+                            <img src="/assets/plus_sign.png" alt="plus icon" class="plus_icon click_single_date_button" jq_index="<%=index1%>" jq_date_certainty_list="<%= @date_certainty_list.to_json %>" jq_single_date_list="<%= @single_date_list.to_json %>"/>
                           </th>
                           <td>
                             <div class="field_group gray_box single_date">
@@ -522,7 +494,7 @@
                                   <tr>
                                     <th>Type:</th>
                                     <td>
-                                      <%= select_tag "entry[entry_dates_attributes][" + index1.to_s + "][single_dates_attributes][" + index2.to_s + "][date_type]", options_for_select(@date_type_list.collect { |date_type| [date_type["label"].join(''), date_type["id"]] }.insert(0, ["--- select ---", ""]), single_date.date_type) %>
+                                      <%= select_tag "entry[entry_dates_attributes][" + index1.to_s + "][single_dates_attributes][" + index2.to_s + "][date_type]", options_for_select(@single_date_list.collect { |date_type| [date_type["label"].join(''), date_type["id"]] }.insert(0, ["--- select ---", ""]), single_date.date_type) %>
                                     </td>
                                   </tr>
                                   </table>
@@ -569,8 +541,10 @@
 </div>
 <div style='clear: both'></div>
 
+<!--<script type="text/javascript">update_related_places()</script>-->
+
 <% if @errors != nil && @errors != '' %>
     <script type="text/javascript">
-        hide_elements_when_errors()
+        hide_elements_when_errors();
     </script>
 <% end %>

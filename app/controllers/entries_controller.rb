@@ -134,7 +134,7 @@ class EntriesController < ApplicationController
     get_authority_lists()
 
     # Define the related person list - note that this is a dynamic list which
-    # has to be initialised before editing the page
+    # has to be initialised before editing the page so that the form displays the correct values
     @related_place_list = []
 
     # Add default select option to the related place list
@@ -175,8 +175,6 @@ class EntriesController < ApplicationController
 
   # UPDATE
   def update
-
-    puts entry_params
 
     # See validation.rb in /concerns
     #@errors = validate(entry_params)
