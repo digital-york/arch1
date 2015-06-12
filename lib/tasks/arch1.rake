@@ -17,20 +17,13 @@ namespace :arch1 do
 
     puts 'Starting ... '
 
-    #for testing
-    #f = File.open("/home/geekscruff/tmp/subjects.xml")
-    #@doc = Nokogiri::XML(f)
-    #f.close
-
     @doc = Nokogiri::XML(open('http://dlib.york.ac.uk/ontologies/borthwick/subjects.xml')) do |config|
       config.strict.nonet
     end
 
     puts 'Creating the Subjects Scheme'
 
-    #@path = '/home/geekscruff/Dropbox/code/rails/arch1/lib/tasks/' # SET THE PATH
-    @path = '/home/py523/rails_projects/arch1/lib/tasks/' # SET THE PATH
-    @skip = false # run broader / narrower
+    @path = Rails.root + 'lib/assets/lists/'
     @scheme # the scheme (parent) record id
     @subjects = {} # subject record ids
     begin
@@ -176,7 +169,8 @@ namespace :arch1 do
 
   task readterms: :environment do
 
-    list = ['folio-faces', 'folios', 'currencies', 'date-types', 'certainty', 'qualifications', 'place-types', 'statuses', 'roles']
+    list = ['folio_faces', 'folio_types', 'currencies', 'date_types', 'certainty',
+            'qualifications', 'place_types', 'statuses', 'roles', 'place_roles', 'date_roles', 'single_dates']
 
     list.each do |l|
       arr = CSV.read('/home/geekscruff/tmp/abs/' + l + '.csv')
@@ -207,34 +201,28 @@ namespace :arch1 do
 
     require 'csv'
 
-    #@path = '/home/geekscruff/Dropbox/code/rails/arch1/lib/tasks/' # SET THE PATH
-    @path = '/home/py523/rails_projects/arch1/lib/tasks/' # SET THE PATH
+    path = Rails.root + 'lib/'
 
     # .csv files should exist in the specified path
-    #list = ['folio-faces', 'folios', 'currencies', 'date-types', 'certainty', 'qualifications', 'place-types', 'statuses', 'roles', 'formats', 'single-date-types', 'languages']
-    list = ['singledates']
+    list = ['folio_faces', 'folio_types', 'currencies', 'date_types', 'certainty','languages',
+            'qualifications', 'place_types', 'statuses', 'person_roles', 'place_roles', 'date_roles', 'single_dates']
 
     list.each do |i|
-
-      if i == 'place-types' or i == 'roles' or i == 'statuses'
-        puts 'Sleeping between the long ones'
-        sleep 5
-      end
 
       puts 'Creating the Concept Scheme'
 
       @arr = []
-      if File.exists?(@path + i + '_list.csv')
-        arr = CSV.read(@path + i + '_list.csv')
-        a = File.open(@path + i + '_list_processing.csv', 'w')
+      if File.exists?(path + "tasks/#{i}_list.csv")
+        arr = CSV.read(path + "tasks/#{i}_list.csv")
+        a = File.open(path + "tasks/#{i}_list_processing.csv", "w")
         arr.each do |i|
           a.write(i[0] + "\n")
         end
         a.close
-        @arr = CSV.read(@path + i + '_list_processing.csv')
+        @arr = CSV.read(path + "tasks/#{i}_list_processing.csv")
       end
 
-      f = File.open(@path + i + '_list.csv', 'w')
+      f = File.open(path + "tasks/#{i}_list.csv", "w")
 
       begin
 
@@ -243,15 +231,12 @@ namespace :arch1 do
           puts @scheme.id + ' exists, using it'
 
         else
-
           @scheme = ConceptScheme.new
           @scheme.title = i
-          @scheme.description = 'Terms for ' + i + " produced from data created during the Archbishop's Registers Pilot project, funded by the Mellon Foundation."
-          @scheme.rdftype += ['http://fedora.info/definitions/v4/indexing#Indexable', 'http://www.w3.org/2004/02/skos/core#ConceptScheme']
+          @scheme.description = "Terms for #{i} produced from data created during the Archbishop's Registers Pilot project, funded by the Mellon Foundation."
+          @scheme.rdftype = @scheme.add_rdf_types
           @scheme.save
-          @scheme.identifier = @scheme.id
-          @scheme.save
-          @scheme.update_index
+          puts @scheme.id
           f.write(@scheme.id + "\n")
 
         end
@@ -261,42 +246,32 @@ namespace :arch1 do
 
       puts 'Processing ' + i + '. This may take some time ... '
 
-      puts @path + i + '.csv'
-      arr = CSV.read(@path + i + '.csv')
+      arr = CSV.read(path + "tasks/#{i}.csv")
       arr = arr.uniq
 
-      arr.each_with_index do |c, index|
+      arr.each do |c|
         c.each do |b|
           begin
-
-            if i == 'place-types' or i == 'roles' or i == 'statuses'
-              sleep 1
-              puts index
-            end
 
             if @arr != []
               if @arr.include? [b.strip]
                 puts 'skipping ' + b.strip
               else
                 h = Concept.new
-                h.rdftype += ['http://www.w3.org/2004/02/skos/core#Concept', 'http://fedora.info/definitions/v4/indexing#Indexable']
+                h.rdftype = h.add_rdf_types
                 h.preflabel = b.strip
                 h.concept_scheme = @scheme
                 h.save
                 h.identifier = h.id
                 h.save
-                h.update_index
                 f.write(h.preflabel + "\n")
               end
             else
               h = Concept.new
-              h.rdftype += ['http://www.w3.org/2004/02/skos/core#Concept', 'http://fedora.info/definitions/v4/indexing#Indexable']
+              h.rdftype += h.add_rdf_types
               h.preflabel = b.strip
               h.concept_scheme = @scheme
               h.save
-              h.identifier = h.id
-              h.save
-              h.update_index
               f.write(h.preflabel + "\n")
             end
           rescue
@@ -306,15 +281,15 @@ namespace :arch1 do
         end
       end
       f.close
-      File.delete(@path + i + '_list.csv')
+      File.delete(path + "tasks/#{i}_list.csv")
     end
     puts 'Finished!'
   end
 
-=begin
+
   task loadregsfolios: :environment do
 
-    path = '/home/geekscruff/Dropbox/code/rails/arch1/'
+    path = Rails.root
 
     f = File.open(path + 'app/assets/files/folio_list.txt', "r")
 
@@ -344,7 +319,7 @@ namespace :arch1 do
       image.folio = fol
       image.rdftype = image.add_rdf_types
       image.motivated_by = 'http://www.shared-canvas.org/ns/painting'
-      image.file = '/usr/digilib-webdocs/digilibImages/ArchbishopsRegisters/reg12/JP2/' + ln.sub("\r", '').sub("\n", '')
+      image.file = '/usr/digilib-webdocs/digilibImages/ArchbishopsRegisters/reg12/JP2/' + ln.sub(' ', '_').sub("\r", '').sub("\n", '')
       image.save
       fol.images += [image]
       fol.register = @register
@@ -406,6 +381,93 @@ namespace :arch1 do
     puts 'Finished'
 
   end
-=end
+
+  task loadallrf: :environment do
+
+    path = Rails.root + 'lib/assets/'
+
+    f = File.open(path + 'registers/registers.json', 'r')
+
+    eval(f.read)[:response][:docs].map do |r|
+
+      # @register = Register.new
+      # @register.rdftype = @register.add_rdf_types
+      # @register.reg_id = r[:"dc.title"].split(':')[0]
+      # @register.title = r[:"dc.title"].split(':')[1]
+      # @register.former_id = r[:PID]
+      # @register.save
+
+      #repeat this step for the folio file
+
+      l =  r[:PID].split(':')[1] + '.json'
+      ff = File.open(path + 'folios/' + l, 'r')
+
+      eval(ff.read)[:response][:docs].map do | rr |
+        #@folio = Folio.new
+        #@folio.title = rr[:"dc.title"].split(';')[0] # ignore the entry statements in register 12
+        #@folio.former_id = rr[:PID]
+
+        o = rr[:"dc.title"].split(';')[0].split(' ')
+        o.delete_at(0)
+        o.delete_at(0)
+        o.delete_at(0)
+        o.delete('and')
+        o.delete('(alternate') #might want to model these a bit differently
+        o.delete('version)')
+        o.each do | oo |
+
+          if oo == 'rectot'
+            oo = 'recto'
+          end
+          if oo == 'vesro'
+            oo = 'verso'
+          end
+          if oo == 'inse'
+            oo = 'insert'
+          end
+          if oo == 'folio/insert'
+            oo = 'insert'
+          end
+
+          if FolioTerms.new('subauthority').search(oo.downcase.singularize).to_s.include? oo.downcase.singularize
+            FolioTerms.new('subauthority').search(oo.downcase.singularize).map do | ft |
+              puts ft['id']
+            end
+
+          elsif FolioFaceTerms.new('subauthority').search(oo.downcase.singularize).to_s.include? oo.downcase.singularize
+            FolioFaceTerms.new('subauthority').search(oo.downcase.singularize).map do | ff |
+              puts ff['id']
+            end
+          else
+            if oo.length > 3
+              puts oo.downcase.singularize
+            end
+          end
+
+          #index
+          #unnumbered
+
+        end
+
+        # use pluralize / singularize
+        # convert to title to array, lookup singularized version in folio-types and folio-faces, remove
+        # remove first three words
+        # left with number
+
+
+
+      end
+
+
+    end
+
+
+
+    #create images (from xml)
+    #create proxies (from internal list)
+
+
+  end
+
 
 end

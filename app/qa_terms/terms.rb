@@ -18,6 +18,14 @@ class Terms
     parse_authority_response(SolrQuery.new.solr_query(q='inScheme_ssim:"' + terms_id + '" AND id:"' + id + '"',fl='id,preflabel_tesim'))
   end
 
+  def find_id val
+    parse_terms_id_response(SolrQuery.new.solr_query(q='inScheme_ssim:"' + terms_id + '" AND preflabel_tesim:"' + val + '"', fl='id'))
+  end
+
+  def find_value_string id
+    parse_string(SolrQuery.new.solr_query(q='inScheme_ssim:"' + terms_id + '" AND id:"' + id + '"', fl='preflabel_tesim'))
+  end
+
   def search q
     parse_authority_response(SolrQuery.new.solr_query(q='inScheme_ssim:"' + terms_id + '" AND preflabel_tesim:"' + q + '"',fl='id,preflabel_tesim'))
   end
@@ -42,6 +50,14 @@ class Terms
       i = result['id']
     end
     i
+  end
+
+  def parse_string(response)
+    str = ''
+    response['response']['docs'].map do |result|
+      str = result['preflabel_tesim']
+    end
+    str
   end
 
   def parse_terms_preflabel_response(response)

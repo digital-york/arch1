@@ -26,3 +26,6 @@
 
 #ignore minter state file
 /config/noid-minter-state
+
+#ignore large directory of xml files
+/lib/assets/folios/xml

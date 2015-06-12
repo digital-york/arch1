@@ -39,19 +39,20 @@
       <%# Is this still valid? Possibly this was true for an earlier version of the code? Update - have removed it for now %>
       <select name="register_choice">
         <option value="">--- Register ---</option>
-        <option value="12"
-                <% if session[:register_choice] == '12' %>selected
-                <% end %>>Register 12
-        </option>
+          <% @registers.each do | r | %>
+              <option value="<%= r[0] %>"
+                      <% if session[:register_choice] == r[0] %>selected
+                      <% end %>><%= r[1] %></option>
+          <% end %>
       </select>
 
       <select name="folio_choice" style="width: 140px">
         <option value="">--- Folio ---</option>
-        <% @folios.each do |folio| %>
-            <option value="<%= folio %>"
-                    <% if session[:folio_choice] == folio %>selected
-                    <% end %>><%= folio %></option>
-        <% end %>
+          <% @folios.each do |folio | %>
+              <option value="<%= folio[0] %>"
+                      <% if session[:folio_choice] == folio[0] %>selected
+                      <% end %>><%= folio[1] %></option>
+          <% end %>
       </select>
 
       <%# following line not working properly - why? %>

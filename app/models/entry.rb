@@ -2,6 +2,8 @@ class Entry < ActiveFedora::Base
 
   include AssignId
 
+  belongs_to :folio, predicate: ::RDF::URI.new('http://dlib.york.ac.uk/ontologies/borthwick-registers#folio')
+
   property :register, predicate: ::RDF::URI.new('http://dlib.york.ac.uk/ontologies/borthwick-registers#register'), multiple: false do |index|
     index.as :stored_searchable
   end
@@ -10,27 +12,11 @@ class Entry < ActiveFedora::Base
     index.as :stored_searchable
   end
 
-  property :folio, predicate: ::RDF::URI.new('http://dlib.york.ac.uk/ontologies/borthwick-registers#folio'), multiple: false do |index|
-    index.as :stored_searchable
-  end
-
-  property :folio_face, predicate: ::RDF::URI.new('http://dlib.york.ac.uk/ontologies/borthwick-registers#folioFace'), multiple: false do |index|
-    index.as :stored_searchable
-  end
-
   property :access_provided_by, predicate: ::RDF::URI.new('http://data.archiveshub.ac.uk/def/accessProvidedBy'), multiple: false do |index|
     index.as :stored_searchable
   end
 
   property :entry_part, predicate: ::RDF::URI.new('http://dlib.york.ac.uk/ontologies/borthwick-registers#entryPart'), multiple: false do |index|
-    index.as :stored_searchable
-  end
-
-  property :is_blank, predicate: ::RDF::URI.new('http://dlib.york.ac.uk/ontologies/borthwick-registers#isBlank'), multiple: false do |index|
-    index.as :stored_searchable
-  end
-
-  property :format, predicate: ::RDF::URI.new('http://purl.org/dc/terms/format'), multiple: false do |index|
     index.as :stored_searchable
   end
 

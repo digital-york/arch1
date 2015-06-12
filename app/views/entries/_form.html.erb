@@ -29,9 +29,7 @@
 
   <%= form_for @entry do |f| %>
 
-      <%= f.hidden_field :register, :value => session[:register_choice] %>
-      <%= f.hidden_field :folio, :value => session[:folio] %>
-      <%= f.hidden_field :folio_face, :value => session[:folio_face] %>
+        <%= f.hidden_field :folio, :value => session[:folio_choice] %>
 
       <div class='field'>
 

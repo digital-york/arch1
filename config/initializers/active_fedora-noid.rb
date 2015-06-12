@@ -4,6 +4,7 @@ ActiveFedora::Noid.configure do |config|
   # Specify a different template for your repository's NOID IDs
   # To use ':' the namespace must be set in Fedora (fedora-node-types.cnd)
   config.template = 'test:.zd'
+  #config.template = 'yorkabp:.zd'
   config.statefile = 'config/noid-minter-state'
 end
 
