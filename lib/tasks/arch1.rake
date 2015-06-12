@@ -305,10 +305,13 @@ namespace :arch1 do
 
     puts 'Processing lines to create folios and images'
 
-    #count = 0
+    count = 0
 
     f.each_line do |ln|
-      #count += 1
+
+      count += 1
+      puts count
+
       #if count < 10 # testrun
       l = ln
       l = l.downcase.sub!('reg_12_', '')
@@ -358,7 +361,12 @@ namespace :arch1 do
 
     puts 'Adding proxies'
 
+    count = 0
+
     @folios.each_with_index do |p, index|
+
+      count += 1
+      puts count
 
       if index == 0
         @register.fst = Folio.where(id: p).first.id
