@@ -361,6 +361,7 @@ namespace :arch1 do
 
     puts 'Adding proxies'
 
+    # blah
     count = 0
 
     @folios.each_with_index do |p, index|

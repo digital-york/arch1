@@ -36,7 +36,7 @@
     <form name="myForm" onsubmit="return validateForm()">
 
       <%# Had to add autocomplete off for Firefox otherwise doesn't select the correct value in the select box as chosen by the user %>
-      <%# Is this still valid? Possibly this was true for an earlier version of the code? Update - have removed it for now %>
+      <%# Is this still valid? Possibly this was true for an earlier version of the code (have removed it for now) %>
       <select name="register_choice">
         <option value="">--- Register ---</option>
           <% @registers.each do | r | %>

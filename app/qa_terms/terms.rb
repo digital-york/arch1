@@ -30,9 +30,9 @@ class Terms
     parse_authority_response(SolrQuery.new.solr_query(q='inScheme_ssim:"' + terms_id + '" AND preflabel_tesim:"' + q + '"',fl='id,preflabel_tesim'))
   end
 
-  # Dereference id into preflabel in order to display it on the form (py)
-  def get_title_from_id id
-    parse_terms_preflabel_response(SolrQuery.new.solr_query(q='id:' + id, fl='preflabel_tesim',rows='1'));
+  # Dereference ids into strings in order to display them, e.g. on the form and the folio drop-down list (py)
+  def get_str_from_id(id, type)
+    parse_terms_response(SolrQuery.new.solr_query(q='id:' + id, fl=type,rows='1'), type);
   end
 
   private
@@ -60,13 +60,15 @@ class Terms
     str
   end
 
-  def parse_terms_preflabel_response(response)
-    preflabel = ''
+  # General method to parse ids into strings (py)
+  def parse_terms_response(response, type)
+    str = ''
     response['response']['docs'].map do |result|
       if result['numFound'] != '0'
-        preflabel = result['preflabel_tesim'].join('')
+        str = result[type].join('') # 'join' is used to convert an array into a string because otherwise an error occurs
       end
     end
-    preflabel
+    str
   end
+
 end

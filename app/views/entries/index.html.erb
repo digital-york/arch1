@@ -13,9 +13,9 @@
 
       <div id='left_frame'>
         <%= render 'image_zoom_small' %>
-          <%= session[:folio_choice] %>
-          <%= session[:first_folio] %>
-          <%= session[:last_folio] %>
+          <%#= session[:folio_choice] %>
+          <%#= session[:first_folio] %>
+          <%#= session[:last_folio] %>
       </div>
 
       <div id='right_frame'>
@@ -88,7 +88,7 @@
                     <td>
                       <% @entry.language.each do |language| %>
                           <div style="padding: 4px 0px">
-                            <%= terms.get_title_from_id(language) %>
+                            <%= terms.get_str_from_id(language, 'preflabel_tesim') %>
                           </div>
                       <% end %>
                     </td>
@@ -195,7 +195,7 @@
 
                                       <% related_place.place_type.each do |place_type| %>
                                           <div class="field_single" style="padding: 4px 0px">
-                                            <%= terms.get_title_from_id(place_type) %>
+                                            <%= terms.get_str_from_id(place_type, 'preflabel_tesim') %>
                                          </div>
                                       <% end %>
 
@@ -276,7 +276,7 @@
 
                                       <% related_person.person_role.each do |person_role| %>
                                           <div class="field_single" style="padding: 4px 0px">
-                                            <%= terms.get_title_from_id(person_role) %>
+                                            <%= terms.get_str_from_id(person_role, 'preflabel_tesim') %>
                                           </div>
                                       <% end %>
 
@@ -293,7 +293,7 @@
 
                                       <% related_person.person_qualification.each do |person_qualification| %>
                                           <div class="field_single" style="padding: 4px 0px">
-                                            <%= terms.get_title_from_id(person_qualification) %>
+                                            <%= terms.get_str_from_id(person_qualification, 'preflabel_tesim') %>
                                           </div>
                                       <% end %>
 
@@ -305,7 +305,7 @@
                                 <tr>
                                   <th>Status</th>
                                   <td>
-                                    <%= terms.get_title_from_id(related_person.person_status) %>
+                                    <%= terms.get_str_from_id(related_person.person_status, 'preflabel_tesim') %>
                                   </td>
                                 </tr>
 
@@ -397,7 +397,7 @@
                                 <tr>
                                   <th>Date Type:</th>
                                   <td>
-                                    <%= terms.get_title_from_id(entry_date.date_type) %>
+                                    <%= terms.get_str_from_id(entry_date.date_type, 'preflabel_tesim') %>
                                   </td>
                                 </tr>
 
@@ -415,7 +415,7 @@
                                             <table class="tab4" style="border-color: #DCDADA">
                                               <tr>
                                                 <th style="width: 60px">Certainty:</th>
-                                                <td><%= terms.get_title_from_id(single_date.date_certainty) %></td>
+                                                <td><%= terms.get_str_from_id(single_date.date_certainty, 'preflabel_tesim') %></td>
                                               </tr>
                                               <tr>
                                                 <th>Date:</th>
@@ -423,7 +423,7 @@
                                               </tr>
                                               <tr>
                                                 <th>Type:</th>
-                                                <td><%= terms.get_title_from_id(single_date.date_type) %></td>
+                                                <td><%= terms.get_str_from_id(single_date.date_type, 'preflabel_tesim') %></td>
                                               </tr>
                                             </table>
                                             <div style="clear: both"></div>

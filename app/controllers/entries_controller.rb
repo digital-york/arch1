@@ -180,6 +180,13 @@ class EntriesController < ApplicationController
 
     # See validation.rb in /concerns
     #@errors = validate(entry_params)
+
+    # Replace the folio id with the corresponding Folio object
+    f = Folio.where(id: entry_params['folio']).first
+    entry_params['folio'] = f
+
+    puts entry_params
+
     @entry.attributes = entry_params
 
     # If there are errors, render the go back to the 'edit' page and display the errors, else go to the 'index' page

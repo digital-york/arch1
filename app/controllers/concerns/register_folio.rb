@@ -62,7 +62,8 @@ module RegisterFolio
     foltype = FolioTerms.new('subauthority')
     face = FolioFaceTerms.new('subauthority')
 
-    q = SolrQuery.new.solr_query('has_model_ssim:"Folio" AND isPartOf_ssim:"' + @register + '"', 'id, folio_type_tesim, folio_no_tesim, folio_face_tesim', 1000)
+    # Added 'sort ASC' so that drop-down list is sorted (py)
+    q = SolrQuery.new.solr_query('has_model_ssim:"Folio" AND isPartOf_ssim:"' + @register + '"', 'id, folio_type_tesim, folio_no_tesim, folio_face_tesim', 1000, 'id ASC')
     q['response']['docs'].map do |result|
       ftype = foltype.find_value_string(result['folio_type_tesim'][0])[0]
       fface = face.find_value_string(result['folio_face_tesim'][0])[0]
