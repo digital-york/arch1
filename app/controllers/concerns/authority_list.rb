@@ -8,7 +8,7 @@ module AuthorityList
     @gender_list = read_auth.lookup('genders').collect { |l| [l["label"]] }
 
     # Fedora lists
-    @role_list = RoleTerms.new('subauthority').all
+    @role_list = PersonRoleTerms.new('subauthority').all
     @qualification_list = QualTerms.new('subauthority').all
     @status_list = StatusTerms.new('subauthority').all
     @place_type_list = PlaceTypeTerms.new('subauthority').all
@@ -17,6 +17,8 @@ module AuthorityList
     @language_list = LanguageTerms.new('subauthority').all
     @format_list = FormatTerms.new('subauthority').all
     @single_date_list = SingleDateTerms.new('subauthority').all
+    @place_roles_list = PlaceRoleTerms.new('subauthority').all
+    @date_roles_list = DateRoleTerms.new('subauthority').all
   end
 
 end

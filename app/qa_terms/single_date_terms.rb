@@ -2,7 +2,7 @@ class SingleDateTerms < Terms
   include Qa::Authorities::WebServiceBase
 
   def terms_list
-    'singledates'
+    'single_dates'
   end
 
 end
