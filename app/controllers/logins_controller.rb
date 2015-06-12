@@ -1,6 +1,6 @@
 class LoginsController < ApplicationController
 
-# LOGIN
+  # LOGIN
   def login
     @login = Login.new
   end
