@@ -56,6 +56,9 @@ module RegisterFolio
 
   # Used in methods above and to display the folio drop-down list on the view pages
   def get_folios
+  puts
+  puts "GET_FOLIOS"
+  start_time = Time.now
     #TODO get this dynamically
     @register = Register.all.first.id
     @folios = []
@@ -74,6 +77,8 @@ module RegisterFolio
       end
       @folios += [[result['id'], ftype + ' ' + result['folio_no_tesim'][0] + fface ]]
     end
+    end_time = Time.now
+    puts "Elapsed Time = #{end_time - start_time}"
   end
 
   def get_registers
