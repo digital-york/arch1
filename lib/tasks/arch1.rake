@@ -361,29 +361,26 @@ namespace :arch1 do
 
     puts 'Adding proxies'
 
-    # blah
-    count = 0
-
     @folios.each_with_index do |p, index|
 
-      count += 1
-      puts count
+      pox = Proxy.new
+      pox.rdftype = pox.add_rdf_types
+      pox.folios += [Folio.where(id: p).first]
 
       if index == 0
+        pox.next = Folio.where(id: @folios[index+1]).first.id
         @register.fst = Folio.where(id: p).first.id
         @register.save
       elsif index == @folios.length - 1
+        pox.prev = Folio.where(id: @folios[index-1]).first.id
         @register.lst = Folio.where(id: p).first.id
         @register.save
       else
-        pox = Proxy.new
-        pox.rdftype = pox.add_rdf_types
-        pox.folios += [Folio.where(id: p).first]
         pox.next = Folio.where(id: @folios[index+1]).first.id
         pox.prev = Folio.where(id: @folios[index-1]).first.id
-        pox.register = @register
-        pox.save
       end
+      pox.register = @register
+      pox.save
 
     end
 
