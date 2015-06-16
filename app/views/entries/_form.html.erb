@@ -98,17 +98,25 @@
             </th>
           </tr>
 
-          <%# Entry No (is this the Entry Reference?) %>
+          <%# Entry No %>
           <tr>
-            <th style="width: 150px">Entry No*</th>
+            <th style="width: 150px">Entry No:</th>
             <td>
               <%= f.text_field :entry_no %>
             </td>
           </tr>
 
+          <%# Title %>
+          <tr>
+            <th>Title:</th>
+            <td>
+              <%= f.text_field :title %>
+            </td>
+          </tr>
+
           <%# Language %>
           <tr>
-            <th>Language
+            <th>Language:
               <img src="/assets/plus_sign.png" alt="plus icon" class="plus_icon click_select_field_button" jq_type="language" jq_language_list="<%= @language_list.to_json %>" />
             </th>
             <td>
@@ -125,14 +133,14 @@
 
           <%# Note %>
           <tr>
-            <th>Note
-              <img src="/assets/plus_sign.png" alt="plus icon" class="plus_icon click_multiple_field_button" jq_type="note" />
+            <th>Note:
+              <img src="/assets/plus_sign.png" alt="plus icon" class="plus_icon click_multiple_text_area_field_button" jq_type="note" />
             </th>
             <td>
               <div class="field_group">
                 <% @entry.note.each do |note| %>
                     <div class="field_single">
-                      <%= text_field_tag "entry[note][]", note, id: '' %>
+                      <%= text_area_tag "entry[note][]", note, id: '' %>
                       <%= image_tag('delete.png', class: 'delete_icon click_remove_field_level1') %>
                     </div>
                 <% end %>
@@ -142,14 +150,14 @@
 
           <%# Editorial Note %>
           <tr>
-            <th>Editorial Note
-              <img src="/assets/plus_sign.png" alt="plus icon" class="plus_icon click_multiple_field_button" jq_type="editorial_note" />
+            <th>Editorial Note:
+              <img src="/assets/plus_sign.png" alt="plus icon" class="plus_icon click_multiple_text_area_field_button" jq_type="editorial_note" />
             </th>
             <td>
               <div class="field_group">
                 <% @entry.editorial_note.each do |editorial_note| %>
                     <div class="field_single">
-                      <%= text_field_tag "entry[editorial_note][]", editorial_note, id: '' %>
+                      <%= text_area_tag "entry[editorial_note][]", editorial_note, id: '' %>
                       <%= image_tag('delete.png', class: 'delete_icon click_remove_field_level1') %>
                     </div>
                 <% end %>
@@ -159,14 +167,31 @@
 
           <%# Marginal Note %>
           <tr>
-            <th>Marginal Note
-              <img src="/assets/plus_sign.png" alt="plus icon" class="plus_icon click_multiple_field_button" jq_type="marginal_note" />
+            <th>Marginal Note:
+              <img src="/assets/plus_sign.png" alt="plus icon" class="plus_icon click_multiple_text_area_field_button" jq_type="marginal_note" />
             </th>
             <td>
               <div class="field_group">
                 <% @entry.marginal_note.each do |marginal_note| %>
                     <div class="field_single">
-                      <%= text_field_tag "entry[marginal_note][]", marginal_note, id: '' %>
+                      <%= text_area_tag "entry[marginal_note][]", marginal_note, id: '' %>
+                      <%= image_tag('delete.png', class: 'delete_icon click_remove_field_level1') %>
+                    </div>
+                <% end %>
+              </div>
+            </td>
+          </tr>
+
+          <%# Summary Note %>
+          <tr>
+            <th>Summary Note:
+              <img src="/assets/plus_sign.png" alt="plus icon" class="plus_icon click_multiple_text_area_field_button" jq_type="summary_note" />
+            </th>
+            <td>
+              <div class="field_group">
+                <% @entry.summary_note.each do |summary_note| %>
+                    <div class="field_single">
+                      <%= text_area_tag "entry[summary_note][]", summary_note, id: '' %>
                       <%= image_tag('delete.png', class: 'delete_icon click_remove_field_level1') %>
                     </div>
                 <% end %>
@@ -176,7 +201,7 @@
 
           <%# Is Referenced By %>
           <tr>
-            <th>Is Referenced By
+            <th>Is Referenced By:
               <img src="/assets/plus_sign.png" alt="plus icon" class="plus_icon click_multiple_field_button" jq_type="is_referenced_by" />
             </th>
             <td>
@@ -193,7 +218,7 @@
 
           <%# Subject %>
           <tr>
-            <th>Subject
+            <th>Subject:
               <img src="/assets/plus_sign.png" alt="plus icon" class="plus_icon click_multiple_field_button" jq_type="subject"/>
             </th>
             <td>
@@ -212,7 +237,7 @@
           <tr>
 
             <th>Place:
-              <img src="/assets/plus_sign.png" alt="plus icon" class="plus_icon click_place_button" jq_place_type_list="<%= @place_type_list.to_json %>" />
+              <img src="/assets/plus_sign.png" alt="plus icon" class="plus_icon click_place_button" jq_place_type_list="<%= @place_type_list.to_json %>" jq_place_role_list="<%= @place_role_list.to_json %>" />
             </th>
 
             <td class="tab2">
@@ -226,8 +251,25 @@
                       <table class="tab3">
 
                         <tr>
+                          <th>
+                            Place Role:
+                            <img src="/assets/plus_sign.png" alt="plus icon" class="plus_icon click_select_field_button_level2" jq_attributes="related_places_attributes" jq_index="<%=index1%>" jq_type="place_role" jq_place_role_list="<%= @place_role_list.to_json %>" />
+                          </th>
+                          <td>
+                            <div class="field_group gray_box">
+                              <% related_place.place_role.each_with_index do |place_role, index2| %>
+                                  <div class="field_single">
+                                    <%= select_tag "entry[related_places_attributes][" + index1.to_s + "][place_role][]", options_for_select(@place_role_list.collect { |place_role| [place_role["label"].join(''), place_role["id"]] }.insert(0, ["--- select ---", ""]), place_role) %>
+                                    &nbsp;<img src='/assets/delete.png' alt='Delete icon' class='delete_icon click_remove_field_level1'>
+                                  </div>
+                              <% end %>
+                            </div>
+                          </td>
+                        </tr>
+
+                        <tr>
                           <th style="width: 110px">
-                            As Written*
+                            As Written:
                             <img src="/assets/plus_sign.png" alt="plus icon" class="plus_icon click_multiple_field_button_level2" jq_attributes="related_places_attributes" jq_index="<%=index1%>" jq_type="place_as_written" />
                           </th>
                           <td>
@@ -245,7 +287,7 @@
 
                         <tr>
                           <th>
-                            Place Type
+                            Place Type:
                             <img src="/assets/plus_sign.png" alt="plus icon" class="plus_icon click_select_field_button_level2" jq_attributes="related_places_attributes" jq_index="<%=index1%>" jq_type="place_type" jq_place_type_list="<%= @place_type_list.to_json %>" />
                           </th>
                           <td>
@@ -253,7 +295,6 @@
                               <% related_place.place_type.each_with_index do |place_type, index2| %>
                                   <div class="field_single">
                                     <%= select_tag "entry[related_places_attributes][" + index1.to_s + "][place_type][]", options_for_select(@place_type_list.collect { |place_type| [place_type["label"].join(''), place_type["id"]] }.insert(0, ["--- select ---", ""]), place_type) %>
-                                    <%#= text_field_tag "entry[related_places_attributes][" + index1.to_s + "][place_type][]", place_type, id: '' %>
                                     &nbsp;<img src='/assets/delete.png' alt='Delete icon' class='delete_icon click_remove_field_level1'>
                                   </div>
                               <% end %>
@@ -262,7 +303,7 @@
                         </tr>
 
                         <tr>
-                          <th>Same As*</th>
+                          <th>*Same As:</th>
                           <td class="input_single">
                             <%#= text_field_tag "entry[related_places_attributes][" + index1.to_s + "][place_same_as]", related_place.place_same_as, id: '' %>
                             <input type="text" name="entry[related_places_attributes][<%= index1.to_s %>][place_same_as]" value="<%= related_place.place_same_as %>">
@@ -271,7 +312,7 @@
 
                         <tr>
                           <th>
-                            Note
+                            Note:
                             <img src="/assets/plus_sign.png" alt="plus icon" class="plus_icon click_multiple_field_button_level2" jq_attributes="related_places_attributes" jq_index="<%=index1%>" jq_type="place_note" />
                           </th>
                           <td>
@@ -317,7 +358,7 @@
 
                         <tr>
                           <th style="width: 110px">
-                            As Written*
+                            *As Written:
                             <img src="/assets/plus_sign.png" alt="plus icon" class="plus_icon click_multiple_field_button_level2" jq_attributes="related_people_attributes" jq_index="<%=index1%>" jq_type="person_as_written" />
                           </th>
                           <td>
@@ -333,7 +374,7 @@
                         </tr>
 
                         <tr>
-                          <th>Role
+                          <th>Person Role:
                             <img src="/assets/plus_sign.png" alt="plus icon" class="plus_icon click_select_field_button_level2" jq_attributes="related_people_attributes" jq_index="<%=index1%>" jq_type="person_role" jq_role_list="<%= @role_list.to_json %>"  />
                           </th>
                           <td>
@@ -349,7 +390,7 @@
                         </tr>
 
                         <tr>
-                          <th>Qualification
+                          <th>Qualification:
                             <img src="/assets/plus_sign.png" alt="plus icon" class="plus_icon click_select_field_button_level2" jq_attributes="related_people_attributes" jq_index="<%=index1%>" jq_type="person_qualification" jq_qualification_list="<%= @qualification_list.to_json %>" />
                           </th>
                           <td>
@@ -366,21 +407,21 @@
 
                         <%# Status %>
                         <tr>
-                          <th>Status</th>
+                          <th>*Status:</th>
                           <td>
                             <%= select_tag "entry[related_people_attributes][" + index1.to_s + "][person_status]", options_for_select(@status_list.collect { |status| [status["label"].join(''), status["id"]] }.insert(0, ["--- select ---", ""]), related_person.person_status) %>
                           </td>
                         </tr>
 
                         <tr>
-                          <th>Gender</th>
+                          <th>Gender:</th>
                           <td>
                             <%= select_tag "entry[related_people_attributes][" + index1.to_s + "][person_gender]", options_for_select(@gender_list.collect { |gender| [gender[0]] }.insert(0, ["--- select ---", ""]), related_person.person_gender) %>
                           </td>
                         </tr>
 
                         <tr>
-                          <th>Same As*</th>
+                          <th>*Same As:</th>
                           <td class="input_single">
                             <%= text_field_tag "entry[related_people_attributes][" + index1.to_s + "][person_same_as]", related_person.person_same_as, id: '' %>
                           </td>
@@ -388,7 +429,7 @@
 
                         <tr>
                           <th>
-                            Note
+                            Note:
                             <img src="/assets/plus_sign.png" alt="plus icon" class="plus_icon click_multiple_field_button_level2" jq_attributes="related_people_attributes" jq_index="<%=index1%>" jq_type="person_note" />
                           </th>
                           <td>
@@ -405,7 +446,7 @@
 
                         <tr>
                           <th>
-                            Related Place
+                            Related Place:
                             <img src="/assets/plus_sign.png" alt="plus icon" class="plus_icon click_related_place_field_button" jq_attributes="related_people_attributes" jq_index="<%=index1%>" jq_type="person_related_place" />
                           </th>
                           <td>
@@ -436,7 +477,7 @@
           <tr>
 
             <th>Date:
-              <img src="/assets/plus_sign.png" alt="plus icon" class="plus_icon click_date_button" jq_date_type_list="<%= @date_type_list.to_json %>" jq_date_certainty_list="<%= @date_certainty_list.to_json %>" jq_single_date_list="<%= @single_date_list.to_json %>" />
+              <img src="/assets/plus_sign.png" alt="plus icon" class="plus_icon click_date_button" jq_date_type_list="<%= @date_type_list.to_json %>" jq_date_certainty_list="<%= @date_certainty_list.to_json %>" jq_single_date_list="<%= @single_date_list.to_json %>" jq_date_role_list="<%= @date_role_list.to_json %>" />
             </th>
 
             <td class="tab2">
@@ -464,6 +505,13 @@
                         </tr>
 
                         <tr>
+                          <th>Date Role:</th>
+                          <td>
+                            <%= select_tag "entry[entry_dates_attributes][" + index1.to_s + "][date_role]", options_for_select(@date_role_list.collect{ |date_role| [date_role["label"].join(''), date_role["id"]] }.insert(0, ["--- select ---", ""]), entry_date.date_role) %>
+                          </td>
+                        </tr>
+
+                        <tr>
                           <th>Date Type:</th>
                           <td>
                             <%= select_tag "entry[entry_dates_attributes][" + index1.to_s + "][date_type]", options_for_select(@date_type_list.collect{ |date_type_single| [date_type_single["label"].join(''), date_type_single["id"]] }.insert(0, ["--- select ---", ""]), entry_date.date_type) %>
@@ -471,7 +519,7 @@
                         </tr>
 
                         <tr>
-                          <th>Date
+                          <th>Date:
                             <img src="/assets/plus_sign.png" alt="plus icon" class="plus_icon click_single_date_button" jq_index="<%=index1%>" jq_date_certainty_list="<%= @date_certainty_list.to_json %>" jq_single_date_list="<%= @single_date_list.to_json %>"/>
                           </th>
                           <td>

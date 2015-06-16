@@ -3,7 +3,7 @@ class EntriesController < ApplicationController
   # Set the entry number, get the folio list (for the drop-down) and check if the session is timed out before calling the appropriate methods
   before_action :set_entry, only: [:index, :show, :update]
   before_action :get_registers, only: [:index, :show, :new, :edit, :create, :update, :destroy]
-  before_action :get_folios, only: [:index, :show, :new, :edit, :create, :update, :destroy]
+  #before_action :get_folios, only: [:index, :show, :new, :edit, :create, :update, :destroy]
   before_filter :session_timed_out, except: [:login]
 
   # NOTE - we want to display folio with a space or underscore, e.g. 'Insert a' but save the field as 'Inserta' because
@@ -62,6 +62,8 @@ class EntriesController < ApplicationController
   # INDEX
   def index
 
+    #puts "INDEX"
+
     # Set the appropriate session variables when the register, folio and folio face are chosen and the 'Go' button is clicked
     if params[:go] == 'true'
       get_current_folio
@@ -87,15 +89,22 @@ class EntriesController < ApplicationController
       # Get all the entries which match with the chosen register, folio and folio face
       @entries = Entry.where(folio_ssim: session[:folio_choice])
 
-      set_entry
+      #set_entry
     end
+
+    get_folios()
   end
 
   # SHOW
+  # This is called when the user clicks on the 'Go' button
   def show
+
+    #puts "SHOW"
+
     @entries = Entry.all.where(folio_ssim: session[:folio_choice])
+
     redirect_to :action => 'index', :id => params[:id]
-    set_entry
+
   end
 
   # NEW
@@ -111,6 +120,8 @@ class EntriesController < ApplicationController
 
     @entries = Entry.where(folio_ssim: session[:folio_choice])
     get_authority_lists
+
+    get_folios()
 
   end
 
@@ -149,6 +160,8 @@ class EntriesController < ApplicationController
       @related_place_list << temp
     end
 
+    get_folios()
+
   end
 
   # CREATE
@@ -181,11 +194,13 @@ class EntriesController < ApplicationController
     # See validation.rb in /concerns
     #@errors = validate(entry_params)
 
+    #puts entry_params
+
     # Replace the folio id with the corresponding Folio object
     f = Folio.where(id: entry_params['folio']).first
     entry_params['folio'] = f
 
-    puts entry_params
+    #puts entry_params
 
     @entry.attributes = entry_params
 
@@ -195,11 +210,12 @@ class EntriesController < ApplicationController
       get_authority_lists
       #@entry.attributes = entry_params # Updates the @entry with the appropriate attributes before rendering the 'edit' page
       set_entry
+      get_folios()
       render 'edit'
     else
       remove_multivalue_blanks
       @entry.save
-      set_entry
+      #set_entry
       redirect_to :action => 'index', :id => @entry.id
     end
   end
@@ -208,6 +224,7 @@ class EntriesController < ApplicationController
   def destroy
     @entry = Entry.find(params[:id])
     @entry.destroy
+
     redirect_to entries_path, notice: 'Project was successfully destroyed.'
   end
 

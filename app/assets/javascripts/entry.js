@@ -56,10 +56,26 @@ $(document).ready(function () {
             e.preventDefault(); // I think this prevents other events firing?
             var field_group_div = $(this).parent('th').next('td').find('>:first-child');
             var jq_type = $(this).attr('jq_type');
-            var new_code_block = "<div class='field_single'>\
-            <input type='text' value='' name='entry[" + jq_type + "][]'>\
-            <img alt='Delete icon' src='/assets/delete.png' class='delete_icon click_remove_field_level1'>\
-            </div>";
+            var new_code_block = "<div class='field_single'>"
+            + "<input type='text' value='' name='entry[" + jq_type + "][]'>"
+            + "<img alt='Delete icon' src='/assets/delete.png' class='delete_icon click_remove_field_level1'>"
+            + "</div>";
+            field_group_div.append(new_code_block);
+        } catch (err) {
+            alert(err);
+        }
+    });
+
+    $('body').on('click', '.click_multiple_text_area_field_button', function (e) {
+
+        try {
+            e.preventDefault(); // I think this prevents other events firing?
+            var field_group_div = $(this).parent('th').next('td').find('>:first-child');
+            var jq_type = $(this).attr('jq_type');
+            var new_code_block = "<div class='field_single'>"
+            + "<textarea value='' name='entry[" + jq_type + "][]'></textarea>"
+            + "<img alt='Delete icon' src='/assets/delete.png' class='delete_icon click_remove_field_level1'>"
+            + "</div>";
             field_group_div.append(new_code_block);
         } catch (err) {
             alert(err);
@@ -133,6 +149,8 @@ $(document).ready(function () {
                 list_array = $.parseJSON($(this).attr('jq_qualification_list'));
             } else if (jq_type == 'place_type') {
                 list_array = $.parseJSON($(this).attr('jq_place_type_list'));
+            } else if (jq_type == 'place_role') {
+                list_array = $.parseJSON($(this).attr('jq_place_role_list'));
             }
             for (i = 0; i < list_array.length; i++) {
                 options = options + "<option value='" + list_array[i].id + "'>" + list_array[i].label + "</option/>";
@@ -159,10 +177,11 @@ $(document).ready(function () {
 
             // Update the related place list for this element
             // because the user has clicked on the 'plus' button to add a new one
-            var options_list = "<option value=''>--- select ---</option>"
+            var options_list = ""
             $(".place_as_written").each(function() {
                 options_list += "<option value='" + $(this).val() + "'>" + $(this).val() + "</option>"
             });
+
             var select_div = $(this).parent('th').next('td').find('select');
             select_div.append(options_list);;
         } catch (err) {
@@ -178,25 +197,31 @@ $(document).ready(function () {
             var field_group_div = $(this).parent('th').next('td').find('>:first-child');
             var jq_index = field_group_div.children().length;
             var jq_place_type_list = $(this).attr('jq_place_type_list').replace(/ /g, "&#32;"); // Appears to be a problem when list is added as a nested list, i.e. Level 2, therefore replace them here
+            var jq_place_role_list = $(this).attr('jq_place_role_list').replace(/ /g, "&#32;"); // See above
 
             var new_code_block = "<div class='field_single'>" +
 
                 "<table class='tab3' cellspacing='0'>" +
 
-                    // As Written
+                // Place Role
+                "<tr><th>Place Role&nbsp;<img jq_place_role_list=" + jq_place_role_list +
+                " jq_type='" + "place_role" + "' jq_index='" + jq_index + "' jq_attributes='related_places_attributes' class='plus_icon click_select_field_button_level2' src='/assets/plus_sign.png'>" +
+                "</th><td><div class='field_group gray_box'></div></td></tr>" +
+
+                // As Written
                 "<tr><th style='width: 110px'>As Written*" +
                 "&nbsp;<img jq_type='place_as_written' jq_index='" + jq_index + "' jq_attributes='related_places_attributes' class='plus_icon click_multiple_field_button_level2' src='/assets/plus_sign.png'>" +
                 "</th><td><div class='field_group gray_box'></div></td></tr>" +
 
-                    // Place Type
+                // Place Type
                 "<tr><th>Place Type&nbsp;<img jq_place_type_list=" + jq_place_type_list +
                 " jq_type='" + "place_type" + "' jq_index='" + jq_index + "' jq_attributes='related_places_attributes' class='plus_icon click_select_field_button_level2' src='/assets/plus_sign.png'>" +
                 "</th><td><div class='field_group gray_box'></div></td></tr>" +
 
-                    // Same As
+                // Same As
                 "<tr><th>Same As*</th><td class='input_single'><input type='text' value='' id='' name='entry[related_places_attributes][" + jq_index + "][place_same_as]'></td></tr>" +
 
-                    // Note
+                // Note
                 "<tr><th>Note" +
                 "&nbsp;<img jq_type='place_note' jq_index='" + jq_index + "' jq_attributes='related_places_attributes' class='plus_icon click_multiple_field_button_level2' src='/assets/plus_sign.png'>" +
                 "</th><td><div class='field_group gray_box'></div></td></tr>" +
@@ -293,6 +318,7 @@ $(document).ready(function () {
             var field_group_div = $(this).parent('th').next('td').find('>:first-child');
             var jq_index = field_group_div.children().length;
             var jq_date_type_list = $.parseJSON($(this).attr('jq_date_type_list')); // // Don't need to remove spaces because not nested like the two lists below (I think)
+            var jq_date_role_list = $.parseJSON($(this).attr('jq_date_role_list')) // See note on line above
             var jq_date_certainty_list = $(this).attr('jq_date_certainty_list').replace(/ /g, "&#32;");  // Appears to be a problem when list is added as a nested list, i.e. Level 2, therefore replace them here
             var jq_single_date_list = $(this).attr('jq_single_date_list').replace(/ /g, "&#32;"); // See note on line above
 
@@ -302,20 +328,29 @@ $(document).ready(function () {
                 date_type_options = date_type_options + "<option value='" + jq_date_type_list[i].id + "'>" + jq_date_type_list[i].label + "</option/>";
             }
 
+            var date_role_options = "<option value=''>--- select ---</option>";
+
+            for (i = 0; i < jq_date_role_list.length; i++) {
+                date_role_options = date_role_options + "<option value='" + jq_date_role_list[i].id + "'>" + jq_date_role_list[i].label + "</option/>";
+            }
+
             var new_code_block = "<div class='field_single no_padding'>" +
 
                 "<table class='tab3' cellspacing='0'>" +
 
-                    // As Written
+                // As Written
                 "<tr><th style='width: 110px'>As Written</th><td class='input_single'><input type='text' value='' id='' name='entry[entry_dates_attributes][" + jq_index + "][date_as_written]'></td></tr>" +
 
-                    // Note
+                // Note
                 "<tr><th>Note</th><td class='input_single'><input type='text' value='' id='' name='entry[entry_dates_attributes][" + jq_index + "][date_note]'></td></tr>" +
 
-                    // Date Type
+                // Date Role
+                "<tr><th>Date Role</th><td><select name='entry[entry_dates_attributes][" + jq_index + "][date_role]'>" + date_role_options + "</select></td></tr>" +
+
+                // Date Type
                 "<tr><th>Date Type</th><td><select name='entry[entry_dates_attributes][" + jq_index + "][date_type]'>" + date_type_options + "</select></td></tr>" +
 
-                    // Date
+                // Date
                 "<tr><th>Date&nbsp;<img jq_date_certainty_list='" + jq_date_certainty_list + "' jq_single_date_list='" + jq_single_date_list + "' jq_index='" + jq_index + "' class='plus_icon click_single_date_button' src='/assets/plus_sign.png'></th><td><div class='field_group gray_box single_date'></div></td></tr>" +
 
                 "</table>" +
@@ -526,7 +561,7 @@ function update_related_places() {
 
         $('.related_place').each(function() {
 
-            $(this).css("border", "3px solid green");
+            //$(this).css("border", "3px solid green");
 
             $(this).find('option').each(function() {
 

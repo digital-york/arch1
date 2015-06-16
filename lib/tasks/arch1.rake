@@ -299,7 +299,9 @@ namespace :arch1 do
     @register.save
 
     @foltype = FolioTerms.new('subauthority')
+    puts @foltype
     @face = FolioFaceTerms.new('subauthority')
+    puts @face
 
     @folios = []
 
@@ -337,6 +339,7 @@ namespace :arch1 do
         l = l.sub('insert', '')
       else
         fol.folio_type = @foltype.find_id('folio')
+        puts "folio type = #{fol.folio_type}"
       end
 
       if l.include? 'recto'
