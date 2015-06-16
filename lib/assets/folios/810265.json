@@ -1,0 +1,165 @@
+{
+  "responseHeader":{
+    "status":0,
+    "QTime":2,
+    "params":{
+      "explainOther":"",
+      "sort":"PID asc",
+      "fl":"PID,dc.title",
+      "indent":"on",
+      "start":"0",
+      "q":"rdf.rel.isMemberOf:\"york:810265\"",
+      "hl.fl":"",
+      "wt":"json",
+      "fq":"",
+      "version":"2.2",
+      "rows":"10000"}},
+  "response":{"numFound":49,"start":0,"docs":[
+      {
+        "PID":"york:814073",
+        "dc.title":"Abp Reg 8a membrane 001 face"},
+      {
+        "PID":"york:814074",
+        "dc.title":"Abp Reg 8a membranes 001 and 002 face"},
+      {
+        "PID":"york:814075",
+        "dc.title":"Abp Reg 8a membranes 002 and 003 face"},
+      {
+        "PID":"york:814076",
+        "dc.title":"Abp Reg 8a membranes 003 and 004 face"},
+      {
+        "PID":"york:814077",
+        "dc.title":"Abp Reg 8a membrane 004 face"},
+      {
+        "PID":"york:814078",
+        "dc.title":"Abp Reg 8a membrane 005 face"},
+      {
+        "PID":"york:814079",
+        "dc.title":"Abp Reg 8a membranes 005 and 006 face"},
+      {
+        "PID":"york:814080",
+        "dc.title":"Abp Reg 8a membranes 006 and 007 face"},
+      {
+        "PID":"york:814081",
+        "dc.title":"Abp Reg 8a membranes 007 and 008 face"},
+      {
+        "PID":"york:814082",
+        "dc.title":"Abp Reg 8a membrane 008 face"},
+      {
+        "PID":"york:814083",
+        "dc.title":"Abp Reg 8a membrane 009 face"},
+      {
+        "PID":"york:814084",
+        "dc.title":"Abp Reg 8a membranes 009 and 010 face"},
+      {
+        "PID":"york:814085",
+        "dc.title":"Abp Reg 8a membranes 010 and 011 face"},
+      {
+        "PID":"york:814086",
+        "dc.title":"Abp Reg 8a membrane 011 012"},
+      {
+        "PID":"york:814087",
+        "dc.title":"Abp Reg 8a membrane 012 face"},
+      {
+        "PID":"york:814088",
+        "dc.title":"Abp Reg 8a membranes 012 and 013 face"},
+      {
+        "PID":"york:814089",
+        "dc.title":"Abp Reg 8a membrane 013 face"},
+      {
+        "PID":"york:814090",
+        "dc.title":"Abp Reg 8a membranes 013 and 014 face"},
+      {
+        "PID":"york:814091",
+        "dc.title":"Abp Reg 8a membranes 014 and 015 face"},
+      {
+        "PID":"york:814092",
+        "dc.title":"Abp Reg 8a membranes 015 and 016 face"},
+      {
+        "PID":"york:814093",
+        "dc.title":"Abp Reg 8a membrane 016 face"},
+      {
+        "PID":"york:814094",
+        "dc.title":"Abp Reg 8a membranes 016 017"},
+      {
+        "PID":"york:814095",
+        "dc.title":"Abp Reg 8a membranes 017 and 018 face"},
+      {
+        "PID":"york:814096",
+        "dc.title":"Abp Reg 8b membrane 001 face"},
+      {
+        "PID":"york:814097",
+        "dc.title":"Abp Reg 8b membranes 001 and 002 face"},
+      {
+        "PID":"york:814098",
+        "dc.title":"Abp Reg 8b membranes 002 and 003 face"},
+      {
+        "PID":"york:814099",
+        "dc.title":"Abp Reg 8b membrane 003 face"},
+      {
+        "PID":"york:814100",
+        "dc.title":"Abp Reg 8b membranes 003 and 004 face"},
+      {
+        "PID":"york:814101",
+        "dc.title":"Abp Reg 8b membranes 004 and 005 face"},
+      {
+        "PID":"york:814102",
+        "dc.title":"Abp Reg 8b membrane 005 face"},
+      {
+        "PID":"york:814103",
+        "dc.title":"Abp Reg 8b membranes 005 and 006 face"},
+      {
+        "PID":"york:814104",
+        "dc.title":"Abp Reg 8b membranes 004 and 005 face"},
+      {
+        "PID":"york:814105",
+        "dc.title":"Abp Reg 8b membranes 005 and 006 face"},
+      {
+        "PID":"york:814106",
+        "dc.title":"Abp Reg 8b membranes 006 and 007 face"},
+      {
+        "PID":"york:814107",
+        "dc.title":"Abp Reg 8b membrane 007 face"},
+      {
+        "PID":"york:814108",
+        "dc.title":"Abp Reg 8b membranes 007 and 008 face"},
+      {
+        "PID":"york:814109",
+        "dc.title":"Abp Reg 8b membranes 008 and 009 face"},
+      {
+        "PID":"york:814110",
+        "dc.title":"Abp Reg 8b membrane 009 face"},
+      {
+        "PID":"york:814111",
+        "dc.title":"Abp Reg 8b membrane 010 face"},
+      {
+        "PID":"york:814112",
+        "dc.title":"Abp Reg 8b membranes 010 and 011 face"},
+      {
+        "PID":"york:814113",
+        "dc.title":"Abp Reg 8b membrane 011 face"},
+      {
+        "PID":"york:814114",
+        "dc.title":"Abp Reg 8b membrane 012 face"},
+      {
+        "PID":"york:814115",
+        "dc.title":"Abp Reg 8b membranes 012 and 013 face"},
+      {
+        "PID":"york:814116",
+        "dc.title":"Abp Reg 8b membranes 013 and 014"},
+      {
+        "PID":"york:814117",
+        "dc.title":"Abp Reg 8b membrane 014 face"},
+      {
+        "PID":"york:814118",
+        "dc.title":"Abp Reg 8b membranes 014 and 015 face"},
+      {
+        "PID":"york:814119",
+        "dc.title":"Abp Reg 8b membranes 015 and 016 face"},
+      {
+        "PID":"york:814120",
+        "dc.title":"Abp Reg 8b membrane 016 face"},
+      {
+        "PID":"york:814121",
+        "dc.title":"Abp Reg 8b membranes 016 and 017"}]
+  }}

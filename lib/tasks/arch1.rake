@@ -400,12 +400,16 @@ namespace :arch1 do
 
     eval(f.read)[:response][:docs].map do |r|
 
-      # @register = Register.new
-      # @register.rdftype = @register.add_rdf_types
-      # @register.reg_id = r[:"dc.title"].split(':')[0]
-      # @register.title = r[:"dc.title"].split(':')[1]
-      # @register.former_id = r[:PID]
-      # @register.save
+      puts "Processing Register #{r[:"dc.title"]}"
+
+      @register = Register.new
+      @register.rdftype = @register.add_rdf_types
+      @register.reg_id = r[:"dc.title"].split(':')[0]
+      @register.title = r[:"dc.title"].split(':')[1]
+      @register.former_id = [r[:PID]]
+      @register.save
+
+      @folios = []
 
       #repeat this step for the folio file
 
@@ -413,9 +417,10 @@ namespace :arch1 do
       ff = File.open(path + 'folios/' + l, 'r')
 
       eval(ff.read)[:response][:docs].map do | rr |
-        #@folio = Folio.new
-        #@folio.title = rr[:"dc.title"].split(';')[0] # ignore the entry statements in register 12
-        #@folio.former_id = rr[:PID]
+        puts "Processing Folio #{rr[:"dc.title"]}"
+        @folio = Folio.new
+        @folio.title = rr[:"dc.title"].split(';')[0] # ignore the entry statements in register 12
+        @folio.former_id = [rr[:PID]]
 
         o = rr[:"dc.title"].split(';')[0].split(' ')
         o.delete_at(0)
@@ -441,41 +446,68 @@ namespace :arch1 do
 
           if FolioTerms.new('subauthority').search(oo.downcase.singularize).to_s.include? oo.downcase.singularize
             FolioTerms.new('subauthority').search(oo.downcase.singularize).map do | ft |
-              puts ft['id']
+              @folio.folio_type = ft['id']
             end
 
           elsif FolioFaceTerms.new('subauthority').search(oo.downcase.singularize).to_s.include? oo.downcase.singularize
             FolioFaceTerms.new('subauthority').search(oo.downcase.singularize).map do | ff |
-              puts ff['id']
+              @folio.folio_face = ff['id']
             end
           else
-            if oo.length > 3
-              puts oo.downcase.singularize
-            end
+            @folio.folio_no += [oo.downcase.singularize]
           end
-
-          #index
-          #unnumbered
 
         end
 
-        # use pluralize / singularize
-        # convert to title to array, lookup singularized version in folio-types and folio-faces, remove
-        # remove first three words
-        # left with number
+        @folio.save
+        @folios += [@folio.id]
+        @folio.register = @register
 
+        #create images (from xml)
 
+        puts "Adding Image"
+
+        image = Image.new
+        image.folio = @folio
+        image.rdftype = image.add_rdf_types
+        image.motivated_by = 'http://www.shared-canvas.org/ns/painting'
+        f = File.open(path + "folios/xml/#{rr[:PID].sub('york:','')}.xml")
+        @doc = Nokogiri::XML(f)
+        f.close
+        image.file = @doc.css('datastreamProfile dsLocation').text.sub('http://dlib.york.ac.uk/','/usr/digilib-webdocs/')
+        image.save
+        @folio.images += [image]
 
       end
 
+      #create proxies (from internal list)
+
+      puts 'Adding proxies'
+
+      @folios.each_with_index do |p, index|
+
+        pox = Proxy.new
+        pox.rdftype = pox.add_rdf_types
+        pox.folios += [Folio.where(id: p).first]
+
+        if index == 0
+          pox.next = Folio.where(id: @folios[index+1]).first.id
+          @register.fst = Folio.where(id: p).first.id
+          @register.save
+        elsif index == @folios.length - 1
+          pox.prev = Folio.where(id: @folios[index-1]).first.id
+          @register.lst = Folio.where(id: p).first.id
+          @register.save
+        else
+          pox.next = Folio.where(id: @folios[index+1]).first.id
+          pox.prev = Folio.where(id: @folios[index-1]).first.id
+        end
+        pox.register = @register
+        pox.save
+
+      end
 
     end
-
-
-
-    #create images (from xml)
-    #create proxies (from internal list)
-
 
   end
 

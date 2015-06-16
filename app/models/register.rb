@@ -1,5 +1,5 @@
 class Register < ActiveFedora::Base
-  include DCTerms,RdfType,AssignId,Iana,Pcdm
+  include DCTerms,RdfType,AssignId,Iana,Pcdm,Generic
 
   has_many :folios
 
