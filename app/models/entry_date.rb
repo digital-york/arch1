@@ -12,6 +12,10 @@ class EntryDate < ActiveFedora::Base
     index.as :stored_searchable
   end
 
+  property :date_role, predicate: ::RDF::URI.new('http://dlib.york.ac.uk/ontologies/borthwick-registers#role'), multiple: false do |index|
+    index.as :stored_searchable
+  end
+
   property :date_type, predicate: ::RDF::URI.new('http://dlib.york.ac.uk/ontologies/borthwick-registers#dateType'), multiple: false do |index|
     index.as :stored_searchable
   end
