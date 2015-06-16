@@ -60,34 +60,34 @@ module RegisterFolio
     puts "GET_FOLIOS"
     start_time = Time.now
     #TODO get this dynamically
-    #@register = Register.first.id # Takes about 3 seconds
+    @register = Register.first.id # Takes about 3 seconds
     #puts "Elapsed Time 1 = #{Time.now - start_time}"
-    #@folios = []
-    #foltype = FolioTerms.new('subauthority')
-    #face = FolioFaceTerms.new('subauthority')
+    @folios = []
+    foltype = FolioTerms.new('subauthority')
+    face = FolioFaceTerms.new('subauthority')
     #puts "Elapsed Time 2 = #{Time.now - start_time}"
     # Added 'sort ASC' so that drop-down list is sorted (py)
-    #q = SolrQuery.new.solr_query('has_model_ssim:"Folio" AND isPartOf_ssim:"' + @register + '"', 'id, folio_type_tesim, folio_no_tesim, folio_face_tesim', 1000, 'id ASC')
+    q = SolrQuery.new.solr_query('has_model_ssim:"Folio" AND isPartOf_ssim:"' + @register + '"', 'id, folio_type_tesim, folio_no_tesim, folio_face_tesim', 1000, 'id ASC')
     #puts "Elapsed Time 3 = #{Time.now - start_time}"
     # Takes about 2.5 seconds
-    #q['response']['docs'].map do |result|
-    #  ftype = foltype.find_value_string(result['folio_type_tesim'][0])[0]
-    #  fface = face.find_value_string(result['folio_face_tesim'][0])[0]
-    #  if fface != 'undefined'
-    #    fface = ' ' + fface
-    #  else
-    #    fface = ''
-    #  end
-    #  @folios += [[result['id'], ftype + ' ' + result['folio_no_tesim'][0] + fface ]]
-    #end
-    @register = 'Abp Reg 12'
-    @folios = []
-    f = File.open(Rails.root + 'app/assets/files/folio_temp_list.txt', "r")
-    f.each_line do |ln|
-      arr = ln.split(/-/)
-      x = [[arr[0].strip, arr[1].strip]]
-      @folios += x
+    q['response']['docs'].map do |result|
+      ftype = foltype.find_value_string(result['folio_type_tesim'][0])[0]
+      fface = face.find_value_string(result['folio_face_tesim'][0])[0]
+      if fface != 'undefined'
+        fface = ' ' + fface
+      else
+        fface = ''
+      end
+      @folios += [[result['id'], ftype + ' ' + result['folio_no_tesim'][0] + fface ]]
     end
+    #@register = 'Abp Reg 12'
+    #@folios = []
+    #f = File.open(Rails.root + 'app/assets/files/folio_temp_list.txt', "r")
+    #f.each_line do |ln|
+    #  arr = ln.split(/-/)
+    #  x = [[arr[0].strip, arr[1].strip]]
+    #  @folios += x
+    #end
     puts "Elapsed Time 1 = #{Time.now - start_time}"
   end
 
