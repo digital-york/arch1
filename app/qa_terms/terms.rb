@@ -6,12 +6,18 @@ class Terms
     @subauthority = subauthority
   end
 
+  # Gets the ConceptScheme, etc
   def terms_id
     parse_terms_id_response(SolrQuery.new.solr_query(q='rdftype_tesim:http://www.w3.org/2004/02/skos/core#ConceptScheme AND title_tesim:"' + terms_list + '"'))
   end
 
   def all
-    parse_authority_response(SolrQuery.new.solr_query(q='inScheme_ssim:"' + terms_id + '"',fl='id,preflabel_tesim',rows=1000,sort='preflabel_si asc'))
+    # 'Languages' are sorted by id so that 'Latin' is first
+    sort_order = 'preflabel_si asc'
+    if terms_list == 'languages'
+      sort_order = 'id asc'
+    end
+    parse_authority_response(SolrQuery.new.solr_query(q='inScheme_ssim:"' + terms_id + '"',fl='id,preflabel_tesim',rows=1000,sort=sort_order))
   end
 
   def find id

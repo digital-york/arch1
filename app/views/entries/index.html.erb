@@ -72,8 +72,14 @@
 
                   <%# Entry No %>
                   <tr>
-                    <th style='width: 153px'>Entry No*</th>
+                    <th style='width: 153px'>Entry No:</th>
                     <td style='width: 750px'><%= @entry.entry_no %></td>
+                  </tr>
+
+                  <%# Title %>
+                  <tr>
+                    <th style='width: 153px'>Title:</th>
+                    <td style='width: 750px'><%= @entry.title %></td>
                   </tr>
 
                   <%# Access Provided By %>
@@ -84,11 +90,13 @@
 
                   <%# Language %>
                   <tr>
-                    <th>Language</th>
+                    <th>Language:</th>
                     <td>
                       <% @entry.language.each do |language| %>
                           <div style="padding: 4px 0px">
-                            <%= terms.get_str_from_id(language, 'preflabel_tesim') %>
+                            <% if @entry.language != nil %>
+                              <%= terms.get_str_from_id(language, 'preflabel_tesim') %>
+                            <% end %>
                           </div>
                       <% end %>
                     </td>
@@ -96,7 +104,7 @@
 
                   <%# Note %>
                   <tr>
-                    <th>Note</th>
+                    <th>Note:</th>
                     <td>
                       <% @entry.note.each do |note| %>
                           <div style="padding: 4px 0px">
@@ -108,7 +116,7 @@
 
                   <%# Editorial Note %>
                   <tr>
-                    <th>Editorial Note</th>
+                    <th>Editorial Note:</th>
                     <td>
                       <% @entry.editorial_note.each do |editorial_note| %>
                           <div style="padding: 4px 0px">
@@ -120,7 +128,7 @@
 
                   <%# Marginal Note %>
                   <tr>
-                    <th>Marginal Note</th>
+                    <th>Marginal Note:</th>
                     <td>
                       <% @entry.marginal_note.each do |marginal_note| %>
                           <div style="padding: 4px 0px">
@@ -130,9 +138,21 @@
                     </td>
                   </tr>
 
+                  <%# Summary Note %>
+                  <tr>
+                    <th>Summary Note:</th>
+                    <td>
+                      <% @entry.summary_note.each do |summary_note| %>
+                          <div style="padding: 4px 0px">
+                            <%= summary_note %>
+                          </div>
+                      <% end %>
+                    </td>
+                  </tr>
+
                   <%# Is Referenced By %>
                   <tr>
-                    <th>Is Referenced By</th>
+                    <th>Is Referenced By:</th>
                     <td>
                       <% @entry.is_referenced_by.each do |is_referenced_by| %>
                           <div style="padding: 4px 0px">
@@ -144,7 +164,7 @@
 
                   <%# Subject %>
                   <tr>
-                    <th>Subject</th>
+                    <th>Subject:</th>
                     <td>
                       <% @entry.subject.each do |subject| %>
                           <div style="padding: 4px 0px">
@@ -157,7 +177,7 @@
                   <%# Related Place %>
                   <tr>
 
-                    <th>Place</th>
+                    <th>Place:</th>
 
                     <td class="tab2">
 
@@ -171,7 +191,27 @@
 
                                 <tr>
                                   <th style="width: 110px">
-                                    As Written*
+                                    Place Role:
+                                  </th>
+                                  <td>
+                                    <div style="padding: 4px 0px; min-height: 18px" class="field_group">
+
+                                      <% related_place.place_role.each do |place_role| %>
+                                          <div class="field_single" style="padding: 4px 0px">
+                                            <% if place_role != nil %>
+                                              <%= terms.get_str_from_id(place_role, 'preflabel_tesim') %>
+                                            <% end %>
+                                          </div>
+                                      <% end %>
+
+                                    </div>
+                                  </td>
+                                </tr>
+
+
+                                <tr>
+                                  <th>
+                                    As Written:
                                   </th>
                                   <td>
                                     <div style="padding: 4px 0px; min-height: 18px" class="field_group">
@@ -188,14 +228,16 @@
 
                                 <tr>
                                   <th>
-                                    Place Type
+                                    Place Type:
                                   </th>
                                   <td>
                                     <div style="padding: 4px 0px; min-height: 18px" class="field_group">
 
                                       <% related_place.place_type.each do |place_type| %>
                                           <div class="field_single" style="padding: 4px 0px">
-                                            <%= terms.get_str_from_id(place_type, 'preflabel_tesim') %>
+                                            <% if place_type != nil %>
+                                              <%= terms.get_str_from_id(place_type, 'preflabel_tesim') %>
+                                            <% end %>
                                          </div>
                                       <% end %>
 
@@ -204,7 +246,7 @@
                                 </tr>
 
                                 <tr>
-                                  <th>Same As*</th>
+                                  <th>*Same As:</th>
                                   <td>
                                     <%= related_place.place_same_as %>
                                   </td>
@@ -212,7 +254,7 @@
 
                                 <tr>
                                   <th>
-                                    Note*
+                                    Note:
                                   </th>
                                   <td>
                                     <div style="padding: 4px 0px; min-height: 18px" class="field_group">
@@ -252,7 +294,7 @@
 
                                 <tr>
                                   <th style="width: 110px">
-                                    As Written*
+                                    *As Written:
                                   </th>
                                   <td>
                                     <div style="padding: 4px 0px; min-height: 18px" class="field_group">
@@ -269,7 +311,7 @@
 
                                 <tr>
                                   <th>
-                                    Role
+                                    Person Role:
                                   </th>
                                   <td>
                                     <div style="padding: 4px 0px; min-height: 18px" class="field_group">
@@ -286,7 +328,7 @@
 
                                 <tr>
                                   <th>
-                                    Qualification
+                                    Qualification:
                                   </th>
                                   <td>
                                     <div style="padding: 4px 0px; min-height: 18px" class="field_group">
@@ -303,21 +345,21 @@
 
                                 <%# Status %>
                                 <tr>
-                                  <th>Status</th>
+                                  <th>Status:</th>
                                   <td>
                                     <%= terms.get_str_from_id(related_person.person_status, 'preflabel_tesim') %>
                                   </td>
                                 </tr>
 
                                 <tr>
-                                  <th>Gender</th>
+                                  <th>Gender:</th>
                                   <td>
                                     <%= related_person.person_gender %>
                                   </td>
                                 </tr>
 
                                 <tr>
-                                  <th>Same As*</th>
+                                  <th>*Same As:</th>
                                   <td>
                                     <%= related_person.person_same_as %>
                                   </td>
@@ -325,7 +367,7 @@
 
                                 <tr>
                                   <th>
-                                    Note
+                                    Note:
                                   </th>
                                   <td>
                                     <div style="padding: 4px 0px; min-height: 18px" class="field_group">
@@ -342,7 +384,7 @@
 
                                 <tr>
                                   <th>
-                                    Related Place
+                                    Related Place:
                                   </th>
                                   <td>
                                     <div style="padding: 4px 0px; min-height: 18px" class="field_group">
@@ -395,9 +437,20 @@
                                 </tr>
 
                                 <tr>
+                                  <th>Date Role:</th>
+                                  <td>
+                                    <% if entry_date.date_role != nil %>
+                                      <%= terms.get_str_from_id(entry_date.date_role, 'preflabel_tesim') %>
+                                    <% end %>
+                                  </td>
+                                </tr>
+
+                                <tr>
                                   <th>Date Type:</th>
                                   <td>
-                                    <%= terms.get_str_from_id(entry_date.date_type, 'preflabel_tesim') %>
+                                    <% if entry_date.date_type != nil %>
+                                      <%= terms.get_str_from_id(entry_date.date_type, 'preflabel_tesim') %>
+                                    <% end %>
                                   </td>
                                 </tr>
 

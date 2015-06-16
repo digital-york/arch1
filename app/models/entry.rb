@@ -4,11 +4,15 @@ class Entry < ActiveFedora::Base
 
   belongs_to :folio, predicate: ::RDF::URI.new('http://dlib.york.ac.uk/ontologies/borthwick-registers#folio')
 
-  property :register, predicate: ::RDF::URI.new('http://dlib.york.ac.uk/ontologies/borthwick-registers#register'), multiple: false do |index|
+  #property :register, predicate: ::RDF::URI.new('http://dlib.york.ac.uk/ontologies/borthwick-registers#register'), multiple: false do |index|
+  #  index.as :stored_searchable
+  #end
+
+  property :entry_no, predicate: ::RDF::URI.new('http://dlib.york.ac.uk/ontologies/borthwick-registers#entryNo'), multiple: false do |index|
     index.as :stored_searchable
   end
 
-  property :entry_no, predicate: ::RDF::URI.new('http://dlib.york.ac.uk/ontologies/borthwick-registers#entryNo'), multiple: false do |index|
+  property :title, predicate: ::RDF::URI.new('http://purl.org/dc/terms/title'), multiple: false do |index|
     index.as :stored_searchable
   end
 
@@ -33,6 +37,10 @@ class Entry < ActiveFedora::Base
   end
 
   property :marginal_note, predicate: ::RDF::URI.new('http://dlib.york.ac.uk/ontologies/borthwick-registers#marginal_note'), multiple: true do |index|
+    index.as :stored_searchable
+  end
+
+  property :summary_note, predicate: ::RDF::URI.new('http://dlib.york.ac.uk/ontologies/borthwick-registers#summary_note'), multiple: true do |index|
     index.as :stored_searchable
   end
 

@@ -194,6 +194,8 @@ class EntriesController < ApplicationController
     # See validation.rb in /concerns
     #@errors = validate(entry_params)
 
+    #puts entry_params
+
     # Replace the folio id with the corresponding Folio object
     f = Folio.where(id: entry_params['folio']).first
     entry_params['folio'] = f
