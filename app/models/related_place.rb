@@ -5,6 +5,10 @@ class RelatedPlace < ActiveFedora::Base
   belongs_to :entry, predicate: ActiveFedora::RDF::Fcrepo::RelsExt.isPartOf
   belongs_to :related_person, predicate: ActiveFedora::RDF::Fcrepo::RelsExt.isPartOf
 
+  property :place_role, predicate: ::RDF::URI.new('http://dlib.york.ac.uk/ontologies/borthwick-registers#role'), multiple: true do |index|
+    index.as :stored_searchable
+  end
+
   property :place_as_written, predicate: ::RDF::URI.new('http://dlib.york.ac.uk/ontologies/borthwick-registers#asWritten'), multiple: true do |index|
     index.as :stored_searchable
   end
