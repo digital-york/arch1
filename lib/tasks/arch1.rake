@@ -369,7 +369,7 @@ namespace :arch1 do
 
       if index == 0
         pox.next = Folio.where(id: @folios[index+1]).first.id
-        @register.fst = Folio.where(id: p).first.id
+        @register.fst = pox.id
         @register.save
       elsif index == @folios.length - 1
         pox.prev = Folio.where(id: @folios[index-1]).first.id
@@ -388,6 +388,7 @@ namespace :arch1 do
 
   end
 
+  # WORK IN PROGRESS!
   task loadallrf: :environment do
 
     path = Rails.root + 'lib/assets/'
