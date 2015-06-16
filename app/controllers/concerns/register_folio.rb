@@ -85,7 +85,7 @@ module RegisterFolio
     f = File.open(Rails.root + 'app/assets/files/folio_temp_list.txt', "r")
     f.each_line do |ln|
       arr = ln.split(/-/)
-      x = [[arr[0], arr[1]]]
+      x = [[arr[0].strip, arr[1].strip]]
       @folios += x
     end
     puts "Elapsed Time 1 = #{Time.now - start_time}"
