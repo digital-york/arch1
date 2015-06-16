@@ -1,7 +1,7 @@
 require 'active_fedora/noid'
 
 class Folio < ActiveFedora::Base
-  include DCTerms,RdfType,AssignId,Pcdm
+  include DCTerms,RdfType,AssignId,Pcdm,Generic
 
   belongs_to :register, predicate: ActiveFedora::RDF::Fcrepo::RelsExt.isPartOf
   has_many :entries
@@ -21,7 +21,7 @@ class Folio < ActiveFedora::Base
     index.as :stored_searchable
   end
 
-  property :folio_no, predicate: ::RDF::URI.new('http://dlib.york.ac.uk/ontologies/borthwick-registers#folioNumber'), multiple: false do |index|
+  property :folio_no, predicate: ::RDF::URI.new('http://dlib.york.ac.uk/ontologies/borthwick-registers#folioNumber'), multiple: true do |index|
     index.as :stored_searchable
   end
 
