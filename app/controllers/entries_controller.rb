@@ -89,10 +89,10 @@ class EntriesController < ApplicationController
       # Get all the entries which match with the chosen register, folio and folio face
       @entries = Entry.where(folio_ssim: session[:folio_choice])
 
-      get_folios()
-
       #set_entry
     end
+
+    get_folios()
   end
 
   # SHOW

@@ -58,15 +58,15 @@ module RegisterFolio
   def get_folios
   puts
   puts "GET_FOLIOS"
-  start_time = Time.now
+    start_time = Time.now
     #TODO get this dynamically
-    @register = Register.all.first.id
+    @register = Register.first.id # Takes about 3 seconds
     @folios = []
     foltype = FolioTerms.new('subauthority')
     face = FolioFaceTerms.new('subauthority')
-
     # Added 'sort ASC' so that drop-down list is sorted (py)
     q = SolrQuery.new.solr_query('has_model_ssim:"Folio" AND isPartOf_ssim:"' + @register + '"', 'id, folio_type_tesim, folio_no_tesim, folio_face_tesim', 1000, 'id ASC')
+    # Takes about 2.5 seconds
     q['response']['docs'].map do |result|
       ftype = foltype.find_value_string(result['folio_type_tesim'][0])[0]
       fface = face.find_value_string(result['folio_face_tesim'][0])[0]
@@ -77,8 +77,7 @@ module RegisterFolio
       end
       @folios += [[result['id'], ftype + ' ' + result['folio_no_tesim'][0] + fface ]]
     end
-    end_time = Time.now
-    puts "Elapsed Time = #{end_time - start_time}"
+    puts "Elapsed Time 5 = #{Time.now - start_time}"
   end
 
   def get_registers
