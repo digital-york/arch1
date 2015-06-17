@@ -1,7 +1,10 @@
 <% if session[:register_choice] != '' %>
 
     <div id="image_header" style='width: 300px'>
-      <%
+
+        <%= session[:folio_title] %>
+
+      <%#
         terms = Terms.new('subauthority')
         folio_no = terms.get_str_from_id(session[:folio_choice], 'folio_no_tesim')
         folio_face_id = terms.get_str_from_id(session[:folio_choice], 'folio_face_tesim')
@@ -10,11 +13,11 @@
         folio_type = terms.get_str_from_id(folio_type_id, 'preflabel_tesim')
       %>
 
-      <%= folio_type %>
-      <%= folio_no %>
-      <% if folio_face != 'undefined' %>
-        <%= folio_face %>
-      <% end %>
+      <%#= folio_type %>
+      <%#= folio_no %>
+      <%# if folio_face != 'undefined' %>
+        <%#= folio_face %>
+      <%# end %>
 
       <%#= session[:folio_choice] %>
     </div>

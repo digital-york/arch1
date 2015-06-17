@@ -28,6 +28,9 @@ module RegisterFolio
     SolrQuery.new.solr_query('hasTarget_ssim:"' + session[:folio_choice] + '"', 'file_tesim', 1)['response']['docs'].map do |result|
       session[:image] = result['file_tesim'][0]
     end
+    SolrQuery.new.solr_query('id:"' + session[:folio_choice] + '"' , 'title_tesim', 1)['response']['docs'].map do |result|
+      session[:folio_title] = result['title_tesim'][0]
+    end
 
   end
 
@@ -55,7 +58,7 @@ module RegisterFolio
   end
 
   # Used in methods above and to display the folio drop-down list on the view pages
-  def get_folios
+  def get_folios_old
     puts
     puts "GET_FOLIOS"
     start_time = Time.now
@@ -89,6 +92,23 @@ module RegisterFolio
     #  @folios += x
     #end
     puts "Elapsed Time 1 = #{Time.now - start_time}"
+  end
+
+  def get_folios
+    puts "GET_FOLIOS"
+    start_time = Time.now
+    #TODO get this dynamically
+    @register = Register.first.id
+    puts "Elapsed Time 1 = #{Time.now - start_time}"
+    @folios = []
+    puts "Elapsed Time 2 = #{Time.now - start_time}"
+    # Added 'sort ASC' so that drop-down list is sorted (py)
+    q = SolrQuery.new.solr_query('has_model_ssim:"Folio" AND isPartOf_ssim:"' + @register + '"', 'id, title_tesim', 1000, 'id ASC')
+    puts "Elapsed Time 3 = #{Time.now - start_time}"
+    q['response']['docs'].map do |result|
+      @folios += [[result['id'], result['title_tesim'][0]]]
+    end
+    puts "Elapsed Time 4 = #{Time.now - start_time}"
   end
 
   def get_registers

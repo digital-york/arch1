@@ -299,9 +299,7 @@ namespace :arch1 do
     @register.save
 
     @foltype = FolioTerms.new('subauthority')
-    puts @foltype
     @face = FolioFaceTerms.new('subauthority')
-    puts @face
 
     @folios = []
 
@@ -331,7 +329,6 @@ namespace :arch1 do
       @register.folios += [fol]
       @register.has_member += [fol.id] #id or not to id, see also next / prev (USING IDs)
       @register.save
-      @register.update_index
 
       if l.include? 'insert'
         fol.folio_type = @foltype.find_id('insert')
@@ -391,7 +388,6 @@ namespace :arch1 do
 
   end
 
-  # WORK IN PROGRESS!
   task loadallrf: :environment do
 
     path = Rails.root + 'lib/assets/'
@@ -421,6 +417,7 @@ namespace :arch1 do
         @folio = Folio.new
         @folio.title = rr[:"dc.title"].split(';')[0] # ignore the entry statements in register 12
         @folio.former_id = [rr[:PID]]
+        @folio.register = @register
 
         o = rr[:"dc.title"].split(';')[0].split(' ')
         o.delete_at(0)
@@ -431,6 +428,7 @@ namespace :arch1 do
         o.delete('version)')
         o.each do | oo |
 
+          # deal with errors in the data
           if oo == 'rectot'
             oo = 'recto'
           end
@@ -461,11 +459,8 @@ namespace :arch1 do
 
         @folio.save
         @folios += [@folio.id]
-        @folio.register = @register
 
-        #create images (from xml)
-
-        puts "Adding Image"
+        puts 'Adding Image (from xml)'
 
         image = Image.new
         image.folio = @folio
@@ -478,9 +473,11 @@ namespace :arch1 do
         image.save
         @folio.images += [image]
 
-      end
+        @register.folios += [@folio]
+        @register.has_member += [@folio.id] #id or not to id, see also next / prev (USING IDs)
+        @register.save
 
-      #create proxies (from internal list)
+      end
 
       puts 'Adding proxies'
 
@@ -506,10 +503,7 @@ namespace :arch1 do
         pox.save
 
       end
-
     end
-
   end
-
 
 end
