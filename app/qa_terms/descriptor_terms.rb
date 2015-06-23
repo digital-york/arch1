@@ -1,7 +1,7 @@
-class StatusTerms < Terms
+class DescriptorTerms < Terms
   include Qa::Authorities::WebServiceBase
 
   def terms_list
-    'statuses'
+    'descriptors'
   end
 end

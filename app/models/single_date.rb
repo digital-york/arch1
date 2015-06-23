@@ -4,11 +4,11 @@ class SingleDate < ActiveFedora::Base
 
   belongs_to :entry_date, predicate: ActiveFedora::RDF::Fcrepo::RelsExt.isPartOf
 
-  property :date_certainty, predicate: ::RDF::URI.new('http://dlib.york.ac.uk/ontologies/borthwick-registers#certainty'), multiple: false do |index|
+  property :date, predicate: ::RDF::URI.new('http://schema.org/date'), multiple: false do |index|
     index.as :stored_searchable
   end
 
-  property :date, predicate: ::RDF::URI.new('http://schema.org/date'), multiple: false do |index|
+  property :date_certainty, predicate: ::RDF::URI.new('http://dlib.york.ac.uk/ontologies/borthwick-registers#certainty'), multiple: false do |index|
     index.as :stored_searchable
   end
 

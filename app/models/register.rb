@@ -1,7 +1,9 @@
 class Register < ActiveFedora::Base
   include DCTerms,RdfType,AssignId,Iana,Pcdm,Generic
 
-  has_many :folios
+  has_many :folios, :dependent => :destroy
+
+  accepts_nested_attributes_for :folios, :allow_destroy => true, :reject_if => :all_blank
 
   property :reg_id, predicate: ::RDF::URI.new('http://dlib.york.ac.uk/ontologies/borthwick-registers#reference'), multiple: false do |index|
     index.as :stored_searchable
