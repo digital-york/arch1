@@ -1,0 +1,16 @@
+<div style="margin-left: 20px">
+
+<h2>Subjects</h2>
+
+<p>Please choose a subject:</p>
+
+<%
+    @subject_list.each do |subject|
+%>
+    <a href='#' onClick="post_value('<%= subject['label'].join('') %>', '<%= params[:subject_field] %>')"><%= subject['label'].join('') %></a>
+    <br/>
+<%
+    end
+%>
+
+</div>
