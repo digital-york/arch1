@@ -1,16 +1,42 @@
-<div style="margin-left: 20px">
+<div style="margin-left: 30px">
 
 <h2>Subjects</h2>
 
 <p>Please choose a subject:</p>
 
 <%
-    @subject_list.each do |subject|
+    @subject_list.each_with_index do |top_level_term, index|
 %>
-    <a href='#' onClick="post_value('<%= subject['label'].join('') %>', '<%= params[:subject_field] %>')"><%= subject['label'].join('') %></a>
-    <br/>
+
+<div style='margin-top: 8px'>
+
+    <a href='#' style='font-size: 1.1em; color: #805409' onClick="post_value('<%= top_level_term['label'].join('') %>', '<%= params[:subject_field] %>')"><%= top_level_term['label'].join('') %></a>
+
+    <%= image_tag 'plus_icon_subject.png', class: 'plus_icon_subject' %>
+
+    <div style='margin-left: 30px; display: none; padding-top: 5px' class='subject_table'>
+<%
+    top_level_term[:elements].each do |middle_level_term|
+%>
+        <a href='#' style='font-size: 1.0em; color: #7E1111' onClick="post_value('<%= middle_level_term['label'].join('') %>', '<%= params[:subject_field] %>')"><%= middle_level_term['label'].join('') %></a>
+        <br/>
+<%
+          middle_level_term[:elements].each do |bottom_level_term|
+%>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <a href='#' style='font-size: 0.9em; color: #BE6226'  post_value('<%= bottom_level_term['label'].join('') %>', '<%= params[:subject_field] %>')><em><%= bottom_level_term['label'].join('') %></em></a>
+            <br/>
+
+<%
+          end
+%>
+
 <%
     end
 %>
-
+    </div>
+<%
+   end
+%>
+</div>
 </div>

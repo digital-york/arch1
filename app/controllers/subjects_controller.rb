@@ -2,7 +2,7 @@ class SubjectsController < ApplicationController
 
 def index
 
-  @subject_list = SubjectTerms.new('subauthority').all
+  @subject_list = SubjectTerms.new('subauthority').all_top_level_subject_terms
 
 end
 
