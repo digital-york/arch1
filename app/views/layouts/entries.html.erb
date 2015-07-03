@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+
+<html lang="en" class="no-js">
+
+<head>
+  <meta charset="utf-8"/>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+  <title>Archbishops&#39; Registers</title>
+  <%= stylesheet_link_tag "application", media: "all" %>
+  <%= javascript_include_tag "application" %>
+</head>
+
+<body>
+
+<!-- Put this tag in because there was an exception sending the authenticity token with a link_to -->
+<!-- Not sure why it works and not sure if I need it anymore -->
+<%#= csrf_meta_tag %>
+
+<div id="header">
+
+  <div id="header_text" style="width: 100%">
+    <%= link_to "Archbishops&#39; Registers Editing Tool".html_safe, entry_path("default") %>
+  </div>
+</div>
+
+<div id="navbar">
+  <span style="float: left"><a href='/'><%= image_tag 'back_icon2.png', class: 'home_icon' %></a></span>
+  <span style="float: left">&nbsp;&nbsp;<span style="color: #333232"><em><%= session[:register_name] %></em></span></span>
+  <span style="float: right; margin-right: 5px; margin-top: 0px">
+    <%= button_to 'Logout', logout_path, :method => 'get', :data => {:confirm => 'Are you sure you want to logout?'} %>
+  </span>
+</div>
+
+<div id="container">
+
+  <%= yield %>
+
+  <div style="clear: both"></div>
+
+</div>
+
+<div style="clear: both"></div>
+
+</body>
+</html>
+

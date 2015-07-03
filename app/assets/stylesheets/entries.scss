@@ -1,0 +1,527 @@
+// Place all the styles related to the Entries controller here.
+// They will automatically be included in application.css.
+// You can use Sass (SCSS) here: http://sass-lang.com/
+
+label {
+  font-weight: normal;
+}
+
+table {
+  font-size: 0.8em;
+  table-layout: fixed;
+  margin: auto;
+}
+
+th, td {
+  padding: 7px 8px;
+}
+
+th {
+  font-weight: normal;
+  text-align: left;
+}
+
+.tab1 {
+  float: left
+}
+
+.tab1 table {
+  border-right: 1px solid #ACADB7;
+  border-bottom: 1px solid #ACADB7;
+}
+
+.tab1 td, .tab1 th {
+  border-top: 1px solid #ACADB7;
+  border-left: 1px solid #ACADB7;
+}
+
+.tab1 th {
+  background-color: #E1E1E1;
+}
+
+.tab1 td {
+  background-color: #F2F0F0;
+}
+
+.tab2 table {
+  font-size: 1em;
+  border: 1px solid silver;
+  width: 96%;
+  float: left;
+  margin: 3px 3px 7px 0px;
+}
+
+.tab2 td, .tab2 th {
+  border: none;
+}
+
+.tab2 td {
+  background-color: white;
+}
+
+input[type="text"] {
+  width: 94%
+}
+
+.td_center td {
+  text-align: center;
+}
+
+.plus_icon {
+  position: relative;
+  top: 3px;
+}
+
+html, body {
+  height: 100%;
+}
+
+body {
+  font-family: Arial, Verdana;
+  background-color: #fff8eb;
+  margin: 0px;
+  font-size: 100%;
+}
+#header_text {
+  color: #FFFFFF;
+  font-size: 1.8em;
+  font-weight: bold;
+  padding-top: 8px;
+  padding-left: 10px;
+  font-family: "Trebuchet MS", Helvetica, sans-serif
+}
+
+#header_text a {
+  color: #FFFFFF;
+}
+
+#container {
+  width: 100%;
+  padding-bottom: 30px;
+  margin-top: 40px;
+}
+
+#register_menu {
+  font-size: 1.2em;
+  height: 32px;
+  margin-top: 5px;
+  padding: 5px 0px 25px 40px;
+}
+
+#register_menu select {
+  width: 120px;
+}
+
+#main {
+  color: #000000;
+  width: 1280px;
+}
+
+#left_frame {
+  float: left;
+  width: 300px;
+  margin-left: 20px;
+  padding-top: 2px;
+}
+
+#right_frame {
+  padding-left: 30px;
+  float: left;
+  width: 900px;
+}
+
+#location1 {
+  height: 300px;
+  width: 280px;
+  padding: 10px;
+}
+
+#location2 {
+  height: 300px;
+  width: 280px;
+  padding: 10px;
+}
+
+#entry_menu {
+  height: 26px;
+  margin-top: 2px;
+  padding-top: 7px;
+  width: 900px;
+  background-color: grey;
+
+}
+
+#entry_menu ul {
+  background: none repeat scroll 0 0 rgba(0, 0, 0, 0);
+  margin: 0;
+  padding: 0;
+}
+
+#entry_menu li {
+  display: inline-block;
+  float: left;
+  font-size: 1.1em;
+  list-style: outside none none;
+  margin: 0;
+  padding: 4px 0 5px;
+  margin-left: 2px;
+}
+
+#entry_menubar {
+  height: 20px;
+  background-color: #e1e1e1;
+}
+
+a, a:hover, a:focus {
+  color: #9C6B17;
+  text-decoration: none;
+  outline: 0;
+}
+
+.highlight {
+  color: #9c6b17;
+  background-color: #E1E1E1;
+  border-radius: 6px 6px 0 0;
+  padding: 6px 10px 6px 12px;
+}
+
+.highlight a {
+  color: #9C6B17;
+  text-decoration: none;
+}
+
+.nohighlight {
+  background-color: #C5C5C5;
+  border-radius: 6px 6px 0 0;
+  padding: 6px 10px 4px 12px;
+}
+
+.nohighlight a {
+  color: #888888;
+  text-decoration: none;
+}
+
+.nohighlight a:hover {
+  color: #9C6B17;
+  text-decoration: none;
+}
+
+#header_menubar {
+  padding: 8px;
+  font-size: 1.2em;
+}
+
+.edit_button {
+  float: right;
+  margin-top: 3px;
+  font-size: 1.2em;
+}
+
+.noth th {
+  padding: 0px;
+}
+
+.button_to {
+  float: left;
+  margin-bottom: 0px;
+}
+
+#image_frame {
+  float: left;
+  background-color: #403C35;
+}
+
+#image_frame a {
+  text-decoration: none;
+}
+#image_frame2 {
+  float: left;
+  background-color: #403C35;
+}
+
+#image_frame2 a {
+  text-decoration: none;
+}
+
+#image_header {
+  font-size: 1em;
+  float: left;
+  height: 28px;
+  background-color: grey;
+  width: 100%;
+  padding-top: 5px;
+  color: #F7F4EE;
+  text-align: center;
+}
+
+#image_header2 {
+  font-size: 1em;
+  float: left;
+  height: 28px;
+  background-color: grey;
+  width: 100%;
+  padding-top: 5px;
+  color: #F7F4EE;
+  text-align: center;
+}
+
+#image_main {
+  float: left;
+  width: 100%;
+  padding: 15px 0px;
+}
+
+#image_main_left {
+  float: left;
+  width: 30px;
+  vertical-align: middle;
+}
+
+#image_main_center {
+  float: left;
+  width: 200px;
+}
+
+#image_main_right {
+  float: left;
+  width: 30px;
+  vertical-align: middle;
+}
+
+#image_footer {
+  float: left;
+  width: 100%;
+  height: 36px;
+  background-color: grey;
+}
+
+// Just to make the height of the view page elements match that of the edit elements
+// Doesn't work so well for multi elements though
+.tab1 th {
+  height: 23px;
+}
+
+.tab2 th {
+  background-color: #FFFFFF;
+  width: 115px;
+}
+
+//.tab2 td {
+//  height: 38px;
+//}
+
+.delete_icon {
+  float: right;
+  position: relative;
+  top: 2px;
+  right: 3px;
+}
+
+.delete_icon_select {
+  position: relative;
+  top: 2px;
+  right: 3px;
+  margin-left: 10px;
+}
+
+.nested_single {
+  padding: 4px 0px;
+}
+
+.nested_single2 {
+  padding: 7px 0px;
+}
+
+.tab4 td, .tab4 th {
+  background-color: #f2f0f0;
+}
+
+.tab4 input[type="text"] {
+  width: 94%;
+}
+
+table {
+  border-spacing: 0px;
+  border-collapse: separate;
+}
+
+.tab3 input[type="text"] {
+  width: 94%;
+}
+
+.background_gray {
+  background-color: #f2f0f0;
+}
+
+.background_gray th {
+  background-color: #F2F0F0;
+}
+
+#header {
+  background: url('/assets/header.jpg') repeat-x scroll 0 50% #000000;
+  height: 100px;
+  /*border-bottom: 1px solid #805E5E;*/
+}
+.ui-datepicker-trigger {
+  margin-left: 5px;
+}
+
+.blank {
+  color: transparent;
+}
+
+.login table {
+  border: 1px solid #ACADB7;
+}
+
+.login td, .login th {
+  height: 50px;
+}
+
+.login th {
+  background-color: #F2F0F0;
+}
+
+.login td {
+  background-color: #F2F0F0;
+}
+
+.login input[type="text"], .login input[type="password"] {
+  width: 200px;
+}
+
+.timed_out {
+  text-align: center;
+}
+
+.message {
+  background-color: #D74A4A;
+  width: auto;
+  margin-bottom: 20px;
+  font-size: 1.2em;
+  height: auto;
+  color: white;
+  padding: 10px 10px 7px 10px;
+}
+
+.error {
+  background-color: #D74A4A;
+}
+
+.timeout {
+  border-radius: 3px;
+  background-color: #B7A17C;
+}
+
+.grey_box {
+  background-color: #F2F0F0;
+  padding: 4px 5px;
+  border: 1px solid silver;
+  min-height: 18px;
+}
+
+.field_single {
+  padding: 4px 0px;
+}
+
+.no_padding {
+  padding: 0px;
+}
+
+.input_single input[type="text"] {
+  width: 99%;
+}
+
+.grey_text {
+  color: #ACADB7;
+}
+
+.single_date table {
+  margin: 0px 0px 0px 2px;
+  width: 94%;
+}
+
+.green_text {
+  color: green;
+}
+
+textarea {
+  font-family: Tahoma;
+  font-size: 1em;
+  width: 94%;
+  height: 36px;
+}
+
+.subject_style {
+  width:  80%;
+  border: 1px solid #F2F0F0;
+  background-color: #F2F0F0;
+}
+
+.subject_table table {
+  border: 0px;
+  margin: 0px;
+}
+
+.subject_table td {
+  text-align: left;
+  font-size: 1.2em;
+  padding: 2px;
+}
+
+.plus_icon_subject {
+  left: 3px;
+  position: relative;
+  top: 2px;
+}
+
+.minus_icon_subject {
+  left: 3px;
+  position: relative;
+  top: 2px;
+}
+
+#navbar {
+  background-color: #C4AF8C;
+  border-bottom: 1px solid #B89C5D;
+  border-top: 1px solid #B89C5D;
+  color: #FFFFFF;
+  height: 23px;
+  padding: 5px 0 5px 30px;
+}
+
+.home_icon {
+  position: relative;
+  top: -2px;
+}
+
+.landing_page {
+  padding-left: 0px;
+  padding-top: 0px;
+  width: 100%;
+  text-align: center;
+}
+
+.landing_page table {
+  border: 1px solid silver;
+  padding: 20px 30px;
+  background-color: #f2f0f0;
+}
+
+.landing_page td {
+  padding: 15px 20px 15px 20px;
+  border: none;
+}
+
+.landing_page_text {
+  width: 180px;
+  text-align: center;
+  color: black;
+  padding-top: 10px;
+  height: 60px;
+}
+
+.landing_page img {
+  border: 1px solid #BFBFBF;
+  width: 180px;
+}

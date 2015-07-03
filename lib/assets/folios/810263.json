@@ -1,0 +1,186 @@
+{
+  "responseHeader":{
+    "status":0,
+    "QTime":2,
+    "params":{
+      "explainOther":"",
+      "sort":"PID asc",
+      "fl":"PID,dc.title",
+      "indent":"on",
+      "start":"0",
+      "q":"rdf.rel.isMemberOf:\"york:810263\"",
+      "hl.fl":"",
+      "wt":"json",
+      "fq":"",
+      "version":"2.2",
+      "rows":"10000"}},
+  "response":{"numFound":56,"start":0,"docs":[
+      {
+        "PID":"york:813617",
+        "dc.title":"Abp Reg 1a membrane 001 face (alternate version)"},
+      {
+        "PID":"york:813618",
+        "dc.title":"Abp Reg 1a membrane 001 face"},
+      {
+        "PID":"york:813619",
+        "dc.title":"Abp Reg 1a membrane 002 face"},
+      {
+        "PID":"york:813620",
+        "dc.title":"Abp Reg 1a membrane 003 face"},
+      {
+        "PID":"york:813621",
+        "dc.title":"Abp Reg 1a membrane 004 face"},
+      {
+        "PID":"york:813622",
+        "dc.title":"Abp Reg 1a membrane 005 face"},
+      {
+        "PID":"york:813623",
+        "dc.title":"Abp Reg 1a membrane 006 face"},
+      {
+        "PID":"york:813624",
+        "dc.title":"Abp Reg 1a membrane 007 face"},
+      {
+        "PID":"york:813625",
+        "dc.title":"Abp Reg 1a membrane 008 face"},
+      {
+        "PID":"york:813626",
+        "dc.title":"Abp Reg 1a membrane 009 face"},
+      {
+        "PID":"york:813627",
+        "dc.title":"Abp Reg 1a membranes 010 and 011 face"},
+      {
+        "PID":"york:813628",
+        "dc.title":"Abp Reg 1a membrane 001 002 face"},
+      {
+        "PID":"york:813629",
+        "dc.title":"Abp Reg 1a membranes 013 and 014 face"},
+      {
+        "PID":"york:813630",
+        "dc.title":"Abp Reg 1a membrane 016 face"},
+      {
+        "PID":"york:813631",
+        "dc.title":"Abp Reg 1a membrane 017 face"},
+      {
+        "PID":"york:813632",
+        "dc.title":"Abp Reg 1a membranes 019 and 020 face"},
+      {
+        "PID":"york:813633",
+        "dc.title":"Abp Reg 1a membrane 021 face"},
+      {
+        "PID":"york:813634",
+        "dc.title":"Abp Reg 1a membrane 022 face"},
+      {
+        "PID":"york:813635",
+        "dc.title":"Abp Reg 1a membrane 023 face"},
+      {
+        "PID":"york:813636",
+        "dc.title":"Abp Reg 1a membrane 024 face (alternate version)"},
+      {
+        "PID":"york:813637",
+        "dc.title":"Abp Reg 1a membrane 024 face"},
+      {
+        "PID":"york:813638",
+        "dc.title":"Abp Reg 1a membrane 025 face"},
+      {
+        "PID":"york:813639",
+        "dc.title":"Abp Reg 1a membrane 026 face"},
+      {
+        "PID":"york:813640",
+        "dc.title":"Abp Reg 1a membrane 001 dorse (alternate version)"},
+      {
+        "PID":"york:813641",
+        "dc.title":"Abp Reg 1a membrane 001 dorse"},
+      {
+        "PID":"york:813642",
+        "dc.title":"Abp Reg 1a membrane 002 dorse"},
+      {
+        "PID":"york:813643",
+        "dc.title":"Abp Reg 1a membrane 003 dorse"},
+      {
+        "PID":"york:813644",
+        "dc.title":"Abp Reg 1a membrane 004 dorse"},
+      {
+        "PID":"york:813645",
+        "dc.title":"Abp Reg 1a membrane 005 dorse"},
+      {
+        "PID":"york:813646",
+        "dc.title":"Abp Reg 1a membrane 006 dorse"},
+      {
+        "PID":"york:813647",
+        "dc.title":"Abp Reg 1a membrane 007 dorse"},
+      {
+        "PID":"york:813648",
+        "dc.title":"Abp Reg 1a membrane 008 dorse"},
+      {
+        "PID":"york:813649",
+        "dc.title":"Abp Reg 1a membrane 009 dorse"},
+      {
+        "PID":"york:813650",
+        "dc.title":"Abp Reg 1a membrane 010 dorse"},
+      {
+        "PID":"york:813651",
+        "dc.title":"Abp Reg 1a membrane 011 dorse"},
+      {
+        "PID":"york:813652",
+        "dc.title":"Abp Reg 1a membrane 012 dorse"},
+      {
+        "PID":"york:813653",
+        "dc.title":"Abp Reg 1a membrane 013 dorse"},
+      {
+        "PID":"york:813654",
+        "dc.title":"Abp Reg 1a membrane 014 dorse"},
+      {
+        "PID":"york:813655",
+        "dc.title":"Abp Reg 1a membrane 015 dorse"},
+      {
+        "PID":"york:813656",
+        "dc.title":"Abp Reg 1a membrane 016 dorse"},
+      {
+        "PID":"york:813657",
+        "dc.title":"Abp Reg 1a membrane 017 dorse"},
+      {
+        "PID":"york:813658",
+        "dc.title":"Abp Reg 1a membrane 018 dorse"},
+      {
+        "PID":"york:813659",
+        "dc.title":"Abp Reg 1a membranes 019 and 020 dorse"},
+      {
+        "PID":"york:813660",
+        "dc.title":"Abp Reg 1a membranes 020 and 021 dorse"},
+      {
+        "PID":"york:813661",
+        "dc.title":"Abp Reg 1a membrane 022 dorse"},
+      {
+        "PID":"york:813662",
+        "dc.title":"Abp Reg 1a membrane 023 dorse"},
+      {
+        "PID":"york:813663",
+        "dc.title":"Abp Reg 1a membrane 024 dorse"},
+      {
+        "PID":"york:813664",
+        "dc.title":"Abp Reg 1a membrane 025 dorse"},
+      {
+        "PID":"york:813665",
+        "dc.title":"Abp Reg 1a membrane 026 dorse"},
+      {
+        "PID":"york:813666",
+        "dc.title":"Abp Reg 1a index cover"},
+      {
+        "PID":"york:813667",
+        "dc.title":"Abp Reg 1a index 001"},
+      {
+        "PID":"york:813668",
+        "dc.title":"Abp Reg 1a index 002"},
+      {
+        "PID":"york:813669",
+        "dc.title":"Abp Reg 1a index 003"},
+      {
+        "PID":"york:813670",
+        "dc.title":"Abp Reg 1a index 004"},
+      {
+        "PID":"york:813671",
+        "dc.title":"Abp Reg 1a index 005"},
+      {
+        "PID":"york:813672",
+        "dc.title":"Abp Reg 1a index 006"}]
+  }}

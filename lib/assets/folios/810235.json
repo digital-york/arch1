@@ -1,0 +1,951 @@
+{
+  "responseHeader":{
+    "status":0,
+    "QTime":2,
+    "params":{
+      "explainOther":"",
+      "sort":"PID asc",
+      "fl":"PID,dc.title",
+      "indent":"on",
+      "start":"0",
+      "q":"rdf.rel.isMemberOf:\"york:810235\"",
+      "hl.fl":"",
+      "wt":"json",
+      "fq":"",
+      "version":"2.2",
+      "rows":"10000"}},
+  "response":{"numFound":311,"start":0,"docs":[
+      {
+        "PID":"york:813722",
+        "dc.title":"Abp Reg 3 folio 001 recto"},
+      {
+        "PID":"york:813723",
+        "dc.title":"Abp Reg 3 folio 001 verso"},
+      {
+        "PID":"york:813724",
+        "dc.title":"Abp Reg 3 folio 002 recto"},
+      {
+        "PID":"york:813725",
+        "dc.title":"Abp Reg 3 folio 002 verso"},
+      {
+        "PID":"york:813726",
+        "dc.title":"Abp Reg 3 folio 003 recto"},
+      {
+        "PID":"york:813727",
+        "dc.title":"Abp Reg 3 folio 003 verso"},
+      {
+        "PID":"york:813728",
+        "dc.title":"Abp Reg 3 folio 004 recto"},
+      {
+        "PID":"york:813729",
+        "dc.title":"Abp Reg 3 folio 004 verso"},
+      {
+        "PID":"york:813730",
+        "dc.title":"Abp Reg 3 folio 005 recto"},
+      {
+        "PID":"york:813731",
+        "dc.title":"Abp Reg 3 folio 005 verso"},
+      {
+        "PID":"york:813732",
+        "dc.title":"Abp Reg 3 folio 006 recto"},
+      {
+        "PID":"york:813733",
+        "dc.title":"Abp Reg 3 folio 006 verso"},
+      {
+        "PID":"york:813734",
+        "dc.title":"Abp Reg 3 folio 007 recto"},
+      {
+        "PID":"york:813735",
+        "dc.title":"Abp Reg 3 folio 007 verso"},
+      {
+        "PID":"york:813736",
+        "dc.title":"Abp Reg 3 folio 008 recto"},
+      {
+        "PID":"york:813737",
+        "dc.title":"Abp Reg 3 folio 008 verso"},
+      {
+        "PID":"york:813738",
+        "dc.title":"Abp Reg 3 folio 009 recto"},
+      {
+        "PID":"york:813739",
+        "dc.title":"Abp Reg 3 folio 009 verso"},
+      {
+        "PID":"york:813740",
+        "dc.title":"Abp Reg 3 folio 010 recto"},
+      {
+        "PID":"york:813741",
+        "dc.title":"Abp Reg 3 folio 010 verso"},
+      {
+        "PID":"york:813742",
+        "dc.title":"Abp Reg 3 folio 011 recto"},
+      {
+        "PID":"york:813743",
+        "dc.title":"Abp Reg 3 folio 011 verso"},
+      {
+        "PID":"york:813744",
+        "dc.title":"Abp Reg 3 folio 012 recto"},
+      {
+        "PID":"york:813745",
+        "dc.title":"Abp Reg 3 folio 012 verso"},
+      {
+        "PID":"york:813746",
+        "dc.title":"Abp Reg 3 folio 013 recto"},
+      {
+        "PID":"york:813747",
+        "dc.title":"Abp Reg 3 folio 013 verso"},
+      {
+        "PID":"york:813748",
+        "dc.title":"Abp Reg 3 folio 014 recto"},
+      {
+        "PID":"york:813749",
+        "dc.title":"Abp Reg 3 folio 014 verso"},
+      {
+        "PID":"york:813750",
+        "dc.title":"Abp Reg 3 folio 015 recto"},
+      {
+        "PID":"york:813751",
+        "dc.title":"Abp Reg 3 folio 015 verso"},
+      {
+        "PID":"york:813752",
+        "dc.title":"Abp Reg 3 folio 016 recto"},
+      {
+        "PID":"york:813753",
+        "dc.title":"Abp Reg 3 folio 016 verso"},
+      {
+        "PID":"york:813754",
+        "dc.title":"Abp Reg 3 folio 017 recto"},
+      {
+        "PID":"york:813755",
+        "dc.title":"Abp Reg 3 folio 017 verso"},
+      {
+        "PID":"york:813756",
+        "dc.title":"Abp Reg 3 folio 018 recto"},
+      {
+        "PID":"york:813757",
+        "dc.title":"Abp Reg 3 folio 018 verso"},
+      {
+        "PID":"york:813758",
+        "dc.title":"Abp Reg 3 folio 019 recto"},
+      {
+        "PID":"york:813759",
+        "dc.title":"Abp Reg 3 folio 019 verso"},
+      {
+        "PID":"york:813760",
+        "dc.title":"Abp Reg 3 folio 020 recto"},
+      {
+        "PID":"york:813761",
+        "dc.title":"Abp Reg 3 folio 020 verso"},
+      {
+        "PID":"york:813762",
+        "dc.title":"Abp Reg 3 folio 021 recto"},
+      {
+        "PID":"york:813763",
+        "dc.title":"Abp Reg 3 folio 021 verso"},
+      {
+        "PID":"york:813764",
+        "dc.title":"Abp Reg 3 folios 022 and 023 recto"},
+      {
+        "PID":"york:813765",
+        "dc.title":"Abp Reg 3 folio 024 recto"},
+      {
+        "PID":"york:813766",
+        "dc.title":"Abp Reg 3 folio 024 verso"},
+      {
+        "PID":"york:813767",
+        "dc.title":"Abp Reg 3 folio 025 recto"},
+      {
+        "PID":"york:813768",
+        "dc.title":"Abp Reg 3 folio 025 verso"},
+      {
+        "PID":"york:813769",
+        "dc.title":"Abp Reg 3 folio 026 recto"},
+      {
+        "PID":"york:813770",
+        "dc.title":"Abp Reg 3 folios 027 and 028 recto"},
+      {
+        "PID":"york:813771",
+        "dc.title":"Abp Reg 3 folio 029 recto"},
+      {
+        "PID":"york:813772",
+        "dc.title":"Abp Reg 3 folio 030 recto"},
+      {
+        "PID":"york:813773",
+        "dc.title":"Abp Reg 3 folio 031 recto"},
+      {
+        "PID":"york:813774",
+        "dc.title":"Abp Reg 3 folio 032 recto"},
+      {
+        "PID":"york:813775",
+        "dc.title":"Abp Reg 3 folio 033 recto"},
+      {
+        "PID":"york:813776",
+        "dc.title":"Abp Reg 3 folio 034 recto"},
+      {
+        "PID":"york:813777",
+        "dc.title":"Abp Reg 3 folio 035 recto"},
+      {
+        "PID":"york:813778",
+        "dc.title":"Abp Reg 3 folio 035 verso"},
+      {
+        "PID":"york:813779",
+        "dc.title":"Abp Reg 3 folio 036 recto"},
+      {
+        "PID":"york:813780",
+        "dc.title":"Abp Reg 3 folio 036 verso"},
+      {
+        "PID":"york:813781",
+        "dc.title":"Abp Reg 3 folio 037 recto"},
+      {
+        "PID":"york:813782",
+        "dc.title":"Abp Reg 3 folio 037 verso"},
+      {
+        "PID":"york:813783",
+        "dc.title":"Abp Reg 3 folio 038 recto"},
+      {
+        "PID":"york:813784",
+        "dc.title":"Abp Reg 3 folio 038 verso"},
+      {
+        "PID":"york:813785",
+        "dc.title":"Abp Reg 3 folio 039 recto"},
+      {
+        "PID":"york:813786",
+        "dc.title":"Abp Reg 3 folio 039 verso"},
+      {
+        "PID":"york:813787",
+        "dc.title":"Abp Reg 3 folio 040 recto"},
+      {
+        "PID":"york:813788",
+        "dc.title":"Abp Reg 3 folio 040 verso"},
+      {
+        "PID":"york:813789",
+        "dc.title":"Abp Reg 3 folios 41, 042 and 043 recto"},
+      {
+        "PID":"york:813790",
+        "dc.title":"Abp Reg 3 folio 044 recto"},
+      {
+        "PID":"york:813791",
+        "dc.title":"Abp Reg 3 folio 044 verso"},
+      {
+        "PID":"york:813792",
+        "dc.title":"Abp Reg 3 folio 045 recto"},
+      {
+        "PID":"york:813793",
+        "dc.title":"Abp Reg 3 folio 045 verso"},
+      {
+        "PID":"york:813794",
+        "dc.title":"Abp Reg 3 folio 046 recto"},
+      {
+        "PID":"york:813795",
+        "dc.title":"Abp Reg 3 folio 046 verso"},
+      {
+        "PID":"york:813796",
+        "dc.title":"Abp Reg 3 folio 047 recto"},
+      {
+        "PID":"york:813797",
+        "dc.title":"Abp Reg 3 folio 047 verso"},
+      {
+        "PID":"york:813798",
+        "dc.title":"Abp Reg 3 folio 048 recto"},
+      {
+        "PID":"york:813799",
+        "dc.title":"Abp Reg 3 folio 048 verso"},
+      {
+        "PID":"york:813800",
+        "dc.title":"Abp Reg 3 folio 049 recto"},
+      {
+        "PID":"york:813801",
+        "dc.title":"Abp Reg 3 folio 049 verso"},
+      {
+        "PID":"york:813802",
+        "dc.title":"Abp Reg 3 folio 050 recto"},
+      {
+        "PID":"york:813803",
+        "dc.title":"Abp Reg 3 folio 050 verso"},
+      {
+        "PID":"york:813804",
+        "dc.title":"Abp Reg 3 folio 051 recto"},
+      {
+        "PID":"york:813805",
+        "dc.title":"Abp Reg 3 folio 051 verso"},
+      {
+        "PID":"york:813806",
+        "dc.title":"Abp Reg 3 folio 052 recto"},
+      {
+        "PID":"york:813808",
+        "dc.title":"Abp Reg 3 folio 053 recto"},
+      {
+        "PID":"york:813809",
+        "dc.title":"Abp Reg 3 folio 053 verso"},
+      {
+        "PID":"york:813810",
+        "dc.title":"Abp Reg 3 folios 054 and 055 recto"},
+      {
+        "PID":"york:813811",
+        "dc.title":"Abp Reg 3 folio 056 recto"},
+      {
+        "PID":"york:813812",
+        "dc.title":"Abp Reg 3 folio 056 verso"},
+      {
+        "PID":"york:813813",
+        "dc.title":"Abp Reg 3 folio 057 recto"},
+      {
+        "PID":"york:813814",
+        "dc.title":"Abp Reg 3 folio 057 verso"},
+      {
+        "PID":"york:813815",
+        "dc.title":"Abp Reg 3 folio 058 recto"},
+      {
+        "PID":"york:813816",
+        "dc.title":"Abp Reg 3 folio 058 verso"},
+      {
+        "PID":"york:813817",
+        "dc.title":"Abp Reg 3 folio 059 recto"},
+      {
+        "PID":"york:813818",
+        "dc.title":"Abp Reg 3 folio 059 verso"},
+      {
+        "PID":"york:813819",
+        "dc.title":"Abp Reg 3 folio 060 recto"},
+      {
+        "PID":"york:813820",
+        "dc.title":"Abp Reg 3 folio 060 verso"},
+      {
+        "PID":"york:813821",
+        "dc.title":"Abp Reg 3 folio 061 recto"},
+      {
+        "PID":"york:813822",
+        "dc.title":"Abp Reg 3 folio 062 recto"},
+      {
+        "PID":"york:813823",
+        "dc.title":"Abp Reg 3 folio 063 recto"},
+      {
+        "PID":"york:813824",
+        "dc.title":"Abp Reg 3 folio 064 recto"},
+      {
+        "PID":"york:813825",
+        "dc.title":"Abp Reg 3 folio 065 verso"},
+      {
+        "PID":"york:813826",
+        "dc.title":"Abp Reg 3 folio 066 recto"},
+      {
+        "PID":"york:813827",
+        "dc.title":"Abp Reg 3 folio 066 verso"},
+      {
+        "PID":"york:813828",
+        "dc.title":"Abp Reg 3 folio 068 recto"},
+      {
+        "PID":"york:813829",
+        "dc.title":"Abp Reg 3 folio 068 verso"},
+      {
+        "PID":"york:813830",
+        "dc.title":"Abp Reg 3 folio 069 recto"},
+      {
+        "PID":"york:813831",
+        "dc.title":"Abp Reg 3 folio 069 verso"},
+      {
+        "PID":"york:813832",
+        "dc.title":"Abp Reg 3 folio 070 recto"},
+      {
+        "PID":"york:813833",
+        "dc.title":"Abp Reg 3 folio 070 verso"},
+      {
+        "PID":"york:813834",
+        "dc.title":"Abp Reg 3 folio 071 recto"},
+      {
+        "PID":"york:813835",
+        "dc.title":"Abp Reg 3 folio 071 verso"},
+      {
+        "PID":"york:813836",
+        "dc.title":"Abp Reg 3 folio 072 recto"},
+      {
+        "PID":"york:813837",
+        "dc.title":"Abp Reg 3 folio 078 recto"},
+      {
+        "PID":"york:813838",
+        "dc.title":"Abp Reg 3 folio 078 verso"},
+      {
+        "PID":"york:813839",
+        "dc.title":"Abp Reg 3 folio 079 recto"},
+      {
+        "PID":"york:813840",
+        "dc.title":"Abp Reg 3 folio 079 verso"},
+      {
+        "PID":"york:813841",
+        "dc.title":"Abp Reg 3 folio 080 recto"},
+      {
+        "PID":"york:813842",
+        "dc.title":"Abp Reg 3 folio 080 verso"},
+      {
+        "PID":"york:813843",
+        "dc.title":"Abp Reg 3 folio 081 recto"},
+      {
+        "PID":"york:813844",
+        "dc.title":"Abp Reg 3 folio 081 verso"},
+      {
+        "PID":"york:813845",
+        "dc.title":"Abp Reg 3 folio 082 recto"},
+      {
+        "PID":"york:813846",
+        "dc.title":"Abp Reg 3 folio 083 recto"},
+      {
+        "PID":"york:813847",
+        "dc.title":"Abp Reg 3 folio 083 verso"},
+      {
+        "PID":"york:813848",
+        "dc.title":"Abp Reg 3 folio 084 recto"},
+      {
+        "PID":"york:813849",
+        "dc.title":"Abp Reg 3 folio 084 verso"},
+      {
+        "PID":"york:813850",
+        "dc.title":"Abp Reg 3 folio 085 recto"},
+      {
+        "PID":"york:813851",
+        "dc.title":"Abp Reg 3 folio 085 verso"},
+      {
+        "PID":"york:813852",
+        "dc.title":"Abp Reg 3 folio 086 recto"},
+      {
+        "PID":"york:813853",
+        "dc.title":"Abp Reg 3 folio 086 verso"},
+      {
+        "PID":"york:813854",
+        "dc.title":"Abp Reg 3 folio 087 recto"},
+      {
+        "PID":"york:813855",
+        "dc.title":"Abp Reg 3 folio 087 verso"},
+      {
+        "PID":"york:813856",
+        "dc.title":"Abp Reg 3 folio 088 recto"},
+      {
+        "PID":"york:813857",
+        "dc.title":"Abp Reg 3 folio 088 verso"},
+      {
+        "PID":"york:813858",
+        "dc.title":"Abp Reg 3 folio 089 recto"},
+      {
+        "PID":"york:813859",
+        "dc.title":"Abp Reg 3 folio 089 verso"},
+      {
+        "PID":"york:813860",
+        "dc.title":"Abp Reg 3 folio 090 recto"},
+      {
+        "PID":"york:813861",
+        "dc.title":"Abp Reg 3 folio 090 verso"},
+      {
+        "PID":"york:813862",
+        "dc.title":"Abp Reg 3 folio 091 recto"},
+      {
+        "PID":"york:813863",
+        "dc.title":"Abp Reg 3 folio 092 recto"},
+      {
+        "PID":"york:813864",
+        "dc.title":"Abp Reg 3 folio 093 recto"},
+      {
+        "PID":"york:813865",
+        "dc.title":"Abp Reg 3 folio 094 recto"},
+      {
+        "PID":"york:813866",
+        "dc.title":"Abp Reg 3 folio 095 recto"},
+      {
+        "PID":"york:813867",
+        "dc.title":"Abp Reg 3 folio 096 recto"},
+      {
+        "PID":"york:813868",
+        "dc.title":"Abp Reg 3 folio 097 recto"},
+      {
+        "PID":"york:813869",
+        "dc.title":"Abp Reg 3 folio 097 verso"},
+      {
+        "PID":"york:813870",
+        "dc.title":"Abp Reg 3 folio 098 recto"},
+      {
+        "PID":"york:813871",
+        "dc.title":"Abp Reg 3 folio 098 verso"},
+      {
+        "PID":"york:813872",
+        "dc.title":"Abp Reg 3 folio 100 recto"},
+      {
+        "PID":"york:813873",
+        "dc.title":"Abp Reg 3 folio 100 verso"},
+      {
+        "PID":"york:813874",
+        "dc.title":"Abp Reg 3 folio 102 recto"},
+      {
+        "PID":"york:813875",
+        "dc.title":"Abp Reg 3 folio 102 verso"},
+      {
+        "PID":"york:813876",
+        "dc.title":"Abp Reg 3 folio 103 recto"},
+      {
+        "PID":"york:813877",
+        "dc.title":"Abp Reg 3 folio 104 recto"},
+      {
+        "PID":"york:813878",
+        "dc.title":"Abp Reg 3 folio 104 verso"},
+      {
+        "PID":"york:813879",
+        "dc.title":"Abp Reg 3 folio 105 recto"},
+      {
+        "PID":"york:813880",
+        "dc.title":"Abp Reg 3 folio 105 verso"},
+      {
+        "PID":"york:813881",
+        "dc.title":"Abp Reg 3 folio 106 recto"},
+      {
+        "PID":"york:813882",
+        "dc.title":"Abp Reg 3 folio 106 verso"},
+      {
+        "PID":"york:813883",
+        "dc.title":"Abp Reg 3 folio 107 recto"},
+      {
+        "PID":"york:813884",
+        "dc.title":"Abp Reg 3 folio 107 verso"},
+      {
+        "PID":"york:813885",
+        "dc.title":"Abp Reg 3 folio 108 recto"},
+      {
+        "PID":"york:813886",
+        "dc.title":"Abp Reg 3 folio 109 recto"},
+      {
+        "PID":"york:813887",
+        "dc.title":"Abp Reg 3 folio 109 verso"},
+      {
+        "PID":"york:813888",
+        "dc.title":"Abp Reg 3 folio 110 recto"},
+      {
+        "PID":"york:813889",
+        "dc.title":"Abp Reg 3 folio 111 recto"},
+      {
+        "PID":"york:813890",
+        "dc.title":"Abp Reg 3 folio 113 recto"},
+      {
+        "PID":"york:813891",
+        "dc.title":"Abp Reg 3 folio 113 verso"},
+      {
+        "PID":"york:813892",
+        "dc.title":"Abp Reg 3 folio 114 recto"},
+      {
+        "PID":"york:813893",
+        "dc.title":"Abp Reg 3 folio 114 verso"},
+      {
+        "PID":"york:813894",
+        "dc.title":"Abp Reg 3 folio 115 recto"},
+      {
+        "PID":"york:813895",
+        "dc.title":"Abp Reg 3 folio 115 verso"},
+      {
+        "PID":"york:813896",
+        "dc.title":"Abp Reg 3 folio 116 recto"},
+      {
+        "PID":"york:813897",
+        "dc.title":"Abp Reg 3 folio 116 verso"},
+      {
+        "PID":"york:813898",
+        "dc.title":"Abp Reg 3 folio 117 recto"},
+      {
+        "PID":"york:813899",
+        "dc.title":"Abp Reg 3 folio 117 verso"},
+      {
+        "PID":"york:813900",
+        "dc.title":"Abp Reg 3 folio 118 recto"},
+      {
+        "PID":"york:813901",
+        "dc.title":"Abp Reg 3 folio 118 verso"},
+      {
+        "PID":"york:813902",
+        "dc.title":"Abp Reg 3 folio 119 recto"},
+      {
+        "PID":"york:813903",
+        "dc.title":"Abp Reg 3 folio 119 verso"},
+      {
+        "PID":"york:813904",
+        "dc.title":"Abp Reg 3 folio 120 recto"},
+      {
+        "PID":"york:813905",
+        "dc.title":"Abp Reg 3 folio 120 verso"},
+      {
+        "PID":"york:813906",
+        "dc.title":"Abp Reg 3 folio 121 recto"},
+      {
+        "PID":"york:813907",
+        "dc.title":"Abp Reg 3 folio 121 verso"},
+      {
+        "PID":"york:813908",
+        "dc.title":"Abp Reg 3 folio 122 recto"},
+      {
+        "PID":"york:813909",
+        "dc.title":"Abp Reg 3 folio 122 verso"},
+      {
+        "PID":"york:813910",
+        "dc.title":"Abp Reg 3 folio 123 recto"},
+      {
+        "PID":"york:813911",
+        "dc.title":"Abp Reg 3 folio 123 verso"},
+      {
+        "PID":"york:813912",
+        "dc.title":"Abp Reg 3 folio 124 recto"},
+      {
+        "PID":"york:813913",
+        "dc.title":"Abp Reg 3 folio 124 verso"},
+      {
+        "PID":"york:813914",
+        "dc.title":"Abp Reg 3 folio 126 recto"},
+      {
+        "PID":"york:813915",
+        "dc.title":"Abp Reg 3 folio 126 verso"},
+      {
+        "PID":"york:813916",
+        "dc.title":"Abp Reg 3 folio 127 recto"},
+      {
+        "PID":"york:813917",
+        "dc.title":"Abp Reg 3 folio 127 verso"},
+      {
+        "PID":"york:813918",
+        "dc.title":"Abp Reg 3 folio 128 recto"},
+      {
+        "PID":"york:813919",
+        "dc.title":"Abp Reg 3 folio 128 verso"},
+      {
+        "PID":"york:813920",
+        "dc.title":"Abp Reg 3 folio 129 recto"},
+      {
+        "PID":"york:813921",
+        "dc.title":"Abp Reg 3 folio 129 verso"},
+      {
+        "PID":"york:813922",
+        "dc.title":"Abp Reg 3 folio 130 recto"},
+      {
+        "PID":"york:813923",
+        "dc.title":"Abp Reg 3 folio 130 verso"},
+      {
+        "PID":"york:813924",
+        "dc.title":"Abp Reg 3 folio 131 recto"},
+      {
+        "PID":"york:813925",
+        "dc.title":"Abp Reg 3 folio 133 recto"},
+      {
+        "PID":"york:813926",
+        "dc.title":"Abp Reg 3 folio 133 verso"},
+      {
+        "PID":"york:813927",
+        "dc.title":"Abp Reg 3 folio 134 recto"},
+      {
+        "PID":"york:813928",
+        "dc.title":"Abp Reg 3 folio 134 verso"},
+      {
+        "PID":"york:813929",
+        "dc.title":"Abp Reg 3 folio 135 recto"},
+      {
+        "PID":"york:813930",
+        "dc.title":"Abp Reg 3 folio 135 verso"},
+      {
+        "PID":"york:813931",
+        "dc.title":"Abp Reg 3 folio 136 recto"},
+      {
+        "PID":"york:813932",
+        "dc.title":"Abp Reg 3 folio 136 verso"},
+      {
+        "PID":"york:813933",
+        "dc.title":"Abp Reg 3 folio 137 recto"},
+      {
+        "PID":"york:813934",
+        "dc.title":"Abp Reg 3 folio 137 verso"},
+      {
+        "PID":"york:813935",
+        "dc.title":"Abp Reg 3 folio 138 recto"},
+      {
+        "PID":"york:813936",
+        "dc.title":"Abp Reg 3 folio 138 verso"},
+      {
+        "PID":"york:813937",
+        "dc.title":"Abp Reg 3 folio 139 recto"},
+      {
+        "PID":"york:813938",
+        "dc.title":"Abp Reg 3 folio 139 verso"},
+      {
+        "PID":"york:813939",
+        "dc.title":"Abp Reg 3 folio 140 recto"},
+      {
+        "PID":"york:813940",
+        "dc.title":"Abp Reg 3 folio 140 verso"},
+      {
+        "PID":"york:813941",
+        "dc.title":"Abp Reg 3 folio 141 recto"},
+      {
+        "PID":"york:813942",
+        "dc.title":"Abp Reg 3 folio 141 verso"},
+      {
+        "PID":"york:813943",
+        "dc.title":"Abp Reg 3 folio 142 recto"},
+      {
+        "PID":"york:813944",
+        "dc.title":"Abp Reg 3 folio 142 verso"},
+      {
+        "PID":"york:813945",
+        "dc.title":"Abp Reg 3 folio 143 recto"},
+      {
+        "PID":"york:813946",
+        "dc.title":"Abp Reg 3 folio 143 verso"},
+      {
+        "PID":"york:813947",
+        "dc.title":"Abp Reg 3 folio 145 recto"},
+      {
+        "PID":"york:813948",
+        "dc.title":"Abp Reg 3 folio 146 recto"},
+      {
+        "PID":"york:813949",
+        "dc.title":"Abp Reg 3 folio 146 verso"},
+      {
+        "PID":"york:813950",
+        "dc.title":"Abp Reg 3 folio 147 recto"},
+      {
+        "PID":"york:813951",
+        "dc.title":"Abp Reg 3 folio 147 verso"},
+      {
+        "PID":"york:813952",
+        "dc.title":"Abp Reg 3 folio 148 recto"},
+      {
+        "PID":"york:813953",
+        "dc.title":"Abp Reg 3 folio 148 verso"},
+      {
+        "PID":"york:813954",
+        "dc.title":"Abp Reg 3 folio 149 recto"},
+      {
+        "PID":"york:813955",
+        "dc.title":"Abp Reg 3 folio 149 verso"},
+      {
+        "PID":"york:813956",
+        "dc.title":"Abp Reg 3 folio 150 recto"},
+      {
+        "PID":"york:813957",
+        "dc.title":"Abp Reg 3 folio 150 verso"},
+      {
+        "PID":"york:813958",
+        "dc.title":"Abp Reg 3 folio 151 recto"},
+      {
+        "PID":"york:813959",
+        "dc.title":"Abp Reg 3 folio 151 verso"},
+      {
+        "PID":"york:813960",
+        "dc.title":"Abp Reg 3 folio 152 recto"},
+      {
+        "PID":"york:813961",
+        "dc.title":"Abp Reg 3 folio 152 verso"},
+      {
+        "PID":"york:813962",
+        "dc.title":"Abp Reg 3 folio 153 recto"},
+      {
+        "PID":"york:813963",
+        "dc.title":"Abp Reg 3 folio 154 recto"},
+      {
+        "PID":"york:813964",
+        "dc.title":"Abp Reg 3 folio 154 verso"},
+      {
+        "PID":"york:813965",
+        "dc.title":"Abp Reg 3 folio 155 recto"},
+      {
+        "PID":"york:813966",
+        "dc.title":"Abp Reg 3 folio 157 recto"},
+      {
+        "PID":"york:813967",
+        "dc.title":"Abp Reg 3 folio 157 verso"},
+      {
+        "PID":"york:813968",
+        "dc.title":"Abp Reg 3 folio 158 recto"},
+      {
+        "PID":"york:813969",
+        "dc.title":"Abp Reg 3 folio 158 verso"},
+      {
+        "PID":"york:813970",
+        "dc.title":"Abp Reg 3 folio 159 verso"},
+      {
+        "PID":"york:813971",
+        "dc.title":"Abp Reg 3 folio 160 recto"},
+      {
+        "PID":"york:813972",
+        "dc.title":"Abp Reg 3 folio 162 recto"},
+      {
+        "PID":"york:813973",
+        "dc.title":"Abp Reg 3 folio 162 verso"},
+      {
+        "PID":"york:813974",
+        "dc.title":"Abp Reg 3 folio 164 verso"},
+      {
+        "PID":"york:813975",
+        "dc.title":"Abp Reg 3 folio 166 recto"},
+      {
+        "PID":"york:813976",
+        "dc.title":"Abp Reg 3 folio 168 recto"},
+      {
+        "PID":"york:813977",
+        "dc.title":"Abp Reg 3 folio 168 verso"},
+      {
+        "PID":"york:813978",
+        "dc.title":"Abp Reg 3 folio 169 recto"},
+      {
+        "PID":"york:813979",
+        "dc.title":"Abp Reg 3 folio 169 verso"},
+      {
+        "PID":"york:813980",
+        "dc.title":"Abp Reg 3 folio 170 recto"},
+      {
+        "PID":"york:813981",
+        "dc.title":"Abp Reg 3 folio 170 verso"},
+      {
+        "PID":"york:813982",
+        "dc.title":"Abp Reg 3 folio 171 recto"},
+      {
+        "PID":"york:813983",
+        "dc.title":"Abp Reg 3 folio 171 verso"},
+      {
+        "PID":"york:813984",
+        "dc.title":"Abp Reg 3 folio 172 recto"},
+      {
+        "PID":"york:813985",
+        "dc.title":"Abp Reg 3 folio 172 verso"},
+      {
+        "PID":"york:813986",
+        "dc.title":"Abp Reg 3 folio 173 recto"},
+      {
+        "PID":"york:813987",
+        "dc.title":"Abp Reg 3 folio 173 verso"},
+      {
+        "PID":"york:813988",
+        "dc.title":"Abp Reg 3 folio 174 recto"},
+      {
+        "PID":"york:813989",
+        "dc.title":"Abp Reg 3 folio 174 verso"},
+      {
+        "PID":"york:813990",
+        "dc.title":"Abp Reg 3 folio 175 recto"},
+      {
+        "PID":"york:813991",
+        "dc.title":"Abp Reg 3 folio 175 verso"},
+      {
+        "PID":"york:813992",
+        "dc.title":"Abp Reg 3 folio 176 recto"},
+      {
+        "PID":"york:813993",
+        "dc.title":"Abp Reg 3 folio 176 verso"},
+      {
+        "PID":"york:813994",
+        "dc.title":"Abp Reg 3 folio 177 verso"},
+      {
+        "PID":"york:813995",
+        "dc.title":"Abp Reg 3 folio 178 recto"},
+      {
+        "PID":"york:813996",
+        "dc.title":"Abp Reg 3 folio 178 verso"},
+      {
+        "PID":"york:813997",
+        "dc.title":"Abp Reg 3 folio 179 recto"},
+      {
+        "PID":"york:813998",
+        "dc.title":"Abp Reg 3 folio 179 verso"},
+      {
+        "PID":"york:813999",
+        "dc.title":"Abp Reg 3 folio 180 recto"},
+      {
+        "PID":"york:814000",
+        "dc.title":"Abp Reg 3 folio 181 recto"},
+      {
+        "PID":"york:814001",
+        "dc.title":"Abp Reg 3 folio 181 verso"},
+      {
+        "PID":"york:814002",
+        "dc.title":"Abp Reg 3 folio 182 recto"},
+      {
+        "PID":"york:814003",
+        "dc.title":"Abp Reg 3 folio 182 verso"},
+      {
+        "PID":"york:814004",
+        "dc.title":"Abp Reg 3 folio 183 recto"},
+      {
+        "PID":"york:814005",
+        "dc.title":"Abp Reg 3 folio 184 recto"},
+      {
+        "PID":"york:814006",
+        "dc.title":"Abp Reg 3 folio 184 verso"},
+      {
+        "PID":"york:814007",
+        "dc.title":"Abp Reg 3 folio 185 recto"},
+      {
+        "PID":"york:814008",
+        "dc.title":"Abp Reg 3 folio 185 verso"},
+      {
+        "PID":"york:814009",
+        "dc.title":"Abp Reg 3 folio 186 recto"},
+      {
+        "PID":"york:814010",
+        "dc.title":"Abp Reg 3 folio 188 recto"},
+      {
+        "PID":"york:814011",
+        "dc.title":"Abp Reg 3 folio 188 verso"},
+      {
+        "PID":"york:814012",
+        "dc.title":"Abp Reg 3 folio 189 recto"},
+      {
+        "PID":"york:814013",
+        "dc.title":"Abp Reg 3 folio 189 verso"},
+      {
+        "PID":"york:814014",
+        "dc.title":"Abp Reg 3 folio 190 recto"},
+      {
+        "PID":"york:814015",
+        "dc.title":"Abp Reg 3 folio 190 verso"},
+      {
+        "PID":"york:814016",
+        "dc.title":"Abp Reg 3 folio 191 recto"},
+      {
+        "PID":"york:814017",
+        "dc.title":"Abp Reg 3 folio 191 verso"},
+      {
+        "PID":"york:814018",
+        "dc.title":"Abp Reg 3 folio 192 recto"},
+      {
+        "PID":"york:814019",
+        "dc.title":"Abp Reg 3 folio 192 verso"},
+      {
+        "PID":"york:814020",
+        "dc.title":"Abp Reg 3 folio 193 recto"},
+      {
+        "PID":"york:814021",
+        "dc.title":"Abp Reg 3 folio 193 verso"},
+      {
+        "PID":"york:814022",
+        "dc.title":"Abp Reg 3 folio 194 recto"},
+      {
+        "PID":"york:814023",
+        "dc.title":"Abp Reg 3 folio 194 verso"},
+      {
+        "PID":"york:814024",
+        "dc.title":"Abp Reg 3 folio 195 recto"},
+      {
+        "PID":"york:814025",
+        "dc.title":"Abp Reg 3 folio 195 verso"},
+      {
+        "PID":"york:814026",
+        "dc.title":"Abp Reg 3 folio 196 recto"},
+      {
+        "PID":"york:814027",
+        "dc.title":"Abp Reg 3 folio 196 verso"},
+      {
+        "PID":"york:814028",
+        "dc.title":"Abp Reg 3 folio 197 recto"},
+      {
+        "PID":"york:814029",
+        "dc.title":"Abp Reg 3 folio 197 verso"},
+      {
+        "PID":"york:814030",
+        "dc.title":"Abp Reg 3 folio 198 recto"},
+      {
+        "PID":"york:814031",
+        "dc.title":"Abp Reg 3 folio 198 verso"},
+      {
+        "PID":"york:814032",
+        "dc.title":"Abp Reg 3 folio 199 recto"},
+      {
+        "PID":"york:814033",
+        "dc.title":"Abp Reg 3 folio 199 verso"}]
+  }}

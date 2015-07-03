@@ -7,7 +7,7 @@ class ImageZoomLargeController < ApplicationController
   before_filter :session_timed_out
 
   def session_timed_out
-    if session[:login] == '' || session[:login] == nil
+    if session[:logins] == '' || session[:logins] == nil
       render 'timed_out', :layout => 'session_timed_out'
     end
   end
@@ -20,7 +20,7 @@ class ImageZoomLargeController < ApplicationController
 
     @dzi_url_str = remote_server + remote_dzi_base_url + remote_dzi_image_url
 
-    # Get the xml from the url and replace the carraiage returns, otherwise it doesn't work
+    # Get the xml from the url and replace the carriage returns, otherwise it doesn't work
     dzi_xml = Net::HTTP.get('dlib.york.ac.uk', remote_dzi_base_url + remote_dzi_image_url)
     dzi_xml = dzi_xml.gsub(/\r/,' ')
     @dzi_xml = dzi_xml.gsub(/\n/,' ')

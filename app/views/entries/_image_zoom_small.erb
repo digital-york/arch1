@@ -1,0 +1,104 @@
+<div id="image_header" style='width: 300px'>
+
+  <!--<form name="myForm" onsubmit="return validateForm()">-->
+
+  <form name="myForm" id="choose_folio">
+
+    <span style="position: relative; top: 1px">Current Folio:</span>
+
+    <select name="folio_choice" style="width: 160px" class="choose_folio">
+      <option value="">--- Folio ---</option>
+      <% @folios.each do |folio| %>
+          <option value="<%= folio[0] %>" <% if session[:folio_choice] == folio[0] %>selected<% end %>><%= folio[1] %></option>
+      <% end %>
+    </select>
+
+    <input type="hidden" name="set_folio" value="true" />
+
+  </form>
+
+</div>
+
+<% if session[:register_choice] != '' && session[:folio_choice] != '' %>
+
+    <div id="image_frame" style="text-align: center">
+
+      <div id="location1" style="background-color: black"></div>
+
+      <div id="image_footer">
+
+        <div style="float: left; padding-left: 120px; padding-top: 6px">
+
+          <% current_folio = session[:folio_choice] %>
+
+          <% if current_folio == session[:first_folio] %>
+              <%= button_to "<", {}, :style => 'margin-right: 5px', :disabled => 'true' %>
+          <% else %>
+              <%= button_to "<", entries_path, :method => "get", params: { :set_folio_next_previous => 'previous' }, :style => 'margin-right: 5px', :title => 'previous image' %>
+          <% end %>
+
+          <% if current_folio == session[:last_folio] %>
+              <%= button_to ">", {}, :disabled => 'true' %>
+          <% else %>
+              <%= button_to ">", entries_path, :method => "get", params: { :set_folio_next_previous => 'next' }, :title => 'next image' %>
+          <% end %>
+        </div>
+
+        <div style="float: left; margin-left: 72px"><%= link_to image_tag("magnifying_glass.png", :alt => "register", :class => "icon", :style => "position: relative; top: 7px", :title => 'Open new window'), "#", :onclick => "image_zoom_large_popup('/image_zoom_large')", :title => "" %></div>
+
+        <div style="clear: both"></div>
+      </div>
+    </div>
+
+    <div style="clear: both"></div>
+
+    <div id="image_header2" style='width: 280px; margin-top: 30px; color: black; background-color: transparent'>
+      Browse Folios:
+    </div>
+
+    <div style="clear: both"></div>
+
+    <div id="images_frame2" style="text-align: center">
+
+      <div id="location2" style="background-color: black">
+        <%= image_tag "Reg_12_001_Insert_a_PREVIEW.jpg", :width => '' %>
+      </div>
+
+      <div id="image_footer">
+
+        <div style="float: left; padding-left: 120px; padding-top: 6px">
+
+          <% current_folio = session[:folio_choice] %>
+
+          <% if current_folio == session[:first_folio] %>
+              <%= button_to "<", {}, :style => 'margin-right: 5px', :disabled => 'true' %>
+          <% else %>
+              <%= button_to "<", entries_path, :method => "get", params: {:button_action => 'back'}, :style => 'margin-right: 5px', :title => 'previous image' %>
+          <% end %>
+
+          <% if current_folio == session[:last_folio] %>
+              <%= button_to ">", {}, :disabled => 'true' %>
+          <% else %>
+              <%= button_to ">", entries_path, :method => "get", params: {:button_action => 'forward'}, :title => 'next image' %>
+          <% end %>
+        </div>
+
+        <div style="float: left; margin-left: 72px"><%= link_to image_tag("magnifying_glass.png", :alt => "register", :class => "icon", :style => "position: relative; top: 7px", :title => 'Open new window'), "#", :onclick => "image_zoom_large_popup('/image_zoom_large')", :title => "" %></div>
+
+        <div style="clear: both"></div>
+      </div>
+
+      <div style="clear: both"></div>
+
+    </div>
+<% end %>
+
+<script type="text/javascript">
+    var viewer = OpenSeadragon({
+        id: "location1",
+        prefixUrl: "assets/seadragonImages/",
+        autoResize: true,
+        tileSources: "http://dlib.york.ac.uk/cgi-bin/iipsrv.fcgi?DeepZoom=<%= session[:image] %>.dzi",
+        showNavigationControl: false
+    });
+</script>
