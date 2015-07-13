@@ -5,11 +5,11 @@ module RegisterFolio
   def get_first_and_last_folio
 
     SolrQuery.new.solr_query('id:"' + session[:register_id] + '"', 'fst_tesim', 1)['response']['docs'].map do |result|
-      session[:first_folio] = result['fst_tesim'][0]
+      session[:first_folio_id] = result['fst_tesim'][0]
     end
 
     SolrQuery.new.solr_query('id:"' + session[:register_id] + '"', 'lst_tesim', 1)['response']['docs'].map do |result|
-      session[:last_folio] = result['lst_tesim'][0]
+      session[:last_folio_id] = result['lst_tesim'][0]
     end
 
   end

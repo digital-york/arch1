@@ -24,13 +24,13 @@
 
         <% current_folio = session[:browse_id] %>
 
-        <% if current_folio == session[:first_folio] %>
+        <% if current_folio == session[:first_folio_id] %>
             <%= button_to "<", {}, :style => 'margin-right: 5px', :disabled => 'true', :class => 'button_previous' %>
         <% else %>
             <%= button_to "<", browse_folios_path, :method => "get", params: {:browse_action => 'prev_tesim'}, :style => 'margin-right: 5px', :title => 'previous image', :class => 'button_previous' %>
         <% end %>
 
-        <% if current_folio == session[:last_folio] %>
+        <% if current_folio == session[:last_folio_id] %>
             <%= button_to ">", {}, :disabled => 'true', :class => 'button_next' %>
         <% else %>
             <%= button_to ">", browse_folios_path, :method => "get", params: {:browse_action => 'next_tesim'}, :title => 'next image', :class => 'button_next' %>

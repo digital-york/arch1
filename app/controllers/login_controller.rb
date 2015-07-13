@@ -23,12 +23,13 @@ class LoginController < ApplicationController
   end
 
   def reset_session_variables
+    session[:login] = ''
     session[:register_id] = ''
+    session[:register_name] = ''
     session[:folio_id] = ''
     session[:folio_image] = ''
-    session[:login] = ''
-    session[:first_folio] = ''
-    session[:last_folio] = ''
+    session[:first_folio_id] = ''
+    session[:last_folio_id] = ''
     session[:browse_id] = ''
     session[:browse_image] = ''
   end

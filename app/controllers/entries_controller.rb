@@ -42,9 +42,10 @@ class EntriesController < ApplicationController
   # NEW
   def new
 
+    # Create a new entry (but isn't saved to Fedora until the user clicks on submit)
     @entry = Entry.new
 
-    # Get the next entry no
+    # Get the max entry no for the current folio (used to automate the entry no in the line below)
     max_entry_no = 0
     SolrQuery.new.solr_query('folio_ssim:"' + session[:folio_id] + '"', 'entry_no_tesim', 100)['response']['docs'].each do |result|
       entry_no = result['entry_no_tesim'].join('').to_i
@@ -53,13 +54,31 @@ class EntriesController < ApplicationController
       end
     end
 
+    # Set the entry_no
     @entry.entry_no = max_entry_no + 1
 
+    # Get all the entries for this folio (so that they can be displayed as tabs)
     @entry_list = Entry.where(folio_ssim: session[:folio_id])
 
+    # Set the authority lists (e.g. subject)
     set_authority_lists
 
+    # Set the folio drop-down list
     set_folio_list
+
+    next_folio_id = ''
+
+    # Get next folio_id
+    SolrQuery.new.solr_query('proxyFor_ssim:"' + session[:folio_id] + '"', 'next_tesim', 1)['response']['docs'].map do |result|
+      next_folio_id = result['next_tesim'][0]
+    end
+
+    # Determine if an entry exists for the next folio
+    @continue_button = 'true'
+
+    SolrQuery.new.solr_query('folio_ssim:"' + next_folio_id + '"', 'id', 1)['response']['docs'].map do |result|
+      @continue_button = 'false'
+    end
 
   end
 
@@ -109,8 +128,8 @@ class EntriesController < ApplicationController
 
     # Get a new entry and replace values with the form parameters
     # Replace the folio id with the corresponding Folio object
-    f = Folio.where(id: entry_params['folio']).first
-    entry_params['folio'] = f
+    folio = Folio.where(id: entry_params['folio']).first
+    entry_params['folio'] = folio
     @entry = Entry.new(entry_params)
 
     # If there are errors, go back to the 'new' page and display the errors, else go to the 'index' page
@@ -119,16 +138,39 @@ class EntriesController < ApplicationController
       set_authority_lists
       render 'new'
     else
+
       # Remove multi-value fields which are empty
+
+      # If 'Continue', create new entry on next folio and save
+      next_entry_id = ''
+      if params[:commit] == 'Continue'
+        next_folio_id = ''
+        SolrQuery.new.solr_query('proxyFor_ssim:"' + @entry.folio_id + '"', 'next_tesim', 1)['response']['docs'].map do |result|
+          next_folio_id = result['next_tesim'][0]
+        end
+        new_entry = Entry.new
+        new_entry.entry_no = '1'
+        new_entry.folio_id = next_folio_id
+        new_entry.save
+        next_entry_id = new_entry.id
+        @entry.continues_on = next_folio_id
+      end
+
       @entry.save
-      redirect_to :action => 'index', :id => @entry.id
+
+      if next_entry_id != ''
+        redirect_to :controller => 'entries', :action => 'index', :id => @entry.id
+      else
+        redirect_to :controller => 'entries', :action => 'edit', :id => next_entry_id
+      end
+
     end
   end
 
   # UPDATE
   def update
 
-  set_entry
+    set_entry
 
     # See validation.rb in /concerns
     #@errors = validate(entry_params)
@@ -151,8 +193,6 @@ class EntriesController < ApplicationController
 
     # Remove any multivalue blank fields or they will be submitted to Fedora
     remove_multivalue_blanks
-
-puts @entry.inspect
 
     # Next folio?
     if params[:commit] == 'Continue'
@@ -180,9 +220,6 @@ puts @entry.inspect
           new_entry.save
 
           @entry.continues_on = next_folio_id
-
-          puts
-          puts @entry.inspect
 
         end
       end
