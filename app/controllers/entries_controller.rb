@@ -1,96 +1,86 @@
 class EntriesController < ApplicationController
 
-  # Set the entry number, get the folio list (for the drop-down) and check if the session is timed out before calling the appropriate methods
-  before_action :set_entry, only: [:index, :show, :update]
-  #before_action :get_registers, only: [:index, :show, :new, :edit, :create, :update, :destroy]
-  #before_action :get_folios, only: [:index, :show, :new, :edit, :create, :update, :destroy]
-  #before_filter :session_timed_out, except: [:login]
-
-  # NOTE - we want to display folio with a space or underscore, e.g. 'Insert a' but save the field as 'Inserta' because
-  # there was a problem with the 'Entry.where' statement when a space occurred - not sure why
+  before_filter :session_timed_out
 
   # INDEX
   def index
 
-    #puts "INDEX (ENTRIES)"
-    #puts params
-
-    # Set the appropriate session variables when the register, folio and folio face are chosen and the 'Go' button is clicked
+    # Set the folio and image session variables when a folio is chosen from the drop-down list (or the '<' or '>' buttons are clicked)
     if params[:set_folio] == 'true'
       set_folio
-    elsif params[:set_folio_next_previous] != nil
-      set_folio_next_previous(params[:set_folio_next_previous])
+    elsif params[:small_zoom_action] != nil
+      set_small_zoom_folio_and_image(params[:small_zoom_action], session[:folio_id])
     end
 
-    get_folios
+    # Set the folio drop-down list
+    set_folio_list
 
-    if session[:register_choice] != '' && session[:folio_choice] != ''
+    if session[:folio_id] != ''
 
-      # Get the first entry for the folio if there isn't an id,  else get the entry with the appropriate id
-      if params[:id] == nil || params[:id] == ''
-        @entry = Entry.where(folio_ssim: session[:folio_choice]).first
+      # Get the first entry for the folio if there isn't an id
+      # Else get the entry with the specified id
+      if params[:id] == nil
+        @entry = Entry.where(folio_ssim: session[:folio_id]).first
       else
         @entry = Entry.find(params[:id])
       end
 
       # Get all the entries which match with the chosen register, folio and folio face
-      @entries = Entry.where(folio_ssim: session[:folio_choice])
-
-      #set_entry
+      @entry_list = Entry.where(folio_ssim: session[:folio_id])
     end
 
   end
 
   # SHOW
-  # This is called when the user clicks on the 'Go' button
+  # This is called when the user selects an entry from the tabs
   def show
-
-    @entries = Entry.all.where(folio_ssim: session[:folio_choice])
-
-    redirect_to :action => 'index', :id => params[:id]
-
+    set_entry
+    @entry_list = Entry.all.where(folio_ssim: session[:folio_id])
+    redirect_to :controller => 'entries', :action => 'index', :id => params[:id]
   end
 
   # NEW
   def new
 
-    # This code sets the new session variables and redirects to index if the 'Go' button is clicked on the new page
-    if params[:go] == 'true'
-      get_current_folio
-      redirect_to :action => 'index'
-    end
-
     @entry = Entry.new
 
-    @entries = Entry.where(folio_ssim: session[:folio_choice])
-    get_authority_lists
+    # Get the next entry no
+    max_entry_no = 0
+    SolrQuery.new.solr_query('folio_ssim:"' + session[:folio_id] + '"', 'entry_no_tesim', 100)['response']['docs'].each do |result|
+      entry_no = result['entry_no_tesim'].join('').to_i
+      if entry_no > max_entry_no
+        max_entry_no = entry_no
+      end
+    end
 
-    get_folios
+    @entry.entry_no = max_entry_no + 1
+
+    @entry_list = Entry.where(folio_ssim: session[:folio_id])
+
+    set_authority_lists
+
+    set_folio_list
 
   end
 
   # EDIT
   def edit
 
-    # This code sets the new session variables and redirects to index if the 'Go' button is clicked on the edit page
-    if params[:go] == 'true'
-      get_current_folio
-      redirect_to :action => 'index'
-    end
+    # Get all the entries for this folio (so that they can be displayed as tabs)
+    @entry_list = Entry.all.where(folio_ssim: session[:folio_id])
 
-    # Get all the entries so that they can be displayed as tabs
-    @entries = Entry.all.where(folio_ssim: session[:folio_choice])
+    # Set the authority lists (e.g. subject)
+    set_authority_lists
 
-    # Get the fields for the current entry
+    # Set the folio drop-down list
+    set_folio_list
+
+    # Set the current entry
     set_entry
-    #puts @entry.inspect
-
-    # Set the authroity lists
-    get_authority_lists
 
     # Define the related person list
-    # # Note that this is a dynamic list which has to be initialised
-    # before editing the page so that the form displays the correct values
+    # Note that this is a dynamic list which has to be initialised before
+    # editing the page so that the form displays the correct values
     @related_place_list = []
 
     # Add default select option to the related place list
@@ -99,16 +89,15 @@ class EntriesController < ApplicationController
     temp << ''
     @related_place_list << temp
 
-    # Add other elements to the related place list, i.e. using 'RelatedPlace' -> 'place_as_written'
+    # Add other elements to the related place list, i.e. using RelatedPlace.place_as_written
+    # Note - only add the first place_as_written at index [0] for each RelatedPlace
     @entry.related_places.each do |related_place|
       temp = []
       if related_place.place_as_written.count > 0
-        temp << related_place.place_as_written[0] # Only use the first 'place_as_written for the list
+        temp << related_place.place_as_written[0]
         @related_place_list << temp
       end
     end
-
-    get_folios
 
   end
 
@@ -126,8 +115,8 @@ class EntriesController < ApplicationController
 
     # If there are errors, go back to the 'new' page and display the errors, else go to the 'index' page
     if @errors != '' && @errors != nil
-      @entries = Entry.where(folio_ssim: session[:folio_choice])
-      get_authority_lists
+      @entry_list = Entry.where(folio_ssim: session[:folio_id])
+      set_authority_lists
       render 'new'
     else
       # Remove multi-value fields which are empty
@@ -139,69 +128,91 @@ class EntriesController < ApplicationController
   # UPDATE
   def update
 
+  set_entry
+
     # See validation.rb in /concerns
     #@errors = validate(entry_params)
 
     # Replace the folio id with the corresponding Folio object
-    f = Folio.where(id: entry_params['folio']).first
-    entry_params['folio'] = f
+    folio_id = Folio.where(id: entry_params['folio']).first
+    entry_params['folio'] = folio_id
 
     @entry.attributes = entry_params
 
     # If there are errors, render the go back to the 'edit' page and display the errors, else go to the 'index' page
-    if @errors != '' && @errors != nil
-      @entries = Entry.where(folio_ssim: session[:folio_choice])
-      get_authority_lists
-      #@entry.attributes = entry_params # Updates the @entry with the appropriate attributes before rendering the 'edit' page
-      set_entry
-      get_folios()
-      render 'edit'
+    #if @errors != '' && @errors != nil
+    #  @@entry_list = Entry.where(folio_ssim: session[:folio_id])
+    #  set_authority_lists
+    #  #@entry.attributes = entry_params # Updates the @entry with the appropriate attributes before rendering the 'edit' page
+    #  set_entry
+    #  set_folio_list
+    #  render 'edit'
+    #else
+
+    # Remove any multivalue blank fields or they will be submitted to Fedora
+    remove_multivalue_blanks
+
+puts @entry.inspect
+
+    # Next folio?
+    if params[:commit] == 'Continue'
+
+      SolrQuery.new.solr_query('proxyFor_ssim:"' + @entry.folio_id + '"', 'next_tesim', 1)['response']['docs'].map do |result|
+
+        next_folio_id = result['next_tesim'][0]
+
+        # Determine if an entry exists for the next folio
+        is_entry = 'false'
+
+        SolrQuery.new.solr_query('folio_ssim:"' + next_folio_id + '"', 'id', 1)['response']['docs'].map do |result|
+          is_entry = 'true'
+        end
+
+        # If it does exist, return an error message
+        # Else, create the first entry on the next folio (and set 'continues_on' to the next folio in the @entry)
+        if is_entry == 'true'
+          # error!
+        else
+
+          new_entry = Entry.new
+          new_entry.entry_no = '1'
+          new_entry.folio_id = next_folio_id
+          new_entry.save
+
+          @entry.continues_on = next_folio_id
+
+          puts
+          puts @entry.inspect
+
+        end
+      end
+    end
+
+    # Save form data to Fedora
+    @entry.save
+
+    if params[:commit] == 'Continue'
+      redirect_to :controller => 'entries', :action => 'index', :id => @entry.id, :continue => 'true'
     else
-
-      # Remove any multivalue blank fields or they will be submitted to Fedora
-      remove_multivalue_blanks
-
-# This code might be used later on
-=begin
-if entry_params[:related_people_attributes] != nil
-  entry_params[:related_people_attributes].values.each do |related_person|
-    related_person_id = related_person[:id]
-    person_related_place = related_person[:person_related_place]
-    puts "Person #{related_person_id}, #{person_related_place}"
-    entry_params[:related_places_attributes].values.each do |related_place|
-      related_place_id = related_place[:id]
-      place_as_written = related_place[:place_as_written]
-      puts "   Place #{related_place_id}, #{place_as_written}"
+      redirect_to :controller => 'entries', :action => 'index', :id => @entry.id
     end
-  end
-end
-=end
 
-      # Save the for data to Fedora
-      @entry.save
-
-      # Redirect to the index page and pass the current entry id
-      redirect_to :action => 'index', :id => @entry.id
-
-    end
   end
 
   # DESTROY
   def destroy
     @entry = Entry.find(params[:id])
     @entry.destroy
-
     redirect_to entries_path, notice: 'Project was successfully destroyed.'
   end
 
   # PRIVATE METHODS
   private
 
-  # Get the entry for the specified id
+  # Set entry for the specified id
   def set_entry
     if params[:id] != nil && params[:id] != ''
       @entry = Entry.find(params[:id])
-      #puts @entry.inspect
     end
   end
 
@@ -269,6 +280,14 @@ end
       @entry.related_people[index].person_role = related_person.person_role.select { |element| element.present? };
       @entry.related_people[index].person_note = related_person.person_note.select { |element| element.present? };
       @entry.related_people[index].person_related_place = related_person.person_related_place.select { |element| element.present? };
+    end
+  end
+
+  # Check if session has timed out
+  # Note that the session timeout value is set in config/initializers/session_store.rb
+  def session_timed_out
+    if session[:login] != 'true'
+      redirect_to :controller => 'login', :action => 'timed_out'
     end
   end
 end

@@ -40,6 +40,10 @@ class Entry < ActiveFedora::Base
     index.as :stored_searchable
   end
 
+  property :continues_on, predicate: ::RDF::URI.new('http://dlib.york.ac.uk/ontologies/generic#continues_on'), multiple: false do |index|
+    index.as :stored_searchable
+  end
+
   has_many :related_people, :dependent => :destroy
   has_many :related_places, :dependent => :destroy
   has_many :entry_dates, :dependent => :destroy

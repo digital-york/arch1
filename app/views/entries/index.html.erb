@@ -5,14 +5,19 @@
     terms = Terms.new('subauthority')
   %>
 
+  <% if session[:folio_id] == '' %>
+
+    <div style="margin-left: 40px; font-size: 1.3em">Please choose a folio from the drop-down list in the menubar.</div>
+
+  <% else %>
+
       <div id='left_frame'>
         <%= render 'image_zoom_small' %>
       </div>
 
-  <% if session[:register_choice] != '' && session[:folio_choice] != '' %>
-
       <div id='right_frame'>
-        <% if @entries.length == 0 %>
+
+        <% if @entry_list.length == 0 %>
             <div style='float: left; width: 900px; font-size: 1.3em'>There are currently no entries for this folio -
               <%= link_to 'please click here to add a new one', new_entry_path, {:title => 'Create new entry'} %>.
             </div>
@@ -29,7 +34,7 @@
                     <th colspan='2' id='entry_menu'>
                       <ul>
                         <li style='margin-left: 5px'></li>
-                        <% @entries.each do |entry| %>
+                        <% @entry_list.each do |entry| %>
                             <li>
                               <% if entry.id == @entry.id %>
                                 <span class='highlight'>
@@ -73,6 +78,16 @@
                   <tr>
                     <th style='width: 153px'>Entry Type:</th>
                     <td style='width: 750px'><%= @entry.entry_type %></td>
+                  </tr>
+
+                  <%# Continues On %>
+                  <tr>
+                    <th>Continues on next folio:</th>
+                    <td>
+                      <% if @entry.continues_on != nil %>
+                          <%= image_tag 'tick.png' %>
+                      <% end %>
+                    </td>
                   </tr>
 
                   <%# Summary %>
@@ -470,8 +485,10 @@
         <% end %>
         <div style='clear: both'></div>
       </div>
+
       <div style='clear: both'></div>
-    <% end %>
+
+  <% end %>
 </div>
 
 

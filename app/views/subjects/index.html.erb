@@ -8,9 +8,9 @@
     @subject_list.each_with_index do |top_level_term, index|
 %>
 
-<div style='margin-top: 8px'>
+<div style='margin-top: 5px'>
 
-    <a href='#' style='font-size: 1em; color: #805409' onClick="post_value('<%= top_level_term['label'].join('') %>', '<%= top_level_term['id'] %>', '<%= params[:subject_field] %>')"><%= top_level_term['label'].join('') %></a>
+    <a href='#' style='font-size: 0.9em; color: #805409' onClick="post_value('<%= top_level_term['label'].join('') %>', '<%= top_level_term['id'] %>', '<%= params[:subject_field] %>')"><%= top_level_term['label'].join('') %></a>
 
     <%= image_tag 'plus_icon_subject.png', class: 'plus_icon_subject' %>
 
@@ -18,13 +18,13 @@
 <%
     top_level_term[:elements].each do |middle_level_term|
 %>
-        <a href='#' style='font-size: 0.9em; color: #84580C' onClick="post_value('<%= middle_level_term['label'].join('') %>', '<%= middle_level_term['id'] %>', '<%= params[:subject_field] %>')"><%= middle_level_term['label'].join('') %></a>
+        <a href='#' style='font-size: 0.85em; color: #805409' onClick="post_value('<%= middle_level_term['label'].join('') %>', '<%= middle_level_term['id'] %>', '<%= params[:subject_field] %>')"><%= middle_level_term['label'].join('') %></a>
         <br/>
 <%
           middle_level_term[:elements].each do |bottom_level_term|
 %>
             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-            <a href='#' style='font-size: 0.9em; color: #BE6226'  onClick="post_value('<%= bottom_level_term['label'].join('') %>', '<%= bottom_level_term['id'] %>', '<%= params[:subject_field] %>')"><em><%= bottom_level_term['label'].join('') %></em></a>
+            <a href='#' style='font-size: 0.8em; color: #805409'  onClick="post_value('<%= bottom_level_term['label'].join('') %>', '<%= bottom_level_term['id'] %>', '<%= params[:subject_field] %>')"><em><%= bottom_level_term['label'].join('') %></em></a>
             <br/>
 
 <%

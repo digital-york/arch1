@@ -1,25 +1,16 @@
-<div id="image_header" style='width: 300px'>
+<% if session[:folio_id] != '' %>
 
-  <!--<form name="myForm" onsubmit="return validateForm()">-->
+    <div id="image_header" style='width: 300px'>
 
-  <form name="myForm" id="choose_folio">
+      <%
+         terms = Terms.new('subauthority')
+         folio_title = terms.get_str_from_id(session[:folio_id], 'title_tesim')
+         folio_title = folio_title.gsub(/Abp Reg \d+ /, "")
+      %>
 
-    <span style="position: relative; top: 1px">Current Folio:</span>
+      <%= folio_title %>
 
-    <select name="folio_choice" style="width: 160px" class="choose_folio">
-      <option value="">--- Folio ---</option>
-      <% @folios.each do |folio| %>
-          <option value="<%= folio[0] %>" <% if session[:folio_choice] == folio[0] %>selected<% end %>><%= folio[1] %></option>
-      <% end %>
-    </select>
-
-    <input type="hidden" name="set_folio" value="true" />
-
-  </form>
-
-</div>
-
-<% if session[:register_choice] != '' && session[:folio_choice] != '' %>
+    </div>
 
     <div id="image_frame" style="text-align: center">
 
@@ -29,22 +20,22 @@
 
         <div style="float: left; padding-left: 120px; padding-top: 6px">
 
-          <% current_folio = session[:folio_choice] %>
+          <% current_folio = session[:folio_id] %>
 
           <% if current_folio == session[:first_folio] %>
               <%= button_to "<", {}, :style => 'margin-right: 5px', :disabled => 'true' %>
           <% else %>
-              <%= button_to "<", entries_path, :method => "get", params: { :set_folio_next_previous => 'previous' }, :style => 'margin-right: 5px', :title => 'previous image' %>
+              <%= button_to "<", entries_path, :method => "get", params: {:small_zoom_action => 'prev_tesim'}, :style => 'margin-right: 5px', :title => 'previous image' %>
           <% end %>
 
           <% if current_folio == session[:last_folio] %>
               <%= button_to ">", {}, :disabled => 'true' %>
           <% else %>
-              <%= button_to ">", entries_path, :method => "get", params: { :set_folio_next_previous => 'next' }, :title => 'next image' %>
+              <%= button_to ">", entries_path, :method => "get", params: {:small_zoom_action => 'next_tesim'}, :title => 'next image' %>
           <% end %>
         </div>
 
-        <div style="float: left; margin-left: 72px"><%= link_to image_tag("magnifying_glass.png", :alt => "register", :class => "icon", :style => "position: relative; top: 7px", :title => 'Open new window'), "#", :onclick => "image_zoom_large_popup('/image_zoom_large')", :title => "" %></div>
+        <div style="float: left; margin-left: 72px"><%= link_to image_tag("magnifying_glass.png", :alt => "register", :class => "icon", :style => "position: relative; top: 7px", :title => 'Image zoom'), "#", :onclick => "image_zoom_large_popup('/image_zoom_large'); return false", :title => "" %></div>
 
         <div style="clear: both"></div>
       </div>
@@ -52,44 +43,8 @@
 
     <div style="clear: both"></div>
 
-    <div id="image_header2" style='width: 280px; margin-top: 30px; color: black; background-color: transparent'>
-      Browse Folios:
-    </div>
-
-    <div style="clear: both"></div>
-
-    <div id="images_frame2" style="text-align: center">
-
-      <div id="location2" style="background-color: black">
-        <%= image_tag "Reg_12_001_Insert_a_PREVIEW.jpg", :width => '' %>
-      </div>
-
-      <div id="image_footer">
-
-        <div style="float: left; padding-left: 120px; padding-top: 6px">
-
-          <% current_folio = session[:folio_choice] %>
-
-          <% if current_folio == session[:first_folio] %>
-              <%= button_to "<", {}, :style => 'margin-right: 5px', :disabled => 'true' %>
-          <% else %>
-              <%= button_to "<", entries_path, :method => "get", params: {:button_action => 'back'}, :style => 'margin-right: 5px', :title => 'previous image' %>
-          <% end %>
-
-          <% if current_folio == session[:last_folio] %>
-              <%= button_to ">", {}, :disabled => 'true' %>
-          <% else %>
-              <%= button_to ">", entries_path, :method => "get", params: {:button_action => 'forward'}, :title => 'next image' %>
-          <% end %>
-        </div>
-
-        <div style="float: left; margin-left: 72px"><%= link_to image_tag("magnifying_glass.png", :alt => "register", :class => "icon", :style => "position: relative; top: 7px", :title => 'Open new window'), "#", :onclick => "image_zoom_large_popup('/image_zoom_large')", :title => "" %></div>
-
-        <div style="clear: both"></div>
-      </div>
-
-      <div style="clear: both"></div>
-
+    <div style="width: 300px; margin-top: 20px; text-align: center">
+      <em><%= link_to "Click here to browse folios", "#", :onclick => "browse_folios_popup('/browse_folios?is_popup=true'); return false" %></em>
     </div>
 <% end %>
 
@@ -98,7 +53,7 @@
         id: "location1",
         prefixUrl: "assets/seadragonImages/",
         autoResize: true,
-        tileSources: "http://dlib.york.ac.uk/cgi-bin/iipsrv.fcgi?DeepZoom=<%= session[:image] %>.dzi",
+        tileSources: "http://dlib.york.ac.uk/cgi-bin/iipsrv.fcgi?DeepZoom=<%= session[:folio_image] %>.dzi",
         showNavigationControl: false
     });
 </script>

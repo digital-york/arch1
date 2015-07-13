@@ -6,12 +6,6 @@ class ImageZoomLargeController < ApplicationController
 
   before_filter :session_timed_out
 
-  def session_timed_out
-    if session[:logins] == '' || session[:logins] == nil
-      render 'timed_out', :layout => 'session_timed_out'
-    end
-  end
-
   def index
 
     remote_server = "http://dlib.york.ac.uk"
@@ -25,6 +19,12 @@ class ImageZoomLargeController < ApplicationController
     dzi_xml = dzi_xml.gsub(/\r/,' ')
     @dzi_xml = dzi_xml.gsub(/\n/,' ')
     @dzi_xml = @dzi_xml.html_safe
+  end
+
+  def session_timed_out
+    if session[:login] != 'true'
+      render 'timed_out', :layout => 'session_timed_out'
+    end
   end
 
 end

@@ -34,7 +34,7 @@
 
   <%= form_for @entry do |f| %>
 
-      <%= f.hidden_field :folio, :value => session[:folio_choice] %>
+      <%= f.hidden_field :folio, :value => session[:folio_id] %>
 
 <div id='form_modified'>
 
@@ -48,7 +48,7 @@
               <ul>
                 <li style='margin-left: 5px'></li>
                 <% if @entry.new_record? %>
-                    <% @entries.each do |entry| %>
+                    <% @entry_list.each do |entry| %>
                         <% i = i + 1 %>
                         <li>
 					  <span class='nohighlight'>
@@ -62,7 +62,7 @@
 					  </span>
                     </li>
                 <% else %>
-                    <% @entries.each do |entry| %>
+                    <% @entry_list.each do |entry| %>
                         <% i = i + 1 %>
                         <li>
                           <% if entry.id == @entry.id %>
@@ -91,11 +91,14 @@
               <div id='entry_menubar'>
                 <span class='edit_button'>
 				<% if @entry.new_record? %>
-				<%= f.submit 'Submit' %>
+				 <%= f.submit 'Submit' %>
                       <a href='<%= entries_path %>'><input type='button' value='Back' /></a>
 				<% else %>
-				<%= f.submit 'Update' %>
-                      <a href='<%= entry_path(@entry) %>'><input type='button' value='Back to View' /></a>
+				  <%= f.submit 'Update' %>
+				  <% if @entry.continues_on == nil %>
+                    <%= f.submit 'Continue', :onclick => 'return confirm("Update the current form and continue on to the next folio?")' %>
+                  <% end %>
+                  <a href='<%= entry_path(@entry) %>'><input type='button' value='Back to View' /></a>
 				<% end %>
 				</span>
               </div>
@@ -106,7 +109,9 @@
           <tr>
             <th style="width: 150px">Entry No:</th>
             <td>
-              <%= f.text_field :entry_no %>
+              <%#= f.text_field :entry_no %>
+              <%= @entry.entry_no %>
+              <%= f.hidden_field :entry_no, :value => @entry.entry_no %>
             </td>
           </tr>
 
@@ -115,6 +120,16 @@
             <th>Entry Type:</th>
             <td>
               <%= f.text_field :entry_type %>
+            </td>
+          </tr>
+
+          <%# Continues On %>
+          <tr>
+            <th>Continues on next folio:</th>
+            <td>
+              <% if @entry.continues_on != nil %>
+                <%= image_tag 'tick.png' %>
+              <% end %>
             </td>
           </tr>
 

@@ -1,7 +1,7 @@
 module AuthorityList
 
   # Get authority lists
-  def get_authority_lists
+  def set_authority_lists
 
     # Local lists
     read_auth = ReadAuth.new

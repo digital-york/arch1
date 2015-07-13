@@ -1,4 +1,4 @@
-<div class="login" style="">
+<div class="login" style="margin-top: 100px">
 
   <% if @error == 'true' %>
       <div class='message error' style="display: inline-block; padding: 5px 20px 8px 20px">Invalid username and / or
@@ -6,27 +6,11 @@
       </div>
   <% end %>
 
-  <div style="float: left; padding-left: 40px">
-
-    <div style="font-size: 1.4em">
-      Please click on one of the registers below:
-    </div>
-
-    <div style="margin-top: 25px">
-      <a href="/login_submit?submit=true&go=true"><%= image_tag "register_12.png", style: 'border: 1px solid gray' %></a>
-    </div>
-
-    <div style="width: 223px; text-align: center; color: #403C35; height: 26px; padding-top: 10px; border-radius: 2px">Abp
-      Reg 12
-    </div>
-
-  </div>
-
-  <div style="float: right; padding-right: 20px">
+  <div style="">
 
     <form action="/login_submit">
 
-      <table cellspacing="0" style="font-size: 1em">
+      <table cellspacing="0" style="font-size: 0.9em">
 
         <tr>
           <th colspan="2" style="height: 50px; font-size: 1.1em; padding: 5px 5px 10px 5px">
@@ -53,7 +37,7 @@
         <input type="hidden" name='submit' value="true"/>
 
         <tr>
-          <td colspan="2" style="margin-top: 40px"><input type="submit" value="index"/>
+          <td colspan="2" style="margin-top: 40px"><input type="submit" value="Login" />
           </th>
         </tr>
 

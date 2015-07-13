@@ -21,14 +21,33 @@
   <div id="header_text" style="width: 100%">
     <%= link_to "Archbishops&#39; Registers Editing Tool".html_safe, entry_path("default") %>
   </div>
+
+  <span style="float: right; margin-right: 6px; margin-top: 25px">
+    <%= button_to 'Logout', logout_path, :method => 'get', :data => {:confirm => 'Are you sure you want to logout?'} %>
+  </span>
+
 </div>
 
 <div id="navbar">
+
   <span style="float: left"><a href='/'><%= image_tag 'back_icon2.png', class: 'home_icon' %></a></span>
-  <span style="float: left">&nbsp;&nbsp;<span style="color: #333232"><em><%= session[:register_name] %></em></span></span>
-  <span style="float: right; margin-right: 5px; margin-top: 0px">
-    <%= button_to 'Logout', logout_path, :method => 'get', :data => {:confirm => 'Are you sure you want to logout?'} %>
+
+  <span style="float: left">&nbsp;&nbsp;<strong>Current Register</strong>: <span style="font-size: 0.95em"><%= session[:register_name] %></span></span>
+
+  <form style="float: left" name="myForm" id="choose_folio">
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>Current Folio</strong>:
+    <select name="folio_id" style="width: 160px" class="choose_folio">
+      <option value="">--- Folio ---</option>
+      <% @folio_list.each do |folio| %>
+          <option value="<%= folio[0] %>"
+                  <% if session[:folio_id] == folio[0] %>selected
+                  <% end %>><%= folio[1] %></option>
+      <% end %>
+    </select>
+    <input type="hidden" name="set_folio" value="true"/>
+  </form>
   </span>
+
 </div>
 
 <div id="container">

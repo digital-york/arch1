@@ -73,7 +73,7 @@ input[type="text"] {
 }
 
 html, body {
-  height: 100%;
+  /*height: 100%;*/
 }
 
 body {
@@ -485,7 +485,7 @@ textarea {
   background-color: #C4AF8C;
   border-bottom: 1px solid #B89C5D;
   border-top: 1px solid #B89C5D;
-  color: #FFFFFF;
+  color: #333232;
   height: 23px;
   padding: 5px 0 5px 30px;
 }
@@ -496,6 +496,7 @@ textarea {
 }
 
 .landing_page {
+  margin-top: 25px;
   padding-left: 0px;
   padding-top: 0px;
   width: 100%;
@@ -509,7 +510,7 @@ textarea {
 }
 
 .landing_page td {
-  padding: 15px 20px 15px 20px;
+  padding: 10px 20px 0px 20px;
   border: none;
 }
 
@@ -524,4 +525,16 @@ textarea {
 .landing_page img {
   border: 1px solid #BFBFBF;
   width: 180px;
+}
+
+.button_previous {
+  position: relative;
+  top: 0px;
+  left: 225px;
+}
+
+.button_next {
+  position: relative;
+  top: 0px;
+  left: 230px;
 }

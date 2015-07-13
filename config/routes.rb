@@ -5,12 +5,15 @@ Rails.application.routes.draw do
   resources :entries
 
   get 'image_zoom_large' => 'image_zoom_large#index'
-  get 'logout' => 'logins#logout'
-  get 'login' => 'logins#index'
-  get 'login_submit' => 'logins#login_submit'
-  get 'landing_page' => 'logins#landing_page'
+  get 'logout' => 'login#logout'
+  get 'login' => 'login#index'
+  get 'login_submit' => 'login#login_submit'
+  get 'timed_out' => 'login#timed_out'
+  get 'landing_page' => 'landing_page#index'
+  get 'browse_folios' => 'browse_folios#index'
+  get 'go_entries' => 'landing_page#go_entries'
 
-  root 'logins#landing_page'
+  root 'login#index'
 
   resources :subjects
 
