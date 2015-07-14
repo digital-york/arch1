@@ -7,9 +7,9 @@ class EntriesController < ApplicationController
 
     # Set the folio and image session variables when a folio is chosen from the drop-down list (or the '<' or '>' buttons are clicked)
     if params[:set_folio] == 'true'
-      set_folio
+      set_folio_and_image_drop_down
     elsif params[:small_zoom_action] != nil
-      set_small_zoom_folio_and_image(params[:small_zoom_action], session[:folio_id])
+      set_folio_and_image(params[:small_zoom_action], session[:folio_id])
     end
 
     # Set the folio drop-down list
@@ -24,6 +24,21 @@ class EntriesController < ApplicationController
       else
         @entry = Entry.find(params[:id])
       end
+
+      # Check if this is the last entry for the folio
+      # Determines if the 'Continues on next folio' tick or N/A is displayed
+      max_entry_no = get_max_entry_no_for_folio
+      @is_last_entry = false
+
+      if @entry != nil
+        if @entry.entry_no.to_i >= max_entry_no.to_i
+          @is_last_entry = true
+        end
+      end
+
+      # Check if the an entry on the folio continues
+      # Determines if the 'New Entry' Tab is displayed
+      does_folio_continue
 
       # Get all the entries which match with the chosen register, folio and folio face
       @entry_list = Entry.where(folio_ssim: session[:folio_id])
@@ -45,16 +60,8 @@ class EntriesController < ApplicationController
     # Create a new entry (but isn't saved to Fedora until the user clicks on submit)
     @entry = Entry.new
 
-    # Get the max entry no for the current folio (used to automate the entry no in the line below)
-    max_entry_no = 0
-    SolrQuery.new.solr_query('folio_ssim:"' + session[:folio_id] + '"', 'entry_no_tesim', 100)['response']['docs'].each do |result|
-      entry_no = result['entry_no_tesim'].join('').to_i
-      if entry_no > max_entry_no
-        max_entry_no = entry_no
-      end
-    end
-
-    # Set the entry_no
+    # Set the entry no for the current folio
+    max_entry_no = get_max_entry_no_for_folio
     @entry.entry_no = max_entry_no + 1
 
     # Get all the entries for this folio (so that they can be displayed as tabs)
@@ -66,19 +73,8 @@ class EntriesController < ApplicationController
     # Set the folio drop-down list
     set_folio_list
 
-    next_folio_id = ''
-
-    # Get next folio_id
-    SolrQuery.new.solr_query('proxyFor_ssim:"' + session[:folio_id] + '"', 'next_tesim', 1)['response']['docs'].map do |result|
-      next_folio_id = result['next_tesim'][0]
-    end
-
-    # Determine if an entry exists for the next folio
-    @continue_button = 'true'
-
-    SolrQuery.new.solr_query('folio_ssim:"' + next_folio_id + '"', 'id', 1)['response']['docs'].map do |result|
-      @continue_button = 'false'
-    end
+    # Sets the continue button status - either 'true', 'false' or 'none'
+    set_continue_button_status
 
   end
 
@@ -96,6 +92,24 @@ class EntriesController < ApplicationController
 
     # Set the current entry
     set_entry
+
+    # Sets the continue button status - either 'true', 'false' or 'none'
+    set_continue_button_status
+
+    # Check if this is the last entry for the folio
+    # Determines if the 'Continues on next folio' tick or N/A is displayed
+    max_entry_no = get_max_entry_no_for_folio
+    @is_last_entry = false
+
+    if @entry != nil
+      if @entry.entry_no.to_i >= max_entry_no.to_i
+        @is_last_entry = true
+      end
+    end
+
+    # Check if the an entry on the folio continues
+    # Determines if the 'New Entry' Tab is displayed
+    does_folio_continue
 
     # Define the related person list
     # Note that this is a dynamic list which has to be initialised before
@@ -141,27 +155,21 @@ class EntriesController < ApplicationController
 
       # Remove multi-value fields which are empty
 
-      # If 'Continue', create new entry on next folio and save
+      # If entry continues, create a new entry on the next folio and save
+      # Also update the current entries 'continues_on' attribute
       next_entry_id = ''
       if params[:commit] == 'Continue'
-        next_folio_id = ''
-        SolrQuery.new.solr_query('proxyFor_ssim:"' + @entry.folio_id + '"', 'next_tesim', 1)['response']['docs'].map do |result|
-          next_folio_id = result['next_tesim'][0]
-        end
-        new_entry = Entry.new
-        new_entry.entry_no = '1'
-        new_entry.folio_id = next_folio_id
-        new_entry.save
-        next_entry_id = new_entry.id
-        @entry.continues_on = next_folio_id
+        next_entry_id = create_next_entry
       end
 
       @entry.save
 
+      # If entry continues, redirect to the first entry on the next folio
+      # Else redirect to the index page
       if next_entry_id != ''
-        redirect_to :controller => 'entries', :action => 'index', :id => @entry.id
-      else
         redirect_to :controller => 'entries', :action => 'edit', :id => next_entry_id
+      else
+        redirect_to :controller => 'entries', :action => 'index', :id => @entry.id
       end
 
     end
@@ -194,42 +202,20 @@ class EntriesController < ApplicationController
     # Remove any multivalue blank fields or they will be submitted to Fedora
     remove_multivalue_blanks
 
-    # Next folio?
+    # If entry continues, create a new entry on the next folio and save
+    # Also update the current entries 'continues_on' attribute
+    next_entry_id = ''
     if params[:commit] == 'Continue'
-
-      SolrQuery.new.solr_query('proxyFor_ssim:"' + @entry.folio_id + '"', 'next_tesim', 1)['response']['docs'].map do |result|
-
-        next_folio_id = result['next_tesim'][0]
-
-        # Determine if an entry exists for the next folio
-        is_entry = 'false'
-
-        SolrQuery.new.solr_query('folio_ssim:"' + next_folio_id + '"', 'id', 1)['response']['docs'].map do |result|
-          is_entry = 'true'
-        end
-
-        # If it does exist, return an error message
-        # Else, create the first entry on the next folio (and set 'continues_on' to the next folio in the @entry)
-        if is_entry == 'true'
-          # error!
-        else
-
-          new_entry = Entry.new
-          new_entry.entry_no = '1'
-          new_entry.folio_id = next_folio_id
-          new_entry.save
-
-          @entry.continues_on = next_folio_id
-
-        end
-      end
+      next_entry_id = create_next_entry
     end
 
     # Save form data to Fedora
     @entry.save
 
-    if params[:commit] == 'Continue'
-      redirect_to :controller => 'entries', :action => 'index', :id => @entry.id, :continue => 'true'
+    # If entry continues, redirect to the first entry on the next folio
+    # Else redirect to the index page
+    if next_entry_id != ''
+      redirect_to :controller => 'entries', :action => 'edit', :id => next_entry_id
     else
       redirect_to :controller => 'entries', :action => 'index', :id => @entry.id
     end

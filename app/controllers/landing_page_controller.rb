@@ -13,7 +13,7 @@ class LandingPageController < ApplicationController
     session[:register_name] = params[:register_name]
 
     # This is required for the image '<' and '>' buttons
-    get_first_and_last_folio
+    set_first_and_last_folio
 
     redirect_to :controller => 'entries', :action => 'index',  :login_submit => 'true'
 

@@ -7,7 +7,7 @@
 
   <% if session[:folio_id] == '' %>
 
-    <div style="margin-left: 40px; font-size: 1.3em">Please choose a folio from the drop-down list in the menubar.</div>
+    <div style="margin-left: 40px; font-size: 1.3em">Please choose a folio from the from the menubar.</div>
 
   <% else %>
 
@@ -50,9 +50,15 @@
                             </li>
                         <% end %>
                         <li>
-                          <span class='nohighlight'>
-                          <%= link_to 'New Entry', new_entry_path, {:title => 'Create new entry'} %>
-                          </span>
+                          <% if @folio_continues == true %>
+                            <li style=" color: #FFF8EB">
+                              &nbsp;&nbsp;<em>Last entry continues onto next folio</em>
+                            </li>
+                          <% else %>
+                            <span class='nohighlight'>
+                              <%= link_to 'New Entry', new_entry_path, {:title => 'Create new entry'} %>
+                            </span>
+                          <% end %>
                         </li>
                       </ul>
                     </th>
@@ -81,14 +87,16 @@
                   </tr>
 
                   <%# Continues On %>
-                  <tr>
-                    <th>Continues on next folio:</th>
-                    <td>
-                      <% if @entry.continues_on != nil %>
-                          <%= image_tag 'tick.png' %>
-                      <% end %>
-                    </td>
-                  </tr>
+                  <% if @is_last_entry == true %>
+                      <tr>
+                        <th>Continues onto next folio:</th>
+                        <td>
+                          <% if @entry.continues_on != nil %>
+                              <%= image_tag 'tick.png' %>
+                          <% end %>
+                        </td>
+                      </tr>
+                  <% end %>
 
                   <%# Summary %>
                   <tr>

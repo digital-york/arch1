@@ -12,7 +12,7 @@ class BrowseFoliosController < ApplicationController
       session[:browse_image] = session[:folio_image]
     # Else do this if the '<' or '>' buttons are clicked
     elsif params[:browse_action] != nil
-      set_browse_folio_and_image(params[:browse_action], session[:browse_id])
+      set_folio_and_image_browse(params[:browse_action], session[:browse_id])
     end
   end
 
