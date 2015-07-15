@@ -88,54 +88,63 @@ module RegisterFolio
     end
   end
 
-  # Determines if the entry can continue on to the next folio
-  # @continue_button_status can be:
-  #   'none' - do not display button, i.e. if it is not the last entry or a new entry
-  #   'true' - display the button - it is the last entry and an entry doesn't exist on the next folio
-  #   'false' - display the button greyed out - it is the last entry but an entry exists on the next folio
-  def set_continue_button_status
+  # Does an entry exist for the next folio?
+  def is_entry_on_next_folio
 
     next_folio_id = ''
 
-    @continue_button_status = 'none'
-
-    # Check if this is the last entry for the folio
-    max_entry_no = get_max_entry_no_for_folio
-    is_last_entry = false
-
-    if @entry.entry_no.to_i >= max_entry_no.to_i
-      is_last_entry = true
-    end
-
-    # Check if an entry exists for the next folio
-    # First get the next_folio_id
+    # First get the next_folio_id...
     SolrQuery.new.solr_query('proxyFor_ssim:"' + session[:folio_id] + '"', 'next_tesim', 1)['response']['docs'].map do |result|
       next_folio_id = result['next_tesim'][0]
     end
 
-    is_next_entry = false
+    @is_entry_on_next_folio = false
 
-    # Then determine if an entry exists
-    SolrQuery.new.solr_query('folio_ssim:"' + next_folio_id + '"', 'id', 1)['response']['docs'].map do |result|
-      is_next_entry = true
-    end
-
-    if is_last_entry == true
-      if is_next_entry == true
-        @continue_button_status = 'false'
-      else
-        @continue_button_status = 'true'
+    # ...then determine if an entry exists
+    if next_folio_id != nil
+      SolrQuery.new.solr_query('folio_ssim:"' + next_folio_id + '"', 'id', 1)['response']['docs'].map do |result|
+        @is_entry_on_next_folio = true
       end
     end
 
-    # Return the status
-    @continue_button_status
+    # Return
+    @is_entry_on_next_folio
+  end
+
+  def is_last_entry(entry)
+    if entry != nil
+      @is_last_entry = false
+      max_entry_no = get_max_entry_no_for_folio
+      if entry.entry_no.to_i >= max_entry_no.to_i
+        @is_last_entry = true
+      end
+    end
+  end
+
+  # Does the folio contain an entry which continues?
+  # (this determines if the 'New Entry' Tab and '(continues)' text are displayed)
+  def set_folio_continues_id
+
+    @folio_continues_id = ''
+
+    SolrQuery.new.solr_query('folio_ssim:"' + session[:folio_id] + '"', 'id', 100)['response']['docs'].each do |result|
+      entry_id = result['id']
+      SolrQuery.new.solr_query('id:"' + entry_id + '"', 'continues_on_tesim, entry_no_tesim', 1)['response']['docs'].each do |result|
+        if result['continues_on_tesim'] != nil
+          @folio_continues_id = result['entry_no_tesim']
+          @folio_continues_id = @folio_continues_id.join('')
+        end
+      end
+    end
+
+    # Return
+    @folio_continues_id
   end
 
   # If the entry is continued onto the next folio, creates the entry and
   # sets the new session variables
   # Also sets the entry 'continues_on' attribute
-  def create_next_entry
+  def create_next_entry(create_entry_status)
 
       next_folio_id = ''
 
@@ -143,19 +152,32 @@ module RegisterFolio
         next_folio_id = result['next_tesim'][0]
       end
 
-      new_entry = Entry.new
-      new_entry.entry_no = '1'
-      new_entry.folio_id = next_folio_id
-      new_entry.save
+      # Only create a new entry if one doesn't already exist on the next folio
+      if @is_entry_on_next_folio == false
+        new_entry = Entry.new
+        new_entry.entry_no = '1'
+        new_entry.folio_id = next_folio_id
+        new_entry.save
+      end
 
       # Add the next folio id to the entry
       @entry.continues_on = next_folio_id
 
-      # Set the new folio_id and folio_image session variables
+      # Set the next folio_id and folio_image session variables
       set_folio_and_image('next_tesim', session[:folio_id])
 
-      # return new entry id
-      new_entry.id
+
+      # Return the new id if an entry has been created
+      # Else return the first entry id of the next folio
+      if @is_entry_on_next_folio == false
+        return new_entry.id
+      else
+        id = ''
+        SolrQuery.new.solr_query('folio_ssim:"' + next_folio_id + '"', 'entry_no_tesim, id', 1)['response']['docs'].map do |result|
+          id = result['id']
+        end
+        return id
+      end
   end
 
   # Get the max entry no for the folio
@@ -173,25 +195,6 @@ module RegisterFolio
 
     # return max_entry_no
     max_entry_no
-  end
-
-  # Does the folio contain an entry which continues?
-  # This is used to determine if to display the 'New Entry' Tab
-  def does_folio_continue
-
-    @folio_continues = false
-
-    SolrQuery.new.solr_query('folio_ssim:"' + session[:folio_id] + '"', 'id', 100)['response']['docs'].each do |result|
-      entry_id = result['id']
-      SolrQuery.new.solr_query('id:"' + entry_id + '"', 'continues_on_tesim', 1)['response']['docs'].each do |result|
-        if result['continues_on_tesim'] != nil
-          @folio_continues = true
-        end
-      end
-    end
-
-    # Return
-    @folio_continues
   end
 
 end

@@ -12,10 +12,6 @@
 
 <body>
 
-<!-- Put this tag in because there was an exception sending the authenticity token with a link_to -->
-<!-- Not sure why it works and not sure if I need it anymore -->
-<%#= csrf_meta_tag %>
-
 <div id="header">
 
   <div id="header_text" style="width: 100%">
@@ -36,12 +32,10 @@
 
   <form style="float: left" name="myForm" id="choose_folio">
     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>Current Folio</strong>:
-    <select name="folio_id" style="width: 160px" class="choose_folio">
+    <select name="folio_id" style="width: 160px" class="choose_folio" <% if controller.action_name.to_s != 'index' %>disabled<% end %>>
       <option value="">--- Folio ---</option>
       <% @folio_list.each do |folio| %>
-          <option value="<%= folio[0] %>"
-                  <% if session[:folio_id] == folio[0] %>selected
-                  <% end %>><%= folio[1] %></option>
+        <option value="<%= folio[0] %>" <% if session[:folio_id] == folio[0] %>selected<% end %>><%= folio[1] %></option>
       <% end %>
     </select>
     <input type="hidden" name="set_folio" value="true"/>

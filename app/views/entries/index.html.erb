@@ -7,7 +7,7 @@
 
   <% if session[:folio_id] == '' %>
 
-    <div style="margin-left: 40px; font-size: 1.3em">Please choose a folio from the from the menubar.</div>
+    <div style="margin-left: 40px; font-size: 1.3em">Please choose a folio from the menubar.</div>
 
   <% else %>
 
@@ -34,27 +34,29 @@
                     <th colspan='2' id='entry_menu'>
                       <ul>
                         <li style='margin-left: 5px'></li>
-                        <% @entry_list.each do |entry| %>
+                        <% @entry_list.each_with_index do |entry, index| %>
                             <li>
+                              <%
+                                 str = ''
+                                 if @folio_continues_id.to_i == index + 1
+                                   str = ' (continues)'
+                                 end
+                              %>
                               <% if entry.id == @entry.id %>
                                 <span class='highlight'>
                                   <span style='color: #9c6b17'>
-                                    <%= entry.entry_no %>
+                                    <%= entry.entry_no + str %>
                                   </span>
                                 </span>
                               <% else %>
                                 <span class='nohighlight'>
-                                  <%= link_to entry.entry_no, entry_path(entry) %>
+                                  <%= link_to entry.entry_no + str, entry_path(entry) %>
                                 </span>
                               <% end %>
                             </li>
                         <% end %>
                         <li>
-                          <% if @folio_continues == true %>
-                            <li style=" color: #FFF8EB">
-                              &nbsp;&nbsp;<em>Last entry continues onto next folio</em>
-                            </li>
-                          <% else %>
+                          <% if @folio_continues_id == '' %>
                             <span class='nohighlight'>
                               <%= link_to 'New Entry', new_entry_path, {:title => 'Create new entry'} %>
                             </span>
@@ -89,10 +91,11 @@
                   <%# Continues On %>
                   <% if @is_last_entry == true %>
                       <tr>
-                        <th>Continues onto next folio:</th>
+                        <th>Continues on next folio:</th>
                         <td>
-                          <% if @entry.continues_on != nil %>
+                          <% if @entry.continues_on != nil && @entry.continues_on != '' %>
                               <%= image_tag 'tick.png' %>
+                              &nbsp;&nbsp;<%= link_to 'Discontinue', entry_path(@entry.id, :discontinue => 'true') %>
                           <% end %>
                         </td>
                       </tr>

@@ -5,17 +5,20 @@ class EntriesController < ApplicationController
   # INDEX
   def index
 
-    # Set the folio and image session variables when a folio is chosen from the drop-down list (or the '<' or '>' buttons are clicked)
+    # Set the folio and image session variables when a folio is chosen from the drop-down list
     if params[:set_folio] == 'true'
       set_folio_and_image_drop_down
-    elsif params[:small_zoom_action] != nil
-      set_folio_and_image(params[:small_zoom_action], session[:folio_id])
     end
 
-    # Set the folio drop-down list
+    # Set the @folio_list for the folio drop-down
     set_folio_list
 
     if session[:folio_id] != ''
+
+      # Set the folio and image session variables when the '<' or '>' buttons are clicked
+      if params[:small_zoom_action] != nil
+        set_folio_and_image(params[:small_zoom_action], session[:folio_id])
+      end
 
       # Get the first entry for the folio if there isn't an id
       # Else get the entry with the specified id
@@ -26,19 +29,11 @@ class EntriesController < ApplicationController
       end
 
       # Check if this is the last entry for the folio
-      # Determines if the 'Continues on next folio' tick or N/A is displayed
-      max_entry_no = get_max_entry_no_for_folio
-      @is_last_entry = false
+      # Determines if the 'Continues on next folio' row and 'Continues' button are displayed
+      is_last_entry(@entry)
 
-      if @entry != nil
-        if @entry.entry_no.to_i >= max_entry_no.to_i
-          @is_last_entry = true
-        end
-      end
-
-      # Check if the an entry on the folio continues
-      # Determines if the 'New Entry' Tab is displayed
-      does_folio_continue
+      # Determines if the 'New Entry' Tab and '(continues)' text are displayed
+      set_folio_continues_id
 
       # Get all the entries which match with the chosen register, folio and folio face
       @entry_list = Entry.where(folio_ssim: session[:folio_id])
@@ -47,10 +42,17 @@ class EntriesController < ApplicationController
   end
 
   # SHOW
-  # This is called when the user selects an entry from the tabs
+  # This is called when the user selects an entry from the tabs (or when the 'discontinued' link is clicked)
   def show
-    set_entry
-    @entry_list = Entry.all.where(folio_ssim: session[:folio_id])
+
+    # Check if the discontinued link has been clicked for an entry
+    if params[:discontinue] == 'true'
+      @entry = Entry.find(params[:id])
+      @entry.continues_on = nil
+      @entry.save
+      #@entry = Entry.find(params[:id])
+    end
+
     redirect_to :controller => 'entries', :action => 'index', :id => params[:id]
   end
 
@@ -73,8 +75,12 @@ class EntriesController < ApplicationController
     # Set the folio drop-down list
     set_folio_list
 
-    # Sets the continue button status - either 'true', 'false' or 'none'
-    set_continue_button_status
+    # Check if this is the last entry for the folio
+    # Determines if the 'Continues on next folio' row and 'Continues' button are displayed
+    is_last_entry(@entry)
+
+    # Determines which message is displayed on the 'Continue' button
+    is_entry_on_next_folio
 
   end
 
@@ -93,23 +99,15 @@ class EntriesController < ApplicationController
     # Set the current entry
     set_entry
 
-    # Sets the continue button status - either 'true', 'false' or 'none'
-    set_continue_button_status
-
     # Check if this is the last entry for the folio
-    # Determines if the 'Continues on next folio' tick or N/A is displayed
-    max_entry_no = get_max_entry_no_for_folio
-    @is_last_entry = false
+    # Determines if the 'Continues on next folio' row and 'Continues' button are displayed
+    is_last_entry(@entry)
 
-    if @entry != nil
-      if @entry.entry_no.to_i >= max_entry_no.to_i
-        @is_last_entry = true
-      end
-    end
+    # Determines if the 'New Entry' Tab and '(continues)' text are displayed
+    set_folio_continues_id
 
-    # Check if the an entry on the folio continues
-    # Determines if the 'New Entry' Tab is displayed
-    does_folio_continue
+    # Determines which message is displayed on the 'Continue' button
+    is_entry_on_next_folio
 
     # Define the related person list
     # Note that this is a dynamic list which has to be initialised before
@@ -153,13 +151,15 @@ class EntriesController < ApplicationController
       render 'new'
     else
 
-      # Remove multi-value fields which are empty
+      # Remove any multivalue blank fields or they will be submitted to Fedora
+      remove_multivalue_blanks
 
       # If entry continues, create a new entry on the next folio and save
       # Also update the current entries 'continues_on' attribute
       next_entry_id = ''
       if params[:commit] == 'Continue'
-        next_entry_id = create_next_entry
+        is_entry_on_next_folio
+        next_entry_id = create_next_entry(@is_entry_on_next_folio)
       end
 
       @entry.save
@@ -206,7 +206,8 @@ class EntriesController < ApplicationController
     # Also update the current entries 'continues_on' attribute
     next_entry_id = ''
     if params[:commit] == 'Continue'
-      next_entry_id = create_next_entry
+      is_entry_on_next_folio
+      next_entry_id = create_next_entry(@is_entry_on_next_folio)
     end
 
     # Save form data to Fedora

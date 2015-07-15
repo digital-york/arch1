@@ -24,11 +24,11 @@
                    else
                 %>
                     <div style='margin-bottom: 6px'>Please enter a value for '<%= e %>'</div>
-                <%
-                   end
-                   end
-                   end
-                %>
+        <%
+               end
+             end
+           end
+        %>
       </div>
   <% end %>
 
@@ -44,17 +44,15 @@
 
           <tr class='noth'>
             <th colspan='2' id='entry_menu'>
-              <% i = 0 %>
               <ul>
                 <li style='margin-left: 5px'></li>
                 <% if @entry.new_record? %>
                     <% @entry_list.each do |entry| %>
-                        <% i = i + 1 %>
-                        <li>
-					  <span class='nohighlight'>
-					    <%= link_to entry.entry_no, entry_path(entry) %>
-					  </span>
-                        </li>
+                      <li>
+					    <span class='nohighlight'>
+					      <%= link_to entry.entry_no, entry_path(entry) %>
+					    </span>
+                      </li>
                     <% end %>
                     <li>
                       <span class='highlight'>
@@ -62,26 +60,27 @@
 					  </span>
                     </li>
                 <% else %>
-                    <% @entry_list.each do |entry| %>
-                        <% i = i + 1 %>
+                    <% @entry_list.each_with_index do |entry, index| %>
                         <li>
+                          <%
+                            str = ''
+                            if @folio_continues_id.to_i == index + 1
+                              str = ' (continues)'
+                            end
+                          %>
                           <% if entry.id == @entry.id %>
-						  <span class='highlight'>
-						    <%= entry.entry_no %>
-						  </span>
+						    <span class='highlight'>
+						      <%= entry.entry_no + str %>
+						    </span>
                           <% else %>
-						  <span class='nohighlight'>
-						    <%= link_to entry.entry_no, edit_entry_path(entry) %>
-						  </span>
+						    <span class='nohighlight'>
+						      <%= link_to entry.entry_no + str, edit_entry_path(entry) %>
+                		    </span>
                           <% end %>
                         </li>
                     <% end %>
                     <li>
-                      <% if @folio_continues == true %>
-                        <li style=" color: #FFF8EB">
-                          &nbsp;&nbsp;<em>Last entry continues onto next folio</em>
-                        </li>
-                      <% else %>
+                      <% if @folio_continues_id == '' %>
                         <span class='nohighlight'>
                           <%= link_to 'New Entry', new_entry_path, {:title => 'Create new entry'} %>
                         </span>
@@ -96,20 +95,24 @@
             <th colspan='2'>
               <div id='entry_menubar'>
                 <span class='edit_button'>
-				<% if @entry.new_record? %>
+				<%
+                   str = ''
+                   if @is_entry_on_next_folio == false
+                     str = 'Update the current form and continue on to the next folio?'
+                   else
+                     str = 'An entry already exists on the next folio - do you want to continue?'
+                   end
+                %>
+                  <% if @entry.new_record? %>
 				  <%= f.submit 'Submit' %>
-                  <% if @continue_button_status == 'true' %>
-                    <%= f.submit 'Continue', :onclick => 'return confirm("Update the current form and continue on to the next folio?")' %>
-                  <%# elsif @continue_button_status == 'false' %>
-                    <%#= f.submit 'Continue', :disabled => 'true' %>
+				  <% if @is_last_entry == true %>
+                    <%= f.submit 'Continue', :onclick => "return confirm('" + str + "')" %>
                   <% end %>
                   <a href='<%= entries_path %>'><input type='button' value='Back' /></a>
 				<% else %>
 				  <%= f.submit 'Update' %>
-                  <% if @continue_button_status == 'true' %>
-                    <%= f.submit 'Continue', :onclick => 'return confirm("Update the current form and continue on to the next folio?")' %>
-                  <%# elsif @continue_button_status == 'false' %>
-                    <%#= f.submit 'Continue', :disabled => 'true' %>
+                  <% if @is_last_entry == true %>
+                    <%= f.submit 'Continue', :onclick => "return confirm('" + str + "')" %>
                   <% end %>
                   <a href='<%= entry_path(@entry) %>'><input type='button' value='Back to View' /></a>
 				<% end %>
@@ -139,9 +142,9 @@
           <%# Continues On %>
           <% if @is_last_entry == true %>
             <tr>
-              <th>Continues onto next folio:</th>
+              <th>Continues on next folio:</th>
               <td>
-                <% if @entry.continues_on != nil %>
+                <% if @entry.continues_on != nil && @entry.continues_on != '' %>
                   <%= image_tag 'tick.png' %>
                 <% end %>
               </td>
@@ -584,18 +587,14 @@
                 <span class='edit_button'>
 				<% if @entry.new_record? %>
 				<%= f.submit 'Submit' %>
-                  <% if @continue_button_status == 'true' %>
+                  <% if @folio_continues_id != '' %>
                     <%= f.submit 'Continue', :onclick => 'return confirm("Update the current form and continue on to the next folio?")' %>
-                  <% elsif @continue_button_status == 'false' %>
-                    <%= f.submit 'Continue', :disabled => 'true' %>
                   <% end %>
                   <a href='<%= entries_path %>'><input type='button' value='Back' /></a>
 				<% else %>
 				  <%= f.submit 'Update' %>
-                  <% if @continue_button_status == 'true' %>
+                  <% if @folio_continues_id != '' %>
                     <%= f.submit 'Continue', :onclick => 'return confirm("Update the current form and continue on to the next folio?")' %>
-                  <% elsif @continue_button_status == 'false' %>
-                    <%= f.submit 'Continue', :disabled => 'true' %>
                   <% end %>
                   <a href='<%= entry_path(@entry) %>'><input type='button' value='Back to View'></a>
 				<% end %>

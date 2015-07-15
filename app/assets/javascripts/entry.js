@@ -41,18 +41,6 @@ function browse_folios_popup(page) {
     window.open(page, 'browse_folios_popup', 'status = 1, top = ' + top + ', left = ' + left + ', height = ' + popupHeight + ', width = ' + popupWidth + ', scrollbars=yes');
 }
 
-// Datepicker method
-/*$('.datePicker').datepicker({
- showOn: 'button',
- buttonImage: '/assets/calendar.gif',
- buttonImageOnly: true,
- buttonText: 'Select date',
- dateFormat: 'dd-mm-yy'
- // Not being used at present
- //$(this).datepicker();
- });*/
-
-
 // Methods which add/remove elements to the form
 $(document).ready(function () {
 
