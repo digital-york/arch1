@@ -1,4 +1,3 @@
-<div id="main">
 
   <% if session[:folio_id] == nil || session[:folio_id] == '' %>
 
@@ -16,5 +15,10 @@
         <%= render "form" %>
       </div>
 
+      <div id="help_frame" style="float: left">
+        <a href='#' onclick='info("Help Text"); return false'><%= image_tag "help_icon.png", :class => 'help_icon', :title => 'Help for form fields' %></a>
+      </div>
+
+      <div style="clear: both"></div>
+
   <% end %>
-</div>

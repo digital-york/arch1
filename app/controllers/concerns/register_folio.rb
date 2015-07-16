@@ -36,18 +36,21 @@ module RegisterFolio
     next_id = ''
     next_image = ''
 
-    # Set the folio id session variable
-    SolrQuery.new.solr_query('proxyFor_ssim:"' + id + '"', action, 1)['response']['docs'].map do |result|
-      next_id = result[action][0]
-    end
+    if action != nil && id != nil
 
-    # Set the folio image session variable
-    SolrQuery.new.solr_query('hasTarget_ssim:"' + next_id + '"', 'file_tesim', 1)['response']['docs'].map do |result|
-      next_image = result['file_tesim'][0]
-    end
+      # Set the folio id session variable
+      SolrQuery.new.solr_query('proxyFor_ssim:"' + id + '"', action, 1)['response']['docs'].map do |result|
+        next_id = result[action][0]
+      end
 
-    session[:folio_id] = next_id
-    session[:folio_image] = next_image
+      # Set the folio image session variable
+      SolrQuery.new.solr_query('hasTarget_ssim:"' + next_id + '"', 'file_tesim', 1)['response']['docs'].map do |result|
+        next_image = result['file_tesim'][0]
+      end
+
+      session[:folio_id] = next_id
+      session[:folio_image] = next_image
+    end
  end
 
   # Set the next (or previous) folio and image session variables (when the '>' or '<' buttons are clicked)

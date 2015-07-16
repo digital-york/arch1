@@ -1,4 +1,3 @@
-<div id='main'>
 
   <%
     # This instantiates the Terms class (which is used below to dereference ids
@@ -7,7 +6,7 @@
 
   <% if session[:folio_id] == '' %>
 
-    <div style="margin-left: 40px; font-size: 1.3em">Please choose a folio from the menubar.</div>
+    <div style="margin-left: 40px; font-size: 1.3em">Please select a folio from the menubar</div>
 
   <% else %>
 
@@ -19,7 +18,7 @@
 
         <% if @entry_list.length == 0 %>
             <div style='float: left; width: 900px; font-size: 1.3em'>There are currently no entries for this folio -
-              <%= link_to 'please click here to add a new one', new_entry_path, {:title => 'Create new entry'} %>.
+              <%= link_to 'please click here to add a new one', new_entry_path, {:title => 'Create new entry'} %>
             </div>
             <div style='clear: both'></div>
         <% else %>
@@ -497,9 +496,14 @@
         <div style='clear: both'></div>
       </div>
 
+      <% if @entry_list.length > 0 %>
+        <div id="help_frame" style="float: left">
+          <a href='#' onclick='info("Help Text"); return false'><%= image_tag "help_icon.png", :class => 'help_icon', :title => 'Help for form fields' %></a>
+        </div>
+      <% end %>
+
       <div style='clear: both'></div>
 
   <% end %>
-</div>
 
 

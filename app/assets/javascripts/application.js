@@ -13,12 +13,11 @@
 //= require jquery
 // require jquery.turbolinks
 //= require jquery_ujs
+//= require jquery-ui
 //
 // Required by Blacklight
 //= require blacklight/blacklight
 //= require_tree .
-//
-//= require jquery-ui/datepicker
 //
 // commented out turblinks because jquery wasn't working properly on the 'new' page
 // require turbolinks

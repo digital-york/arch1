@@ -125,7 +125,6 @@
           <tr>
             <th style="width: 150px">Entry No:</th>
             <td>
-              <%#= f.text_field :entry_no %>
               <%= @entry.entry_no %>
               <%= f.hidden_field :entry_no, :value => @entry.entry_no %>
             </td>
@@ -334,7 +333,7 @@
                         <tr>
                           <th>Note:</th>
                           <td class="input_single">
-                            <%= text_field_tag "entry[entry_dates_attributes][" + index1.to_s + "][date_note]", entry_date.date_note, id: '' %>
+                            <%= text_area_tag "entry[entry_dates_attributes][" + index1.to_s + "][date_note]", entry_date.date_note, id: '' %>
                           </td>
                         </tr>
 
@@ -436,7 +435,7 @@
                             <div class="field_group grey_box">
                               <% related_place.place_note.each_with_index do |place_note, index2| %>
                                   <div class="field_single">
-                                    <%= text_field_tag "entry[related_places_attributes][" + index1.to_s + "][place_note][]", place_note, id: '' %>
+                                    <%= text_area_tag "entry[related_places_attributes][" + index1.to_s + "][place_note][]", place_note, id: '' %>
                                     &nbsp;<img src='/assets/delete.png' alt='Delete icon' class='delete_icon click_remove_field_level1' jq_tag_type='input'>
                                   </div>
                               <% end %>
@@ -542,7 +541,7 @@
                             <div class="field_group grey_box">
                               <% related_person.person_note.each_with_index do |person_note, index2| %>
                                   <div class="field_single">
-                                    <%= text_field_tag "entry[related_people_attributes][" + index1.to_s + "][person_note][]", person_note, id: '' %>
+                                    <%= text_area_tag "entry[related_people_attributes][" + index1.to_s + "][person_note][]", person_note, id: '' %>
                                     &nbsp;<img src='/assets/delete.png' alt='Delete icon' class='delete_icon click_remove_field_level1' jq_tag_type='input'>
                                   </div>
                               <% end %>

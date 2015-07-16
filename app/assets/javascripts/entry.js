@@ -41,6 +41,26 @@ function browse_folios_popup(page) {
     window.open(page, 'browse_folios_popup', 'status = 1, top = ' + top + ', left = ' + left + ', height = ' + popupHeight + ', width = ' + popupWidth + ', scrollbars=yes');
 }
 
+var dummy_text = "Lorem ipsum dolor sit amet, nam ei sumo vidisse expetenda, ea vocent imperdiet vix. Te quem alterum mea, sumo nullam nusquam te vel. Ipsum melius has id. No sale debitis vulputate vel, has cu enim delectus detraxit. Mei ne pericula comprehensam, eu bonorum periculis per. Mei soleat voluptua torquatos ei. In eos velit nostrum, sit populo latine docendi no. Vis dicam dolores ponderum et. No eum legendos democritum deterruisset, eu nonumes temporibus est. Vix ex iisque impetus epicurei, ea altera suscipit pertinacia eos, quidam invidunt platonem has in. Vivendo legendos quo ad, ea probo hendrerit qui, ius ei purto iudicabit. Vel cu ullum soluta. Usu erat facilisis complectitur at. Vix nostrud definitiones te. Ius dicant dissentias id, usu an deserunt deseruisse, eam urbanitas voluptaria an. Brute mucius temporibus no qui. Pri ex tibique eligendi iracundia. Imperdiet mediocritatem nam ex, eam ea mollis latine admodum, ea nec odio latine reprehendunt. Nulla disputando delicatissimi ei duo. Mel ne movet melius, cum at veniam platonem, nec integre eleifend ad. Qui vidit congue te. Ei eligendi adolescens eum. Est ne decore ancillae appetere. Ut lorem equidem impedit eos."
+
+// Shows the info pop-up when a question mark is clicked
+function info(title) {
+    var text = "..."
+    var string = "<html><head><style>li { padding: 5px }</style><title>" + title + "</title><body style='font-family: Arial,Helvetica,sans-serif; font-size: 80%;'>";
+    string += "<h2>" + title + "</h2> ";
+    string += "<p style='text-align: justify'>" + dummy_text + "</p>";
+    string += "<br/><br/><a href='javascript:window.close()' style='color: #A14685; font-size: 0.9em; font-weight: bold; text-decoration: none;'>" + "CLOSE" + "</a>";
+    string += "</body></html>";
+    var popupWidth=600;
+    var popupHeight=500;
+    var left = (screen.width-popupWidth)/2;
+    var top = (screen.height-popupHeight)/4;
+    helpWindow = window.open( '', 'id1', 'scrollbars=yes, left=' + left + ', top=' + top + ', width=' + popupWidth + ', height=' + popupHeight );
+    helpWindow.document.open( "text/html" );
+    helpWindow.document.write(string);
+    helpWindow.document.close();
+}
+
 // Methods which add/remove elements to the form
 $(document).ready(function () {
 
@@ -168,6 +188,8 @@ $(document).ready(function () {
             var jq_index = $(this).attr('jq_index');
             var jq_type = $(this).attr('jq_type');
 
+            // Is this just for the related place?
+            // Note that this isn't done for person_as_written
             var place_as_written_class = "";
             if (jq_type == 'place_as_written') {
                 place_as_written_class = " place_as_written";
@@ -185,7 +207,7 @@ $(document).ready(function () {
     });
 
     // Click multiple text area button (Level 2)
-    // e.g. 'As Written' on Person and Place
+    // e.g. 'Note' on Person and Place
     $('body').on('click', '.click_multiple_text_area_button_level2', function (e) {
 
         try {
@@ -194,13 +216,8 @@ $(document).ready(function () {
             var jq_index = $(this).attr('jq_index');
             var jq_type = $(this).attr('jq_type');
 
-            var place_as_written_class = "";
-            if (jq_type == 'place_as_written') {
-                place_as_written_class = " place_as_written";
-            }
-
             var new_code_block = "<div class='field_single'>"
-                + "<input type='text' class='" + place_as_written_class + "' name='entry[" + jq_attributes + "][" + jq_index + "][" + jq_type + "][]'>"
+                + "<textarea name='entry[" + jq_attributes + "][" + jq_index + "][" + jq_type + "][]'/>"
                 + "&nbsp;<img alt='Delete icon' src='/assets/delete.png' class='delete_icon click_remove_field_level1' jq_tag_type='textarea'>"
                 + "</div>";
             $(this).parent('th').next('td').find('.field_group').append(new_code_block);
@@ -317,7 +334,7 @@ $(document).ready(function () {
 
                     // Note
                 "<tr><th>Note:" +
-                "&nbsp;<img jq_type='place_note' jq_index='" + jq_index + "' jq_attributes='related_places_attributes' class='plus_icon click_multiple_field_button_level2' src='/assets/plus_sign.png'>" +
+                "&nbsp;<img jq_type='place_note' jq_index='" + jq_index + "' jq_attributes='related_places_attributes' class='plus_icon click_multiple_text_area_button_level2' src='/assets/plus_sign.png'>" +
                 "</th><td><div class='field_group grey_box'></div></td></tr>" +
 
                 "</table>" +
@@ -379,7 +396,7 @@ $(document).ready(function () {
 
                     // Note
                 "<tr><th>Note:" +
-                "&nbsp;<img jq_type='person_note' jq_index='" + jq_index + "' jq_attributes='related_people_attributes' class='plus_icon click_multiple_field_button_level2' src='/assets/plus_sign.png'>" +
+                "&nbsp;<img jq_type='person_note' jq_index='" + jq_index + "' jq_attributes='related_people_attributes' class='plus_icon click_multiple_text_area_button_level2' src='/assets/plus_sign.png'>" +
                 "</th><td><div class='field_group grey_box'></div></td></tr>" +
 
                     // Related Place
@@ -426,7 +443,7 @@ $(document).ready(function () {
                 "<tr><th>Date Role:</th><td><select name='entry[entry_dates_attributes][" + jq_index + "][date_role]'>" + date_role_options + "</select></td></tr>" +
 
                     // Note
-                "<tr><th>Note:</th><td class='input_single'><input type='text' value='' id='' name='entry[entry_dates_attributes][" + jq_index + "][date_note]'></td></tr>" +
+                "<tr><th>Note:</th><td class='input_single'><textarea value='' id='' name='entry[entry_dates_attributes][" + jq_index + "][date_note]'/></td></tr>" +
 
                 "</table>" +
                 "<img src='/assets/delete.png' alt='Delete icon' class='delete_icon click_remove_field_level2' params_type='related_places'>" +

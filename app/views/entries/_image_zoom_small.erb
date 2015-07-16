@@ -1,6 +1,6 @@
 <% if session[:folio_id] != '' %>
 
-    <div id="image_header" style='width: 300px'>
+    <div id="image_header">
 
       <%
          terms = Terms.new('subauthority')
@@ -18,7 +18,7 @@
 
       <div id="image_footer">
 
-        <div style="float: left; padding-left: 120px; padding-top: 6px">
+        <div style="float: left; padding-left: 110px; padding-top: 6px">
 
           <% current_folio = session[:folio_id] %>
 
@@ -35,7 +35,7 @@
           <% end %>
         </div>
 
-        <div style="float: left; margin-left: 72px"><%= link_to image_tag("magnifying_glass.png", :alt => "register", :class => "icon", :style => "position: relative; top: 7px", :title => 'Image zoom'), "#", :onclick => "image_zoom_large_popup('/image_zoom_large'); return false", :title => "" %></div>
+        <div style="float: left; margin-left: 70px"><%= link_to image_tag("magnifying_glass.png", :alt => "register", :class => "icon", :style => "position: relative; top: 7px", :title => 'Image zoom'), "#", :onclick => "image_zoom_large_popup('/image_zoom_large'); return false", :title => "" %></div>
 
         <div style="clear: both"></div>
       </div>
@@ -43,7 +43,7 @@
 
     <div style="clear: both"></div>
 
-    <div style="width: 300px; margin-top: 20px; text-align: center">
+    <div style="margin-top: 20px; text-align: center">
       <em><%= link_to "Click here to browse folios", "#", :onclick => "browse_folios_popup('/browse_folios?is_popup=true'); return false" %></em>
     </div>
 <% end %>
