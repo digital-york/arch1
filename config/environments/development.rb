@@ -43,8 +43,11 @@ Rails.application.configure do
   # Raises error for missing translations
   # config.action_view.raise_on_missing_translations = true
 
-config.log_level = :error
+  config.log_level = :error
 
-config.middleware.delete Rack::Lock
+  config.middleware.delete Rack::Lock
+
+  # This line can be used to redirect to the 'public' error pages (normally the errors just appear on the page in the development environment)
+  #config.consider_all_requests_local = false
 
 end
