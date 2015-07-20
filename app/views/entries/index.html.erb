@@ -83,8 +83,10 @@
 
                   <%# Entry Type %>
                   <tr>
-                    <th style='width: 153px'>Entry Type:</th>
-                    <td style='width: 750px'><%= @entry.entry_type %></td>
+                    <th>Entry Type:</th>
+                    <td>
+                      <%= terms.get_str_from_id(@entry.entry_type, 'preflabel_tesim') %>
+                    </td>
                   </tr>
 
                   <%# Continues On %>
