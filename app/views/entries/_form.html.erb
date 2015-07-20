@@ -134,7 +134,7 @@
           <tr>
             <th>Entry Type:</th>
             <td>
-              <%= f.text_field :entry_type %>
+              <%= select_tag 'entry[entry_type][]', options_for_select(@entry_type_list.collect{ |entry_type| [entry_type["label"].join(''), entry_type["id"]] }.insert(0, ["--- select ---", ""]), @entry.entry_type) %>
             </td>
           </tr>
 

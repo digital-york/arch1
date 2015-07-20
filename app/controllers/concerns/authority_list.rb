@@ -18,6 +18,8 @@ module AuthorityList
     @single_date_list = SingleDateTerms.new('subauthority').all
     @place_role_list = PlaceRoleTerms.new('subauthority').all
     @date_role_list = DateRoleTerms.new('subauthority').all
+    @entry_type_list = EntryTypeTerms.new('subauthority').all
+
   end
 
 end
