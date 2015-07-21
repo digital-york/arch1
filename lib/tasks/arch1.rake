@@ -100,7 +100,7 @@ namespace :arch1 do
             h.former_id = i.values
             h.save
             h.update_index
-            @subjects[i.values] = h.idcd
+            @subjects[i.values] = h.id
 
           end
         end
