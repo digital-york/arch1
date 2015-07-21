@@ -1,75 +1,30 @@
 <div class="landing_page">
 
-  <table>
+  <table style="width: 100%">
 
     <tr>
 
-      <td>
+        <%
+          @reg_id_tesim_list.each_with_index do |element, index|
 
-        <div>
-          <a href="/go_entries?register_id=test:17865&amp;register_name=Abp Reg 1A"><img src="/assets/reg_1A.png"/></a>
-        </div>
-        <div class="landing_page_text">
-          <strong>Abp Reg 1A</strong><br/>Register of Walter de Gray<br/>(Major roll 1225-1235)
-        </div>
-      </td>
+            # Add a new row to the table if there are more than 5 registers
+            if index == 5
+        %>
+              </tr><tr>
+        <%
+            end
+        %>
 
-      <td>
-        <div>
-          <a href="/go_entries?register_id=test:18034&amp;register_name=Abp Reg 1B"><img src="/assets/reg_1B.png"/></a>
-        </div>
-        <div class="landing_page_text">
-          <strong>Abp Reg 1B</strong><br/>Register of Walter de Gray<br/>(Minor roll 1235-1255)
-        </div>
-      </td>
+          <td>
+            <div>
+              <a href="/go_entries?register_id=<%= @reg_id_list[index] %>&amp;register_name=<%= @reg_id_tesim_list[index] %>"><img src="/assets/<%= @reg_image_list[index] %>"/></a>
+            </div>
+            <div class="landing_page_text">
+              <strong><%= @reg_id_tesim_list[index] %></strong><br/><%= @reg_title_list[index] %>
+            </div>
+          </td>
 
-      <td>
-        <div>
-          <a href="/go_entries?register_id=test:18173&amp;register_name=Abp Reg 03"><img src="/assets/reg_03.png"/></a>
-        </div>
-        <div class="landing_page_text">
-            <strong>Abp Reg 03</strong><br/>Register of William Wickwane (1279-1285)
-        </div>
-      </td>
-
-      <td>
-        <div>
-          <a href="/go_entries?register_id=test:17717&amp;register_name=Abp Reg 08"><img src="/assets/reg_08.png"/></a>
-        </div>
-        <div class="landing_page_text">
-            <strong>Abp Reg 08</strong><br/>Register of William Greenfield (1306-1315)
-        </div>
-      </td>
-
-      <td>
-        <div>
-          <a href="/go_entries?register_id=test:21152&amp;register_name=Abp Reg 12"><img src="/assets/reg_12.png"/></a>
-        </div>
-        <div class="landing_page_text"><strong>Abp Reg 12</strong><br/>Register of Alexander Neville (1374-1388)</div>
-      </td>
-    </tr>
-
-    <tr>
-
-      <td>
-        <a href="/go_entries?register_id=test:21981&amp;register_name=Abp Reg 22"><img src="/assets/reg_22.png"/></a>
-        <div class="landing_page_text"><strong>Abp Reg 22</strong><br/>Register of George Neville (1465-1476) and Laurence Booth (1476-1480)</div>
-      </td>
-
-      <td>
-        <a href="/go_entries?register_id=test:24271&amp;register_name=Abp Reg 23"><img src="/assets/reg_23.png"/></a>
-        <div class="landing_page_text"><strong>Abp Reg 23</strong><br/>Register of Thomas Rotherham (1480-1500)</div>
-      </td>
-
-      <td>
-        <a href="/go_entries?register_id=test:20353&amp;register_name=Abp Reg 26"><img src="/assets/reg_26.png"/></a>
-        <div class="landing_page_text"><strong>Abp Reg 26</strong><br/>Register of Christopher Bainbridge (1508-1514) Sede Vacante Register 1514</div>
-      </td>
-
-      <td>
-        <a href="/go_entries?register_id=test:19107&amp;register_name=Abp Reg 28"><img src="/assets/reg_28.png"/></a>
-        <div class="landing_page_text"><strong>Abp Reg 28</strong><br/>Register of Edward Lee (1531-1544)</div>
-      </td>
+        <% end %>
     </tr>
 
   </table>
