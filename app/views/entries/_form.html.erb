@@ -525,9 +525,18 @@
 
                         <%# Descriptor %>
                         <tr>
-                          <th>*Descriptor:</th>
+                          <th>*Descriptor:
+                            <img src="/assets/plus_sign.png" alt="plus icon" class="plus_icon click_select_field_button_level2" jq_attributes="related_people_attributes" jq_index="<%=index1%>" jq_type="person_descriptor" jq_descriptor_list="<%= @descriptor_list.to_json %>"  />
+                          </th>
                           <td>
-                            <%= select_tag "entry[related_people_attributes][" + index1.to_s + "][person_descriptor]", options_for_select(@descriptor_list.collect { |descriptor| [descriptor["label"].join(''), descriptor["id"]] }.insert(0, ["--- select ---", ""]), related_person.person_descriptor) %>
+                            <div class="field_group grey_box">
+                              <% related_person.person_descriptor.each_with_index do |person_descriptor, index2| %>
+                                  <div class="field_single">
+                                    <%= select_tag "entry[related_people_attributes][" + index1.to_s + "][person_descriptor][]", options_for_select(@descriptor_list.collect { |descriptor| [descriptor["label"].join(''), descriptor["id"]] }.insert(0, ["--- select ---", ""]), person_descriptor) %>
+                                    <img alt="Delete icon" src="/assets/delete.png" class="delete_icon_select click_remove_field_level1" jq_tag_type="select">
+                                  </div>
+                              <% end %>
+                            </div>
                           </td>
                         </tr>
 

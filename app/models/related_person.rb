@@ -20,7 +20,7 @@ class RelatedPerson < ActiveFedora::Base
     index.as :stored_searchable
   end
 
-  property :person_descriptor, predicate: ::RDF::URI.new('http://dlib.york.ac.uk/ontologies/borthwick-registers#descriptor'), multiple: false do |index|
+  property :person_descriptor, predicate: ::RDF::URI.new('http://dlib.york.ac.uk/ontologies/borthwick-registers#descriptor'), multiple: true do |index|
     index.as :stored_searchable
   end
 

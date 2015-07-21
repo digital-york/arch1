@@ -268,7 +268,10 @@ $(document).ready(function () {
                 list_array = $.parseJSON($(this).attr('jq_place_type_list'));
             } else if (jq_type == 'place_role') {
                 list_array = $.parseJSON($(this).attr('jq_place_role_list'));
+            } else if (jq_type == 'person_descriptor') {
+                list_array = $.parseJSON($(this).attr('jq_descriptor_list'));
             }
+
             for (i = 0; i < list_array.length; i++) {
                 options = options + "<option value='" + list_array[i].id + "'>" + list_array[i].label + "</option/>";
             }
@@ -356,8 +359,8 @@ $(document).ready(function () {
             var field_group_div = $(this).parent('th').next('td').find('>:first-child');
             var jq_index = field_group_div.children().length;
             var jq_role_list = $(this).attr('jq_role_list').replace(/ /g, "&#32;"); //  // Appears to be a problem when list is added as a nested list, i.e. Level 2, therefore replace them here
-            var jq_descriptor_list = $.parseJSON($(this).attr('jq_descriptor_list')); // Don't need to remove spaces because not nested like the above lists (I think)
-            var jq_gender_list = $.parseJSON($(this).attr('jq_gender_list'));
+            var jq_descriptor_list = $(this).attr('jq_descriptor_list').replace(/ /g, "&#32;"); // See above
+            var jq_gender_list = $.parseJSON($(this).attr('jq_gender_list')); // Don't need to remove spaces because not nested like the above lists (I think)
 
             var descriptor_options = "<option value=''>--- select ---</option>";
 
@@ -392,7 +395,9 @@ $(document).ready(function () {
                 "</th><td><div class='field_group grey_box'></div></td></tr>" +
 
                     // Descriptor
-                "<tr><th>*Descriptor:</th><td><select name='entry[related_people_attributes][" + jq_index + "][person_descriptor]'>" + descriptor_options + "</select></td></tr>" +
+                "<tr><th style='width: 110px'>Descriptor:" +
+                "&nbsp;<img jq_descriptor_list=" + jq_descriptor_list + " jq_type='" + "person_descriptor" + "' jq_index='" + jq_index + "' jq_attributes='related_people_attributes' class='plus_icon click_select_field_button_level2' src='/assets/plus_sign.png'>" +
+                "</th><td><div class='field_group grey_box'></div></td></tr>" +
 
                     // Note
                 "<tr><th>Note:" +

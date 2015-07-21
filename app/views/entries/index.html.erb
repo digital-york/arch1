@@ -433,9 +433,19 @@
 
                                 <%# Descriptor %>
                                 <tr>
-                                  <th>*Descriptor:</th>
+                                  <th>
+                                    Descriptor:
+                                  </th>
                                   <td>
-                                    <%= terms.get_str_from_id(related_person.person_descriptor, 'preflabel_tesim') %>
+                                    <div style="padding: 4px 0px; min-height: 18px" class="field_group">
+
+                                      <% related_person.person_descriptor.each do |person_descriptor| %>
+                                          <div class="field_single" style="padding: 4px 0px">
+                                            <%= terms.get_str_from_id(person_descriptor, 'preflabel_tesim') %>
+                                          </div>
+                                      <% end %>
+
+                                    </div>
                                   </td>
                                 </tr>
 

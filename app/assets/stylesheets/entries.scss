@@ -175,6 +175,9 @@ a, a:hover, a:focus {
   background-color: #E1E1E1;
   border-radius: 6px 6px 0 0;
   padding: 6px 10px 7px 12px;
+  // This solves a problem in IE where the 'highlighted' tab is behind the row below thereby displaying a line which should be displayed
+  // Not sure why but it seems to move the element in front
+  opacity: 0.99;
 }
 
 .highlight a {
@@ -533,4 +536,8 @@ textarea {
   position: relative;
   left: -28px;
   top: 6px;
+}
+
+img {
+  border: none;
 }
