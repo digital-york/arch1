@@ -32,6 +32,15 @@
       </div>
   <% end %>
 
+  <%
+     button_str = ''
+     if @is_entry_on_next_folio == false
+       button_str = 'Update the current form and continue on to the next folio?'
+     else
+       button_str = 'An entry already exists on the next folio - do you want to continue?'
+     end
+  %>
+
   <%= form_for @entry do |f| %>
 
       <%= f.hidden_field :folio, :value => session[:folio_id] %>
@@ -64,7 +73,7 @@
                         <li>
                           <%
                             str = ''
-                            if @folio_continues_id.to_i == index + 1
+                            if @folio_continues_id == entry.entry_no
                               str = ' (continues)'
                             end
                           %>
@@ -95,27 +104,19 @@
             <th colspan='2'>
               <div id='entry_menubar'>
                 <span class='edit_button'>
-				<%
-                   str = ''
-                   if @is_entry_on_next_folio == false
-                     str = 'Update the current form and continue on to the next folio?'
-                   else
-                     str = 'An entry already exists on the next folio - do you want to continue?'
-                   end
-                %>
-                  <% if @entry.new_record? %>
-				  <%= f.submit 'Submit' %>
-				  <% if @is_last_entry == true %>
-                    <%= f.submit 'Continue', :onclick => "return confirm('" + str + "')" %>
-                  <% end %>
-                  <a href='<%= entries_path %>'><input type='button' value='Back' /></a>
-				<% else %>
-				  <%= f.submit 'Update' %>
-                  <% if @is_last_entry == true %>
-                    <%= f.submit 'Continue', :onclick => "return confirm('" + str + "')" %>
-                  <% end %>
-                  <a href='<%= entry_path(@entry) %>'><input type='button' value='Back to View' /></a>
-				<% end %>
+				  <% if @entry.new_record? %>
+				    <%= f.submit 'Submit' %>
+				    <% if @is_last_entry == true %>
+                      <%= f.submit 'Continue', :onclick => "return confirm('" + button_str + "')" %>
+                    <% end %>
+                    <a href='<%= entries_path %>'><input type='button' value='Back' /></a>
+				  <% else %>
+				    <%= f.submit 'Update' %>
+                    <% if @is_last_entry == true %>
+                      <%= f.submit 'Continue', :onclick => "return confirm('" + button_str + "')" %>
+                    <% end %>
+                    <a href='<%= entry_path(@entry) %>'><input type='button' value='Back to View' /></a>
+				  <% end %>
 				</span>
               </div>
             </th>
@@ -593,19 +594,19 @@
             <th colspan='2'>
               <div id='entry_menubar'>
                 <span class='edit_button'>
-				<% if @entry.new_record? %>
-				<%= f.submit 'Submit' %>
-                  <% if @folio_continues_id != '' %>
-                    <%= f.submit 'Continue', :onclick => 'return confirm("Update the current form and continue on to the next folio?")' %>
-                  <% end %>
-                  <a href='<%= entries_path %>'><input type='button' value='Back' /></a>
-				<% else %>
-				  <%= f.submit 'Update' %>
-                  <% if @folio_continues_id != '' %>
-                    <%= f.submit 'Continue', :onclick => 'return confirm("Update the current form and continue on to the next folio?")' %>
-                  <% end %>
-                  <a href='<%= entry_path(@entry) %>'><input type='button' value='Back to View'></a>
-				<% end %>
+				  <% if @entry.new_record? %>
+				    <%= f.submit 'Submit' %>
+                      <% if @is_last_entry == true %>
+                      <%= f.submit 'Continue', :onclick => "return confirm('" + button_str + "')" %>
+                    <% end %>
+                      <a href='<%= entries_path %>'><input type='button' value='Back' /></a>
+				  <% else %>
+				    <%= f.submit 'Update' %>
+                      <% if @is_last_entry == true %>
+                      <%= f.submit 'Continue', :onclick => "return confirm('" + button_str + "')" %>
+                    <% end %>
+                      <a href='<%= entry_path(@entry) %>'><input type='button' value='Back to View' /></a>
+				  <% end %>
 				</span>
               </div>
             </th>

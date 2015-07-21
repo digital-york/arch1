@@ -37,7 +37,7 @@
                             <li>
                               <%
                                  str = ''
-                                 if @folio_continues_id.to_i == index + 1
+                                 if @folio_continues_id == entry.entry_no
                                    str = ' (continues)'
                                  end
                               %>
