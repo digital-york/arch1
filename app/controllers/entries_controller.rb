@@ -22,7 +22,7 @@ class EntriesController < ApplicationController
 
       # Get the first entry for the folio if there isn't an id
       # Else get the entry with the specified id
-      if params[:id] == nil
+      if params[:id] == nil or params[:id] = ''
         @entry = Entry.where(folio_ssim: session[:folio_id]).first
       else
         @entry = Entry.find(params[:id])
@@ -135,6 +135,12 @@ class EntriesController < ApplicationController
   # CREATE
   def create
 
+    # Redirects to 'index' when the user clicks the 'Back' button
+    if params['commit'] == 'Back'
+      redirect_to :controller => 'entries', :action => 'index', :id => ''
+      return
+    end
+
     # See validation.rb in /concerns
     #@errors = validate(entry_params)
 
@@ -177,6 +183,12 @@ class EntriesController < ApplicationController
 
   # UPDATE
   def update
+
+    # Redirects to 'show' when the user clicks the 'Back to View' button
+    if params['commit'] == 'Back to View'
+      redirect_to :controller => 'entries', :action => 'show', :id => params[:id]
+      return
+    end
 
     set_entry
 

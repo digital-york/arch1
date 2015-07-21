@@ -109,13 +109,13 @@
 				    <% if @is_last_entry == true %>
                       <%= f.submit 'Continue', :onclick => "return confirm('" + button_str + "')" %>
                     <% end %>
-                    <a href='<%= entries_path %>'><input type='button' value='Back' /></a>
+                    <%= f.submit 'Back' %>
 				  <% else %>
 				    <%= f.submit 'Update' %>
                     <% if @is_last_entry == true %>
                       <%= f.submit 'Continue', :onclick => "return confirm('" + button_str + "')" %>
                     <% end %>
-                    <a href='<%= entry_path(@entry) %>'><input type='button' value='Back to View' /></a>
+                      <%= f.submit 'Back to View' %>
 				  <% end %>
 				</span>
               </div>
