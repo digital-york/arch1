@@ -54,39 +54,25 @@
           <tr class='noth'>
             <th colspan='2' id='entry_menu'>
               <ul>
-                <li style='margin-left: 5px'></li>
+                <li style='margin-left: 3px'></li>
                 <% if @entry.new_record? %>
                     <% @entry_list.each do |entry| %>
-                      <li>
-					    <span class='nohighlight'>
-					      <%= link_to entry.entry_no, entry_path(entry) %>
-					    </span>
-                      </li>
+                      <li><span class='nohighlight'><%= link_to entry.entry_no, entry_path(entry) %></span></li>
                     <% end %>
-                    <li>
-                      <span class='highlight'>
-					    New Entry
-					  </span>
-                    </li>
+                    <li><span class='highlight'>New Entry</span></li>
                 <% else %>
                     <% @entry_list.each_with_index do |entry, index| %>
-                        <li>
-                          <%
-                            str = ''
-                            if @folio_continues_id == entry.entry_no
-                              str = ' (continues)'
-                            end
-                          %>
-                          <% if entry.id == @entry.id %>
-						    <span class='highlight'>
-						      <%= entry.entry_no + str %>
-						    </span>
+                        <%
+                           str = ''
+                           if @folio_continues_id == entry.entry_no
+                             str = ' (continues)'
+                           end
+                        %>
+                        <% if entry.id == @entry.id %>
+                            <li><span class='highlight'><%= entry.entry_no + str %></span></li>
                           <% else %>
-						    <span class='nohighlight'>
-						      <%= link_to entry.entry_no + str, edit_entry_path(entry) %>
-                		    </span>
+						    <li><span class='nohighlight'><%= link_to entry.entry_no + str, edit_entry_path(entry) %></span></li>
                           <% end %>
-                        </li>
                     <% end %>
                     <li>
                       <% if @folio_continues_id == '' %>

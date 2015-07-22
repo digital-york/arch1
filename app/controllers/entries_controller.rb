@@ -22,7 +22,7 @@ class EntriesController < ApplicationController
 
       # Get the first entry for the folio if there isn't an id
       # Else get the entry with the specified id
-      if params[:id] == nil or params[:id] = ''
+      if params[:id] == nil or params[:id] == ''
         @entry = Entry.where(folio_ssim: session[:folio_id]).first
       else
         @entry = Entry.find(params[:id])
