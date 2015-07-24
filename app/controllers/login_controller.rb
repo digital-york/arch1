@@ -22,6 +22,12 @@ class LoginController < ApplicationController
     end
   end
 
+  def login_temp
+    reset_session_variables
+    session[:login] = 'true'
+    redirect_to :controller => 'landing_page', :action => 'index'
+  end
+
   def reset_session_variables
     session[:login] = ''
     session[:register_id] = ''

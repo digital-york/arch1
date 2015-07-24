@@ -8,12 +8,13 @@ Rails.application.routes.draw do
   get 'logout' => 'login#logout'
   get 'login' => 'login#index'
   get 'login_submit' => 'login#login_submit'
+  get 'login_temp' => 'login#login_temp'
   get 'timed_out' => 'login#timed_out'
   get 'landing_page' => 'landing_page#index'
   get 'browse_folios' => 'browse_folios#index'
   get 'go_entries' => 'landing_page#go_entries'
 
-  root 'login#index'
+  root 'login#login_temp'
 
   resources :subjects
 
