@@ -69,7 +69,9 @@ class Terms
 
   # Dereference ids into strings in order to display them, e.g. on the form and the folio drop-down list (py)
   def get_str_from_id(id, type)
-    parse_terms_response(SolrQuery.new.solr_query(q='id:' + id, fl=type,rows='1'), type);
+    if id != '' && id != nil && type != '' and type != nil
+      parse_terms_response(SolrQuery.new.solr_query(q='id:' + id, fl=type,rows='1'), type);
+    end
   end
 
   private
