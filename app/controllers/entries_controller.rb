@@ -157,9 +157,6 @@ class EntriesController < ApplicationController
       render 'new'
     else
 
-      # Remove any multivalue blank fields or they will be submitted to Fedora
-      remove_multivalue_blanks
-
       # If entry continues, create a new entry on the next folio and save
       # Also update the current entries 'continues_on' attribute
       next_entry_id = ''
@@ -192,12 +189,12 @@ class EntriesController < ApplicationController
 
     set_entry
 
-    # See validation.rb in /concerns
-    #@errors = validate(entry_params)
-
     # Replace the folio id with the corresponding Folio object
     folio_id = Folio.where(id: entry_params['folio']).first
     entry_params['folio'] = folio_id
+
+    # See validation.rb in /concerns
+    @errors = validate(entry_params)
 
     @entry.attributes = entry_params
 
@@ -210,9 +207,6 @@ class EntriesController < ApplicationController
     #  set_folio_list
     #  render 'edit'
     #else
-
-    # Remove any multivalue blank fields or they will be submitted to Fedora
-    remove_multivalue_blanks
 
     # If entry continues, create a new entry on the next folio and save
     # Also update the current entries 'continues_on' attribute
@@ -256,67 +250,6 @@ class EntriesController < ApplicationController
   def entry_params
     params.require(:entry).permit! # Note - this needs changing because it allows through all params at the moment!!
     #params.require(:entry).permit(:entry_no, :access_provided_by, editorial_notes_attributes: [:id, :editorial_note, :_destroy], people_attributes: [:id, :name_as_written, :note, :age, :gender, :name_authority, :_destroy])
-  end
-
-  # Remove multi-value fields which are empty
-  # Note that there was an error when submitting a form with no multi-value elements
-  # Therefore, instead of just removing elements when the user clicks on the 'remove' icon, the elements are hidden and the value set to ''
-  # The code below will then remove the element(s) from Fedora
-  # Note also that you have to check that size is greater than 0 because an empty array is passed when the 'edit' button is clicked
-  # (i.e. if there are no elements) and we don't want to check if the elements are blank if none exist, otherwise an error will occur
-  def remove_multivalue_blanks
-
-    if @entry.language.size > 0
-      @entry.language = params[:entry][:language].select { |element| element.present? }
-    end
-
-    if @entry.note.size > 0
-      @entry.note = params[:entry][:note].select { |element| element.present? }
-    end
-
-    if @entry.editorial_note.size > 0
-      @entry.editorial_note = params[:entry][:editorial_note].select { |element| element.present? }
-    end
-
-    if @entry.marginalia.size > 0
-      @entry.marginalia = params[:entry][:marginalia].select { |element| element.present? }
-    end
-
-    if @entry.summary.size > 0
-      @entry.summary = params[:entry][:summary].select { |element| element.present? }
-    end
-
-    if @entry.is_referenced_by.size > 0
-      @entry.is_referenced_by = params[:entry][:is_referenced_by].select { |element| element.present? }
-    end
-
-    if @entry.subject.size > 0
-      @entry.subject = params[:entry][:subject].select { |element| element.present? }
-    end
-
-    # Note:
-    # Adding blank Place and updating - element is removed and doesn't go into following code - equals [] - why?
-    # Adding blank Place, then removing with 'x' icon - don't disappear and goes into the following code
-    # However, if exists in Fedora and remove with 'x' then disappears!
-    # Note solved the above problem by not passing '_destroy' = '1' if the element was blank but did not exist in Fedora
-    @entry.related_places.each_with_index do |related_place, index|
-      #puts params.inspect
-      #puts params[:entry][:related_place]
-      #puts params[:entry][:related_places_attributes][1]
-      @entry.related_places[index].place_as_written = related_place.place_as_written.select { |element| element.present? };
-      @entry.related_places[index].place_role = related_place.place_role.select { |element| element.present? };
-      @entry.related_places[index].place_type = related_place.place_type.select { |element| element.present? };
-      @entry.related_places[index].place_note = related_place.place_note.select { |element| element.present? };
-      #puts @entry.related_places[index].place_as_written.size;
-      #puts @entry.related_places[index].place_as_written;
-    end
-
-    @entry.related_people.each_with_index do |related_person, index|
-      @entry.related_people[index].person_as_written = related_person.person_as_written.select { |element| element.present? };
-      @entry.related_people[index].person_role = related_person.person_role.select { |element| element.present? };
-      @entry.related_people[index].person_note = related_person.person_note.select { |element| element.present? };
-      @entry.related_people[index].person_related_place = related_person.person_related_place.select { |element| element.present? };
-    end
   end
 
   # Check if session has timed out

@@ -285,14 +285,14 @@
                                   <div class="field_single">
                                     <table>
                                       <tr>
+                                        <th>Date:</th>
+                                        <td class="input_single"><%= text_field_tag "entry[entry_dates_attributes][" + index1.to_s + "][single_dates_attributes][" + index2.to_s + "][date]", single_date.date, id: '' %></td>
+                                      </tr>
+                                      <tr>
                                         <th style="width: 60px">Certainty:</th>
                                         <td>
                                           <%= select_tag "entry[entry_dates_attributes][" + index1.to_s + "][single_dates_attributes][" + index2.to_s + "][date_certainty]", options_for_select(@date_certainty_list.collect { |date_certainty| [date_certainty["label"].join(''), date_certainty["id"]] }.insert(0, ["--- select ---", ""]), single_date.date_certainty) %>
                                         </td>
-                                      </tr>
-                                      <tr>
-                                        <th>Date:</th>
-                                        <td class="input_single"><%= text_field_tag "entry[entry_dates_attributes][" + index1.to_s + "][single_dates_attributes][" + index2.to_s + "][date]", single_date.date, id: '' %></td>
                                       </tr>
                                       <tr>
                                         <th>Type:</th>
@@ -423,7 +423,7 @@
                               <% related_place.place_note.each_with_index do |place_note, index2| %>
                                   <div class="field_single">
                                     <%= text_area_tag "entry[related_places_attributes][" + index1.to_s + "][place_note][]", place_note, id: '' %>
-                                    &nbsp;<img src='/assets/delete.png' alt='Delete icon' class='delete_icon click_remove_field_level1' jq_tag_type='input'>
+                                    &nbsp;<img src='/assets/delete.png' alt='Delete icon' class='delete_icon click_remove_field_level1' jq_tag_type='textarea'>
                                   </div>
                               <% end %>
                             </div>
@@ -538,7 +538,7 @@
                               <% related_person.person_note.each_with_index do |person_note, index2| %>
                                   <div class="field_single">
                                     <%= text_area_tag "entry[related_people_attributes][" + index1.to_s + "][person_note][]", person_note, id: '' %>
-                                    &nbsp;<img src='/assets/delete.png' alt='Delete icon' class='delete_icon click_remove_field_level1' jq_tag_type='input'>
+                                    &nbsp;<img src='/assets/delete.png' alt='Delete icon' class='delete_icon click_remove_field_level1' jq_tag_type='textarea'>
                                   </div>
                               <% end %>
                             </div>

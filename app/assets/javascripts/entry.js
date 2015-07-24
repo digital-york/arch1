@@ -451,7 +451,7 @@ $(document).ready(function () {
                 "<tr><th>Note:</th><td class='input_single'><textarea value='' id='' name='entry[entry_dates_attributes][" + jq_index + "][date_note]'/></td></tr>" +
 
                 "</table>" +
-                "<img src='/assets/delete.png' alt='Delete icon' class='delete_icon click_remove_field_level2' params_type='related_places'>" +
+                "<img src='/assets/delete.png' alt='Delete icon' class='delete_icon click_remove_field_level2' params_type='entry_dates'>" +
                 "</div>";
 
             field_group_div.append(new_code_block);
@@ -543,25 +543,28 @@ $(document).ready(function () {
     });
 
     // This code hides Level 2 elements such as Place
-    // Note that a hidden field is also added with '_destroy' = '1' - this
-    // is necessary to remove associations in Fedora
+    // Note that a hidden field is also added with '_destroy' = '1' - this is necessary to remove associations in Fedora
     $('body').on('click', '.click_remove_field_level2', function (e) {
 
         try {
             e.preventDefault(); // I think this prevents other events firing?
             var field_single_div = $(this).parent('div');
             field_single_div.css({'display': 'none'});
-            // If there is a hidden input element with an 'id', add a '_destroy' = '1' hidden element to make sure
-            // that it is deleted from Fedora but don't do it for elements without an 'id' otherwise the element is added to Fedora!
-            // Note that the uses the Place 'Same As' input field to get the index - maybe there is a better way to do this?
-            var input_tag_hidden = field_single_div.find('#hidden_field');
-            if (input_tag_hidden.length > 0) { // i.e. if there is a hidden field, it must be an 'id'
-                var params_type = $(this).attr('params_type');
-                var input_tag = field_single_div.find('input');
-                var name = input_tag.attr('name');
-                var index = get_index(name);
-                field_single_div.append("<input type='hidden' name='entry[" + params_type + "_attributes][" + index + "][_destroy]' value='1'>");
+            // Add a '_destroy' = '1' hidden element to make sure that the block is deleted from Fedora
+            // Note that the code uses the 'Same As' input field to get the index for Place and Person
+            // and the 'Date Role' select field to get the index for Date - maybe there is a better way to get the index?
+            var params_type = $(this).attr('params_type');
+            var target_tag = '';
+            if (params_type == 'entry_dates') {
+                target_tag = field_single_div.find('select');
+                target_tag.css("border", "1px solid red");
+            } else {
+                target_tag = field_single_div.find('input');
+                target_tag.css("border", "1px solid red");
             }
+            var name = target_tag.attr('name');
+            var index = get_index(name);
+            field_single_div.append("<input type='hidden' name='entry[" + params_type + "_attributes][" + index + "][_destroy]' value='1'>");
 
             // Update the person 'Related Place' list because an element which is removed shouldn't be shown
             update_related_places();
