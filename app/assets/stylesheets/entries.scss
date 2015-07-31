@@ -401,6 +401,12 @@ table {
 
 .error {
   background-color: #D74A4A;
+  width: auto;
+  margin-bottom: 20px;
+  font-size: 1em;
+  height: auto;
+  color: white;
+  padding: 7px 10px 7px 10px;
 }
 
 .timeout {
@@ -534,8 +540,8 @@ textarea {
 
 .help_icon {
   position: relative;
-  left: -28px;
-  top: 6px;
+  left: -4px;
+  top: -5px;
 }
 
 // Stops IE showing border around images

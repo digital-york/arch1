@@ -87,6 +87,10 @@ class EntriesController < ApplicationController
   # EDIT
   def edit
 
+    puts "1"
+    puts params
+    puts @entry
+
     # Get all the entries for this folio (so that they can be displayed as tabs)
     @entry_list = Entry.all.where(folio_ssim: session[:folio_id])
 
@@ -97,7 +101,7 @@ class EntriesController < ApplicationController
     set_folio_list
 
     # Set the current entry
-    set_entry
+    @entry = Entry.find(params[:id])
 
     # Check if this is the last entry for the folio
     # Determines if the 'Continues on next folio' row and 'Continues' button are displayed
@@ -141,6 +145,9 @@ class EntriesController < ApplicationController
       return
     end
 
+    # Check parameters are whitelisted
+    entry_params = whitelist_entry_params
+
     # See validation.rb in /concerns
     #@errors = validate(entry_params)
 
@@ -183,71 +190,93 @@ class EntriesController < ApplicationController
 
     # Redirects to 'show' when the user clicks the 'Back to View' button
     if params['commit'] == 'Back to View'
-      redirect_to :controller => 'entries', :action => 'show', :id => params[:id]
+      redirect_to :controller => 'entries', :action => 'show', :id => '-1'
       return
     end
 
-    set_entry
+    # Check parameters are whitelisted
+    entry_params = whitelist_entry_params
 
     # Replace the folio id with the corresponding Folio object
     folio_id = Folio.where(id: entry_params['folio']).first
     entry_params['folio'] = folio_id
 
-    # See validation.rb in /concerns
-    @errors = validate(entry_params)
+    # Remove any empty fields and blocks (date, place, person)
+    remove_empty_fields(entry_params)
 
+    # Check for errors
+    @errors = check_for_errors(entry_params)
+
+    # Get an entry object using the id and populate it with the entry parameters
+    @entry = Entry.find(params[:id])
     @entry.attributes = entry_params
 
     # If there are errors, render the go back to the 'edit' page and display the errors, else go to the 'index' page
-    #if @errors != '' && @errors != nil
-    #  @@entry_list = Entry.where(folio_ssim: session[:folio_id])
-    #  set_authority_lists
-    #  #@entry.attributes = entry_params # Updates the @entry with the appropriate attributes before rendering the 'edit' page
-    #  set_entry
-    #  set_folio_list
-    #  render 'edit'
-    #else
+    if @errors != '' && @errors != nil
 
-    # If entry continues, create a new entry on the next folio and save
-    # Also update the current entries 'continues_on' attribute
-    next_entry_id = ''
-    if params[:commit] == 'Continue'
+      # Note: it would be better to 'redirect' to the 'edit' controller rather than 'render' to the 'edit' page
+      # because we wouldn't have to set_authority_lists, etc, but 'redirect' loses the state of the nested form, i.e.
+      # any fields which have been added are closed again??
+
+      # Get all the entries for this folio (so that they can be displayed as tabs)
+      @entry_list = Entry.all.where(folio_ssim: session[:folio_id])
+
+      # Set the authority lists (e.g. subject)
+      set_authority_lists
+
+      # Set the folio drop-down list
+      set_folio_list
+
+      # Check if this is the last entry for the folio
+      # Determines if the 'Continues on next folio' row and 'Continues' button are displayed
+      is_last_entry(@entry)
+
+      # Determines if the 'New Entry' Tab and '(continues)' text are displayed
+      set_folio_continues_id
+
+      # Determines which message is displayed on the 'Continue' button
       is_entry_on_next_folio
-      next_entry_id = create_next_entry(@is_entry_on_next_folio)
-    end
 
-    # Save form data to Fedora
-    @entry.save
+      # Add related place code freom 'edit' here?
 
-    # If entry continues, redirect to the first entry on the next folio
-    # Else redirect to the index page
-    if next_entry_id != ''
-      redirect_to :controller => 'entries', :action => 'edit', :id => next_entry_id
+      # Render the edit page
+      render 'edit'
+
     else
-      redirect_to :controller => 'entries', :action => 'index', :id => @entry.id
-    end
 
+      # Save form data to Fedora
+      @entry.save
+
+      # If entry continues, create a new entry on the next folio and save
+      # Also update the current entries 'continues_on' attribute
+      next_entry_id = ''
+      if params[:commit] == 'Continue'
+        is_entry_on_next_folio
+        next_entry_id = create_next_entry(@is_entry_on_next_folio)
+      end
+
+      # If entry continues, redirect to the first entry on the next folio
+      # Else redirect to the index page
+      if next_entry_id != ''
+        redirect_to :controller => 'entries', :action => 'edit', :id => next_entry_id
+      else
+        redirect_to :controller => 'entries', :action => 'index', :id => @entry.id
+      end
+    end
   end
 
   # DESTROY
   def destroy
     @entry = Entry.find(params[:id])
     @entry.destroy
-    redirect_to entries_path, notice: 'Project was successfully destroyed.'
+    redirect_to entries_path, notice: 'Entry deleted.'
   end
 
   # PRIVATE METHODS
   private
 
-  # Set entry for the specified id
-  def set_entry
-    if params[:id] != nil && params[:id] != ''
-      @entry = Entry.find(params[:id])
-    end
-  end
-
   # Never trust parameters from the scary internet, only allow the white list through.
-  def entry_params
+  def whitelist_entry_params
     params.require(:entry).permit! # Note - this needs changing because it allows through all params at the moment!!
     #params.require(:entry).permit(:entry_no, :access_provided_by, editorial_notes_attributes: [:id, :editorial_note, :_destroy], people_attributes: [:id, :name_as_written, :note, :age, :gender, :name_authority, :_destroy])
   end

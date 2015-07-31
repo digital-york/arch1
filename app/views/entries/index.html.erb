@@ -53,6 +53,11 @@
                             </span>
                           <% end %>
                         </li>
+                        <% if @entry_list.length > 0 %>
+                          <li style='float: right; height: 1px'>
+                            <a href='#' onclick='info("Help Text"); return false'><%= image_tag "help_icon.png", :class => 'help_icon', :title => 'Help for form fields' %></a>
+                          </li>
+                        <% end %>
                       </ul>
                     </th>
                   </tr>
@@ -499,12 +504,6 @@
         <% end %>
         <div style='clear: both'></div>
       </div>
-
-      <% if @entry_list.length > 0 %>
-        <div id="help_frame" style="float: left">
-          <a href='#' onclick='info("Help Text"); return false'><%= image_tag "help_icon.png", :class => 'help_icon', :title => 'Help for form fields' %></a>
-        </div>
-      <% end %>
 
       <div style='clear: both'></div>
 
