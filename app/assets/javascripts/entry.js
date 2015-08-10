@@ -41,17 +41,48 @@ function browse_folios_popup(page) {
     window.open(page, 'browse_folios_popup', 'status = 1, top = ' + top + ', left = ' + left + ', height = ' + popupHeight + ', width = ' + popupWidth + ', scrollbars=yes');
 }
 
-var dummy_text = "Lorem ipsum dolor sit amet, nam ei sumo vidisse expetenda, ea vocent imperdiet vix. Te quem alterum mea, sumo nullam nusquam te vel. Ipsum melius has id. No sale debitis vulputate vel, has cu enim delectus detraxit. Mei ne pericula comprehensam, eu bonorum periculis per. Mei soleat voluptua torquatos ei. In eos velit nostrum, sit populo latine docendi no. Vis dicam dolores ponderum et. No eum legendos democritum deterruisset, eu nonumes temporibus est. Vix ex iisque impetus epicurei, ea altera suscipit pertinacia eos, quidam invidunt platonem has in. Vivendo legendos quo ad, ea probo hendrerit qui, ius ei purto iudicabit. Vel cu ullum soluta. Usu erat facilisis complectitur at. Vix nostrud definitiones te. Ius dicant dissentias id, usu an deserunt deseruisse, eam urbanitas voluptaria an. Brute mucius temporibus no qui. Pri ex tibique eligendi iracundia. Imperdiet mediocritatem nam ex, eam ea mollis latine admodum, ea nec odio latine reprehendunt. Nulla disputando delicatissimi ei duo. Mel ne movet melius, cum at veniam platonem, nec integre eleifend ad. Qui vidit congue te. Ei eligendi adolescens eum. Est ne decore ancillae appetere. Ut lorem equidem impedit eos."
+//var dummy_text = "Lorem ipsum dolor sit amet, nam ei sumo vidisse expetenda, ea vocent imperdiet vix. Te quem alterum mea, sumo nullam nusquam te vel. Ipsum melius has id. No sale debitis vulputate vel, has cu enim delectus detraxit. Mei ne pericula comprehensam, eu bonorum periculis per. Mei soleat voluptua torquatos ei. In eos velit nostrum, sit populo latine docendi no. Vis dicam dolores ponderum et. No eum legendos democritum deterruisset, eu nonumes temporibus est. Vix ex iisque impetus epicurei, ea altera suscipit pertinacia eos, quidam invidunt platonem has in. Vivendo legendos quo ad, ea probo hendrerit qui, ius ei purto iudicabit. Vel cu ullum soluta. Usu erat facilisis complectitur at. Vix nostrud definitiones te. Ius dicant dissentias id, usu an deserunt deseruisse, eam urbanitas voluptaria an. Brute mucius temporibus no qui. Pri ex tibique eligendi iracundia. Imperdiet mediocritatem nam ex, eam ea mollis latine admodum, ea nec odio latine reprehendunt. Nulla disputando delicatissimi ei duo. Mel ne movet melius, cum at veniam platonem, nec integre eleifend ad. Qui vidit congue te. Ei eligendi adolescens eum. Est ne decore ancillae appetere. Ut lorem equidem impedit eos."
+
+var dummy_text = "\
+<p class='help_text_header'>Entry:</p>\
+<p><strong>Entry Number</strong>: automatically generated sequence number for entries on a particular folio</p>\
+<p><strong>Entry Type</strong>: general classification for the type of entry, choose from the drop-down list</p>\
+<p><strong>Continues on next folio</strong>: indicates whether this entry continues on the next folio (add when you press the button</p>\
+<p><strong>Summary</strong>: very brief text summary of the contents of the Entry</p>\
+<p><strong>Marginalia</strong>: marginal notes</p>\
+<p><strong>Language</strong>: language of the entry, choose from the drop-down list</p>\
+<p><strong>Subject</strong>: choose one or more subject headings from the pop-up</p>\
+<p><strong>Note</strong>: any general notes about the entry that do not fit elsewhere, intended for public users</p>\
+<p><strong>Editorial notes</strong>: notes about the editing process, eg. areas that were difficult to read, not intended for public users</p>\
+<p><strong>Is Referenced By</strong>: bibliographic reference for the entry in printed editions or citations in other works</p>\
+<p class='help_text_header'>Date: dates referenced in the entry</p>\
+<p><strong>Date</strong>: an individual date; for date ranges add two dates, one with type=start and one with type=end</p>\
+<p><strong>Date Role</strong>: the role of the date in the document, choose from the drop-down list</p>\
+<p><strong>Note</strong>: general notes about the date</p>\
+<p class='help_text_header'>Place: places referenced in the entry</p>\
+<p><strong>Same As</strong>: this field has not yet been implemented, please ignore</p>\
+<p><strong>As Written</strong>: transcribe the place as written</p>\
+<p><strong>Place Role</strong>: the role of the place in the document, choose from the drop-down list</p>\
+<p><strong>Place Type</strong>: the type of place, choose from the drop-down list</p>\
+<p><strong>Note</strong>: general notes about the place</p>\
+<p class='help_text_header'>Person: persons referenced in the entry</p>\
+<p><strong>Same As</strong>: this field has not yet been implemented, please ignore</p>\
+<p><strong>As Written</strong>: transcribe the person’s name as written</p>\
+<p><strong>Gender</strong>: choose from the drop-down list</p>\
+<p><strong>Person Role</strong>: the role of the person in the document, choose from the drop-down list</p>\
+<p><strong>Descriptor</strong>: the status, qualification or occupation of the person, choose from the drop-down list</p>\
+<p><strong>Note</strong>: general notes about the person</p>\
+<p><strong>Related Place</strong>: if a place entered above is related to this person rather than the entry as a whole, link them here</p>";
 
 // Shows the info pop-up when a question mark is clicked
 function info(title) {
     var text = "..."
-    var string = "<html><head><style>li { padding: 5px }</style><title>" + title + "</title><body style='font-family: Arial,Helvetica,sans-serif; font-size: 80%;'>";
+    var string = "<html><head><style>li { padding: 5px; } .help_text_header { font-size: 1.3em; font-weight: bold; }</style><title>" + title + "</title><body style='font-family: Arial,Helvetica,sans-serif; font-size: 80%;'>";
     string += "<h2>" + title + "</h2> ";
     string += "<p style='text-align: justify'>" + dummy_text + "</p>";
     string += "<br/><br/><a href='javascript:window.close()' style='color: #A14685; font-size: 0.9em; font-weight: bold; text-decoration: none;'>" + "CLOSE" + "</a>";
     string += "</body></html>";
-    var popupWidth=600;
+    var popupWidth=700;
     var popupHeight=500;
     var left = (screen.width-popupWidth)/2;
     var top = (screen.height-popupHeight)/4;
