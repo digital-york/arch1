@@ -224,9 +224,9 @@ namespace :arch1 do
 
     path = Rails.root + 'lib/'
 
-    # .csv files should exist in the specified path
+    # .csv files should exist in the specified path but remove any list_processing.csv files if starting afresh
     list = ['folio_faces', 'folio_types', 'currencies', 'certainty', 'languages',
-            'place_types', 'descriptors', 'person_roles', 'place_roles', 'date_roles', 'single_dates']
+            'place_types', 'descriptors', 'person_roles', 'place_roles', 'date_roles', 'single_dates', 'entry_types']
 
     list.each do |i|
 

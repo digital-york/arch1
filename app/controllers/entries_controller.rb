@@ -87,8 +87,6 @@ class EntriesController < ApplicationController
   # EDIT
   def edit
 
-    puts "1"
-    puts params
     puts @entry
 
     # Get all the entries for this folio (so that they can be displayed as tabs)
@@ -190,7 +188,7 @@ class EntriesController < ApplicationController
 
     # Redirects to 'show' when the user clicks the 'Back to View' button
     if params['commit'] == 'Back to View'
-      redirect_to :controller => 'entries', :action => 'show', :id => '-1'
+      redirect_to :controller => 'entries', :action => 'show', :id => ''
       return
     end
 
