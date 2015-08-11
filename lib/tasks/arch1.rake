@@ -307,6 +307,8 @@ namespace :arch1 do
     puts 'Finished!'
   end
 
+   # This is superseded loadallrf
+=begin
   task loadregsfolios: :environment do
 
     require 'json'
@@ -409,7 +411,9 @@ namespace :arch1 do
     puts 'Finished'
 
   end
+=end
 
+  # Need xml.tar to be expanded in lib/assets/folios for this to work
   task loadallrf: :environment do
 
     path = Rails.root + 'lib/assets/'
