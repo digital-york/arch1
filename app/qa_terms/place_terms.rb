@@ -27,7 +27,7 @@ class PlaceTerms
   end
 
   def search q
-    parse_authority_response(SolrQuery.new.solr_query(q='inScheme_ssim:"' + terms_id + '" AND preflabel_tesim:"' + q + '"'))
+    parse_authority_response(SolrQuery.new.solr_query(q='inScheme_ssim:"' + terms_id + '" AND preflabel_tesim:"' + q + '"', fl=''))
   end
 
   # Dereference ids into strings in order to display them, e.g. on the form and the folio drop-down list (py)
