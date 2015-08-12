@@ -9,8 +9,9 @@ class SolrQuery
     CONN.get 'select', :params => {
                          :q=>q,
                          :fl=>fl,
-                         :start=>start,
                          :rows=>rows,
-                          :sort=>sort}
+                         :sort=>sort,
+                         :start=>start
+    }
   end
 end

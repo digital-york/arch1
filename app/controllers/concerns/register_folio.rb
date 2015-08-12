@@ -81,13 +81,58 @@ module RegisterFolio
 
     @folio_list = []
 
-    q = SolrQuery.new.solr_query('has_model_ssim:"Folio" AND isPartOf_ssim:"' + register + '"', 'id, title_tesim, folio_type_tesim, folio_no_tesim, folio_face_tesim', 1000, 'id ASC')
+    folio_hash = {}
 
-    # Iterate over the titles and remove the register par - e.g. 'Abp Reg 12 '
+    # Populate the folio_hash with folio_id => title_tesim - this is used to get the title for each id later on
+    q = SolrQuery.new.solr_query('has_model_ssim:Folio AND isPartOf_ssim:' + register, 'id, title_tesim', 5000, 'id ASC')
+
     q['response']['docs'].each do |result|
-      folio_title = result['title_tesim'].join('')
-      folio_title = folio_title.gsub(/Abp Reg \d+ /, "")
-      @folio_list += [[result['id'], folio_title]]
+      folio_id = result['id']
+      title_tesim = result['title_tesim'].join()
+      folio_hash[folio_id] = title_tesim.gsub(/Abp Reg \d+ /, "")
+    end
+
+    proxy_hash = {}
+
+    q = SolrQuery.new.solr_query('has_model_ssim:Proxy AND proxyIn_ssim:' + register, 'next_tesim, prev_tesim, proxyFor_ssim', 5000, 'id ASC')
+
+    next_tesim_start = ''
+    proxy_for_ssim_start = ''
+
+    # Populate the proxy_hash with proxy_for_ssim => next_tesim
+    q['response']['docs'].each do |result|
+
+      next_tesim = result['next_tesim']
+      prev_tesim = result['prev_tesim']
+      proxy_for_ssim = result['proxyFor_ssim'].join()
+
+      if next_tesim == nil || next_tesim == ''
+        next_tesim = ''
+      else
+        next_tesim = next_tesim.join()
+      end
+
+      # If it is the first object, do not add it to the proxy_hash but store the start values for later on
+      if prev_tesim == nil || prev_tesim == ''
+        next_tesim_start = next_tesim
+        proxy_for_ssim_start = proxy_for_ssim
+      else
+        proxy_hash[proxy_for_ssim] = next_tesim
+      end
+
+    end
+
+    # Add the first object to the folio list
+    @folio_list += [[proxy_for_ssim_start, folio_hash[proxy_for_ssim_start]]]
+
+    # Initialise next_tesim
+    next_tesim = next_tesim_start
+
+    # Use next_tesim to find each object in turn and add them the folio_list
+    # Repeat until there isn't a next_tesim (i.e. the last object)
+    until next_tesim == nil || next_tesim == ''
+      @folio_list += [[next_tesim, folio_hash[next_tesim]]]
+      next_tesim = proxy_hash[next_tesim]
     end
   end
 
@@ -110,7 +155,7 @@ module RegisterFolio
       end
     end
 
-    # Return
+    # Return value
     @is_entry_on_next_folio
   end
 
@@ -140,7 +185,7 @@ module RegisterFolio
       end
     end
 
-    # Return
+    # Return value
     @folio_continues_id
   end
 
@@ -159,6 +204,8 @@ module RegisterFolio
       if @is_entry_on_next_folio == false
         new_entry = Entry.new
         new_entry.entry_no = '1'
+        new_entry.entry_type = ''
+        new_entry.continues_on = ''
         new_entry.folio_id = next_folio_id
         new_entry.save
       end

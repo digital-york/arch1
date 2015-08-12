@@ -146,20 +146,50 @@ class EntriesController < ApplicationController
     # Check parameters are whitelisted
     entry_params = whitelist_entry_params
 
-    # See validation.rb in /concerns
-    #@errors = validate(entry_params)
-
     # Get a new entry and replace values with the form parameters
     # Replace the folio id with the corresponding Folio object
     folio = Folio.where(id: entry_params['folio']).first
     entry_params['folio'] = folio
+
+    # Remove any empty fields and blocks (date, place, person)
+    remove_empty_fields(entry_params)
+
+    # Check for errors
+    @errors = check_for_errors(entry_params)
+
+    # Populate new entry with the entry_params
     @entry = Entry.new(entry_params)
 
     # If there are errors, go back to the 'new' page and display the errors, else go to the 'index' page
     if @errors != '' && @errors != nil
-      @entry_list = Entry.where(folio_ssim: session[:folio_id])
+
+      # Note: it would be better to 'redirect' to the 'edit' controller rather than 'render' to the 'edit' page
+      # because we wouldn't have to set_authority_lists, etc, but 'redirect' loses the state of the nested form, i.e.
+      # any fields which have been added are closed again??
+
+      # Get all the entries for this folio (so that they can be displayed as tabs)
+      @entry_list = Entry.all.where(folio_ssim: session[:folio_id])
+
+      # Set the authority lists (e.g. subject)
       set_authority_lists
+
+      # Set the folio drop-down list
+      set_folio_list
+
+      # Check if this is the last entry for the folio
+      # Determines if the 'Continues on next folio' row and 'Continues' button are displayed
+      is_last_entry(@entry)
+
+      # Determines if the 'New Entry' Tab and '(continues)' text are displayed
+      set_folio_continues_id
+
+      # Determines which message is displayed on the 'Continue' button
+      is_entry_on_next_folio
+
+      # Add related place code freom 'edit' here?
+
       render 'new'
+
     else
 
       # If entry continues, create a new entry on the next folio and save
