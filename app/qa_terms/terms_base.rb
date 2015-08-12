@@ -20,6 +20,8 @@ class TermsBase
     parse_authority_response(SolrQuery.new.solr_query(q='inScheme_ssim:"' + terms_id + '"',fl='id,preflabel_tesim',rows=1000,sort=sort_order))
   end
 
+  # Returns an array of hashes (top-level terms) which contain an array of hashes (middle-level terms), etc
+  # These are dereferenced in the subjects pop-up to dispay the subject list
   def all_top_level_subject_terms
 
     all_terms_list = []
