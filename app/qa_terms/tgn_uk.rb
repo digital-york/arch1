@@ -1,4 +1,4 @@
-class TgnUk < TGN
+class TgnUk < Qa::Authorities::Getty::TGN
 
   def sparql(q)
     search = untaint(q)

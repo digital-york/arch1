@@ -1,7 +1,7 @@
 
   <%
     # This instantiates the Terms class (which is used below to dereference ids
-    terms = Terms.new('subauthority')
+    terms = TermsBase.new('subauthority')
   %>
 
   <% if session[:folio_id] == '' %>

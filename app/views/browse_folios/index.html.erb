@@ -9,7 +9,7 @@
     <div style="color: #f7f4ee; text-align: center; font-size: 1em; padding: 9px 0px 3px 0px; background-color: grey; height: 30px">
 
       <%
-         terms = Terms.new('subauthority')
+         terms = TermsBase.new('subauthority')
          folio_title = terms.get_str_from_id(session[:browse_id], 'title_tesim')
          folio_title = folio_title.gsub(/Abp Reg \d+ /, "")
       %>
