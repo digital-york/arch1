@@ -11,6 +11,9 @@ module DCTerms
     property :title, predicate: ::RDF::DC.title, multiple: false do |index|
       index.as :stored_searchable, :sortable
     end
+    property :format, predicate: ::RDF::DC.format, multiple: true do |index|
+      index.as :stored_searchable
+    end
   end
 
 end
