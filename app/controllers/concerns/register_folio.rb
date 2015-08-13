@@ -216,7 +216,6 @@ module RegisterFolio
       # Set the next folio_id and folio_image session variables
       set_folio_and_image('next_tesim', session[:folio_id])
 
-
       # Return the new id if an entry has been created
       # Else return the first entry id of the next folio
       if @is_entry_on_next_folio == false
