@@ -218,7 +218,7 @@ class EntriesController < ApplicationController
 
     # Redirects to 'show' when the user clicks the 'Back to View' button
     if params['commit'] == 'Back to View'
-      redirect_to :controller => 'entries', :action => 'show', :id => ''
+      redirect_to :controller => 'entries', :action => 'show', :id => params[:id]
       return
     end
 
