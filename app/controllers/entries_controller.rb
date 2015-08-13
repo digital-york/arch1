@@ -272,9 +272,6 @@ class EntriesController < ApplicationController
 
     else
 
-      # Save form data to Fedora
-      @entry.save
-
       # If entry continues, create a new entry on the next folio and save
       # Also update the current entries 'continues_on' attribute
       next_entry_id = ''
@@ -282,6 +279,9 @@ class EntriesController < ApplicationController
         is_entry_on_next_folio
         next_entry_id = create_next_entry(@is_entry_on_next_folio)
       end
+
+      # Save form data to Fedora
+      @entry.save
 
       # If entry continues, redirect to the first entry on the next folio
       # Else redirect to the index page
