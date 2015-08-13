@@ -87,8 +87,6 @@ class EntriesController < ApplicationController
   # EDIT
   def edit
 
-    puts @entry
-
     # Get all the entries for this folio (so that they can be displayed as tabs)
     @entry_list = Entry.all.where(folio_ssim: session[:folio_id])
 
