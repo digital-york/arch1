@@ -264,7 +264,7 @@ module Validation
     errors = ''
 
     errors = errors + get_errors(entry_params[:entry_no], 'Entry No', SMALL_FIELD, 'M')
-    errors = errors + get_errors(entry_params[:entry_type], 'Entry Type', MEDIUM_FIELD, 'M')
+    errors = errors + get_errors(entry_params[:entry_type], 'Entry Type', MEDIUM_FIELD, '')
     errors = errors + get_multi_field_errors(entry_params[:summary], 'Summary', MEDIUM_FIELD)
     errors = errors + get_multi_field_errors(entry_params[:marginalia], 'Marginalia', MEDIUM_FIELD)
     errors = errors + get_multi_field_errors(entry_params[:language], 'Language', MEDIUM_FIELD)
