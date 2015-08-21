@@ -26,7 +26,6 @@ class LandingPageController < ApplicationController
         end
       end
     end
-
  end
 
   def go_entries
@@ -40,7 +39,6 @@ class LandingPageController < ApplicationController
     set_first_and_last_folio
 
     redirect_to :controller => 'entries', :action => 'index',  :login_submit => 'true'
-
   end
 
   def reset_session_variables
