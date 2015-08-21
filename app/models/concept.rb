@@ -1,4 +1,5 @@
 class Concept < ActiveFedora::Base
+
   include RdfType,Generic,AssignId,SameAs,SkosLabels,DCTerms
 
   belongs_to :concept_scheme, predicate: ::RDF::SKOS.inScheme
