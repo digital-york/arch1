@@ -1,4 +1,5 @@
 class Register < ActiveFedora::Base
+
   include DCTerms,RdfType,AssignId,Iana,Pcdm,Generic
 
   has_many :folios, :dependent => :destroy
