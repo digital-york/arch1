@@ -1,7 +1,9 @@
 class ConceptScheme < ActiveFedora::Base
+
   include RdfType,DCTerms,AssignId
 
   has_many :concepts
+  #has_many :people
 
   # RDFTYPES
   def add_rdf_types
@@ -10,7 +12,7 @@ class ConceptScheme < ActiveFedora::Base
   # http://fedora.info/definitions/v4/indexing#Indexable
 
   # optional, use for nested subject headings schemes
-  property :topconcept, predicate: ::RDF::SKOS.hasTopConcept, multiple: true do |index|
+  property :top_concept, predicate: ::RDF::SKOS.hasTopConcept, multiple: true do |index|
     index.as :stored_searchable
   end
 

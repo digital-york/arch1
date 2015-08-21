@@ -13,30 +13,8 @@
       "rows":"100"}},
   "response":{"numFound":11,"start":0,"docs":[
       {
-        "PID":"york:810265",
-        "dc.title":"Abp Reg 08: Register of William Greenfield (1306-1315) Roll"},
-      {
-        "PID":"york:810263",
-        "dc.title":"Abp Reg 1A: Register of Walter de Gray (1225-1255) Major roll 1225-1235"},
-      {
-        "PID":"york:810264",
-        "dc.title":"Abp Reg 1B: Register of Walter de Gray (1225-1255)  Minor roll 1235-1255"},
-      {
-        "PID":"york:810235",
-        "dc.title":"Abp Reg 03: Register of William Wickwane (1279-1285)"},
-      {
-        "PID":"york:810241",
-        "dc.title":"Abp Reg 28: Register of Edward Lee (1531-1544)"},
-      {
-        "PID":"york:810240",
-        "dc.title":"Abp Reg 26: Register of Christopher Bainbridge (1508-1514) Sede Vacante Register 1514"},
-      {
         "PID":"york:810237",
-        "dc.title":"Abp Reg 12: Register of Alexander Neville (1374-1388)"},
-      {
-        "PID":"york:810238",
-        "dc.title":"Abp Reg 22: Register of George Neville (1465-1476) and Laurence Booth (1476-1480)"},
-      {
-        "PID":"york:810239",
-        "dc.title":"Abp Reg 23: Register of Thomas Rotherham (1480-1500)"}]
+        "dc.title":"Abp Reg 12: Register of Alexander Neville (1374-1388)"
+      }
+      ]
   }}

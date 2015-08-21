@@ -1,4 +1,7 @@
 <div class="landing_page">
+  <p>
+    <%= link_to 'Search Person', '#', onclick: "person_popup('/person_popup'); return false;" %>
+  </p>
 
   <table style="width: 100%">
 
@@ -17,7 +20,7 @@
 
           <td>
             <div>
-              <a href="/go_entries?register_id=<%= @reg_id_list[index] %>&amp;register_name=<%= @reg_id_tesim_list[index] %>"><img src="/assets/<%= @reg_image_list[index] %>"/></a>
+              <a href="/go_entries?register_id=<%= @reg_id_list[index] %>&amp;register_name=<%= @reg_id_tesim_list[index] %>"><%= image_tag "#{@reg_image_list[index]}" %></a>
             </div>
             <div class="landing_page_text">
               <strong><%= @reg_id_tesim_list[index] %></strong><br/><%= @reg_title_list[index] %>
