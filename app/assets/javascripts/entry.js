@@ -16,6 +16,12 @@ function post_value(value, id, subject_field) {
     self.close();
 }
 
+function general_popup(page, popupWidth, popupHeight, top, left_factor) {
+    var popup_id = Math.floor(Math.random() * 100000) + 1;
+    var left = (screen.width - popupWidth) / left_factor;
+    window.open(page, popup_id, 'status = 1, top = ' + top + ', left = ' + left + ', height = ' + popupHeight + ', width = ' + popupWidth + ', scrollbars=yes');
+}
+
 // Display the image zoom popup
 function image_zoom_large_popup(page) {
     var popupWidth = 1200;
@@ -25,12 +31,20 @@ function image_zoom_large_popup(page) {
     window.open(page, 'image_zoom_popup', 'status = 1, top = ' + top + ', left = ' + left + ', height = ' + popupHeight + ', width = ' + popupWidth + ', scrollbars=yes');
 }
 
-function subjects_popup(page) {
+function subject_popup(page) {
     var popupWidth = 600;
     var popupHeight = screen.height;
     var top = 0;
     var left = screen.width - popupWidth;
-    window.open(page, 'subjects_popup', 'status = 1, top = ' + top + ', left = ' + left + ', height = ' + popupHeight + ', width = ' + popupWidth + ', scrollbars=yes');
+    window.open(page, 'subject_popup', 'status = 1, top = ' + top + ', left = ' + left + ', height = ' + popupHeight + ', width = ' + popupWidth + ', scrollbars=yes');
+}
+
+function person_popup(page) {
+    var popupWidth = 800;
+    var popupHeight = screen.height / 1.5;
+    var top = 0;
+    var left = (screen.width - popupWidth) / 2;
+    window.open(page, 'person_popup', 'status = 1, top = ' + top + ', left = ' + left + ', height = ' + popupHeight + ', width = ' + popupWidth + ', scrollbars=yes');
 }
 
 function browse_folios_popup(page) {
@@ -161,10 +175,6 @@ $(document).ready(function () {
         }
     });
 
-//\'/subjects?subject_field=subject_" + no_elements + "\'
-
-//<img src='/assets/magnifying_glass_small.png' class='plus_icon'>
-
     $('body').on('change', '.choose_folio', function(e) {
         var id = $(this).val();
         var input = $("<input>").attr("type", "hidden").attr("name", "folio_id").val(id);
@@ -182,7 +192,7 @@ $(document).ready(function () {
             var no_elements = field_group_div.children('.field_single').length;
             var jq_type = $(this).attr('jq_type');
             var new_code_block = "<div class='field_single'>"
-                + "<a href='' onclick='subjects_popup(&#39;/subjects?subject_field=subject_" + no_elements + "&#39;); return false;' tabindex='-1'><img src='/assets/magnifying_glass_small.png' class='plus_icon'></a>"
+                + "<a href='' onclick='subject_popup(&#39;/subject_popup?subject_field=subject_" + no_elements + "&#39;); return false;' tabindex='-1'><img src='/assets/magnifying_glass_small.png' class='plus_icon'></a>"
                 + "&nbsp;<span id='subject_" + no_elements + "'></span>"
                 + "<input id='subject_" + no_elements + "_hidden' type='hidden' value='' name='entry[" + jq_type + "][]'>"
                 + "<img alt='Delete icon' src='/assets/delete.png' class='delete_icon click_remove_field_level1' jq_tag_type='input'>"

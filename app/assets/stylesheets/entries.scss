@@ -150,7 +150,7 @@ body {
 }
 
 #entry_menu li {
-  display: inline-block;
+  //display: inline-block;
   float: left;
   font-size: 1.1em;
   list-style: outside none none;
@@ -399,7 +399,7 @@ table {
   padding: 10px 10px 7px 10px;
 }
 
-.error {
+.error, .info {
   background-color: #D74A4A;
   width: auto;
   margin-bottom: 20px;
@@ -407,6 +407,13 @@ table {
   height: auto;
   color: white;
   padding: 7px 10px 7px 10px;
+}
+
+.info {
+  background-color: green;
+  margin: 0px auto;
+  width: 580px;
+  margin-bottom: 20px;
 }
 
 .timeout {
@@ -549,3 +556,16 @@ img {
   border: none;
 }
 
+.search_box input[type="text"] {
+  width: 360px;
+}
+
+.person_popup_menu ul {
+  margin: 0;
+  padding: 0;
+  height: 36px;
+}
+
+.person_popup_menu li {
+  list-style: none;
+}

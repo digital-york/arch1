@@ -4,6 +4,9 @@ Rails.application.routes.draw do
 
   resources :entries
 
+  root 'login#login_temp'
+
+  # My routes
   get 'image_zoom_large' => 'image_zoom_large#index'
   get 'logout' => 'login#logout'
   get 'login' => 'login#index'
@@ -13,10 +16,10 @@ Rails.application.routes.draw do
   get 'landing_page' => 'landing_page#index'
   get 'browse_folios' => 'browse_folios#index'
   get 'go_entries' => 'landing_page#go_entries'
-
-  root 'login#login_temp'
-
-  resources :subjects
+  get 'subject_popup' => 'subject_popup#index'
+  get 'person_popup' => 'person_popup#index'
+  post 'person_popup_create' => 'person_popup#create'
+  post 'person_popup_search' => 'person_popup#search'
 
   #root :to => "catalog#login"
   blacklight_for :catalog
