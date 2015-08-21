@@ -1,0 +1,168 @@
+<% if @person_name != nil && @person_name != '' %>
+    <div class='info'><%= @person_name %> has been added</div>
+<% end %>
+
+<div style="margin: 0px auto; width: 600px; border: 1px solid silver; min-height: 500px; margin-top: 0px; background-color: #E1E1E1">
+
+  <div id="entry_menu" style="width: 600px; font-size: 0.8em; margin-top: 0px; border-bottom: 1px solid #acadb7;">
+    <%
+      search_highlight_class = ''
+      new_person_highlight_class = ''
+      if @type == nil || @type == 'search'
+        search_highlight_class = 'highlight'
+        new_person_highlight_class = 'noHighlight'
+      else
+        search_highlight_class = 'noHighlight'
+        new_person_highlight_class = 'highlight'
+      end
+    %>
+    <ul>
+      <li style="margin-left: 5px"><%= link_to "Search Person", person_popup_path({:type => 'search'}), class: search_highlight_class %></li>
+      <li style=""><%= link_to "Add Person", person_popup_path({:type => 'new_person'}), class: new_person_highlight_class %></li>
+    </ul>
+  </div>
+
+  <div style="background-color: #E1E1E1; padding-top: 30px; margin-left: 20px; margin-bottom: 20px">
+
+    <% if @type == nil || @type == 'search' %>
+
+        <div style="font-size: 0.85em;">
+
+          <%= form_tag person_popup_search_path do |f| %>
+
+              <div class="search_box" style="">
+                Enter Name:&nbsp;
+                <%= text_field_tag 'search_term', nil, class: 'text_field_search', id: 'search_box' %>
+                &nbsp;&nbsp;<%= submit_tag 'Search' %>
+              </div>
+
+          <% end %>
+
+          <div style="margin-top: 20px; margin-left: 2px">
+
+            <%
+               if @search_results_hash != nil && @search_results_hash != ''
+                 sterm = ''
+                 if @search_term != ''
+                   sterm = "'#{@search_term}'"
+                 end
+            %>
+
+                Search term = <strong><%= sterm %></strong>
+
+                <%
+                   @search_results_hash.each do |element|
+                     family_name = element[0]
+                     id = element[1]
+                %>
+                    <div style="padding-top: 5px"><em><%= link_to family_name %></em></div>
+            <%
+                end
+              end
+            %>
+
+            <script>
+                window.onload = function () {
+                    document.getElementById("search_box").focus();
+                };
+            </script>
+          </div>
+        </div>
+
+    <% else %>
+
+        <%= form_for @person, url: person_popup_create_path, method: 'POST' do |f| %>
+
+            <div class='tab1'>
+
+              <table cellspacing="0" style="width: 500px">
+
+                <%# Family Name %>
+                <tr>
+                  <th style="width: 150px">Family Name:</th>
+                  <td>
+                    <%= text_field_tag "person[family]", @person.family %>
+                  </td>
+                </tr>
+
+                <%# Pre-Title %>
+                <tr>
+                  <th style="width: 150px">Pre-Title:</th>
+                  <td>
+                    <%= text_field_tag "person[pre_title]", @person.pre_title %>
+                  </td>
+                </tr>
+
+                <%# Given Name %>
+                <tr>
+                  <th style="width: 150px">Given Name:</th>
+                  <td>
+                    <%= text_field_tag "person[given_name]", @person.given_name %>
+                  </td>
+                </tr>
+
+                <%# Dates %>
+                <tr>
+                  <th>Dates:</th>
+                  <td>
+                    <%= text_field_tag "person[dates]", @person.dates %>
+                  </td>
+                </tr>
+
+                <%# Title %>
+                <tr>
+                  <th>Title:</th>
+                  <td>
+                    <%= text_field_tag "person[post_title]", @person.post_title %>
+                  </td>
+                </tr>
+
+                <%# Epithet %>
+                <tr>
+                  <th>Epithet:</th>
+                  <td>
+                    <%= text_field_tag "person[epithet]", @person.epithet %>
+                  </td>
+                </tr>
+
+                <%# Same As %>
+                <tr>
+                  <th>Same As:</th>
+                  <td>
+                    <%= text_field_tag "person[same_as][]", @person.same_as %>
+                  </td>
+                </tr>
+
+                <%# Related Authority %>
+                <tr>
+                  <th>Related Authority:</th>
+                  <td>
+                    <%= text_field_tag "person[related_authority][]", @person.related_authority %>
+                  </td>
+                </tr>
+
+                <%# Variant Names %>
+                <tr>
+                  <th>Variant Names:</th>
+                  <td>
+                    <%= text_field_tag "person[alt_label][]", @person.alt_label %>
+                  </td>
+                </tr>
+
+                <%# Rules %>
+
+              </table>
+
+              <p>
+                <%= f.submit 'Submit' %>
+              </p>
+
+            </div>
+
+        <% end %>
+
+    <% end %>
+
+  </div>
+
+</div>
