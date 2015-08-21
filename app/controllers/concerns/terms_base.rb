@@ -24,9 +24,9 @@ class TermsBase
   # These are dereferenced in the subjects pop-up to dispay the subject list
   def all_top_level_subject_terms
 
-    all_terms_list = []
-    middle_level_list = []
-    bottom_level_list = []
+    # all_terms_list = []
+    # middle_level_list = []
+    # bottom_level_list = []
 
     top_level_list = parse_authority_response(SolrQuery.new.solr_query(q='istopconcept_tesim:true',fl='id,preflabel_tesim',rows=1000,sort='preflabel_si asc'))
 
