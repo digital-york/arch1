@@ -2,38 +2,46 @@ class PersonPopupController < ApplicationController
 
   def index
 
+    # Should the search form or new person form be displayed?
     @type = params[:type]
+
+    # This variable identifies the 'Same As' field on the form (i.e. it is used when the user selects a 'person')
     @person_field = params[:person_field]
 
-    if @type == nil || @type == ''
-    elsif @type == 'new_person'
+    # Make sure that an object exists for the new person form
+    if @type == 'new_person'
       @person = Person.new
     end
-
-  end
-
-  def new
   end
 
   def create
 
+    # This variable identifies the 'Same As' field on the form (i.e. it is used when the user selects a person')
     @person_field = params[:person_field]
 
-    # Check parameters are valid
+    # Check parameters are permitted
     person_params = whitelist_person_params
 
-    #Create the new person with the parameters
-    @person = Person.new(person_params)
-    response = SolrQuery.new.solr_query(q='has_model_ssim:ConceptScheme AND title_tesim:people', fl='id', rows=1, sort='')
-    id = response['response']['docs'][0]['id']
-    @person.concept_scheme_id = id
-    @person.save
+    if person_params[:family] == ''
+      @error = "Please enter a family name"
+      @person = Person.new(person_params)
+    else
+      # Create a new person with the parameters
+      # Note that a solr query is carried out to obtain the concept scheme id for 'people'
+      @person = Person.new(person_params)
+      response = SolrQuery.new.solr_query(q='has_model_ssim:ConceptScheme AND title_tesim:people', fl='id', rows=1, sort='')
+      id = response['response']['docs'][0]['id']
+      @person.concept_scheme_id = id
+      @person.rules = 'NCARules'
+      @person.preflabel = "#{@person.family}_#{@person.pre_title}"
+      @person.save
 
-    # Pass variable to view page to notify user that perosn has been added
-    @person_name = @person.family
+      # Pass variable to view page to notify user that person has been added
+      @person_name = @person.family
 
-    # Initialise person form again
-    @person = Person.new
+      # Initialise person form again
+      @person = Person.new
+    end
 
     # View page needs to know if this is a 'new person' form or a 'search' form
     @type = 'new person'
@@ -43,10 +51,12 @@ class PersonPopupController < ApplicationController
 
   def search
 
+    # This variable identifies the 'Same As' field on the form (i.e. it is used when the user selects a person')
     @person_field = params[:person_field]
 
     @search_term = params[:search_term]
 
+    # Get all the family names from solr
     response = SolrQuery.new.solr_query(q='has_model_ssim:Person', fl='id, family_tesim', rows=1000, sort='')
 
     temp_hash = {}
@@ -59,6 +69,7 @@ class PersonPopupController < ApplicationController
       end
     end
 
+    # Get all the names which match the search term and sort them
     @search_results_hash = temp_hash.select { |key, value| key.to_s.match(/#{@search_term}/i) }
     @search_results_hash = Hash[@search_results_hash.sort]
 

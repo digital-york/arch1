@@ -202,7 +202,7 @@
               <div class="field_group">
                 <% @entry.subject.each_with_index do |subject, index| %>
                     <div class="field_single">
-                      <a href='' onclick="subject_popup('/subject_popup?subject_field=subject_<%= index.to_s %>'); return false;" tabindex="-1"><%= image_tag "magnifying_glass_small.png", class: "plus_icon" %></a>
+                      <a href='' onclick="popup('/subject_popup?subject_field=subject_<%= index.to_s %>', 'subject'); return false;" tabindex="-1"><%= image_tag "magnifying_glass_small.png", class: "plus_icon" %></a>
                       <span id="subject_<%= index.to_s %>"><%= terms.get_str_from_id(subject, 'preflabel_tesim') %></span>
                       <%= hidden_field_tag "entry[subject][]", subject, id: 'subject_' + index.to_s + '_hidden' %>
                       <img alt="Delete icon" src="/assets/delete.png" class="delete_icon click_remove_field_level1" jq_tag_type="input">
@@ -361,8 +361,9 @@
                         <tr>
                           <th style="width: 110px">*Same As:</th>
                           <td class="input_single">
-                            <%#= text_field_tag "entry[related_places_attributes][" + index1.to_s + "][place_same_as]", related_place.place_same_as, id: '' %>
-                            <input type="text" name="entry[related_places_attributes][<%= index1.to_s %>][place_same_as]" value="<%= related_place.place_same_as %>">
+                            <a href='' onclick="popup('/place_popup?place_field=place_<%= index1 %>', 'place'); return false;" tabindex="-1"><%= image_tag "magnifying_glass_small.png", class: "plus_icon" %></a>
+                            <span id="place<%= index1 %>"><%= terms.get_str_from_id(related_place.place_same_as, 'title_tesim') %></span>
+                            <%= hidden_field_tag "entry[related_places_attributes][" + index1.to_s + "][place_same_as]", related_place.place_same_as, id: 'place_' + index1.to_s + '_hidden' %>
                           </td>
                         </tr>
 
@@ -468,8 +469,7 @@
                         <tr>
                           <th style="width: 110px">*Same As:</th>
                           <td class="input_single">
-                            <%#= text_field_tag "entry[related_people_attributes][" + index1.to_s + "][person_same_as]", related_person.person_same_as, id: '' %>
-                            <a href='' onclick="person_popup('/person_popup?person_field=person_<%= index1 %>'); return false;" tabindex="-1"><%= image_tag "magnifying_glass_small.png", class: "plus_icon" %></a>
+                            <a href='' onclick="popup('/person_popup?person_field=person_<%= index1 %>', 'person'); return false;" tabindex="-1"><%= image_tag "magnifying_glass_small.png", class: "plus_icon" %></a>
                             <span id="person_<%= index1 %>"><%= terms.get_str_from_id(related_person.person_same_as, 'family_tesim') %></span>
                             <%= hidden_field_tag "entry[related_people_attributes][" + index1.to_s + "][person_same_as]", related_person.person_same_as, id: 'person_' + index1.to_s + '_hidden' %>
                           </td>

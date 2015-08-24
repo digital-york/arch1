@@ -1,5 +1,6 @@
 class Place < ActiveFedora::Base
-  include RdfType,AssignId,SameAs,SkosLabels,MadsRelauth,DCTerms,AdminTerms,RdfsSeealso
+
+  include RdfType, AssignId, SameAs, SkosLabels, MadsRelauth, DCTerms, AdminTerms, RdfsSeealso
 
   belongs_to :concept_scheme, predicate: ::RDF::SKOS.inScheme
 
@@ -8,27 +9,27 @@ class Place < ActiveFedora::Base
   end
 
   # eg. NCARules country (England)
-  property :parentADM1, predicate: ::RDF::URI.new('http://www.geonames.org/ontology#parentADM1'), multiple: false do |index|
+  property :parent_ADM1, predicate: ::RDF::URI.new('http://www.geonames.org/ontology#parentADM1'), multiple: false do |index|
     index.as :stored_searchable
   end
 
   # eg. NCARules county/wider administrative unit
-  property :parentADM2, predicate: ::RDF::URI.new('http://www.geonames.org/ontology#parentADM2'), multiple: false do |index|
+  property :parent_ADM2, predicate: ::RDF::URI.new('http://www.geonames.org/ontology#parentADM2'), multiple: false do |index|
     index.as :stored_searchable
   end
 
   # eg. NCARules local administrative unit
-  property :parentADM3, predicate: ::RDF::URI.new('http://www.geonames.org/ontology#parentADM3'), multiple: false do |index|
+  property :parent_ADM3, predicate: ::RDF::URI.new('http://www.geonames.org/ontology#parentADM3'), multiple: false do |index|
     index.as :stored_searchable
   end
 
   # eg. NCARules civil parish
-  property :parentADM4, predicate: ::RDF::URI.new('http://www.geonames.org/ontology#parentADM4'), multiple: false do |index|
+  property :parent_ADM4, predicate: ::RDF::URI.new('http://www.geonames.org/ontology#parentADM4'), multiple: false do |index|
     index.as :stored_searchable
   end
 
   # eg. UK
-  property :parentCountry, predicate: ::RDF::URI.new('http://www.geonames.org/ontology#parentCountry'), multiple: false do |index|
+  property :parent_country, predicate: ::RDF::URI.new('http://www.geonames.org/ontology#parentCountry'), multiple: false do |index|
     index.as :stored_searchable
   end
 

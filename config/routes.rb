@@ -20,6 +20,9 @@ Rails.application.routes.draw do
   get 'person_popup' => 'person_popup#index'
   post 'person_popup_create' => 'person_popup#create'
   post 'person_popup_search' => 'person_popup#search'
+  get 'place_popup' => 'place_popup#index'
+  post 'place_popup_create' => 'place_popup#create'
+  post 'place_popup_search' => 'place_popup#search'
 
   #root :to => "catalog#login"
   blacklight_for :catalog

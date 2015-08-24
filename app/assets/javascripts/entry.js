@@ -10,52 +10,43 @@ function hide_elements_when_errors() {
     });
 }
 
-function post_value(value, id, subject_field) {
-    opener.document.getElementById(subject_field).innerHTML = value;
-    opener.document.getElementById(subject_field + "_hidden").value = id;
+// Used to post value back to calling page, i.e. in subject, person and place popups
+function post_value(value, id, field) {
+    opener.document.getElementById(field).innerHTML = value;
+    opener.document.getElementById(field + "_hidden").value = id;
     self.close();
 }
 
-function general_popup(page, popupWidth, popupHeight, top, left_factor) {
+function popup(page, type) {
+
     var popup_id = Math.floor(Math.random() * 100000) + 1;
-    var left = (screen.width - popupWidth) / left_factor;
-    window.open(page, popup_id, 'status = 1, top = ' + top + ', left = ' + left + ', height = ' + popupHeight + ', width = ' + popupWidth + ', scrollbars=yes');
-}
 
-// Display the image zoom popup
-function image_zoom_large_popup(page) {
-    var popupWidth = 1200;
-    var popupHeight = 800;
+
+    var popupWidth = 0;
+    var popupHeight = 0;
     var top = 0;
-    var left = (screen.width - popupWidth) / 2;
-    window.open(page, 'image_zoom_popup', 'status = 1, top = ' + top + ', left = ' + left + ', height = ' + popupHeight + ', width = ' + popupWidth + ', scrollbars=yes');
-}
+    var left = 0;
 
-function subject_popup(page) {
-    var popupWidth = 600;
-    var popupHeight = screen.height;
-    var top = 0;
-    var left = screen.width - popupWidth;
-    window.open(page, 'subject_popup', 'status = 1, top = ' + top + ', left = ' + left + ', height = ' + popupHeight + ', width = ' + popupWidth + ', scrollbars=yes');
-}
+    if (type == "image_zoom_large") {
+        popupWidth = 1200;
+        popupHeight = 800;
+        left = (screen.width - popupWidth) / 2;
+    } else if (type == "subject") {
+        popupWidth = 600;
+        popupHeight = screen.height;
+        left = screen.width - popupWidth;
+    } else if (type == "person" || type == "place") {
+        var popupWidth = 800;
+        var popupHeight = screen.height / 1.5;
+        var left = (screen.width - popupWidth) / 2;
+    } else if (type == "browse_folios") {
+        popupWidth = 522;
+        popupHeight = 605;
+        left = (screen.width - popupWidth) / 2;
+    }
 
-function person_popup(page) {
-    var popupWidth = 800;
-    var popupHeight = screen.height / 1.5;
-    var top = 0;
-    var left = (screen.width - popupWidth) / 2;
-    window.open(page, 'person_popup', 'status = 1, top = ' + top + ', left = ' + left + ', height = ' + popupHeight + ', width = ' + popupWidth + ', scrollbars=yes');
+    window.open(page, type + "_" + popup_id, 'status = 1, top = ' + top + ', left = ' + left + ', height = ' + popupHeight + ', width = ' + popupWidth + ', scrollbars=yes');
 }
-
-function browse_folios_popup(page) {
-    var popupWidth = 522;
-    var popupHeight = 605;
-    var top = 0;
-    var left = (screen.width - popupWidth) / 2;
-    window.open(page, 'browse_folios_popup', 'status = 1, top = ' + top + ', left = ' + left + ', height = ' + popupHeight + ', width = ' + popupWidth + ', scrollbars=yes');
-}
-
-//var dummy_text = "Lorem ipsum dolor sit amet, nam ei sumo vidisse expetenda, ea vocent imperdiet vix. Te quem alterum mea, sumo nullam nusquam te vel. Ipsum melius has id. No sale debitis vulputate vel, has cu enim delectus detraxit. Mei ne pericula comprehensam, eu bonorum periculis per. Mei soleat voluptua torquatos ei. In eos velit nostrum, sit populo latine docendi no. Vis dicam dolores ponderum et. No eum legendos democritum deterruisset, eu nonumes temporibus est. Vix ex iisque impetus epicurei, ea altera suscipit pertinacia eos, quidam invidunt platonem has in. Vivendo legendos quo ad, ea probo hendrerit qui, ius ei purto iudicabit. Vel cu ullum soluta. Usu erat facilisis complectitur at. Vix nostrud definitiones te. Ius dicant dissentias id, usu an deserunt deseruisse, eam urbanitas voluptaria an. Brute mucius temporibus no qui. Pri ex tibique eligendi iracundia. Imperdiet mediocritatem nam ex, eam ea mollis latine admodum, ea nec odio latine reprehendunt. Nulla disputando delicatissimi ei duo. Mel ne movet melius, cum at veniam platonem, nec integre eleifend ad. Qui vidit congue te. Ei eligendi adolescens eum. Est ne decore ancillae appetere. Ut lorem equidem impedit eos."
 
 var dummy_text = "\
 <p class='help_text_header'>Entry:</p>\
@@ -188,7 +179,7 @@ $(document).ready(function () {
             var no_elements = field_group_div.children('.field_single').length;
             var jq_type = $(this).attr('jq_type');
             var new_code_block = "<div class='field_single'>"
-                + "<a href='' onclick='subject_popup(&#39;/subject_popup?subject_field=subject_" + no_elements + "&#39;); return false;' tabindex='-1'><img src='/assets/magnifying_glass_small.png' class='plus_icon'></a>"
+                + "<a href='' onclick='popup(&#39;/subject_popup?subject_field=subject_" + no_elements + "&#39;, &#39;subject&#39;); return false;' tabindex='-1'><img src='/assets/magnifying_glass_small.png' class='plus_icon'></a>"
                 + "&nbsp;<span id='subject_" + no_elements + "'></span>"
                 + "<input id='subject_" + no_elements + "_hidden' type='hidden' value='' name='entry[" + jq_type + "][]'>"
                 + "<img alt='Delete icon' src='/assets/delete.png' class='delete_icon click_remove_field_level1' jq_tag_type='input'>"
@@ -354,25 +345,29 @@ $(document).ready(function () {
 
                 "<table class='tab3' cellspacing='0'>" +
 
-                    // Same As
-                "<tr><th style='width: 110px'>*Same As:</th><td class='input_single'><input type='text' value='' id='' name='entry[related_places_attributes][" + jq_index + "][place_same_as]'></td></tr>" +
+                // Same As
+                "<tr><th>*Same As:</th><td class='input_single'>" +
+                "<a href='' onclick='popup(&#39;/place_popup?place_field=place_" + jq_index + "&#39;, &#39;place&#39;); return false;' tabindex='-1'><img src='/assets/magnifying_glass_small.png' class='plus_icon'></a>" +
+                "&nbsp;<span id='place_" + jq_index + "'></span>" +
+                "<input type='hidden' id='place_" + jq_index + "_hidden' value='' name='entry[related_places_attributes][" + jq_index + "][place_same_as]'>" +
+                "</td></tr>" +
 
-                    // As Written
+                // As Written
                 "<tr><th>As Written:" +
                 "&nbsp;<img jq_type='place_as_written' jq_index='" + jq_index + "' jq_attributes='related_places_attributes' class='plus_icon click_multiple_field_button_level2' src='/assets/plus_sign.png'>" +
                 "</th><td><div class='field_group grey_box place_as_written_block'></div></td></tr>" +
 
-                    // Place Role
+                // Place Role
                 "<tr><th>Place Role:&nbsp;<img jq_place_role_list=" + jq_place_role_list +
                 " jq_type='" + "place_role" + "' jq_index='" + jq_index + "' jq_attributes='related_places_attributes' class='plus_icon click_select_field_button_level2' src='/assets/plus_sign.png'>" +
                 "</th><td><div class='field_group grey_box'></div></td></tr>" +
 
-                    // Place Type
+                // Place Type
                 "<tr><th>Place Type:&nbsp;<img jq_place_type_list=" + jq_place_type_list +
                 " jq_type='" + "place_type" + "' jq_index='" + jq_index + "' jq_attributes='related_places_attributes' class='plus_icon click_select_field_button_level2' src='/assets/plus_sign.png'>" +
                 "</th><td><div class='field_group grey_box'></div></td></tr>" +
 
-                    // Note
+                // Note
                 "<tr><th>Note:" +
                 "&nbsp;<img jq_type='place_note' jq_index='" + jq_index + "' jq_attributes='related_places_attributes' class='plus_icon click_multiple_text_area_button_level2' src='/assets/plus_sign.png'>" +
                 "</th><td><div class='field_group grey_box'></div></td></tr>" +
@@ -417,8 +412,7 @@ $(document).ready(function () {
 
                     // Same As
                 "<tr><th>*Same As:</th><td class='input_single'>" +
-                //"<input type='text' value='' id='' name='entry[related_people_attributes][" + jq_index + "][person_same_as]'>" +
-                "<a href='' onclick='person_popup(&#39;/person_popup?person_field=person_" + jq_index + "&#39;); return false;' tabindex='-1'><img src='/assets/magnifying_glass_small.png' class='plus_icon'></a>" +
+                "<a href='' onclick='popup(&#39;/person_popup?person_field=person_" + jq_index + "&#39;, &#39;person&#39;); return false;' tabindex='-1'><img src='/assets/magnifying_glass_small.png' class='plus_icon'></a>" +
                 "&nbsp;<span id='person_" + jq_index + "'></span>" +
                 "<input type='hidden' id='person_" + jq_index + "_hidden' value='' name='entry[related_people_attributes][" + jq_index + "][person_same_as]'>" +
                 "</td></tr>" +

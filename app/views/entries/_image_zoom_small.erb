@@ -35,7 +35,7 @@
           <% end %>
         </div>
 
-        <div style="float: left; margin-left: 70px"><%= link_to image_tag("magnifying_glass.png", :alt => "register", :class => "icon", :style => "position: relative; top: 7px", :title => 'Image zoom'), "#", :onclick => "image_zoom_large_popup('/image_zoom_large'); return false", :title => "" %></div>
+        <div style="float: left; margin-left: 70px"><%= link_to image_tag("magnifying_glass.png", :alt => "register", :class => "icon", :style => "position: relative; top: 7px", :title => 'Image zoom'), "#", :onclick => "popup('/image_zoom_large', 'image_zoom_large'); return false", :title => "" %></div>
 
         <div style="clear: both"></div>
       </div>
@@ -44,7 +44,7 @@
     <div style="clear: both"></div>
 
     <div style="margin-top: 20px; text-align: center">
-      <em><%= link_to "Click here to browse folios", "#", :onclick => "browse_folios_popup('/browse_folios?is_popup=true'); return false" %></em>
+      <em><%= link_to "Click here to browse folios", "#", :onclick => "popup('/browse_folios?is_popup=true', 'browse_folios'); return false" %></em>
     </div>
 <% end %>
 

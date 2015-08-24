@@ -1,5 +1,5 @@
-<% if @person_name != nil && @person_name != '' %>
-    <div class='popup_info'><%= @person_name %> has been added</div>
+<% if @place_name != nil && @place_name != '' %>
+    <div class='popup_info'><%= @place_name %> has been added</div>
 <% end %>
 
 <% if @error != nil && @error != '' %>
@@ -12,18 +12,18 @@
   <div id="entry_menu" style="width: 600px; font-size: 0.8em; margin-top: 0px; border-bottom: 1px solid #acadb7;">
     <%
       search_highlight_class = ''
-      new_person_highlight_class = ''
+      new_place_highlight_class = ''
       if @type == nil || @type == 'search'
         search_highlight_class = 'highlight'
-        new_person_highlight_class = 'noHighlight'
+        new_place_highlight_class = 'noHighlight'
       else
         search_highlight_class = 'noHighlight'
-        new_person_highlight_class = 'highlight'
+        new_place_highlight_class = 'highlight'
       end
     %>
     <ul>
-      <li style="margin-left: 5px"><%= link_to "Search Person", person_popup_path({:type => 'search', :person_field => @person_field}), class: search_highlight_class %></li>
-      <li style=""><%= link_to "Add Person", person_popup_path({:type => 'new_person', :person_field => @person_field}), class: new_person_highlight_class %></li>
+      <li style="margin-left: 5px"><%= link_to "Search Place", place_popup_path({:type => 'search', :place_field => @place_field}), class: search_highlight_class %></li>
+      <li style=""><%= link_to "Add Place", place_popup_path({:type => 'new_place', :place_field => @place_field}), class: new_place_highlight_class %></li>
     </ul>
   </div>
 
@@ -33,7 +33,7 @@
 
         <div style="font-size: 0.85em;">
 
-          <%= form_tag person_popup_search_path do |f| %>
+          <%= form_tag place_popup_search_path do |f| %>
 
               <div class="search_box" style="">
                 Enter Name:&nbsp;
@@ -41,7 +41,7 @@
                 &nbsp;&nbsp;<%= submit_tag 'Search' %>
               </div>
 
-              <input type="hidden" name="person_field" value="<%= @person_field %>" />
+              <input type="hidden" name="place_field" value="<%= @place_field %>" />
 
           <% end %>
 
@@ -58,7 +58,7 @@
                      family_name = element[0]
                      id = element[1]
                 %>
-                    <div style="padding-top: 5px"><em><a href='#' onclick='post_value("<%= family_name %>", "<%= id %>", "<%= @person_field %>")'><%= family_name %></a>
+                    <div style="padding-top: 5px"><em><a href='#' onclick='post_value("<%= family_name %>", "<%= id %>", "<%= @place_field %>")'><%= family_name %></a>
                     </em></div>
             <%
                 end
@@ -75,57 +75,57 @@
 
     <% else %>
 
-        <%= form_for @person, url: person_popup_create_path, method: 'POST' do |f| %>
+        <%= form_for @place, url: place_popup_create_path, method: 'POST' do |f| %>
 
             <div class='tab1'>
 
               <table cellspacing="0" style="width: 500px">
 
-                <%# Family Name %>
+                <%# Person ADM1 %>
                 <tr>
-                  <th style="width: 150px">*Family Name:</th>
+                  <th style="width: 150px">*Parent ADM1:</th>
                   <td>
-                    <%= text_field_tag "person[family]", @person.family %>
+                    <%= text_field_tag "place[parent_ADM1]", @place.parent_ADM1 %>
                   </td>
                 </tr>
 
-                <%# Pre-Title %>
+                <%# Person ADM2 %>
                 <tr>
-                  <th style="width: 150px">Pre-Title:</th>
+                  <th>Parent ADM2:</th>
                   <td>
-                    <%= text_field_tag "person[pre_title]", @person.pre_title %>
+                    <%= text_field_tag "place[parent_ADM2]", @place.parent_ADM2 %>
                   </td>
                 </tr>
 
-                <%# Given Name %>
+                <%# Person ADM3 %>
                 <tr>
-                  <th style="width: 150px">Given Name:</th>
+                  <th>Parent ADM3:</th>
                   <td>
-                    <%= text_field_tag "person[given_name]", @person.given_name %>
+                    <%= text_field_tag "place[parent_ADM3]", @place.parent_ADM3 %>
                   </td>
                 </tr>
 
-                <%# Dates %>
+                <%# Person ADM4 %>
                 <tr>
-                  <th>Dates:</th>
+                  <th>Parent ADM4:</th>
                   <td>
-                    <%= text_field_tag "person[dates]", @person.dates %>
+                    <%= text_field_tag "place[parent_ADM4]", @place.parent_ADM4 %>
                   </td>
                 </tr>
 
-                <%# Title %>
+                <%# Parent Country %>
                 <tr>
-                  <th>Title:</th>
+                  <th>Parent Country:</th>
                   <td>
-                    <%= text_field_tag "person[post_title]", @person.post_title %>
+                    <%= text_field_tag "place[parent_country]", @place.parent_country %>
                   </td>
                 </tr>
 
-                <%# Epithet %>
+                <%# Feature Code %>
                 <tr>
-                  <th>Epithet:</th>
+                  <th>Feature Code:</th>
                   <td>
-                    <%= text_field_tag "person[epithet]", @person.epithet %>
+                    <%= text_field_tag "place[feature_code][]", @place.feature_code %>
                   </td>
                 </tr>
 
@@ -133,7 +133,7 @@
                 <tr>
                   <th>Same As:</th>
                   <td>
-                    <%= text_field_tag "person[same_as][]", @person.same_as %>
+                    <%= text_field_tag "place[same_as][]", @place.same_as %>
                   </td>
                 </tr>
 
@@ -141,16 +141,15 @@
                 <tr>
                   <th>Related Authority:</th>
                   <td>
-                    <%= text_field_tag "person[related_authority][]", @person.related_authority %>
+                    <%= text_field_tag "place[related_authority][]", @place.related_authority %>
                   </td>
                 </tr>
 
                 <%# Variant Names %>
-                <%# Note that this is 'altlabel in the model %>
                 <tr>
                   <th>Variant Names:</th>
                   <td>
-                    <%= text_field_tag "person[altlabel][]", @person.altlabel %>
+                    <%= text_field_tag "place[altlabel][]", @place.altlabel %>
                   </td>
                 </tr>
 
@@ -162,7 +161,7 @@
 
             </div>
 
-            <input type="hidden" name="person_field" value="<%= @person_field %>" />
+            <input type="hidden" name="place_field" value="<%= @place_field %>" />
 
         <% end %>
 

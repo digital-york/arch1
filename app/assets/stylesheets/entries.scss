@@ -399,7 +399,7 @@ table {
   padding: 10px 10px 7px 10px;
 }
 
-.error, .info {
+.error {
   background-color: #D74A4A;
   width: auto;
   margin-bottom: 20px;
@@ -409,11 +409,23 @@ table {
   padding: 7px 10px 7px 10px;
 }
 
-.info {
-  background-color: green;
+.popup_info, .popup_error {
+  background-color: #D74A4A;
+  font-size: 1em;
+  height: auto;
+  color: white;
+  padding: 7px 10px 7px 10px;
   margin: 0px auto;
   width: 580px;
   margin-bottom: 20px;
+}
+
+.popup_info {
+  background-color: green;
+}
+
+.popup_error {
+  background-color: red;
 }
 
 .timeout {
