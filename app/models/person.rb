@@ -2,7 +2,7 @@ class Person < ActiveFedora::Base
 
   include RdfType, AssignId, SameAs, SkosLabels, MadsRelauth, RdfsSeealso, DCTerms, AdminTerms
 
-  #belongs_to :concept_scheme, predicate: ::RDF::SKOS.inScheme
+  belongs_to :concept_scheme, predicate: ::RDF::SKOS.inScheme
 
   def add_rdf_types
     ['http://schema.org/Person','http://vocab.getty.edu/ontology#PersonConcept']

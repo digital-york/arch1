@@ -3,7 +3,7 @@ class ConceptScheme < ActiveFedora::Base
   include RdfType,DCTerms,AssignId
 
   has_many :concepts
-  #has_many :people
+  has_many :people
 
   # RDFTYPES
   def add_rdf_types
