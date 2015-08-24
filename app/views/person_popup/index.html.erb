@@ -17,8 +17,8 @@
       end
     %>
     <ul>
-      <li style="margin-left: 5px"><%= link_to "Search Person", person_popup_path({:type => 'search'}), class: search_highlight_class %></li>
-      <li style=""><%= link_to "Add Person", person_popup_path({:type => 'new_person'}), class: new_person_highlight_class %></li>
+      <li style="margin-left: 5px"><%= link_to "Search Person", person_popup_path({:type => 'search', :person_field => @person_field}), class: search_highlight_class %></li>
+      <li style=""><%= link_to "Add Person", person_popup_path({:type => 'new_person', :person_field => @person_field}), class: new_person_highlight_class %></li>
     </ul>
   </div>
 
@@ -36,26 +36,25 @@
                 &nbsp;&nbsp;<%= submit_tag 'Search' %>
               </div>
 
+              <input type="hidden" name="person_field" value="<%= @person_field %>" />
+
           <% end %>
 
           <div style="margin-top: 20px; margin-left: 2px">
 
             <%
                if @search_results_hash != nil && @search_results_hash != ''
-                 sterm = ''
-                 if @search_term != ''
-                   sterm = "'#{@search_term}'"
-                 end
             %>
 
-                Search term = <strong><%= sterm %></strong>
+                Search term = <strong><%= @search_term %></strong>
 
                 <%
                    @search_results_hash.each do |element|
                      family_name = element[0]
                      id = element[1]
                 %>
-                    <div style="padding-top: 5px"><em><%= link_to family_name %></em></div>
+                    <div style="padding-top: 5px"><em><a href='#' onclick='post_value("<%= family_name %>", "<%= id %>", "<%= @person_field %>")'><%= family_name %></a>
+                    </em></div>
             <%
                 end
               end
@@ -158,6 +157,8 @@
               </p>
 
             </div>
+
+            <input type="hidden" name="person_field" value="<%= @person_field %>" />
 
         <% end %>
 

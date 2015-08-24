@@ -96,12 +96,12 @@ function info(title) {
     string += "<p style='text-align: justify'>" + dummy_text + "</p>";
     string += "<br/><br/><a href='javascript:window.close()' style='color: #A14685; font-size: 0.9em; font-weight: bold; text-decoration: none;'>" + "CLOSE" + "</a>";
     string += "</body></html>";
-    var popupWidth=700;
-    var popupHeight=500;
-    var left = (screen.width-popupWidth)/2;
-    var top = (screen.height-popupHeight)/4;
-    helpWindow = window.open( '', 'id1', 'scrollbars=yes, left=' + left + ', top=' + top + ', width=' + popupWidth + ', height=' + popupHeight );
-    helpWindow.document.open( "text/html" );
+    var popupWidth = 700;
+    var popupHeight = 500;
+    var left = (screen.width - popupWidth) / 2;
+    var top = (screen.height - popupHeight) / 4;
+    helpWindow = window.open('', 'id1', 'scrollbars=yes, left=' + left + ', top=' + top + ', width=' + popupWidth + ', height=' + popupHeight);
+    helpWindow.document.open("text/html");
     helpWindow.document.write(string);
     helpWindow.document.close();
 }
@@ -122,8 +122,6 @@ $(document).ready(function () {
         } catch (err) {
             alert(err);
         }
-
-
     });
 
     $('body').on('click', '.minus_icon_subject', function(e) {
@@ -139,8 +137,6 @@ $(document).ready(function () {
         } catch (err) {
             alert(err);
         }
-
-
     });
 
     /*******************************/
@@ -420,7 +416,12 @@ $(document).ready(function () {
                 "<table class='tab3' cellspacing='0'>" +
 
                     // Same As
-                "<tr><th>*Same As:</th><td class='input_single'><input type='text' value='' id='' name='entry[related_people_attributes][" + jq_index + "][person_same_as]'></td></tr>" +
+                "<tr><th>*Same As:</th><td class='input_single'>" +
+                //"<input type='text' value='' id='' name='entry[related_people_attributes][" + jq_index + "][person_same_as]'>" +
+                "<a href='' onclick='person_popup(&#39;/person_popup?person_field=person_" + jq_index + "&#39;); return false;' tabindex='-1'><img src='/assets/magnifying_glass_small.png' class='plus_icon'></a>" +
+                "&nbsp;<span id='person_" + jq_index + "'></span>" +
+                "<input type='hidden' id='person_" + jq_index + "_hidden' value='' name='entry[related_people_attributes][" + jq_index + "][person_same_as]'>" +
+                "</td></tr>" +
 
                     // As Written
                 "<tr><th style='width: 110px'>As Written:" +

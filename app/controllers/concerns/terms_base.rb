@@ -73,7 +73,8 @@ class TermsBase
 
   # Dereference ids into strings in order to display them, e.g. on the form and the folio drop-down list (py)
   def get_str_from_id(id, type)
-    parse_terms_response(SolrQuery.new.solr_query(q='id:' + id, fl=type,rows='1'), type);
+    response = SolrQuery.new.solr_query(q='id:' + id, fl=type, rows='1')
+    parse_terms_response(response, type);
   end
 
   private
@@ -106,7 +107,10 @@ class TermsBase
     str = ''
     response['response']['docs'].map do |result|
       if result['numFound'] != '0'
-        str = result[type].join('') # 'join' is used to convert an array into a string because otherwise an error occurs
+        str = result[type]
+        if str.class == Array
+          str = str.join() # 'join' is used to convert an array into a string because otherwise an error occurs
+        end
       end
     end
     str
