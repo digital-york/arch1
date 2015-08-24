@@ -540,4 +540,20 @@ namespace :arch1 do
     end
   end
 
+  # Temporary code to add people ConceptScheme
+  task add_people_concept_scheme: :environment do
+    @scheme = ConceptScheme.new
+    @scheme.title = 'people'
+    @scheme.save
+    puts @scheme.id
+  end
+
+  # Temporary code to add places ConceptScheme
+  task add_places_concept_scheme: :environment do
+    @scheme = ConceptScheme.new
+    @scheme.title = 'places'
+    @scheme.save
+    puts @scheme.id
+  end
+
 end
