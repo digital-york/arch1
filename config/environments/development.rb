@@ -43,6 +43,7 @@ Rails.application.configure do
   # Raises error for missing translations
   # config.action_view.raise_on_missing_translations = true
 
+  # Set the error level to 'error' (so that the log file isn't too large - py)
   config.log_level = :error
 
   # This line can be used to redirect to the 'public' error pages (normally the errors just appear on the page in the development environment)
