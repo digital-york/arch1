@@ -22,7 +22,7 @@ class PlacePopupController < ApplicationController
     # Check parameters are permitted
     place_params = whitelist_place_params
 
-    if place_params[:family] == ''
+    if place_params[:parent_ADM1] == ''
       @error = "Please enter a parent ADM1"
       @place = Place.new(place_params)
     else
@@ -55,7 +55,7 @@ class PlacePopupController < ApplicationController
 
     @search_term = params[:search_term]
 
-    # Get all the family names from solr
+    # Get all the parent ADM1s from solr
     response = SolrQuery.new.solr_query(q='has_model_ssim:Place', fl='id, parent_ADM1_tesim', rows=1000, sort='')
 
     temp_hash = {}

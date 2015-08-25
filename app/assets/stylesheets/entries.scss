@@ -410,7 +410,6 @@ table {
 }
 
 .popup_info, .popup_error {
-  background-color: #D74A4A;
   font-size: 1em;
   height: auto;
   color: white;
@@ -421,11 +420,11 @@ table {
 }
 
 .popup_info {
-  background-color: green;
+  background-color: #268925;
 }
 
 .popup_error {
-  background-color: red;
+  background-color: #D74A4A;
 }
 
 .timeout {

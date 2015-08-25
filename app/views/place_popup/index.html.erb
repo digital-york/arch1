@@ -37,7 +37,7 @@
 
               <div class="search_box" style="">
                 Enter Name:&nbsp;
-                <%= text_field_tag 'search_term', nil, class: 'text_field_search', id: 'search_box' %>
+                <%= text_field_tag 'search_term', nil, class: 'text_field_search', id: 'search_box', value: @search_term %>
                 &nbsp;&nbsp;<%= submit_tag 'Search' %>
               </div>
 
@@ -51,15 +51,14 @@
                if @search_results_hash != nil && @search_results_hash != ''
             %>
 
-                Search term = <strong><%= @search_term %></strong>
+                <strong>Results</strong>:
 
                 <%
                    @search_results_hash.each do |element|
                      family_name = element[0]
                      id = element[1]
                 %>
-                    <div style="padding-top: 5px"><em><a href='#' onclick='post_value("<%= family_name %>", "<%= id %>", "<%= @place_field %>")'><%= family_name %></a>
-                    </em></div>
+                    <div style="padding-top: 5px"><a href='#' onclick='post_value("<%= family_name %>", "<%= id %>", "<%= @place_field %>")'><%= family_name %></a></div>
             <%
                 end
               end
