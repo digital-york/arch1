@@ -34,7 +34,7 @@ module Validation
   # because the index variable is class Array rather than ActionController::Parameters (please see the Rails section of the wiki for more info on form parameters)
   def remove_empty_array_fields(entry_params)
 
-    entry_params[:summary] = remove_empty_array_fields2(entry_params[:summary])
+    entry_params[:section_type] = remove_empty_array_fields2(entry_params[:section_type])
     entry_params[:marginalia] = remove_empty_array_fields2(entry_params[:marginalia])
     entry_params[:language] = remove_empty_array_fields2(entry_params[:language])
     entry_params[:subject] = remove_empty_array_fields2(entry_params[:subject])
@@ -53,13 +53,13 @@ module Validation
     end
 
     # Remove empty multi-value fields (person)
-    if entry_params[:related_people_attributes] != nil
-      entry_params[:related_people_attributes].each_with_index do |related_person, index|
-        entry_params[:related_people_attributes][index.to_s][:person_as_written] = remove_empty_array_fields2(entry_params[:related_people_attributes][index.to_s][:person_as_written])
-        entry_params[:related_people_attributes][index.to_s][:person_role] = remove_empty_array_fields2(entry_params[:related_people_attributes][index.to_s][:person_role])
-        entry_params[:related_people_attributes][index.to_s][:person_descriptor] = remove_empty_array_fields2(entry_params[:related_people_attributes][index.to_s][:person_descriptor])
-        entry_params[:related_people_attributes][index.to_s][:person_note] = remove_empty_array_fields2(entry_params[:related_people_attributes][index.to_s][:person_note])
-        entry_params[:related_people_attributes][index.to_s][:person_related_place] = remove_empty_array_fields2(entry_params[:related_people_attributes][index.to_s][:person_related_place])
+    if entry_params[:related_person_groups_attributes] != nil
+      entry_params[:related_person_groups_attributes].each_with_index do |related_person, index|
+        entry_params[:related_person_groups_attributes][index.to_s][:person_as_written] = remove_empty_array_fields2(entry_params[:related_person_groups_attributes][index.to_s][:person_as_written])
+        entry_params[:related_person_groups_attributes][index.to_s][:person_role] = remove_empty_array_fields2(entry_params[:related_person_groups_attributes][index.to_s][:person_role])
+        entry_params[:related_person_groups_attributes][index.to_s][:person_descriptor] = remove_empty_array_fields2(entry_params[:related_person_groups_attributes][index.to_s][:person_descriptor])
+        entry_params[:related_person_groups_attributes][index.to_s][:person_note] = remove_empty_array_fields2(entry_params[:related_person_groups_attributes][index.to_s][:person_note])
+        entry_params[:related_person_groups_attributes][index.to_s][:person_related_place] = remove_empty_array_fields2(entry_params[:related_person_groups_attributes][index.to_s][:person_related_place])
       end
     end
   end
@@ -74,14 +74,14 @@ module Validation
         # Check if a single date exists so that we can check if the whole date block should be deleted (see code later on)
         single_date_exists = false
 
-        if entry_params[:entry_dates_attributes][index.to_s][:single_dates_attributes] != nil
+        unless entry_params[:entry_dates_attributes][index.to_s][:single_dates_attributes].nil?
 
           entry_params[:entry_dates_attributes][index.to_s][:single_dates_attributes].each_with_index do |single_date, index2|
 
-            if entry_params[:entry_dates_attributes][index.to_s][:single_dates_attributes][index2.to_s][:id] != nil
+            unless entry_params[:entry_dates_attributes][index.to_s][:single_dates_attributes][index2.to_s][:id].nil?
 
               if entry_params[:entry_dates_attributes][index.to_s][:single_dates_attributes][index2.to_s][:date] == '' \
-                && entry_params[:entry_dates_attributes][index.to_s][:single_dates_attributes][index2.to_s][:date_certainty] == '' \
+                && entry_params[:entry_dates_attributes][index.to_s][:single_dates_attributes][index2.to_s][:date_certainty] == [] \
                 && entry_params[:entry_dates_attributes][index.to_s][:single_dates_attributes][index2.to_s][:date_type] == ''
                 entry_params[:entry_dates_attributes][index.to_s][:single_dates_attributes][index2.to_s][:_destroy] = '1'
               else
@@ -175,45 +175,45 @@ module Validation
   # Remove any empty person blocks, i.e. when all the fields are empty
   def remove_empty_person_blocks(entry_params)
 
-    if entry_params[:related_people_attributes] != nil
+    if entry_params[:related_person_groups_attributes] != nil
 
-      entry_params[:related_people_attributes].each_with_index do |related_person, index|
+      entry_params[:related_person_groups_attributes].each_with_index do |related_person, index|
 
         # Remove person if all fields are empty (but only do this for a saved entry, i.e. an id exists)
-        if entry_params[:related_people_attributes][index.to_s][:id] != nil
+        if entry_params[:related_person_groups_attributes][index.to_s][:id] != nil
 
           remove_person = true
 
-          if entry_params[:related_people_attributes][index.to_s][:person_same_as] != ''
+          if entry_params[:related_person_groups_attributes][index.to_s][:person_same_as] != ''
             remove_person = false
           end
 
-          if entry_params[:related_people_attributes][index.to_s][:person_as_written] != nil && entry_params[:related_people_attributes][index.to_s][:person_as_written].size > 0
+          if entry_params[:related_person_groups_attributes][index.to_s][:person_as_written] != nil && entry_params[:related_person_groups_attributes][index.to_s][:person_as_written].size > 0
             remove_person = false
           end
 
-          if entry_params[:related_people_attributes][index.to_s][:person_gender] != ''
+          if entry_params[:related_person_groups_attributes][index.to_s][:person_gender] != ''
             remove_person = false
           end
 
-          if entry_params[:related_people_attributes][index.to_s][:person_role] != nil && entry_params[:related_people_attributes][index.to_s][:person_role].size > 0
+          if entry_params[:related_person_groups_attributes][index.to_s][:person_role] != nil && entry_params[:related_person_groups_attributes][index.to_s][:person_role].size > 0
             remove_person = false
           end
 
-          if entry_params[:related_people_attributes][index.to_s][:person_descriptor] != nil && entry_params[:related_people_attributes][index.to_s][:person_descriptor].size > 0
+          if entry_params[:related_person_groups_attributes][index.to_s][:person_descriptor] != nil && entry_params[:related_person_groups_attributes][index.to_s][:person_descriptor].size > 0
             remove_person = false
           end
 
-          if entry_params[:related_people_attributes][index.to_s][:person_note] != nil && entry_params[:related_people_attributes][index.to_s][:person_note].size > 0
+          if entry_params[:related_person_groups_attributes][index.to_s][:person_note] != nil && entry_params[:related_person_groups_attributes][index.to_s][:person_note].size > 0
             remove_person = false
           end
 
-          if entry_params[:related_people_attributes][index.to_s][:person_related_place] != nil && entry_params[:related_people_attributes][index.to_s][:person_related_place].size > 0
+          if entry_params[:related_person_groups_attributes][index.to_s][:person_related_place] != nil && entry_params[:related_person_groups_attributes][index.to_s][:person_related_place].size > 0
             remove_person = false
           end
 
           if remove_person == true
-            entry_params[:related_people_attributes][index.to_s][:_destroy] = '1'
+            entry_params[:related_person_groups_attributes][index.to_s][:_destroy] = '1'
           end
 
         # Else remove person when it has been added then deleted with the 'x' button (but has not been saved)
@@ -222,15 +222,15 @@ module Validation
         # to delete it. It we didn't make it equal to 'nil' below I think the blank data is saved to Fedora!
         else
 
-          if entry_params[:related_people_attributes][index.to_s][:_destroy] == '1'
-            entry_params[:related_people_attributes][index.to_s][:person_same_as] = ''
-            entry_params[:related_people_attributes][index.to_s][:person_as_written] = ''
-            entry_params[:related_people_attributes][index.to_s][:person_gender] = ''
-            entry_params[:related_people_attributes][index.to_s][:person_role] = ''
-            entry_params[:related_people_attributes][index.to_s][:person_descriptor] = ''
-            entry_params[:related_people_attributes][index.to_s][:person_note] = ''
-            entry_params[:related_people_attributes][index.to_s][:person_related_place] = ''
-            entry_params[:related_people_attributes][index.to_s][:_destroy] = nil
+          if entry_params[:related_person_groups_attributes][index.to_s][:_destroy] == '1'
+            entry_params[:related_person_groups_attributes][index.to_s][:person_same_as] = ''
+            entry_params[:related_person_groups_attributes][index.to_s][:person_as_written] = ''
+            entry_params[:related_person_groups_attributes][index.to_s][:person_gender] = ''
+            entry_params[:related_person_groups_attributes][index.to_s][:person_role] = ''
+            entry_params[:related_person_groups_attributes][index.to_s][:person_descriptor] = ''
+            entry_params[:related_person_groups_attributes][index.to_s][:person_note] = ''
+            entry_params[:related_person_groups_attributes][index.to_s][:person_related_place] = ''
+            entry_params[:related_person_groups_attributes][index.to_s][:_destroy] = nil
           end
         end
       end
@@ -265,7 +265,8 @@ module Validation
 
     errors = errors + get_errors(entry_params[:entry_no], 'Entry No', SMALL_FIELD, 'M')
     errors = errors + get_errors(entry_params[:entry_type], 'Entry Type', MEDIUM_FIELD, '')
-    errors = errors + get_multi_field_errors(entry_params[:summary], 'Summary', MEDIUM_FIELD)
+    errors = errors + get_errors(entry_params[:summary], 'Summary', MEDIUM_FIELD, '')
+    errors = errors + get_multi_field_errors(entry_params[:section_type], 'Section Type', MEDIUM_FIELD)
     errors = errors + get_multi_field_errors(entry_params[:marginalia], 'Marginalia', MEDIUM_FIELD)
     errors = errors + get_multi_field_errors(entry_params[:language], 'Language', MEDIUM_FIELD)
     errors = errors + get_multi_field_errors(entry_params[:subject], 'Subject', MEDIUM_FIELD)
@@ -291,11 +292,11 @@ module Validation
     end
 
     # Validate related people
-    related_people_params = entry_params[:related_people_attributes]
+    related_person_groups_params = entry_params[:related_person_groups_attributes]
 
-    if related_people_params != nil
+    if related_person_groups_params != nil
 
-      related_people_params.values.each do |related_person|
+      related_person_groups_params.values.each do |related_person|
 
         #if related_person[:_destroy] != nil and related_person[:_destroy] != '1'
           errors = errors + get_errors(related_person[:person_same_as], 'Person Same As', SMALL_FIELD, '')

@@ -1,6 +1,6 @@
 class Place < ActiveFedora::Base
 
-  include RdfType, AssignId, SameAs, SkosLabels, MadsRelauth, DCTerms, AdminTerms, RdfsSeealso
+  include RdfType, AssignId, SameAs, SkosLabels, MadsRelauth, DCTerms, RdfsSeealso
 
   belongs_to :concept_scheme, predicate: ::RDF::SKOS.inScheme
 

@@ -1,31 +1,23 @@
 <div class="landing_page">
-
-  <table style="width: 100%">
-
-    <tr>
-
-        <%
-          @reg_id_tesim_list.each_with_index do |element, index|
-
-            # Add a new row to the table if there are more than 5 registers
-            if index == 5
-        %>
-              </tr><tr>
-        <%
-            end
-        %>
-
-          <td>
-            <div>
-              <a href="/go_entries?register_id=<%= @reg_id_list[index] %>&amp;register_name=<%= @reg_id_tesim_list[index] %>"><%= image_tag "#{@reg_image_list[index]}" %></a>
-            </div>
-            <div class="landing_page_text">
-              <strong><%= @reg_id_tesim_list[index] %></strong><br/><%= @reg_title_list[index] %>
-            </div>
-          </td>
-
-        <% end %>
-    </tr>
-
-  </table>
+    <table style="width: 100%">
+        <tr>
+            <%
+               @reg_list.each_with_index do |pair, index|
+                 # Add a new row to the table if there are more than 5 registers
+                 if index.modulo(5).zero?
+            %>
+                    </tr>
+                    <tr>
+                <% end %>
+                <td>
+                    <div>
+                        <a href="/go_entries?register_id=<%= pair[0] %>&amp;register_name=<%= pair[1][1] %>"><%= image_tag "#{pair[1][0].gsub(/Abp Reg /, 'reg_') + '.png'}" %></a>
+                    </div>
+                    <div class="landing_page_text">
+                        <strong><%= pair[1][0] %></strong><br/><%= pair[1][1] %>
+                    </div>
+                </td>
+            <% end %>
+        </tr>
+    </table>
 </div>

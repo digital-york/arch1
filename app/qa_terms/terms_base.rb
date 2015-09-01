@@ -8,7 +8,7 @@ class TermsBase
 
   # Gets the ConceptScheme, etc
   def terms_id
-    parse_terms_id_response(SolrQuery.new.solr_query(q='rdftype_tesim:"http://www.w3.org/2004/02/skos/core#ConceptScheme" AND title_tesim:"' + terms_list + '"'))
+    parse_terms_id_response(SolrQuery.new.solr_query(q='rdftype_tesim:"http://www.w3.org/2004/02/skos/core#ConceptScheme" AND preflabel_tesim:"' + terms_list + '"'))
   end
 
   def all
@@ -73,8 +73,12 @@ class TermsBase
 
   # Dereference ids into strings in order to display them, e.g. on the form and the folio drop-down list (py)
   def get_str_from_id(id, type)
-    response = SolrQuery.new.solr_query(q='id:' + id, fl=type, rows='1')
-    parse_terms_response(response, type);
+    begin
+      response = SolrQuery.new.solr_query(q='id:"' + id + '"', fl=type, rows='1')
+      parse_terms_response(response, type);
+    rescue
+      # TODO handle this error (happens when no id supplied, eg. no entry type)
+    end
   end
 
   private
@@ -106,6 +110,7 @@ class TermsBase
   def parse_terms_response(response, type)
     str = ''
     response['response']['docs'].map do |result|
+
       if result['numFound'] != '0'
         str = result[type]
         if str.class == Array

@@ -1,6 +1,6 @@
 class Person < ActiveFedora::Base
 
-  include RdfType, AssignId, SameAs, SkosLabels, MadsRelauth, RdfsSeealso, DCTerms, AdminTerms
+  include RdfType, AssignId, SameAs, SkosLabels, MadsRelauth, RdfsSeealso, DCTerms
 
   belongs_to :concept_scheme, predicate: ::RDF::SKOS.inScheme
 

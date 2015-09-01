@@ -29,7 +29,7 @@ class PersonPopupController < ApplicationController
       # Create a new person with the parameters
       # Note that a solr query is carried out to obtain the concept scheme id for 'people'
       @person = Person.new(person_params)
-      response = SolrQuery.new.solr_query(q='has_model_ssim:ConceptScheme AND title_tesim:people', fl='id', rows=1, sort='')
+      response = SolrQuery.new.solr_query(q='has_model_ssim:ConceptScheme AND preflabel_tesim:people', fl='id', rows=1, sort='')
       id = response['response']['docs'][0]['id']
       @person.concept_scheme_id = id
       @person.rules = 'NCARules'

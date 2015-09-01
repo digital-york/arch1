@@ -4,8 +4,9 @@ module AuthorityList
   def set_authority_lists
 
     # Local lists
-    read_auth = ReadAuth.new
-    @gender_list = read_auth.lookup('genders').collect { |l| [l["label"]] }
+    @gender_list = Qa::Authorities::Local::FileBasedAuthority.new('genders').all.collect { |l| [l["label"]] }
+    @date_certainty_list = Qa::Authorities::Local::FileBasedAuthority.new('certainty').all.collect { |l| [l["label"]] }
+    @single_date_list = Qa::Authorities::Local::FileBasedAuthority.new('date_types').all.collect { |l| [l["label"]] }
 
     # Fedora lists
     @language_list = LanguageTerms.new('subauthority').all
@@ -14,12 +15,10 @@ module AuthorityList
     @descriptor_list = DescriptorTerms.new('subauthority').all
     @place_role_list = PlaceRoleTerms.new('subauthority').all
     @place_type_list = PlaceTypeTerms.new('subauthority').all
-    @date_certainty_list = CertaintyTerms.new('subauthority').all
-    @single_date_list = DateTypeTerms.new('subauthority').all
-    #@single_date_list = SingleDateTerms.new('subauthority').all
     @place_role_list = PlaceRoleTerms.new('subauthority').all
     @date_role_list = DateRoleTerms.new('subauthority').all
     @entry_type_list = EntryTypeTerms.new('subauthority').all
+    @section_type_list = SectionTypeTerms.new('subauthority').all
 
   end
 

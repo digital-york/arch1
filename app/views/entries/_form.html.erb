@@ -1,615 +1,672 @@
 <div class='tab1'>
 
-  <%
-     # This instantiates the Terms class (which is used below to dereference ids
-     terms = TermsBase.new('subauthority')
-  %>
+    <%
+       # This instantiates the Terms class (which is used below to dereference ids
+       terms = TermsBase.new('subauthority')
+    %>
 
-  <% if @errors != nil && @errors != '' %>
+    <% if @errors != nil && @errors != '' %>
 
-      <div class='error'>
+        <div class='error'>
 
-        <%
-           # Split the error string by '|' to get the individual errors
-           # If the error includes the text 'Length' display the maximum length error
-           # else display the mandatory field error
-           err = @errors.split('|')
-           err.each do |e|
-             if e != ''
-               if e =~ /Length/
-                 e2 = e.split('_')[0]
-                 max_length = e.split('_')[1]
-                 max_length = max_length.sub 'Length', ''
-        %>
-                    '<%= e2 %>' exceeds maximum length (<%= max_length %>)<br/>
-                <%
-                   else
-                %>
-                    Please enter a value for '<%= e %>'<br/>
-        <%
-               end
-             end
-           end
-        %>
-      </div>
-  <% end %>
+            <%
+               # Split the error string by '|' to get the individual errors
+               # If the error includes the text 'Length' display the maximum length error
+               # else display the mandatory field error
+               err = @errors.split('|')
+               err.each do |e|
+                 if e != ''
+                   if e =~ /Length/
+                     e2 = e.split('_')[0]
+                     max_length = e.split('_')[1]
+                     max_length = max_length.sub 'Length', ''
+            %>
+                        '<%= e2 %>' exceeds maximum length (<%= max_length %>)<br/>
+                    <%
+                       else
+                    %>
+                        Please enter a value for '<%= e %>'<br/>
+                    <%
+                       end
+                       end
+                       end
+                    %>
+        </div>
+    <% end %>
 
-  <%
-     button_str = ''
-     if @is_entry_on_next_folio == false
-       button_str = 'Update the current form and continue on to the next folio?'
-     else
-       button_str = 'An entry already exists on the next folio - do you want to continue?'
-     end
-  %>
+    <%
+       button_str = ''
+       if @is_entry_on_next_folio == false
+         button_str = 'Update the current form and continue on to the next folio?'
+       else
+         button_str = 'An entry already exists on the next folio - do you want to continue?'
+       end
+    %>
 
-  <%= form_for @entry do |f| %>
+    <%= form_for @entry do |f| %>
 
-      <%= f.hidden_field :folio, :value => session[:folio_id] %>
+        <%= f.hidden_field :folio, :value => session[:folio_id] %>
 
-<div id='form_modified'>
+        <div id='form_modified'>
 
-      <div class='field'>
+            <div class='field'>
 
-        <table cellspacing='0'>
+                <table cellspacing='0'>
 
-          <tr class='noth'>
-            <th colspan='2' id='entry_menu'>
-              <ul>
-                <li style='margin-left: 3px'></li>
-                <% if @entry.new_record? %>
-                    <% @entry_list.each do |entry| %>
-                      <li><span class='nohighlight'><%= link_to entry.entry_no, entry_path(entry) %></span></li>
-                    <% end %>
-                    <li><span class='highlight'>New Entry</span></li>
-                <% else %>
-                    <% @entry_list.each_with_index do |entry, index| %>
-                        <%
-                           str = ''
-                           if @folio_continues_id == entry.entry_no
-                             str = ' (continues)'
-                           end
-                        %>
-                        <% if entry.id == @entry.id %>
-                            <li><span class='highlight'><%= entry.entry_no + str %></span></li>
-                          <% else %>
-						    <li><span class='nohighlight'><%= link_to entry.entry_no + str, edit_entry_path(entry) %></span></li>
-                          <% end %>
-                    <% end %>
-                    <li>
-                      <% if @folio_continues_id == '' %>
+                    <tr class='noth'>
+                        <th colspan='2' id='entry_menu'>
+                            <ul>
+                                <li style='margin-left: 3px'></li>
+                                <% if @entry.new_record? %>
+                                    <% @entry_list.each do |entry| %>
+                                        <li>
+                                            <span class='nohighlight'><%= link_to entry.entry_no, entry_path(entry) %></span>
+                                        </li>
+                                    <% end %>
+                                    <li><span class='highlight'>New Entry</span></li>
+                                <% else %>
+                                    <% @entry_list.each_with_index do |entry, index| %>
+                                        <%
+                                           str = ''
+                                           if @folio_continues_id == entry.entry_no
+                                             str = ' (continues)'
+                                           end
+                                        %>
+                                        <% if entry.id == @entry.id %>
+                                            <li><span class='highlight'><%= entry.entry_no.to_s + str %></span></li>
+                                        <% else %>
+                                            <li>
+                                                <span class='nohighlight'><%= link_to entry.entry_no.to_s + str, edit_entry_path(entry) %></span>
+                                            </li>
+                                        <% end %>
+                                    <% end %>
+                                    <li>
+                                        <% if @folio_continues_id == '' %>
                         <span class='nohighlight'>
                           <%= link_to 'New Entry', new_entry_path, {:title => 'Create new entry'} %>
                         </span>
-                      <% end %>
-                    </li>
-                <% end %>
-                <li style='float: right; height: 1px'>
-                  <a href='#' onclick='info("Help Text"); return false'><%= image_tag "help_icon.png", :class => 'help_icon', :title => 'Help for form fields' %></a>
-                </li>
-              </ul>
-            </th>
-          </tr>
+                                        <% end %>
+                                    </li>
+                                <% end %>
+                                <li style='float: right; height: 1px'>
+                                    <a href='#' onclick='info("Help Text"); return false'><%= image_tag "help_icon.png", :class => 'help_icon', :title => 'Help for form fields' %></a>
+                                </li>
+                            </ul>
+                        </th>
+                    </tr>
 
-          <tr>
-            <th colspan='2'>
-              <div id='entry_menubar'>
+                    <tr>
+                        <th colspan='2'>
+                            <div id='entry_menubar'>
                 <span class='edit_button'>
 				  <% if @entry.new_record? %>
 				    <%= f.submit 'Submit' %>
-				    <% if @is_last_entry == true %>
+                        <% if @is_last_entry == true %>
                       <%= f.submit 'Continue', :onclick => "return confirm('" + button_str + "')" %>
                     <% end %>
-                    <%= f.submit 'Back' %>
+                        <%= f.submit 'Back' %>
 				  <% else %>
 				    <%= f.submit 'Update' %>
+                        <% if @is_last_entry == true %>
+                      <%= f.submit 'Continue', :onclick => "return confirm('" + button_str + "')" %>
+                    <% end %>
+                        <%= f.submit 'Back to View' %>
+				  <% end %>
+				</span>
+                            </div>
+                        </th>
+                    </tr>
+
+                    <%# Entry No %>
+                    <tr>
+                        <th style="width: 150px">Entry No:</th>
+                        <td>
+                            <%= @entry.entry_no %>
+                            <%= f.hidden_field :entry_no, :value => @entry.entry_no %>
+                        </td>
+                    </tr>
+
+                    <%# Entry Type %>
+                    <tr>
+                        <th>Entry Type:</th>
+                        <td>
+                            <%= select_tag 'entry[entry_type]', options_for_select(@entry_type_list.collect { |entry_type| [entry_type["label"].join(''), entry_type["id"]] }.insert(0, ["--- select ---", ""]), @entry.entry_type) %>
+                        </td>
+                    </tr>
+
+                    <%# Section Type %>
+                    <tr>
+                        <th>Section Type:
+                            <img src="/assets/plus_sign.png" alt="plus icon" class="plus_icon click_select_field_button" jq_type="section_type" jq_section_type_list="<%= @section_type_list.to_json %>"/>
+                        </th>
+                        <td>
+                            <div class="field_group">
+                                <% @entry.section_type.each do |section_type| %>
+                                    <div class="field_single">
+                                        <%= select_tag 'entry[section_type][]', options_for_select(@section_type_list.collect { |section_type| [section_type["label"].join(''), section_type["id"]] }.insert(0, ["--- select ---", ""]), section_type) %>
+                                        <img alt="Delete icon" src="/assets/delete.png" class="delete_icon_select click_remove_field_level1" jq_tag_type="select">
+                                    </div>
+                                <% end %>
+                            </div>
+                        </td>
+                    </tr>
+
+                    <%# Continues On %>
                     <% if @is_last_entry == true %>
-                      <%= f.submit 'Continue', :onclick => "return confirm('" + button_str + "')" %>
+                        <tr>
+                            <th>Continues on next folio:</th>
+                            <td>
+                                <% if @entry.continues_on != nil && @entry.continues_on != '' %>
+                                    <%= image_tag 'tick.png' %>
+                                <% end %>
+                            </td>
+                        </tr>
                     <% end %>
-                      <%= f.submit 'Back to View' %>
-				  <% end %>
-				</span>
-              </div>
-            </th>
-          </tr>
 
-          <%# Entry No %>
-          <tr>
-            <th style="width: 150px">Entry No:</th>
-            <td>
-              <%= @entry.entry_no %>
-              <%= f.hidden_field :entry_no, :value => @entry.entry_no %>
-            </td>
-          </tr>
+                    <%# Summary %>
+                    <tr>
+                        <th>Summary:
+                        </th>
+                        <td>
+                            <%= text_area_tag "entry[summary]", @entry.summary, id: '' %>
+                        </td>
+                    </tr>
 
-          <%# Entry Type %>
-          <tr>
-            <th>Entry Type:</th>
-            <td>
-              <%= select_tag 'entry[entry_type]', options_for_select(@entry_type_list.collect{ |entry_type| [entry_type["label"].join(''), entry_type["id"]] }.insert(0, ["--- select ---", ""]), @entry.entry_type) %>
-            </td>
-          </tr>
-
-          <%# Continues On %>
-          <% if @is_last_entry == true %>
-            <tr>
-              <th>Continues on next folio:</th>
-              <td>
-                <% if @entry.continues_on != nil && @entry.continues_on != '' %>
-                  <%= image_tag 'tick.png' %>
-                <% end %>
-              </td>
-            </tr>
-          <% end %>
-
-          <%# Summary %>
-          <tr>
-            <th>Summary:
-              <img src="/assets/plus_sign.png" alt="plus icon" class="plus_icon click_multiple_text_area_field_button" jq_type="summary" />
-            </th>
-            <td>
-              <div class="field_group">
-                <% @entry.summary.each do |summary| %>
-                    <div class="field_single">
-                      <%= text_area_tag "entry[summary][]", summary, id: '' %>
-                      <img alt="Delete icon" src="/assets/delete.png" class="delete_icon click_remove_field_level1" jq_tag_type="textarea">
-                    </div>
-                <% end %>
-              </div>
-            </td>
-          </tr>
-
-          <%# Marginalia %>
-          <tr>
-            <th>Marginalia:
-              <img src="/assets/plus_sign.png" alt="plus icon" class="plus_icon click_multiple_text_area_field_button" jq_type="marginalia" />
-            </th>
-            <td>
-              <div class="field_group">
-                <% @entry.marginalia.each do |marginalia| %>
-                    <div class="field_single">
-                      <%= text_area_tag "entry[marginalia][]", marginalia, id: '' %>
-                      <img alt="Delete icon" src="/assets/delete.png" class="delete_icon click_remove_field_level1" jq_tag_type="textarea">
-                    </div>
-                <% end %>
-              </div>
-            </td>
-          </tr>
-
-          <%# Language %>
-          <tr>
-            <th>Language:
-              <img src="/assets/plus_sign.png" alt="plus icon" class="plus_icon click_select_field_button" jq_type="language" jq_language_list="<%= @language_list.to_json %>" />
-            </th>
-            <td>
-              <div class="field_group">
-                <% @entry.language.each do |language| %>
-                    <div class="field_single">
-                      <%= select_tag 'entry[language][]', options_for_select(@language_list.collect{ |language| [language["label"].join(''), language["id"]] }.insert(0, ["--- select ---", ""]), language) %>
-                      <img alt="Delete icon" src="/assets/delete.png" class="delete_icon_select click_remove_field_level1" jq_tag_type="select">
-                    </div>
-                <% end %>
-              </div>
-            </td>
-          </tr>
-
-          <%# Subject %>
-          <tr>
-            <th>Subject:
-              <img src="/assets/plus_sign.png" alt="plus icon" class="plus_icon click_multiple_subject_field_button" jq_type="subject"/>
-            </th>
-            <td>
-              <div class="field_group">
-                <% @entry.subject.each_with_index do |subject, index| %>
-                    <div class="field_single">
-                      <a href='' onclick="popup('/subject_popup?subject_field=subject_<%= index.to_s %>', 'subject'); return false;" tabindex="-1"><%= image_tag "magnifying_glass_small.png", class: "plus_icon" %></a>
-                      <span id="subject_<%= index.to_s %>"><%= terms.get_str_from_id(subject, 'preflabel_tesim') %></span>
-                      <%= hidden_field_tag "entry[subject][]", subject, id: 'subject_' + index.to_s + '_hidden' %>
-                      <img alt="Delete icon" src="/assets/delete.png" class="delete_icon click_remove_field_level1" jq_tag_type="input">
-                    </div>
-                <% end %>
-              </div>
-            </td>
-          </tr>
-
-          <%# Note %>
-          <tr>
-            <th>Note:
-              <img src="/assets/plus_sign.png" alt="plus icon" class="plus_icon click_multiple_text_area_field_button" jq_type="note" />
-            </th>
-            <td>
-              <div class="field_group">
-                <% @entry.note.each do |note| %>
-                    <div class="field_single">
-                      <%= text_area_tag "entry[note][]", note, id: '' %>
-                      <img alt="Delete icon" src="/assets/delete.png" class="delete_icon click_remove_field_level1" jq_tag_type="textarea">
-                    </div>
-                <% end %>
-              </div>
-            </td>
-          </tr>
-
-          <%# Editorial Note %>
-          <tr>
-            <th>Editorial Note:
-              <img src="/assets/plus_sign.png" alt="plus icon" class="plus_icon click_multiple_text_area_field_button" jq_type="editorial_note" />
-            </th>
-            <td>
-              <div class="field_group">
-                <% @entry.editorial_note.each do |editorial_note| %>
-                    <div class="field_single">
-                      <%= text_area_tag "entry[editorial_note][]", editorial_note, id: '' %>
-                      <img alt="Delete icon" src="/assets/delete.png" class="delete_icon click_remove_field_level1" jq_tag_type="textarea">
-                    </div>
-                <% end %>
-              </div>
-            </td>
-          </tr>
-
-          <%# Is Referenced By %>
-          <tr>
-            <th>Is Referenced By:
-              <img src="/assets/plus_sign.png" alt="plus icon" class="plus_icon click_multiple_field_button" jq_type="is_referenced_by" />
-            </th>
-            <td>
-              <div class="field_group">
-                <% @entry.is_referenced_by.each do |is_referenced_by| %>
-                    <div class="field_single">
-                      <%= text_field_tag "entry[is_referenced_by][]", is_referenced_by, id: '' %>
-                      <img alt="Delete icon" src="/assets/delete.png" class="delete_icon click_remove_field_level1" jq_tag_type="input">
-                    </div>
-                <% end %>
-              </div>
-            </td>
-          </tr>
-
-          <%# Entry Date %>
-          <tr>
-
-            <th>Date:
-              <img src="/assets/plus_sign.png" alt="plus icon" class="plus_icon click_date_button" jq_date_certainty_list="<%= @date_certainty_list.to_json %>" jq_single_date_list="<%= @single_date_list.to_json %>" jq_date_role_list="<%= @date_role_list.to_json %>" />
-            </th>
-
-            <td class="tab2">
-
-              <div class="field_group">
-
-                <% @entry.entry_dates.each_with_index do |entry_date, index1| %>
-
-                    <div class="field_single  no_padding">
-
-                      <table class="tab3">
-
-                        <tr>
-                          <th>Date:
-                            <img src="/assets/plus_sign.png" alt="plus icon" class="plus_icon click_single_date_button" jq_index="<%=index1%>" jq_date_certainty_list="<%= @date_certainty_list.to_json %>" jq_single_date_list="<%= @single_date_list.to_json %>"/>
-                          </th>
-                          <td>
-                            <div class="field_group grey_box single_date">
-                              <% entry_date.single_dates.each_with_index do |single_date, index2| %>
-                                  <div class="field_single">
-                                    <table>
-                                      <tr>
-                                        <th>Date:</th>
-                                        <td class="input_single"><%= text_field_tag "entry[entry_dates_attributes][" + index1.to_s + "][single_dates_attributes][" + index2.to_s + "][date]", single_date.date, id: '' %></td>
-                                      </tr>
-                                      <tr>
-                                        <th style="width: 60px">Certainty:</th>
-                                        <td>
-                                          <%= select_tag "entry[entry_dates_attributes][" + index1.to_s + "][single_dates_attributes][" + index2.to_s + "][date_certainty]", options_for_select(@date_certainty_list.collect { |date_certainty| [date_certainty["label"].join(''), date_certainty["id"]] }.insert(0, ["--- select ---", ""]), single_date.date_certainty) %>
-                                        </td>
-                                      </tr>
-                                      <tr>
-                                        <th>Type:</th>
-                                        <td>
-                                          <%= select_tag "entry[entry_dates_attributes][" + index1.to_s + "][single_dates_attributes][" + index2.to_s + "][date_type]", options_for_select(@single_date_list.collect { |date_type| [date_type["label"].join(''), date_type["id"]] }.insert(0, ["--- select ---", ""]), single_date.date_type) %>
-                                        </td>
-                                      </tr>
-                                    </table>
-                                    &nbsp;<img src='/assets/delete.png' alt='Delete icon' class='delete_icon click_remove_field_date' jq_index1="<%= index1 %>">
-                                    <input type="hidden" id="hidden_field" name="entry[entry_dates_attributes][<%= index1.to_s %>][single_dates_attributes][<%= index2.to_s %>][id]" value="<%= single_date.id %>">
-                                    <div style="clear: both"></div>
-                                  </div>
-                              <% end %>
+                    <%# Marginalia %>
+                    <tr>
+                        <th>Marginalia:
+                            <img src="/assets/plus_sign.png" alt="plus icon" class="plus_icon click_multiple_text_area_field_button" jq_type="marginalia"/>
+                        </th>
+                        <td>
+                            <div class="field_group">
+                                <% @entry.marginalia.each do |marginalia| %>
+                                    <div class="field_single">
+                                        <%= text_area_tag "entry[marginalia][]", marginalia, id: '' %>
+                                        <img alt="Delete icon" src="/assets/delete.png" class="delete_icon click_remove_field_level1" jq_tag_type="textarea">
+                                    </div>
+                                <% end %>
                             </div>
-                          </td>
-                        </tr>
+                        </td>
+                    </tr>
 
-                        <tr>
-                          <th>Date Role:</th>
-                          <td>
-                            <%= select_tag "entry[entry_dates_attributes][" + index1.to_s + "][date_role]", options_for_select(@date_role_list.collect{ |date_role| [date_role["label"].join(''), date_role["id"]] }.insert(0, ["--- select ---", ""]), entry_date.date_role) %>
-                          </td>
-                        </tr>
-
-                        <tr>
-                          <th>Note:</th>
-                          <td class="input_single">
-                            <%= text_area_tag "entry[entry_dates_attributes][" + index1.to_s + "][date_note]", entry_date.date_note, id: '' %>
-                          </td>
-                        </tr>
-
-                      </table>
-
-                      <img src='/assets/delete.png' class='delete_icon click_remove_field_level2' params_type='entry_dates' alt='Delete icon'>
-
-                      <input type="hidden" id="hidden_field" name="entry[entry_dates_attributes][<%= index1.to_s %>][id]" value="<%= entry_date.id %>">
-                    </div>
-
-                <% end %>
-              </div>
-            </td>
-          </tr>
-
-          <%# Related Place %>
-          <tr>
-
-            <th>Place:
-              <img src="/assets/plus_sign.png" alt="plus icon" class="plus_icon click_place_button" jq_place_type_list="<%= @place_type_list.to_json %>" jq_place_role_list="<%= @place_role_list.to_json %>" />
-            </th>
-
-            <td class="tab2">
-
-              <div class="field_group">
-
-                <% @entry.related_places.each_with_index do |related_place, index1| %>
-
-                    <div class="field_single no_padding">
-
-                      <table class="tab3">
-
-                        <tr>
-                          <th style="width: 110px">*Same As:</th>
-                          <td class="input_single">
-                            <a href='' onclick="popup('/place_popup?place_field=place_<%= index1 %>', 'place'); return false;" tabindex="-1"><%= image_tag "magnifying_glass_small.png", class: "plus_icon" %></a>
-                            <span id="place_<%= index1 %>"><%= terms.get_str_from_id(related_place.place_same_as, 'parent_ADM1_tesim') %></span>
-                            <%= hidden_field_tag "entry[related_places_attributes][" + index1.to_s + "][place_same_as]", related_place.place_same_as, id: 'place_' + index1.to_s + '_hidden' %>
-                          </td>
-                        </tr>
-
-                        <tr>
-                          <th>
-                            As Written:
-                            <img src="/assets/plus_sign.png" alt="plus icon" class="plus_icon click_multiple_field_button_level2" jq_attributes="related_places_attributes" jq_index="<%=index1%>" jq_type="place_as_written" />
-                          </th>
-                          <td>
-                            <div class="field_group grey_box place_as_written_block">
-                              <% related_place.place_as_written.each_with_index do |place_as_written, index2| %>
-                                  <div class="field_single">
-                                    <%#= text_field_tag "entry[related_places_attributes][" + index1.to_s + "][place_as_written][]", place_as_written, id: none %>
-                                    <input type="text" name="entry[related_places_attributes][<%= index1.to_s %>][place_as_written][]" value="<%= place_as_written %>" class="place_as_written">
-                                    &nbsp;<img src='/assets/delete.png' alt='Delete icon' class='delete_icon click_remove_field_level1' jq_tag_type='input'>
-                                  </div>
-                              <% end %>
+                    <%# Language %>
+                    <tr>
+                        <th>Language:
+                            <img src="/assets/plus_sign.png" alt="plus icon" class="plus_icon click_select_field_button" jq_type="language" jq_language_list="<%= @language_list.to_json %>"/>
+                        </th>
+                        <td>
+                            <div class="field_group">
+                                <% @entry.language.each do |language| %>
+                                    <div class="field_single">
+                                        <%= select_tag 'entry[language][]', options_for_select(@language_list.collect { |language| [language["label"].join(''), language["id"]] }.insert(0, ["--- select ---", ""]), language) %>
+                                        <img alt="Delete icon" src="/assets/delete.png" class="delete_icon_select click_remove_field_level1" jq_tag_type="select">
+                                    </div>
+                                <% end %>
                             </div>
-                          </td>
-                        </tr>
+                        </td>
+                    </tr>
 
-                        <tr>
-                          <th>
-                            Place Role:
-                            <img src="/assets/plus_sign.png" alt="plus icon" class="plus_icon click_select_field_button_level2" jq_attributes="related_places_attributes" jq_index="<%=index1%>" jq_type="place_role" jq_place_role_list="<%= @place_role_list.to_json %>" />
-                          </th>
-                          <td>
-                            <div class="field_group grey_box">
-                              <% related_place.place_role.each_with_index do |place_role, index2| %>
-                                  <div class="field_single">
-                                    <%= select_tag "entry[related_places_attributes][" + index1.to_s + "][place_role][]", options_for_select(@place_role_list.collect { |place_role| [place_role["label"].join(''), place_role["id"]] }.insert(0, ["--- select ---", ""]), place_role) %>
-                                    <img src='/assets/delete.png' alt='Delete icon' class='delete_icon_select click_remove_field_level1' jq_tag_type='select'>
-                                  </div>
-                              <% end %>
+                    <%# Subject %>
+                    <tr>
+                        <th>Subject:
+                            <img src="/assets/plus_sign.png" alt="plus icon" class="plus_icon click_multiple_subject_field_button" jq_type="subject"/>
+                        </th>
+                        <td>
+                            <div class="field_group">
+                                <% @entry.subject.each_with_index do |subject, index| %>
+                                    <div class="field_single">
+                                        <a href='' onclick="popup('/subject_popup?subject_field=subject_<%= index.to_s %>', 'subject'); return false;" tabindex="-1"><%= image_tag "magnifying_glass_small.png", class: "plus_icon" %></a>
+                                        <span id="subject_<%= index.to_s %>"><%= terms.get_str_from_id(subject, 'preflabel_tesim') %></span>
+                                        <%= hidden_field_tag "entry[subject][]", subject, id: 'subject_' + index.to_s + '_hidden' %>
+                                        <img alt="Delete icon" src="/assets/delete.png" class="delete_icon click_remove_field_level1" jq_tag_type="input">
+                                    </div>
+                                <% end %>
                             </div>
-                          </td>
-                        </tr>
+                        </td>
+                    </tr>
 
-                        <tr>
-                          <th>
-                            Place Type:
-                            <img src="/assets/plus_sign.png" alt="plus icon" class="plus_icon click_select_field_button_level2" jq_attributes="related_places_attributes" jq_index="<%=index1%>" jq_type="place_type" jq_place_type_list="<%= @place_type_list.to_json %>" />
-                          </th>
-                          <td>
-                            <div class="field_group grey_box">
-                              <% related_place.place_type.each_with_index do |place_type, index2| %>
-                                  <div class="field_single">
-                                    <%= select_tag "entry[related_places_attributes][" + index1.to_s + "][place_type][]", options_for_select(@place_type_list.collect { |place_type| [place_type["label"].join(''), place_type["id"]] }.insert(0, ["--- select ---", ""]), place_type) %>
-                                    <img src='/assets/delete.png' alt='Delete icon' class='delete_icon_select click_remove_field_level1' jq_tag_type='select'>
-                                  </div>
-                              <% end %>
+                    <%# Note %>
+                    <tr>
+                        <th>Note:
+                            <img src="/assets/plus_sign.png" alt="plus icon" class="plus_icon click_multiple_text_area_field_button" jq_type="note"/>
+                        </th>
+                        <td>
+                            <div class="field_group">
+                                <% @entry.note.each do |note| %>
+                                    <div class="field_single">
+                                        <%= text_area_tag "entry[note][]", note, id: '' %>
+                                        <img alt="Delete icon" src="/assets/delete.png" class="delete_icon click_remove_field_level1" jq_tag_type="textarea">
+                                    </div>
+                                <% end %>
                             </div>
-                          </td>
-                        </tr>
+                        </td>
+                    </tr>
 
-                        <tr>
-                          <th>
-                            Note:
-                            <img src="/assets/plus_sign.png" alt="plus icon" class="plus_icon click_multiple_text_area_button_level2" jq_attributes="related_places_attributes" jq_index="<%=index1%>" jq_type="place_note" />
-                          </th>
-                          <td>
-                            <div class="field_group grey_box">
-                              <% related_place.place_note.each_with_index do |place_note, index2| %>
-                                  <div class="field_single">
-                                    <%= text_area_tag "entry[related_places_attributes][" + index1.to_s + "][place_note][]", place_note, id: '' %>
-                                    &nbsp;<img src='/assets/delete.png' alt='Delete icon' class='delete_icon click_remove_field_level1' jq_tag_type='textarea'>
-                                  </div>
-                              <% end %>
+                    <%# Editorial Note %>
+                    <tr>
+                        <th>Editorial Note:
+                            <img src="/assets/plus_sign.png" alt="plus icon" class="plus_icon click_multiple_text_area_field_button" jq_type="editorial_note"/>
+                        </th>
+                        <td>
+                            <div class="field_group">
+                                <% @entry.editorial_note.each do |editorial_note| %>
+                                    <div class="field_single">
+                                        <%= text_area_tag "entry[editorial_note][]", editorial_note, id: '' %>
+                                        <img alt="Delete icon" src="/assets/delete.png" class="delete_icon click_remove_field_level1" jq_tag_type="textarea">
+                                    </div>
+                                <% end %>
                             </div>
-                          </td>
-                        </tr>
+                        </td>
+                    </tr>
 
-                      </table>
-
-                      <img src='/assets/delete.png' class='delete_icon click_remove_field_level2' params_type='related_places' alt='Delete icon'>
-
-                      <input type="hidden" id="hidden_field" name="entry[related_places_attributes][<%= index1.to_s %>][id]" value="<%= related_place.id %>">
-                    </div>
-
-                <% end %>
-              </div>
-            </td>
-          </tr>
-
-          <%# Related Person %>
-          <tr>
-
-            <th>Person:
-              <img src="/assets/plus_sign.png" alt="plus icon" class="plus_icon click_person_button" jq_role_list="<%= @role_list.to_json %>" jq_descriptor_list="<%= @descriptor_list.to_json %>" jq_gender_list="<%= @gender_list %>" />
-            </th>
-
-            <td class="tab2">
-
-              <div class="field_group">
-
-                <% @entry.related_people.each_with_index do |related_person, index1| %>
-
-                    <div class="field_single no_padding">
-
-                      <table class="tab3">
-
-                        <%# Same As %>
-                        <tr>
-                          <th style="width: 110px">*Same As:</th>
-                          <td class="input_single">
-                            <a href='' onclick="popup('/person_popup?person_field=person_<%= index1 %>', 'person'); return false;" tabindex="-1"><%= image_tag "magnifying_glass_small.png", class: "plus_icon" %></a>
-                            <span id="person_<%= index1 %>"><%= terms.get_str_from_id(related_person.person_same_as, 'family_tesim') %></span>
-                            <%= hidden_field_tag "entry[related_people_attributes][" + index1.to_s + "][person_same_as]", related_person.person_same_as, id: 'person_' + index1.to_s + '_hidden' %>
-                          </td>
-                        </tr>
-
-                        <%# As Written %>
-                        <tr>
-                          <th>
-                            As Written:
-                            <img src="/assets/plus_sign.png" alt="plus icon" class="plus_icon click_multiple_field_button_level2" jq_attributes="related_people_attributes" jq_index="<%=index1%>" jq_type="person_as_written" />
-                          </th>
-                          <td>
-                            <div class="field_group grey_box">
-                              <% related_person.person_as_written.each_with_index do |person_as_written, index2| %>
-                                  <div class="field_single">
-                                    <%= text_field_tag "entry[related_people_attributes][" + index1.to_s + "][person_as_written][]", person_as_written, id: '' %>
-                                    &nbsp;<img src='/assets/delete.png' alt='Delete icon' class='delete_icon click_remove_field_level1' jq_tag_type='input'>
-                                  </div>
-                              <% end %>
+                    <%# Is Referenced By %>
+                    <tr>
+                        <th>Is Referenced By:
+                            <img src="/assets/plus_sign.png" alt="plus icon" class="plus_icon click_multiple_field_button" jq_type="is_referenced_by"/>
+                        </th>
+                        <td>
+                            <div class="field_group">
+                                <% @entry.is_referenced_by.each do |is_referenced_by| %>
+                                    <div class="field_single">
+                                        <%= text_field_tag "entry[is_referenced_by][]", is_referenced_by, id: '' %>
+                                        <img alt="Delete icon" src="/assets/delete.png" class="delete_icon click_remove_field_level1" jq_tag_type="input">
+                                    </div>
+                                <% end %>
                             </div>
-                          </td>
-                        </tr>
+                        </td>
+                    </tr>
 
-                        <%# Gender %>
-                        <tr>
-                          <th>Gender:</th>
-                          <td>
-                            <%= select_tag "entry[related_people_attributes][" + index1.to_s + "][person_gender]", options_for_select(@gender_list.collect { |gender| [gender[0]] }.insert(0, ["--- select ---", ""]), related_person.person_gender) %>
-                          </td>
-                        </tr>
+                    <%# Entry Date %>
+                    <tr>
 
-                        <%# Person Role %>
-                        <tr>
-                          <th>Person Role:
-                            <img src="/assets/plus_sign.png" alt="plus icon" class="plus_icon click_select_field_button_level2" jq_attributes="related_people_attributes" jq_index="<%=index1%>" jq_type="person_role" jq_role_list="<%= @role_list.to_json %>"  />
-                          </th>
-                          <td>
-                            <div class="field_group grey_box">
-                              <% related_person.person_role.each_with_index do |person_role, index2| %>
-                                  <div class="field_single">
-                                    <%= select_tag "entry[related_people_attributes][" + index1.to_s + "][person_role][]", options_for_select(@role_list.collect { |role| [role["label"].join(''), role["id"]] }.insert(0, ["--- select ---", ""]), person_role) %>
-                                    <img alt="Delete icon" src="/assets/delete.png" class="delete_icon_select click_remove_field_level1" jq_tag_type="select">
-                                  </div>
-                              <% end %>
+                        <th>Date:
+                            <img src="/assets/plus_sign.png" alt="plus icon" class="plus_icon click_date_button" jq_date_certainty_list="<%= @date_certainty_list %>" jq_single_date_list="<%= @single_date_list %>" jq_date_role_list="<%= @date_role_list.to_json %>" jq_rdftype='["http://dlib.york.ac.uk/ontologies/borthwick-registers#EntryDate"]'/>
+
+                        </th>
+
+                        <td class="tab2">
+
+                            <div class="field_group">
+
+                                <% @entry.entry_dates.each_with_index do |entry_date, index1| %>
+
+                                    <div class="field_single  no_padding">
+
+                                        <table class="tab3">
+
+                                            <tr>
+                                                <th>Date:
+                                                    <img src="/assets/plus_sign.png" alt="plus icon" class="plus_icon click_single_date_button" jq_index="<%= index1 %>" jq_date_certainty_list="<%= @date_certainty_list %>" jq_single_date_list="<%= @single_date_list %>" jq_rdftype='["http://dlib.york.ac.uk/ontologies/borthwick-registers#SingleDate"]'/>
+                                                </th>
+                                                <td>
+                                                    <div class="field_group grey_box single_date">
+                                                        <% entry_date.single_dates.each_with_index do |single_date, index2| %>
+                                                            <div class="field_single">
+                                                                <table>
+                                                                    <tr>
+                                                                        <th>Date:</th>
+                                                                        <td class="input_single"><%= text_field_tag "entry[entry_dates_attributes][" + index1.to_s + "][single_dates_attributes][" + index2.to_s + "][date]", single_date.date, id: '' %></td>
+                                                                    </tr>
+                                                                    <%# Date Certainty %>
+                                                                    <tr>
+                                                                        <th>Certainty:
+                                                                            <img src="/assets/plus_sign.png" alt="plus icon" class="plus_icon click_select_field_button_date_certainty" jq_attributes="single_date_attributes" jq_index="<%= index1 %>" jq_type="date_certainty" jq_date_certainty_list="<%= @date_certainty_list %>"/>
+                                                                        </th>
+                                                                        <td>
+                                                                            <div class="field_group_date_certainty grey_box">
+                                                                                <% single_date.date_certainty.each_with_index do |single_date_certainty, index2| %>
+                                                                                    <div class="field_single">
+                                                                                        <%= select_tag "entry[entry_dates_attributes][" + index1.to_s + "][single_dates_attributes][" + index2.to_s + "][date_certainty][]", options_for_select(@date_certainty_list.collect { |date_certainty| [date_certainty[0]] }.insert(0, ["--- select ---", ""]), single_date_certainty) %>
+                                                                                        <img alt="Delete icon" src="/assets/delete.png" class="delete_icon_select click_remove_field_level1" jq_tag_type="select">
+                                                                                    </div>
+                                                                                <% end %>
+                                                                            </div>
+                                                                        </td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <th>Type:</th>
+                                                                        <td>
+                                                                            <%= select_tag "entry[entry_dates_attributes][" + index1.to_s + "][single_dates_attributes][" + index2.to_s + "][date_type]", options_for_select(@single_date_list.collect { |date_type| [date_type[0]] }.insert(0, ["--- select ---", ""]), single_date.date_type) %>
+                                                                        </td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <input type="hidden" id="hidden_field" name="entry[entry_dates_attributes][<%= index1.to_s %>][single_dates_attributes][<%= index2.to_s %>][rdftype]" value="<%= single_date.add_rdf_types %>">
+                                                                    </tr>
+                                                                </table>
+                                                                &nbsp;<img src='/assets/delete.png' alt='Delete icon' class='delete_icon click_remove_field_date' jq_index1="<%= index1 %>">
+                                                                <input type="hidden" id="hidden_field" name="entry[entry_dates_attributes][<%= index1.to_s %>][single_dates_attributes][<%= index2.to_s %>][id]" value="<%= single_date.id %>">
+
+                                                                <div style="clear: both"></div>
+                                                            </div>
+                                                        <% end %>
+                                                    </div>
+                                                </td>
+                                            </tr>
+
+                                            <tr>
+                                                <th>Date Role:</th>
+                                                <td>
+                                                    <%= select_tag "entry[entry_dates_attributes][" + index1.to_s + "][date_role]", options_for_select(@date_role_list.collect { |date_role| [date_role["label"].join(''), date_role["id"]] }.insert(0, ["--- select ---", ""]), entry_date.date_role) %>
+                                                </td>
+                                            </tr>
+
+                                            <tr>
+                                                <th>Note:</th>
+                                                <td class="input_single">
+                                                    <%= text_area_tag "entry[entry_dates_attributes][" + index1.to_s + "][date_note]", entry_date.date_note, id: '' %>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <input type="hidden" id="hidden_field" name="entry[entry_dates_attributes][<%= index1.to_s %>][rdftype]" value="<%= entry_date.add_rdf_types %>">
+                                            </tr>
+                                        </table>
+
+                                        <img src='/assets/delete.png' class='delete_icon click_remove_field_level2' params_type='entry_dates' alt='Delete icon'>
+
+                                        <input type="hidden" id="hidden_field" name="entry[entry_dates_attributes][<%= index1.to_s %>][id]" value="<%= entry_date.id %>">
+                                    </div>
+                                <% end %>
                             </div>
-                          </td>
-                        </tr>
+                        </td>
+                    </tr>
 
-                        <%# Descriptor %>
-                        <tr>
-                          <th>*Descriptor:
-                            <img src="/assets/plus_sign.png" alt="plus icon" class="plus_icon click_select_field_button_level2" jq_attributes="related_people_attributes" jq_index="<%=index1%>" jq_type="person_descriptor" jq_descriptor_list="<%= @descriptor_list.to_json %>"  />
-                          </th>
-                          <td>
-                            <div class="field_group grey_box">
-                              <% related_person.person_descriptor.each_with_index do |person_descriptor, index2| %>
-                                  <div class="field_single">
-                                    <%= select_tag "entry[related_people_attributes][" + index1.to_s + "][person_descriptor][]", options_for_select(@descriptor_list.collect { |descriptor| [descriptor["label"].join(''), descriptor["id"]] }.insert(0, ["--- select ---", ""]), person_descriptor) %>
-                                    <img alt="Delete icon" src="/assets/delete.png" class="delete_icon_select click_remove_field_level1" jq_tag_type="select">
-                                  </div>
-                              <% end %>
+                    <%# Related Place %>
+                    <tr>
+
+                        <th>Place:
+                            <img src="/assets/plus_sign.png" alt="plus icon" class="plus_icon click_place_button" jq_place_type_list="<%= @place_type_list.to_json %>" jq_place_role_list="<%= @place_role_list.to_json %>" jq_rdftype='["http://dlib.york.ac.uk/ontologies/borthwick-registers#RelatedPlace","http://schema.org/Place"]'/>
+                        </th>
+
+                        <td class="tab2">
+
+                            <div class="field_group">
+
+                                <% @entry.related_places.each_with_index do |related_place, index1| %>
+
+                                    <div class="field_single no_padding">
+
+                                        <table class="tab3">
+
+                                            <tr>
+                                                <th style="width: 110px">*Same As:</th>
+                                                <td class="input_single">
+                                                    <a href='' onclick="popup('/place_popup?place_field=place_<%= index1 %>', 'place'); return false;" tabindex="-1"><%= image_tag "magnifying_glass_small.png", class: "plus_icon" %></a>
+                                                    <span id="place_<%= index1 %>"><%= terms.get_str_from_id(related_place.place_same_as, 'parent_ADM1_tesim') %></span>
+                                                    <%= hidden_field_tag "entry[related_places_attributes][" + index1.to_s + "][place_same_as]", related_place.place_same_as, id: 'place_' + index1.to_s + '_hidden' %>
+                                                </td>
+                                            </tr>
+
+                                            <tr>
+                                                <th>
+                                                    As Written:
+                                                    <img src="/assets/plus_sign.png" alt="plus icon" class="plus_icon click_multiple_field_button_level2" jq_attributes="related_places_attributes" jq_index="<%= index1 %>" jq_type="place_as_written" %>
+                                                </th>
+                                                <td>
+                                                    <div class="field_group grey_box place_as_written_block">
+                                                        <% related_place.place_as_written.each_with_index do |place_as_written, index2| %>
+                                                            <div class="field_single">
+                                                                <%#= text_field_tag "entry[related_places_attributes][" + index1.to_s + "][place_as_written][]", place_as_written, id: none %>
+                                                                <input type="text" name="entry[related_places_attributes][<%= index1.to_s %>][place_as_written][]" value="<%= place_as_written %>" class="place_as_written">
+                                                                &nbsp;<img src='/assets/delete.png' alt='Delete icon' class='delete_icon click_remove_field_level1' jq_tag_type='input'>
+                                                            </div>
+                                                        <% end %>
+                                                    </div>
+                                                </td>
+                                            </tr>
+
+                                            <tr>
+                                                <th>
+                                                    Place Role:
+                                                    <img src="/assets/plus_sign.png" alt="plus icon" class="plus_icon click_select_field_button_level2" jq_attributes="related_places_attributes" jq_index="<%= index1 %>" jq_type="place_role" jq_place_role_list="<%= @place_role_list.to_json %>"/>
+                                                </th>
+                                                <td>
+                                                    <div class="field_group grey_box">
+                                                        <% related_place.place_role.each_with_index do |place_role, index2| %>
+                                                            <div class="field_single">
+                                                                <%= select_tag "entry[related_places_attributes][" + index1.to_s + "][place_role][]", options_for_select(@place_role_list.collect { |place_role| [place_role["label"].join(''), place_role["id"]] }.insert(0, ["--- select ---", ""]), place_role) %>
+                                                                <img src='/assets/delete.png' alt='Delete icon' class='delete_icon_select click_remove_field_level1' jq_tag_type='select'>
+                                                            </div>
+                                                        <% end %>
+                                                    </div>
+                                                </td>
+                                            </tr>
+
+                                            <tr>
+                                                <th>
+                                                    Place Type:
+                                                    <img src="/assets/plus_sign.png" alt="plus icon" class="plus_icon click_select_field_button_level2" jq_attributes="related_places_attributes" jq_index="<%= index1 %>" jq_type="place_type" jq_place_type_list="<%= @place_type_list.to_json %>"/>
+                                                </th>
+                                                <td>
+                                                    <div class="field_group grey_box">
+                                                        <% related_place.place_type.each_with_index do |place_type, index2| %>
+                                                            <div class="field_single">
+                                                                <%= select_tag "entry[related_places_attributes][" + index1.to_s + "][place_type][]", options_for_select(@place_type_list.collect { |place_type| [place_type["label"].join(''), place_type["id"]] }.insert(0, ["--- select ---", ""]), place_type) %>
+                                                                <img src='/assets/delete.png' alt='Delete icon' class='delete_icon_select click_remove_field_level1' jq_tag_type='select'>
+                                                            </div>
+                                                        <% end %>
+                                                    </div>
+                                                </td>
+                                            </tr>
+
+                                            <tr>
+                                                <th>
+                                                    Note:
+                                                    <img src="/assets/plus_sign.png" alt="plus icon" class="plus_icon click_multiple_text_area_button_level2" jq_attributes="related_places_attributes" jq_index="<%= index1 %>" jq_type="place_note"/>
+                                                </th>
+                                                <td>
+                                                    <div class="field_group grey_box">
+                                                        <% related_place.place_note.each_with_index do |place_note, index2| %>
+                                                            <div class="field_single">
+                                                                <%= text_area_tag "entry[related_places_attributes][" + index1.to_s + "][place_note][]", place_note, id: '' %>
+                                                                &nbsp;<img src='/assets/delete.png' alt='Delete icon' class='delete_icon click_remove_field_level1' jq_tag_type='textarea'>
+                                                            </div>
+                                                        <% end %>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <input type="hidden" id="hidden_field" name="entry[related_places_attributes][<%= index1.to_s %>][rdftype]" value="<%= related_place.add_rdf_types %>">
+                                            </tr>
+                                        </table>
+
+                                        <img src='/assets/delete.png' class='delete_icon click_remove_field_level2' params_type='related_places' alt='Delete icon'>
+
+                                        <input type="hidden" id="hidden_field" name="entry[related_places_attributes][<%= index1.to_s %>][id]" value="<%= related_place.id %>">
+                                    </div>
+                                <% end %>
                             </div>
-                          </td>
-                        </tr>
+                        </td>
+                    </tr>
 
-                        <%# Note %>
-                        <tr>
-                          <th>
-                            Note:
-                            <img src="/assets/plus_sign.png" alt="plus icon" class="plus_icon click_multiple_field_button_level2" jq_attributes="related_people_attributes" jq_index="<%=index1%>" jq_type="person_note" />
-                          </th>
-                          <td>
-                            <div class="field_group grey_box">
-                              <% related_person.person_note.each_with_index do |person_note, index2| %>
-                                  <div class="field_single">
-                                    <%= text_area_tag "entry[related_people_attributes][" + index1.to_s + "][person_note][]", person_note, id: '' %>
-                                    &nbsp;<img src='/assets/delete.png' alt='Delete icon' class='delete_icon click_remove_field_level1' jq_tag_type='textarea'>
-                                  </div>
-                              <% end %>
+                    <%# Related Person %>
+                    <tr>
+
+                        <th>Person:
+                            <img src="/assets/plus_sign.png" alt="plus icon" class="plus_icon click_person_button" jq_role_list="<%= @role_list.to_json %>" jq_descriptor_list="<%= @descriptor_list.to_json %>" jq_gender_list="<%= @gender_list %>" jq_rdftype='["http://dlib.york.ac.uk/ontologies/borthwick-registers#RelatedPersonGroup","http://xmlns.com/foaf/0.1/Person"]'/>
+                        </th>
+
+                        <td class="tab2">
+
+                            <div class="field_group">
+
+                                <% @entry.related_person_groups.each_with_index do |related_person, index1| %>
+
+                                    <div class="field_single no_padding">
+
+                                        <table class="tab3">
+
+                                            <%# Same As %>
+                                            <tr>
+                                                <th style="width: 110px">*Same As:</th>
+                                                <td class="input_single">
+                                                    <a href='' onclick="popup('/person_popup?person_field=person_<%= index1 %>', 'person'); return false;" tabindex="-1"><%= image_tag "magnifying_glass_small.png", class: "plus_icon" %></a>
+                                                    <span id="person_<%= index1 %>"><%= terms.get_str_from_id(related_person.person_same_as, 'family_tesim') %></span>
+                                                    <%= hidden_field_tag "entry[related_person_groups_attributes][" + index1.to_s + "][person_same_as]", related_person.person_same_as, id: 'person_' + index1.to_s + '_hidden' %>
+                                                </td>
+                                            </tr>
+
+                                            <%# As Written %>
+                                            <tr>
+                                                <th>
+                                                    As Written:
+                                                    <img src="/assets/plus_sign.png" alt="plus icon" class="plus_icon click_multiple_field_button_level2" jq_attributes="related_person_groups_attributes" jq_index="<%= index1 %>" jq_type="person_as_written"/>
+                                                </th>
+                                                <td>
+                                                    <div class="field_group grey_box">
+                                                        <% related_person.person_as_written.each_with_index do |person_as_written, index2| %>
+                                                            <div class="field_single">
+                                                                <%= text_field_tag "entry[related_person_groups_attributes][" + index1.to_s + "][person_as_written][]", person_as_written, id: '' %>
+                                                                &nbsp;<img src='/assets/delete.png' alt='Delete icon' class='delete_icon click_remove_field_level1' jq_tag_type='input'>
+                                                            </div>
+                                                        <% end %>
+                                                    </div>
+                                                </td>
+                                            </tr>
+
+                                            <%# Gender %>
+                                            <tr>
+                                                <th>Gender:</th>
+                                                <td>
+                                                    <%= select_tag "entry[related_person_groups_attributes][" + index1.to_s + "][person_gender]", options_for_select(@gender_list.collect { |gender| [gender[0]] }.insert(0, ["--- select ---", ""]), related_person.person_gender) %>
+                                                </td>
+                                            </tr>
+
+                                            <%# Person Role %>
+                                            <tr>
+                                                <th>Person Role:
+                                                    <img src="/assets/plus_sign.png" alt="plus icon" class="plus_icon click_select_field_button_level2" jq_attributes="related_person_groups_attributes" jq_index="<%= index1 %>" jq_type="person_role" jq_role_list="<%= @role_list.to_json %>"/>
+                                                </th>
+                                                <td>
+                                                    <div class="field_group grey_box">
+                                                        <% related_person.person_role.each_with_index do |person_role, index2| %>
+                                                            <div class="field_single">
+                                                                <!-- corrected this, OK? -->
+                                                                <%= select_tag "entry[related_person_groups_attributes][" + index2.to_s + "][person_role][]", options_for_select(@role_list.collect { |role| [role["label"].join(''), role["id"]] }.insert(0, ["--- select ---", ""]), person_role) %>
+                                                                <img alt="Delete icon" src="/assets/delete.png" class="delete_icon_select click_remove_field_level1" jq_tag_type="select">
+                                                            </div>
+                                                        <% end %>
+                                                    </div>
+                                                </td>
+                                            </tr>
+
+                                            <%# Descriptor %>
+                                            <tr>
+                                                <th>*Descriptor:
+                                                    <img src="/assets/plus_sign.png" alt="plus icon" class="plus_icon click_select_field_button_level2" jq_attributes="related_person_groups_attributes" jq_index="<%= index1 %>" jq_type="person_descriptor" jq_descriptor_list="<%= @descriptor_list.to_json %>"/>
+                                                </th>
+                                                <td>
+                                                    <div class="field_group grey_box">
+                                                        <% related_person.person_descriptor.each_with_index do |person_descriptor, index2| %>
+                                                            <div class="field_single">
+                                                                <%= select_tag "entry[related_person_groups_attributes][" + index1.to_s + "][person_descriptor][]", options_for_select(@descriptor_list.collect { |descriptor| [descriptor["label"].join(''), descriptor["id"]] }.insert(0, ["--- select ---", ""]), person_descriptor) %>
+                                                                <img alt="Delete icon" src="/assets/delete.png" class="delete_icon_select click_remove_field_level1" jq_tag_type="select">
+                                                            </div>
+                                                        <% end %>
+                                                    </div>
+                                                </td>
+                                            </tr>
+
+                                            <%# Descriptor As Written %>
+                                            <tr>
+                                                <th>
+                                                    Descriptor As Written:
+                                                    <img src="/assets/plus_sign.png" alt="plus icon" class="plus_icon click_multiple_field_button_level2" jq_attributes="related_person_groups_attributes" jq_index="<%= index1 %>" jq_type="person_descriptor_as_written"/>
+                                                </th>
+                                                <td>
+                                                    <div class="field_group grey_box">
+                                                        <% related_person.person_descriptor_as_written.each_with_index do |person_descriptor_as_written, index2| %>
+                                                            <div class="field_single">
+                                                                <%= text_area_tag "entry[related_person_groups_attributes][" + index1.to_s + "][person_descriptor_as_written][]", person_descriptor_as_written, id: '' %>
+                                                                &nbsp;<img src='/assets/delete.png' alt='Delete icon' class='delete_icon click_remove_field_level1' jq_tag_type='textarea'>
+                                                            </div>
+                                                        <% end %>
+                                                    </div>
+                                                </td>
+                                            </tr>
+
+
+                                            <%# Note %>
+                                            <tr>
+                                                <th>
+                                                    Note:
+                                                    <img src="/assets/plus_sign.png" alt="plus icon" class="plus_icon click_multiple_field_button_level2" jq_attributes="related_person_groups_attributes" jq_index="<%= index1 %>" jq_type="person_note"/>
+                                                </th>
+                                                <td>
+                                                    <div class="field_group grey_box">
+                                                        <% related_person.person_note.each_with_index do |person_note, index2| %>
+                                                            <div class="field_single">
+                                                                <%= text_area_tag "entry[related_person_groups_attributes][" + index1.to_s + "][person_note][]", person_note, id: '' %>
+                                                                &nbsp;<img src='/assets/delete.png' alt='Delete icon' class='delete_icon click_remove_field_level1' jq_tag_type='textarea'>
+                                                            </div>
+                                                        <% end %>
+                                                    </div>
+                                                </td>
+                                            </tr>
+
+                                            <%# Related Place %>
+                                            <tr>
+                                                <th>
+                                                    Related Place:
+                                                    <img src="/assets/plus_sign.png" alt="plus icon" class="plus_icon click_related_place_field_button" jq_attributes="related_person_groups_attributes" jq_index="<%= index1 %>" jq_type="person_related_place"/>
+                                                </th>
+                                                <td>
+                                                    <div class="field_group grey_box">
+                                                        <%#= related_person.related_places %>
+                                                        <% related_person.person_related_place.each do |person_related_place| %>
+                                                            <div class="field_single">
+                                                                <%= select_tag "entry[related_person_groups_attributes][" + index1.to_s + "][person_related_place][]", options_for_select(@related_place_list, person_related_place), class: 'related_place', id: 'rel0' %>
+                                                                <!--<input type="hidden" id="hidden_field" name="entry[related_person_groups_attributes][<%= index1.to_s %>][related_places][]" value="<%= related_person.person_related_place %>"> -->
+                                                                <img src='/assets/delete.png' alt='Delete icon' class='delete_icon_select click_remove_field_level1' jq_tag_type='select'>
+                                                            </div>
+                                                        <% end %>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <input type="hidden" id="hidden_field" name="entry[related_person_groups_attributes][<%= index1.to_s %>][rdftype]" value="<%= related_person.add_rdf_types_p %>">
+                                            </tr>
+
+                                        </table>
+
+                                        <img src='/assets/delete.png' class='delete_icon click_remove_field_level2' params_type='related_person_groups' alt='Delete icon'>
+
+                                        <input type="hidden" id="hidden_field" name="entry[related_person_groups_attributes][<%= index1.to_s %>][id]" value="<%= related_person.id %>">
+                                    </div>
+
+                                <% end %>
                             </div>
-                          </td>
-                        </tr>
+                        </td>
+                    </tr>
 
-                        <%# Related Place %>
-                        <tr>
-                          <th>
-                            Related Place:
-                            <img src="/assets/plus_sign.png" alt="plus icon" class="plus_icon click_related_place_field_button" jq_attributes="related_people_attributes" jq_index="<%=index1%>" jq_type="person_related_place" />
-                          </th>
-                          <td>
-                            <div class="field_group grey_box">
-                            <%#= related_person.related_places %>
-                              <% related_person.person_related_place.each do |person_related_place| %>
-                                  <div class="field_single">
-                                    <%= select_tag "entry[related_people_attributes][" + index1.to_s + "][person_related_place][]", options_for_select(@related_place_list, person_related_place), class: 'related_place', id: 'rel0' %>
-                                    <img src='/assets/delete.png' alt='Delete icon' class='delete_icon_select click_remove_field_level1' jq_tag_type='select'>
-                                  </div>
-                              <% end %>
-                            </div>
-                          </td>
-                        </tr>
-
-                      </table>
-
-                      <img src='/assets/delete.png' class='delete_icon click_remove_field_level2' params_type='related_people' alt='Delete icon'>
-
-                      <input type="hidden" id="hidden_field" name="entry[related_people_attributes][<%= index1.to_s %>][id]" value="<%= related_person.id %>">
-                    </div>
-
-                <% end %>
-              </div>
-            </td>
-          </tr>
-
-          <tr>
-            <th colspan='2'>
-              <div id='entry_menubar'>
+                    <tr>
+                        <th colspan='2'>
+                            <div id='entry_menubar'>
                 <span class='edit_button'>
 				  <% if @entry.new_record? %>
+                        <% @entry.add_rdf_types.each do |rdftype| %>
+                            <input type="hidden" id="hidden_field" name="[rdftype][]" value="<%= rdftype %>">
+                        <% end %>
 				    <%= f.submit 'Submit' %>
-                      <% if @is_last_entry == true %>
+                        <% if @is_last_entry == true %>
                       <%= f.submit 'Continue', :onclick => "return confirm('" + button_str + "')" %>
                     <% end %>
-                      <a href='<%= entries_path %>'><input type='button' value='Back' /></a>
+                        <a href='<%= entries_path %>'><input type='button' value='Back'/></a>
 				  <% else %>
 				    <%= f.submit 'Update' %>
-                      <% if @is_last_entry == true %>
+                        <% if @is_last_entry == true %>
                       <%= f.submit 'Continue', :onclick => "return confirm('" + button_str + "')" %>
                     <% end %>
-                      <a href='<%= entry_path(@entry) %>'><input type='button' value='Back to View' /></a>
+                        <a href='<%= entry_path(@entry) %>'><input type='button' value='Back to View'/></a>
 				  <% end %>
 				</span>
-              </div>
-            </th>
-          </tr>
+                            </div>
+                        </th>
+                    </tr>
 
-        </table>
-      </div>
-      </div>
-  <% end %>
+                </table>
+            </div>
+        </div>
+    <% end %>
 
 </div>
 
