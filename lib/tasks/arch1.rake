@@ -510,7 +510,7 @@ namespace :arch1 do
   # Temporary code to add people ConceptScheme
   task add_people_concept_scheme: :environment do
     @scheme = ConceptScheme.new
-    @scheme.title = 'people'
+    @scheme.preflabel = 'people'
     @scheme.rdftype = @scheme.add_rdf_types
     @scheme.save
     puts @scheme.id
@@ -519,7 +519,7 @@ namespace :arch1 do
   # Temporary code to add places ConceptScheme
   task add_places_concept_scheme: :environment do
     @scheme = ConceptScheme.new
-    @scheme.title = 'places'
+    @scheme.preflabel = 'places'
     @scheme.rdftype = @scheme.add_rdf_types
     @scheme.save
     puts @scheme.id
@@ -615,55 +615,5 @@ namespace :arch1 do
         end
       end
     end
-  end
-
-  task coll: :environment do
-
-    # return a hash of registers in order (id and title), for the landing page
-
-      collection = ''
-      first_register = ''
-      # get the collection
-      SolrQuery.new.solr_query('has_model_ssim:OrderedCollection AND coll_id_tesim:"Abp Reg"','id,fst_tesim')['response']['docs'].map.each do | result |
-        collection = result['id']
-        first_register = result['fst_tesim']
-      end
-
-      registers = Hash.new
-      num = 0
-
-      # get the number of registers in the collection, and the register ids and titles
-      SolrQuery.new.solr_query('isPartOf_ssim:"' + collection + '"','id,preflabel_tesim,reg_id_tesim')['response'].each do | result |
-        if result[0] == 'numFound'
-          num = result[1]
-        elsif result[0] == 'docs'
-          result[1].each do | res |
-            registers[res['id']] = [res['reg_id_tesim'][0],res['preflabel_tesim'][0]]
-          end
-        end
-      end
-
-      order = Hash.new
-      next_un = ''
-
-      # order the registers
-      for i in 1..num.to_i
-        case i
-          when 1
-            order[first_register[0]] = registers[first_register[0]]
-            next_un = SolrQuery.new.solr_query('proxyFor_ssim:"' + first_register[0] + '"','next_tesim')['response']['docs'].map.first['next_tesim']
-            order[next_un[0]] = registers[next_un[0]]
-          when 9
-            # don't process the last one
-          else
-            next_un = SolrQuery.new.solr_query('proxyFor_ssim:"' + next_un[0] + '"','next_tesim')['response']['docs'].map.first['next_tesim']
-            order[next_un[0]] = registers[next_un[0]]
-        end
-      end
-
-      order.each do | pair |
-        puts pair[0]
-        puts "id: #{pair[1][0]},title: #{pair[1][1]}"
-      end
   end
 end

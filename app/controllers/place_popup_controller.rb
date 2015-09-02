@@ -29,7 +29,7 @@ class PlacePopupController < ApplicationController
       # Create a new place with the parameters
       # Note that a solr query is carried out to obtain the concept scheme id for 'places'
       @place = Place.new(place_params)
-      response = SolrQuery.new.solr_query(q='has_model_ssim:ConceptScheme AND preflabel_tesim:places', fl='id', rows=1, sort='')
+      response = SolrQuery.new.solr_query(q='has_model_ssim:ConceptScheme AND preflabel_tesim:"places"', fl='id', rows=1, sort='')
       id = response['response']['docs'][0]['id']
       @place.concept_scheme_id = id
       @place.preflabel = "#{@place.parent_ADM1}_#{@place.parent_ADM2}"

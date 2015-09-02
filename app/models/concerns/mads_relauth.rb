@@ -2,7 +2,7 @@ module MadsRelauth
   extend ActiveSupport::Concern
   
   included do
-    property :relauth, predicate: ::RDF::Vocab::MADS.hasRelatedAuthority, multiple: true do |index|
+    property :related_authority, predicate: ::RDF::Vocab::MADS.hasRelatedAuthority, multiple: true do |index|
       index.as :stored_searchable
     end
   end

@@ -177,10 +177,9 @@ module RegisterFolio
 
     SolrQuery.new.solr_query('folio_ssim:"' + session[:folio_id] + '"', 'id', 100)['response']['docs'].each do |result|
       entry_id = result['id']
-      # SolrQuery.new.solr_query('id:"' + entry_id + '"', 'continues_on_tesim, entry_no_tesim', 1)['response']['docs'].each do |result|
-      SolrQuery.new.solr_query('id:"' + entry_id + '"', 'continues_on_tesim', 1)['response']['docs'].each do |result|
+      SolrQuery.new.solr_query('id:"' + entry_id + '"', 'continues_on_tesim,entry_no_tesim', 1)['response']['docs'].each do |result|
         if result['continues_on_tesim'] != nil
-          #@folio_continues_id = result['entry_no_isim']
+
           @folio_continues_id = result['entry_no_tesim']
           @folio_continues_id = @folio_continues_id.join('')
         end
@@ -205,8 +204,7 @@ module RegisterFolio
       # Only create a new entry if one doesn't already exist on the next folio
       if @is_entry_on_next_folio == false
         new_entry = Entry.new
-        #new_entry.entry_no = '1'
-        new_entry.entry_no = 1
+        new_entry.entry_no = '1'
         new_entry.entry_type = ''
         new_entry.continues_on = ''
         new_entry.folio_id = next_folio_id
@@ -225,7 +223,6 @@ module RegisterFolio
         return new_entry.id
       else
         id = ''
-        #SolrQuery.new.solr_query('folio_ssim:"' + next_folio_id + '"', 'entry_no_tesim, id', 1)['response']['docs'].map do |result|
         SolrQuery.new.solr_query('folio_ssim:"' + next_folio_id + '"', 'entry_no_tesim, id', 1)['response']['docs'].map do |result|
           id = result['id']
         end
@@ -238,8 +235,8 @@ module RegisterFolio
   def get_max_entry_no_for_folio
 
     max_entry_no = 0
-    #SolrQuery.new.solr_query('folio_ssim:"' + session[:folio_id] + '"', 'entry_no_tesim', 100)['response']['docs'].each do |result|
     SolrQuery.new.solr_query('folio_ssim:"' + session[:folio_id] + '"', 'entry_no_tesim', 100)['response']['docs'].each do |result|
+      puts 'folio_ssim:"' + session[:folio_id] + '"'
       entry_no = result['entry_no_tesim'].join('').to_i
       if entry_no > max_entry_no
         max_entry_no = entry_no
