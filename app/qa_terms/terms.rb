@@ -91,4 +91,10 @@ module Terms
       'subject'
     end
   end
+
+  class SectionTypeTerms < TermsBase
+    def terms_list
+      'section_types'
+    end
+  end
 end

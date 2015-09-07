@@ -10,7 +10,7 @@ class PersonTerms
 
   # Gets the ConceptScheme, etc
   def terms_id
-    parse_terms_id_response(SolrQuery.new.solr_query(q='rdftype_tesim:"http://www.w3.org/2004/02/skos/core#ConceptScheme" AND title_tesim:"persons"'))
+    parse_terms_id_response(SolrQuery.new.solr_query(q='rdftype_tesim:"http://www.w3.org/2004/02/skos/core#ConceptScheme" AND preflabel_tesim:"persons"'))
   end
 
   def all
@@ -48,7 +48,7 @@ class PersonTerms
         'given' => result['given_tesim'],
         'dates' => result['dates_tesim'],
         'epithet' => result['epithet_tesim'],
-        'post_title' => result['post_title_tesim']
+        'post_title' => result['post_preflabel_tesim']
       }
     end
   end

@@ -141,6 +141,10 @@ class EntriesController < ApplicationController
       return
     end
 
+    #puts params
+    # update the rdf_types for all objects
+    update_rdf_types
+
     # Check parameters are whitelisted
     entry_params = whitelist_entry_params
 
@@ -198,7 +202,10 @@ class EntriesController < ApplicationController
         next_entry_id = create_next_entry(@is_entry_on_next_folio)
       end
 
+      @entry.rdftype = @entry.add_rdf_types
       @entry.save
+      # add place relations onto people/groups
+      update_related_places
 
       # If entry continues, redirect to the first entry on the next folio
       # Else redirect to the index page
@@ -219,6 +226,9 @@ class EntriesController < ApplicationController
       redirect_to :controller => 'entries', :action => 'show', :id => params[:id]
       return
     end
+
+    # update the rdf_types for all objects
+    update_rdf_types
 
     # Check parameters are whitelisted
     entry_params = whitelist_entry_params
@@ -280,6 +290,7 @@ class EntriesController < ApplicationController
 
       # Save form data to Fedora
       @entry.save
+      update_related_places
 
       # If entry continues, redirect to the first entry on the next folio
       # Else redirect to the index page
@@ -312,6 +323,70 @@ class EntriesController < ApplicationController
   def session_timed_out
     if session[:login] != 'true'
       redirect_to :controller => 'login', :action => 'timed_out'
+    end
+  end
+
+  private
+  def update_rdf_types
+    unless params[:entry][:related_person_groups_attributes].nil?
+      params[:entry][:related_person_groups_attributes].each do | key, value|
+        value.each do | k, v |
+          if k == 'rdftype'
+            params[:entry][:related_person_groups_attributes][key][k] = v.gsub!("[","").gsub!('"','').gsub!("]",'').gsub(' ','').split(',').collect { |s| s }
+          end
+        end
+      end
+    end
+    unless params[:entry][:related_places_attributes].nil?
+      params[:entry][:related_places_attributes].each do | key, value|
+        value.each do | k, v |
+          if k == 'rdftype'
+            params[:entry][:related_places_attributes][key][k] = v.gsub!("[","").gsub!('"','').gsub!("]",'').gsub(' ','').split(',').collect { |s| s }
+          end
+        end
+      end
+    end
+    unless params[:entry][:entry_dates_attributes].nil?
+      params[:entry][:entry_dates_attributes].each do | key, value|
+        value.each do | k, v |
+          if k == 'rdftype'
+            params[:entry][:entry_dates_attributes][key][k] = [v.gsub!("[","").gsub!('"','').gsub!("]",'').gsub(' ','')]
+          end
+          if k == 'single_dates_attributes'
+            v.each do | ke,va |
+              va.each do | keya, val|
+                if keya == 'rdftype'
+                  params[:entry][:entry_dates_attributes][key][k][ke][keya] = [val.gsub!("[","").gsub!('"','').gsub!("]",'').gsub(' ','')]
+                end
+              end
+            end
+          end
+        end
+      end
+    end
+  end
+
+  # this method adds relatedPlaceFor relations to RelatedPersonGroups by looking up the RelatedPlace id for each person_related_place
+  private
+  def update_related_places
+    begin
+      q = 'relatedPlaceFor_ssim:"' + @entry.id + '"'
+      SolrQuery.new.solr_query(q, 'id,place_as_written_tesim', 50)['response']['docs'].each do |result|
+        q = 'relatedAgentFor_ssim:"' + @entry.id + '" AND person_related_place_tesim:"' + result['place_as_written_tesim'][0] + '"'
+        begin
+          SolrQuery.new.solr_query(q, 'id,person_related_place_tesim', 50)['response']['docs'].each do |res|
+            place = RelatedPlace.where(id: result['id']).first
+            places = place.related_person_group
+            places += [RelatedPersonGroup.where(id: res['id']).first]
+            place.related_person_group = places
+            place.save
+          end
+        rescue
+          #move along
+        end
+      end
+    rescue
+      #move along
     end
   end
 end

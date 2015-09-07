@@ -83,13 +83,13 @@ module RegisterFolio
 
     folio_hash = {}
 
-    # Populate the folio_hash with folio_id => title_tesim - this is used to get the title for each id later on
-    q = SolrQuery.new.solr_query('has_model_ssim:Folio AND isPartOf_ssim:' + register, 'id, title_tesim', 5000, 'id ASC')
+    # Populate the folio_hash with folio_id => preflabel_tesim - this is used to get the title for each id later on
+    q = SolrQuery.new.solr_query('has_model_ssim:Folio AND isPartOf_ssim:' + register, 'id, preflabel_tesim', 5000, 'id ASC')
 
     q['response']['docs'].each do |result|
       folio_id = result['id']
-      title_tesim = result['title_tesim'].join()
-      folio_hash[folio_id] = title_tesim.gsub(/Abp Reg \d+ /, "")
+      preflabel_tesim = result['preflabel_tesim'].join()
+      folio_hash[folio_id] = preflabel_tesim.gsub(/Abp Reg \d+ /, "")
     end
 
     proxy_hash = {}
@@ -177,8 +177,9 @@ module RegisterFolio
 
     SolrQuery.new.solr_query('folio_ssim:"' + session[:folio_id] + '"', 'id', 100)['response']['docs'].each do |result|
       entry_id = result['id']
-      SolrQuery.new.solr_query('id:"' + entry_id + '"', 'continues_on_tesim, entry_no_tesim', 1)['response']['docs'].each do |result|
+      SolrQuery.new.solr_query('id:"' + entry_id + '"', 'continues_on_tesim,entry_no_tesim', 1)['response']['docs'].each do |result|
         if result['continues_on_tesim'] != nil
+
           @folio_continues_id = result['entry_no_tesim']
           @folio_continues_id = @folio_continues_id.join('')
         end
@@ -234,8 +235,8 @@ module RegisterFolio
   def get_max_entry_no_for_folio
 
     max_entry_no = 0
-
     SolrQuery.new.solr_query('folio_ssim:"' + session[:folio_id] + '"', 'entry_no_tesim', 100)['response']['docs'].each do |result|
+      puts 'folio_ssim:"' + session[:folio_id] + '"'
       entry_no = result['entry_no_tesim'].join('').to_i
       if entry_no > max_entry_no
         max_entry_no = entry_no
@@ -244,6 +245,50 @@ module RegisterFolio
 
     # return max_entry_no
     max_entry_no
+  end
+
+  # return list of registers (fedora id, register id and title), in order
+  def get_registers_in_order
+    collection = ''
+    first_register = ''
+    # get the collection so that we can get a list of registers and the first register in the sequence
+    SolrQuery.new.solr_query('has_model_ssim:OrderedCollection AND coll_id_tesim:"Abp Reg"','id,fst_tesim')['response']['docs'].map.each do | result |
+      collection = result['id']
+      first_register = result['fst_tesim']
+    end
+
+    registers = Hash.new
+    num = 0
+
+    # get the number of registers and the register ids and names
+    SolrQuery.new.solr_query('isPartOf_ssim:"' + collection + '"','id,preflabel_tesim,reg_id_tesim')['response'].each do | result |
+      if result[0] == 'numFound'
+        num = result[1]
+      elsif result[0] == 'docs'
+        result[1].each do | res |
+          registers[res['id']] = [res['reg_id_tesim'][0],res['preflabel_tesim'][0]]
+        end
+      end
+    end
+
+    order = Hash.new
+    next_un = ''
+
+    # order the registers
+    for i in 1..num.to_i
+      case i
+        when 1
+          order[first_register[0]] = registers[first_register[0]]
+          next_un = SolrQuery.new.solr_query('proxyFor_ssim:"' + first_register[0] + '"','next_tesim')['response']['docs'].map.first['next_tesim']
+          order[next_un[0]] = registers[next_un[0]]
+        when 9
+          # we don't need to process the last one
+        else
+          next_un = SolrQuery.new.solr_query('proxyFor_ssim:"' + next_un[0] + '"','next_tesim')['response']['docs'].map.first['next_tesim']
+          order[next_un[0]] = registers[next_un[0]]
+      end
+    end
+    order
   end
 
 end

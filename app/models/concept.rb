@@ -1,6 +1,5 @@
 class Concept < ActiveFedora::Base
-
-  include RdfType,Generic,AssignId,SameAs,SkosLabels,DCTerms
+  include RdfType,Generic,AssignId,SameAs,SkosLabels,DCTerms,SkosLabels
 
   belongs_to :concept_scheme, predicate: ::RDF::SKOS.inScheme
 
@@ -19,16 +18,6 @@ class Concept < ActiveFedora::Base
   end
 
   property :narrower, predicate: ::RDF::SKOS.narrower, multiple: true do |index|
-    index.as :stored_searchable
-  end
-
-  # boolean
-  property :istopconcept, predicate: ::RDF::URI.new('http://dlib.york.ac.uk/ontologies/generic#isTopConcept'), multiple: false do |index|
-    index.as :stored_searchable
-  end
-
-  # boolean
-  property :approved, predicate: ::RDF::URI.new('http://dlib.york.ac.uk/ontologies/generic#approved'), multiple: false do |index|
     index.as :stored_searchable
   end
 

@@ -1,18 +1,15 @@
 class ConceptScheme < ActiveFedora::Base
+  include RdfType,DCTerms,AssignId,SkosLabels
 
-  include RdfType,DCTerms,AssignId
+  has_many :concepts, :dependent => :destroy
+  accepts_nested_attributes_for :concept, :allow_destroy => true, :reject_if => :all_blank
 
-  has_many :concepts
-  has_many :people
-
-  # RDFTYPES
   def add_rdf_types
     ['http://www.w3.org/2004/02/skos/core#ConceptScheme']
   end
-  # http://fedora.info/definitions/v4/indexing#Indexable
 
   # optional, use for nested subject headings schemes
-  property :top_concept, predicate: ::RDF::SKOS.hasTopConcept, multiple: true do |index|
+  property :topconcept, predicate: ::RDF::SKOS.hasTopConcept, multiple: true do |index|
     index.as :stored_searchable
   end
 

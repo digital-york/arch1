@@ -261,19 +261,23 @@ $(document).ready(function () {
 
         try {
             e.preventDefault(); // I think this prevents other events firing?
-            var field_group_div = $(this).parent('th').next('td').find('>:first-child');
-            var jq_language_list = $.parseJSON($(this).attr('jq_language_list'));
-
-            var language_options = "<option value=''>--- select ---</option>";
-
-            for (i = 0; i < jq_language_list.length; i++) {
-                language_options = language_options + "<option value='" + jq_language_list[i].id + "'>" + jq_language_list[i].label + "</option/>";
+            var jq_type = $(this).attr('jq_type');
+            var list_array = "";
+            if (jq_type == 'language') {
+                list_array = $.parseJSON($(this).attr('jq_language_list'));
+            } else if (jq_type == 'section_type') {
+                list_array = $.parseJSON($(this).attr('jq_section_type_list'));
             }
 
-            var new_code_block = "<div class='field_single'><select id='entry_language_' name='entry[language][]'>" + language_options +
-                "</select>&nbsp;<img alt='Delete icon' src='/assets/delete.png' class='delete_icon_select click_remove_field_level1' jq_tag_type='select'></div>";
+            var options = "<option value=''>--- select ---</option>";
 
-            field_group_div.append(new_code_block);
+            for (i = 0; i < list_array.length; i++) {
+                options = options + "<option value='" + list_array[i].id + "'>" + list_array[i].label + "</option/>";
+            }
+
+            var new_code_block = "<div class='field_single'><select name='entry[" + jq_type + "][]'>" + options +
+                "</select>&nbsp;<img alt='Delete icon' src='/assets/delete.png' class='delete_icon_select click_remove_field_level1' jq_tag_type='select'></div>";
+            $(this).parent('th').next('td').find('.field_group').append(new_code_block);
         } catch (err) {
             alert(err);
         }
@@ -340,6 +344,7 @@ $(document).ready(function () {
             var jq_index = field_group_div.children().length;
             var jq_place_type_list = $(this).attr('jq_place_type_list').replace(/ /g, "&#32;"); // Appears to be a problem when list is added as a nested list, i.e. Level 2, therefore replace them here
             var jq_place_role_list = $(this).attr('jq_place_role_list').replace(/ /g, "&#32;"); // See above
+            var jq_rdftype = $(this).attr('jq_rdftype')
 
             var new_code_block = "<div class='field_single'>" +
 
@@ -372,6 +377,10 @@ $(document).ready(function () {
                 "&nbsp;<img jq_type='place_note' jq_index='" + jq_index + "' jq_attributes='related_places_attributes' class='plus_icon click_multiple_text_area_button_level2' src='/assets/plus_sign.png'>" +
                 "</th><td><div class='field_group grey_box'></div></td></tr>" +
 
+                    // Hidden field for RDFTYPE
+                "<tr><input type='hidden' id='hidden_field' name='entry[related_places_attributes][" + jq_index + "][rdftype]' value='" + jq_rdftype + "'></tr>" +
+
+
                 "</table>" +
                 "<img src='/assets/delete.png' alt='Delete icon' class='delete_icon click_remove_field_level2' params_type='related_places'>" +
                 "</div>";
@@ -393,6 +402,7 @@ $(document).ready(function () {
             var jq_role_list = $(this).attr('jq_role_list').replace(/ /g, "&#32;"); //  // Appears to be a problem when list is added as a nested list, i.e. Level 2, therefore replace them here
             var jq_descriptor_list = $(this).attr('jq_descriptor_list').replace(/ /g, "&#32;"); // See above
             var jq_gender_list = $.parseJSON($(this).attr('jq_gender_list')); // Don't need to remove spaces because not nested like the above lists (I think)
+            var jq_rdftype = $(this).attr('jq_rdftype')
 
             var descriptor_options = "<option value=''>--- select ---</option>";
 
@@ -414,39 +424,47 @@ $(document).ready(function () {
                 "<tr><th>*Same As:</th><td class='input_single'>" +
                 "<a href='' onclick='popup(&#39;/person_popup?person_field=person_" + jq_index + "&#39;, &#39;person&#39;); return false;' tabindex='-1'><img src='/assets/magnifying_glass_small.png' class='plus_icon'></a>" +
                 "&nbsp;<span id='person_" + jq_index + "'></span>" +
-                "<input type='hidden' id='person_" + jq_index + "_hidden' value='' name='entry[related_people_attributes][" + jq_index + "][person_same_as]'>" +
+                "<input type='hidden' id='person_" + jq_index + "_hidden' value='' name='entry[related_person_groups_attributes][" + jq_index + "][person_same_as]'>" +
                 "</td></tr>" +
 
                     // As Written
                 "<tr><th style='width: 110px'>As Written:" +
-                "&nbsp;<img jq_type='person_as_written' jq_index='" + jq_index + "' jq_attributes='related_people_attributes' class='plus_icon click_multiple_field_button_level2' src='/assets/plus_sign.png'>" +
+                "&nbsp;<img jq_type='person_as_written' jq_index='" + jq_index + "' jq_attributes='related_person_groups_attributes' class='plus_icon click_multiple_field_button_level2' src='/assets/plus_sign.png'>" +
                 "</th><td><div class='field_group grey_box'></div></td></tr>" +
 
                     // Gender
-                "<tr><th>Gender:</th><td><select name='entry[related_people_attributes][" + jq_index + "][person_gender]'>" + gender_options + "</select></td></tr>" +
+                "<tr><th>Gender:</th><td><select name='entry[related_person_groups_attributes][" + jq_index + "][person_gender]'>" + gender_options + "</select></td></tr>" +
 
                     // Role
                 "<tr><th style='width: 110px'>Person Role:" +
-                "&nbsp;<img jq_role_list=" + jq_role_list + " jq_type='" + "person_role" + "' jq_index='" + jq_index + "' jq_attributes='related_people_attributes' class='plus_icon click_select_field_button_level2' src='/assets/plus_sign.png'>" +
+                "&nbsp;<img jq_role_list=" + jq_role_list + " jq_type='" + "person_role" + "' jq_index='" + jq_index + "' jq_attributes='related_person_groups_attributes' class='plus_icon click_select_field_button_level2' src='/assets/plus_sign.png'>" +
                 "</th><td><div class='field_group grey_box'></div></td></tr>" +
 
                     // Descriptor
                 "<tr><th style='width: 110px'>Descriptor:" +
-                "&nbsp;<img jq_descriptor_list=" + jq_descriptor_list + " jq_type='" + "person_descriptor" + "' jq_index='" + jq_index + "' jq_attributes='related_people_attributes' class='plus_icon click_select_field_button_level2' src='/assets/plus_sign.png'>" +
+                "&nbsp;<img jq_descriptor_list=" + jq_descriptor_list + " jq_type='" + "person_descriptor" + "' jq_index='" + jq_index + "' jq_attributes='related_person_groups_attributes' class='plus_icon click_select_field_button_level2' src='/assets/plus_sign.png'>" +
+                "</th><td><div class='field_group grey_box'></div></td></tr>" +
+
+                    // Descriptor As Written
+                "<tr><th style='width: 110px'>Descriptor As Written:" +
+                "&nbsp;<img jq_type='person_descriptor_as_written' jq_index='" + jq_index + "' jq_attributes='related_person_groups_attributes' class='plus_icon click_multiple_field_button_level2' src='/assets/plus_sign.png'>" +
                 "</th><td><div class='field_group grey_box'></div></td></tr>" +
 
                     // Note
                 "<tr><th>Note:" +
-                "&nbsp;<img jq_type='person_note' jq_index='" + jq_index + "' jq_attributes='related_people_attributes' class='plus_icon click_multiple_text_area_button_level2' src='/assets/plus_sign.png'>" +
+                "&nbsp;<img jq_type='person_note' jq_index='" + jq_index + "' jq_attributes='related_person_groups_attributes' class='plus_icon click_multiple_text_area_button_level2' src='/assets/plus_sign.png'>" +
                 "</th><td><div class='field_group grey_box'></div></td></tr>" +
 
                     // Related Place
                 "<tr><th>Related Place:" +
-                "&nbsp;<img jq_type='person_related_place' jq_index='" + jq_index + "' jq_attributes='related_people_attributes' class='plus_icon click_related_place_field_button' src='/assets/plus_sign.png'>" +
+                "&nbsp;<img jq_type='person_related_place' jq_index='" + jq_index + "' jq_attributes='related_person_groups_attributes' class='plus_icon click_related_place_field_button' src='/assets/plus_sign.png'>" +
                 "</th><td><div class='field_group grey_box'></div></td></tr>" +
 
+                    // Hidden field for RDFTYPE
+                "<tr><input type='hidden' id='hidden_field' name='entry[related_person_groups_attributes][" + jq_index + "][rdftype]' value='" + jq_rdftype + "'></tr>" +
+
                 "</table>" +
-                "<img src='/assets/delete.png' alt='Delete icon' class='delete_icon click_remove_field_level2' params_type='related_people'>" +
+                "<img src='/assets/delete.png' alt='Delete icon' class='delete_icon click_remove_field_level2' params_type='related_person_groups'>" +
                 "</div>";
 
             field_group_div.append(new_code_block);
@@ -466,6 +484,7 @@ $(document).ready(function () {
             var jq_date_role_list = $.parseJSON($(this).attr('jq_date_role_list')) // See note on line above
             var jq_date_certainty_list = $(this).attr('jq_date_certainty_list').replace(/ /g, "&#32;");  // Appears to be a problem when list is added as a nested list, i.e. Level 2, therefore replace them here
             var jq_single_date_list = $(this).attr('jq_single_date_list').replace(/ /g, "&#32;"); // See note on line above
+            var jq_rdftype = $(this).attr('jq_rdftype')
 
             var date_role_options = "<option value=''>--- select ---</option>";
 
@@ -478,13 +497,16 @@ $(document).ready(function () {
                 "<table class='tab3' cellspacing='0'>" +
 
                     // Date
-                "<tr><th>Date:&nbsp;<img jq_date_certainty_list='" + jq_date_certainty_list + "' jq_single_date_list='" + jq_single_date_list + "' jq_index='" + jq_index + "' class='plus_icon click_single_date_button' src='/assets/plus_sign.png'></th><td><div class='field_group grey_box single_date'></div></td></tr>" +
+                "<tr><th>Date:&nbsp;<img  jq_rdftype='[\"http://dlib.york.ac.uk/ontologies/borthwick-registers#SingleDate\"]' jq_date_certainty_list='" + jq_date_certainty_list + "' jq_single_date_list='" + jq_single_date_list + "' jq_index='" + jq_index + "' class='plus_icon click_single_date_button' src='/assets/plus_sign.png'></th><td><div class='field_group grey_box single_date'></div></td></tr>" +
 
                     // Date Role
                 "<tr><th>Date Role:</th><td><select name='entry[entry_dates_attributes][" + jq_index + "][date_role]'>" + date_role_options + "</select></td></tr>" +
 
                     // Note
                 "<tr><th>Note:</th><td class='input_single'><textarea value='' id='' name='entry[entry_dates_attributes][" + jq_index + "][date_note]'/></td></tr>" +
+
+                // Hidden field for RDFTYPE
+                "<tr><input type='hidden' id='hidden_field' name='entry[entry_dates_attributes][" + jq_index + "][rdftype]' value='" + jq_rdftype + "'></tr>" +
 
                 "</table>" +
                 "<img src='/assets/delete.png' alt='Delete icon' class='delete_icon click_remove_field_level2' params_type='entry_dates'>" +
@@ -505,20 +527,16 @@ $(document).ready(function () {
             var jq_index = $(this).attr('jq_index');
             var field_group_div = $(this).parent('th').next('td').find('>:first-child');
             var jq_index2 = field_group_div.children().length;
-            var jq_date_certainty_list = $.parseJSON($(this).attr('jq_date_certainty_list')); //.replace(/ /g, "&#32;"); // Doesn't like spaces but quotes are OK?!
+            var jq_date_certainty_list = $(this).attr('jq_date_certainty_list'); //.replace(/ /g, "&#32;"); // Doesn't like spaces but quotes are OK?!
             var jq_single_date_list = $.parseJSON($(this).attr('jq_single_date_list')); //.replace(/ /g, "&#32;"); // Doesn't like spaces but quotes are OK?!
-
-            var date_certainty_options = "<option value=''>--- select ---</option>";
-
-            for (i = 0; i < jq_date_certainty_list.length; i++) {
-                date_certainty_options = date_certainty_options + "<option value='" + jq_date_certainty_list[i].id + "'>" + jq_date_certainty_list[i].label + "</option/>";
-            }
+            var jq_rdftype = $(this).attr('jq_rdftype')
 
             var single_date_options = "<option value=''>--- select ---</option>";
 
             for (i = 0; i < jq_single_date_list.length; i++) {
-                single_date_options = single_date_options + "<option value='" + jq_single_date_list[i].id + "'>" + jq_single_date_list[i].label + "</option/>";
+                single_date_options = single_date_options + "<option value='" + jq_single_date_list[i] + "'>" + jq_single_date_list[i] + "</option/>";
             }
+
 
             var new_code_block = "<div class='field_single'>" +
 
@@ -529,12 +547,16 @@ $(document).ready(function () {
                 "<td class='input_single'><input id='' type='text' name='entry[entry_dates_attributes][" + jq_index + "][single_dates_attributes][" + jq_index2 + "][date]'></td>" +
 
                     // Date Certainty
-                "<tr><th>Certainty:</th>" +
-                "<td><select name='entry[entry_dates_attributes][" + jq_index + "][single_dates_attributes][" + jq_index2 + "][date_certainty]'>" + date_certainty_options + "</select></td>" +
+                "<tr><th style='width: 110px'>Certainty:" +
+                "<img src='/assets/plus_sign.png' alt='plus icon' class='plus_icon click_select_field_button_date_certainty' jq_attributes='entry[entry_dates_attributes][" + jq_index + "][single_dates_attributes]' jq_index='" + jq_index2 + "'jq_type='date_certainty' jq_date_certainty_list='" + jq_date_certainty_list + "'/>" +
+                "</th><td><div class='field_group_date_certainty grey_box'></div></td></tr>" +
 
                     // Type
                 "<tr><th>Type:</th>" +
                 "<td><select name='entry[entry_dates_attributes][" + jq_index + "][single_dates_attributes][" + jq_index2 + "][date_type]'>" + single_date_options + "</select></td>" +
+
+                    // Hidden field for RDFTYPE
+                "<tr><input type='hidden' id='hidden_field' name='entry[entry_dates_attributes][" + jq_index + "][single_dates_attributes][" + jq_index2 + "][rdftype]' value='" + jq_rdftype + "'></tr>" +
 
                 "</table>" +
                 "<img alt='Delete icon' src='/assets/delete.png' class='delete_icon click_remove_field_date' jq_index1='" + jq_index2 + "'>" +
@@ -542,6 +564,27 @@ $(document).ready(function () {
 
             $(this).parent('th').next('td').find('.field_group').append(new_code_block);
 
+        } catch (err) {
+            alert(err);
+        }
+    });
+
+    // Click add date certainty button
+    $('body').on('click', '.click_select_field_button_date_certainty', function (e) {
+
+        try {
+            e.preventDefault(); // I think this prevents other events firing?
+            var jq_attributes = $(this).attr('jq_attributes');
+            var jq_index = $(this).attr('jq_index');
+            var jq_type = $(this).attr('jq_type');
+            var options = "<option value=''>--- select ---</option>";
+            var list_array = $.parseJSON($(this).attr('jq_date_certainty_list')); //.replace(/ /g, "&#32;");
+            for (i = 0; i < list_array.length; i++) {
+                options = options + "<option value='" + list_array[i] + "'>" + list_array[i] + "</option/>";
+            }
+            var new_code_block = "<div class='field_single'><select name='" + jq_attributes + "[" + jq_index + "][" + jq_type + "][]'>" + options +
+                "</select>&nbsp;<img alt='Delete icon' src='/assets/delete.png' class='delete_icon_select click_remove_field_level1' jq_tag_type='select'></div>";
+            $(this).parent('th').next('td').find('.field_group_date_certainty').append(new_code_block);
         } catch (err) {
             alert(err);
         }

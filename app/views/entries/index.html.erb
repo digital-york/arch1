@@ -41,9 +41,9 @@
                                  end
                               %>
                               <% if entry.id == @entry.id %>
-                                <li><span class='highlight'><%= entry.entry_no + str %></span></li>
+                                <li><span class='highlight'><%= entry.entry_no.to_s + str %></span></li>
                               <% else %>
-                                <li><span class='nohighlight'><%= link_to entry.entry_no + str, entry_path(entry) %></span></li>
+                                <li><span class='nohighlight'><%= link_to entry.entry_no.to_s + str, entry_path(entry) %></span></li>
                               <% end %>
                         <% end %>
                         <li>
@@ -86,6 +86,20 @@
                     </td>
                   </tr>
 
+                    <%# Section Type %>
+                    <tr>
+                        <th>Section Type:</th>
+                        <td>
+                            <% @entry.section_type.each do |section_type| %>
+                                <div style="padding: 4px 0px">
+                                    <% unless @entry.section_type.nil? %>
+                                        <%= terms.get_str_from_id(section_type, 'preflabel_tesim') %>
+                                    <% end %>
+                                </div>
+                            <% end %>
+                        </td>
+                    </tr>
+
                   <%# Continues On %>
                   <% if @is_last_entry == true %>
                       <tr>
@@ -103,11 +117,7 @@
                   <tr>
                     <th>Summary:</th>
                     <td>
-                      <% @entry.summary.each do |summary| %>
-                          <div style="padding: 4px 0px">
-                            <%= summary %>
-                          </div>
-                      <% end %>
+                      <%= @entry.summary %>
                     </td>
                   </tr>
 
@@ -220,12 +230,18 @@
 
                                               <tr>
                                                 <th style="width: 60px">Certainty:</th>
-                                                <td><%= terms.get_str_from_id(single_date.date_certainty, 'preflabel_tesim') %></td>
+                                                <td>
+                                                    <% single_date.date_certainty.each do |date_certainty| %>
+                                                        <div style="padding: 4px 0px">
+                                                            <%= date_certainty %>
+                                                        </div>
+                                                    <% end %>
+                                                </td>
                                               </tr>
                                               <tr>
 
                                                 <th>Type:</th>
-                                                <td><%= terms.get_str_from_id(single_date.date_type, 'preflabel_tesim') %></td>
+                                                <td><%= single_date.date_type %></td>
                                               </tr>
                                             </table>
                                             <div style="clear: both"></div>
@@ -368,7 +384,7 @@
 
                     <td class="tab2">
 
-                      <% @entry.related_people.each do |related_person| %>
+                      <% @entry.related_person_groups.each do |related_person| %>
 
                           <div class="field_group">
 
@@ -445,6 +461,23 @@
                                     </div>
                                   </td>
                                 </tr>
+
+                                  <tr>
+                                      <th>
+                                          Descriptor As Written:
+                                      </th>
+                                      <td>
+                                          <div style="padding: 4px 0px; min-height: 18px" class="field_group">
+
+                                              <% related_person.person_descriptor_as_written.each do |person_descriptor_as_written| %>
+                                                  <div class="field_single" style="padding: 4px 0px">
+                                                      <%= person_descriptor_as_written %>
+                                                  </div>
+                                              <% end %>
+
+                                          </div>
+                                      </td>
+                                  </tr>
 
                                 <%# Note %>
                                 <tr>
