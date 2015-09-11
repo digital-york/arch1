@@ -235,23 +235,27 @@ module RegisterFolio
   def get_max_entry_no_for_folio
 
     max_entry_no = 0
+
     SolrQuery.new.solr_query('folio_ssim:"' + session[:folio_id] + '"', 'entry_no_tesim', 100)['response']['docs'].each do |result|
-      puts 'folio_ssim:"' + session[:folio_id] + '"'
+
       entry_no = result['entry_no_tesim'].join('').to_i
+
       if entry_no > max_entry_no
         max_entry_no = entry_no
       end
     end
 
-    # return max_entry_no
+    # Return max_entry_no
     max_entry_no
   end
 
-  # return list of registers (fedora id, register id and title), in order
+  # Return list of registers (fedora id, register id and title), in order
   def get_registers_in_order
+
     collection = ''
     first_register = ''
-    # get the collection so that we can get a list of registers and the first register in the sequence
+
+    # Get the collection so that we can get a list of registers and the first register in the sequence
     SolrQuery.new.solr_query('has_model_ssim:OrderedCollection AND coll_id_tesim:"Abp Reg"','id,fst_tesim')['response']['docs'].map.each do | result |
       collection = result['id']
       first_register = result['fst_tesim']
@@ -260,7 +264,7 @@ module RegisterFolio
     registers = Hash.new
     num = 0
 
-    # get the number of registers and the register ids and names
+    # Get the number of registers and the register ids and names
     SolrQuery.new.solr_query('isPartOf_ssim:"' + collection + '"','id,preflabel_tesim,reg_id_tesim')['response'].each do | result |
       if result[0] == 'numFound'
         num = result[1]
@@ -274,7 +278,7 @@ module RegisterFolio
     order = Hash.new
     next_un = ''
 
-    # order the registers
+    # Order the registers
     for i in 1..num.to_i
       case i
         when 1
