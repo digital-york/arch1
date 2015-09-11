@@ -1,5 +1,7 @@
 module AuthorityList
 
+  include Terms
+
   # Get authority lists
   def set_authority_lists
 
