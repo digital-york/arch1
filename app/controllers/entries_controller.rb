@@ -381,11 +381,11 @@ class EntriesController < ApplicationController
             place.save
           end
         rescue
-          #move along
+          # move along
         end
       end
     rescue
-      #move along
+      # move along
     end
   end
 end
