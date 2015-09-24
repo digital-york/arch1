@@ -216,15 +216,8 @@ $(document).ready(function () {
             var jq_index = $(this).attr('jq_index');
             var jq_type = $(this).attr('jq_type');
 
-            // Is this just for the related place?
-            // Note that this isn't done for person_as_written
-            var place_as_written_class = "";
-            if (jq_type == 'place_as_written') {
-                place_as_written_class = " place_as_written";
-            }
-
             var new_code_block = "<div class='field_single'>"
-                + "<input type='text' class='" + place_as_written_class + "' name='entry[" + jq_attributes + "][" + jq_index + "][" + jq_type + "][]'>"
+                + "<input type='text' name='entry[" + jq_attributes + "][" + jq_index + "][" + jq_type + "][]'>"
                 + "&nbsp;<img alt='Delete icon' src='/assets/delete.png' class='delete_icon click_remove_field_level1' jq_tag_type='input'>"
                 + "</div>";
             $(this).parent('th').next('td').find('.field_group').append(new_code_block);
@@ -360,7 +353,7 @@ $(document).ready(function () {
                 // As Written
                 "<tr><th>As Written:" +
                 "&nbsp;<img jq_type='place_as_written' jq_index='" + jq_index + "' jq_attributes='related_places_attributes' class='plus_icon click_multiple_field_button_level2' src='/assets/plus_sign.png'>" +
-                "</th><td><div class='field_group grey_box place_as_written_block'></div></td></tr>" +
+                "</th><td><div class='field_group grey_box'></div></td></tr>" +
 
                 // Place Role
                 "<tr><th>Place Role:&nbsp;<img jq_place_role_list=" + jq_place_role_list +
@@ -634,6 +627,7 @@ $(document).ready(function () {
             // and the 'Date Role' select field to get the index for Date - maybe there is a better way to get the index?
             var params_type = $(this).attr('params_type');
             var target_tag = '';
+            /* WHAT IS THE PURPOSE OF THIS CSS! */
             if (params_type == 'entry_dates') {
                 target_tag = field_single_div.find('select');
                 target_tag.css("border", "1px solid red");

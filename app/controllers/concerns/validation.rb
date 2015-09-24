@@ -51,13 +51,14 @@ module Validation
         entry_params[:related_places_attributes][index.to_s][:place_note] = remove_empty_array_fields2(entry_params[:related_places_attributes][index.to_s][:place_note])
       end
     end
-
+puts entry_params[:related_person_groups_attributes]
     # Remove empty multi-value fields (person)
     if entry_params[:related_person_groups_attributes] != nil
       entry_params[:related_person_groups_attributes].each_with_index do |related_person, index|
         entry_params[:related_person_groups_attributes][index.to_s][:person_as_written] = remove_empty_array_fields2(entry_params[:related_person_groups_attributes][index.to_s][:person_as_written])
         entry_params[:related_person_groups_attributes][index.to_s][:person_role] = remove_empty_array_fields2(entry_params[:related_person_groups_attributes][index.to_s][:person_role])
         entry_params[:related_person_groups_attributes][index.to_s][:person_descriptor] = remove_empty_array_fields2(entry_params[:related_person_groups_attributes][index.to_s][:person_descriptor])
+        entry_params[:related_person_groups_attributes][index.to_s][:person_descriptor_as_written] = remove_empty_array_fields2(entry_params[:related_person_groups_attributes][index.to_s][:person_descriptor_as_written])
         entry_params[:related_person_groups_attributes][index.to_s][:person_note] = remove_empty_array_fields2(entry_params[:related_person_groups_attributes][index.to_s][:person_note])
         entry_params[:related_person_groups_attributes][index.to_s][:person_related_place] = remove_empty_array_fields2(entry_params[:related_person_groups_attributes][index.to_s][:person_related_place])
       end
@@ -201,6 +202,10 @@ module Validation
           end
 
           if entry_params[:related_person_groups_attributes][index.to_s][:person_descriptor] != nil && entry_params[:related_person_groups_attributes][index.to_s][:person_descriptor].size > 0
+            remove_person = false
+          end
+
+          if entry_params[:related_person_groups_attributes][index.to_s][:person_descriptor_as_written] != nil && entry_params[:related_person_groups_attributes][index.to_s][:person_descriptor_as_written].size > 0
             remove_person = false
           end
 

@@ -576,8 +576,8 @@
                                                     <div class="field_group grey_box">
                                                         <% related_person.person_descriptor_as_written.each_with_index do |person_descriptor_as_written, index2| %>
                                                             <div class="field_single">
-                                                                <%= text_area_tag "entry[related_person_groups_attributes][" + index1.to_s + "][person_descriptor_as_written][]", person_descriptor_as_written, id: '' %>
-                                                                &nbsp;<img src='/assets/delete.png' alt='Delete icon' class='delete_icon click_remove_field_level1' jq_tag_type='textarea'>
+                                                                <%= text_field_tag "entry[related_person_groups_attributes][" + index1.to_s + "][person_descriptor_as_written][]", person_descriptor_as_written, id: '' %>
+                                                                &nbsp;<img src='/assets/delete.png' alt='Delete icon' class='delete_icon click_remove_field_level1' jq_tag_type='input'>
                                                             </div>
                                                         <% end %>
                                                     </div>

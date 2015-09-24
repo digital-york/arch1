@@ -11,7 +11,7 @@
       <%
          terms = TermsBase.new('subauthority')
          folio_title = terms.get_str_from_id(session[:browse_id], 'preflabel_tesim')
-         folio_title = folio_title.gsub(/Abp Reg \d+ /, "")
+         folio_title = folio_title.gsub(/Abp Reg \d+[a-z] /, "")
       %>
 
       <%= folio_title %>
