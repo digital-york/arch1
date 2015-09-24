@@ -35,7 +35,7 @@ class PlacePopupController < ApplicationController
       @place.preflabel = "#{@place.parent_ADM4}_#{@place.parent_ADM3}_#{@place.parent_ADM2}_#{@place.parent_ADM1}" # I've added ADM2 and ADM1 - is this correct?
       @place.save
 
-      # Pass variable to view page to notify user that place has been added
+      # Pass variable to view page to notify user that place has been added.
       @place_name = @place.parent_ADM4
 
       # If the 'Submit and Add' button has been clicked, pass these variables back to the page
