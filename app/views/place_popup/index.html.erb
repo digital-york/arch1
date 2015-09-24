@@ -22,7 +22,7 @@
       end
     %>
     <ul>
-      <li style="margin-left: 5px"><%= link_to "Search Place", place_popup_path({:type => 'search', :place_field => @place_field}), class: search_highlight_class %></li>
+      <li style="margin-left: 5px"><%= link_to "Search Places", place_popup_path({:type => 'search', :place_field => @place_field}), class: search_highlight_class %></li>
       <li style=""><%= link_to "Add Place", place_popup_path({:type => 'new_place', :place_field => @place_field}), class: new_place_highlight_class %></li>
     </ul>
   </div>
@@ -55,10 +55,10 @@
 
                 <%
                    @search_results_hash.each do |element|
-                     family_name = element[0]
+                     place_name = element[0]
                      id = element[1]
                 %>
-                    <div style="padding-top: 5px"><a href='#' onclick='post_value("<%= family_name %>", "<%= id %>", "<%= @place_field %>")'><%= family_name %></a></div>
+                    <div style="padding-top: 5px"><a href='#' onclick='post_value("<%= place_name %>", "<%= id %>", "<%= @place_field %>")'><%= place_name %></a></div>
             <%
                 end
               end
@@ -85,19 +85,11 @@
 
               <table cellspacing="0" style="width: 500px">
 
-                <%# Person ADM1 %>
+                <%# Person ADM4 %>
                 <tr>
-                  <th style="width: 150px">*Parent ADM1:</th>
+                  <th style="width: 150px">*Parent ADM4:</th>
                   <td>
-                    <%= text_field_tag "place[parent_ADM1]", @place.parent_ADM1 %>
-                  </td>
-                </tr>
-
-                <%# Person ADM2 %>
-                <tr>
-                  <th>Parent ADM2:</th>
-                  <td>
-                    <%= text_field_tag "place[parent_ADM2]", @place.parent_ADM2 %>
+                    <%= text_field_tag "place[parent_ADM4]", @place.parent_ADM4 %>
                   </td>
                 </tr>
 
@@ -109,11 +101,19 @@
                   </td>
                 </tr>
 
-                <%# Person ADM4 %>
+                <%# Person ADM2 %>
                 <tr>
-                  <th>Parent ADM4:</th>
+                  <th>Parent ADM2:</th>
                   <td>
-                    <%= text_field_tag "place[parent_ADM4]", @place.parent_ADM4 %>
+                    <%= text_field_tag "place[parent_ADM2]", @place.parent_ADM2 %>
+                  </td>
+                </tr>
+
+                <%# Person ADM1 %>
+                <tr>
+                  <th>Parent ADM1:</th>
+                  <td>
+                    <%= text_field_tag "place[parent_ADM1]", @place.parent_ADM1 %>
                   </td>
                 </tr>
 
