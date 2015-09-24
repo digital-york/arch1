@@ -303,10 +303,13 @@
                                                         <% entry_date.single_dates.each_with_index do |single_date, index2| %>
                                                             <div class="field_single">
                                                                 <table>
+
+                                                                    <%# Date %>
                                                                     <tr>
-                                                                        <th>Date:</th>
+                                                                       <th style='width: 80px'>Date:</th>
                                                                         <td class="input_single"><%= text_field_tag "entry[entry_dates_attributes][" + index1.to_s + "][single_dates_attributes][" + index2.to_s + "][date]", single_date.date, id: '' %></td>
                                                                     </tr>
+
                                                                     <%# Date Certainty %>
                                                                     <tr>
                                                                         <th>Certainty:
@@ -314,7 +317,7 @@
                                                                         </th>
                                                                         <td>
                                                                             <div class="field_group_date_certainty grey_box">
-                                                                                <% single_date.date_certainty.each_with_index do |single_date_certainty, index2| %>
+                                                                                <% single_date.date_certainty.each_with_index do |single_date_certainty, index3| %>
                                                                                     <div class="field_single">
                                                                                         <%= select_tag "entry[entry_dates_attributes][" + index1.to_s + "][single_dates_attributes][" + index2.to_s + "][date_certainty][]", options_for_select(@date_certainty_list.collect { |date_certainty| [date_certainty[0]] }.insert(0, ["--- select ---", ""]), single_date_certainty) %>
                                                                                         <img alt="Delete icon" src="/assets/delete.png" class="delete_icon_select click_remove_field_level1" jq_tag_type="select">
@@ -323,6 +326,8 @@
                                                                             </div>
                                                                         </td>
                                                                     </tr>
+
+                                                                    <%# Date Type %>
                                                                     <tr>
                                                                         <th>Type:</th>
                                                                         <td>

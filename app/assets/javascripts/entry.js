@@ -490,7 +490,7 @@ $(document).ready(function () {
                 "<table class='tab3' cellspacing='0'>" +
 
                     // Date
-                "<tr><th>Date:&nbsp;<img  jq_rdftype='[\"http://dlib.york.ac.uk/ontologies/borthwick-registers#SingleDate\"]' jq_date_certainty_list='" + jq_date_certainty_list + "' jq_single_date_list='" + jq_single_date_list + "' jq_index='" + jq_index + "' class='plus_icon click_single_date_button' src='/assets/plus_sign.png'></th><td><div class='field_group grey_box single_date'></div></td></tr>" +
+                "<tr><th>Date:&nbsp;<img jq_rdftype='[\"http://dlib.york.ac.uk/ontologies/borthwick-registers#SingleDate\"]' jq_date_certainty_list='" + jq_date_certainty_list + "' jq_single_date_list='" + jq_single_date_list + "' jq_index='" + jq_index + "' class='plus_icon click_single_date_button' src='/assets/plus_sign.png'></th><td><div class='field_group grey_box single_date'></div></td></tr>" +
 
                     // Date Role
                 "<tr><th>Date Role:</th><td><select name='entry[entry_dates_attributes][" + jq_index + "][date_role]'>" + date_role_options + "</select></td></tr>" +
@@ -536,12 +536,12 @@ $(document).ready(function () {
                 "<table>" +
 
                     // Date
-                "<tr><th style='width: 60px'>Date:</th>" +
+                "<tr><th style='width: 80px'>Date:</th>" +
                 "<td class='input_single'><input id='' type='text' name='entry[entry_dates_attributes][" + jq_index + "][single_dates_attributes][" + jq_index2 + "][date]'></td>" +
 
                     // Date Certainty
-                "<tr><th style='width: 110px'>Certainty:" +
-                "<img src='/assets/plus_sign.png' alt='plus icon' class='plus_icon click_select_field_button_date_certainty' jq_attributes='entry[entry_dates_attributes][" + jq_index + "][single_dates_attributes]' jq_index='" + jq_index2 + "'jq_type='date_certainty' jq_date_certainty_list='" + jq_date_certainty_list + "'/>" +
+                "<tr><th style='width: 110px'>Certainty:&nbsp;" +
+                "<img src='/assets/plus_sign.png' alt='plus icon' class='plus_icon click_select_field_button_date_certainty' jq_index='" + jq_index + "' jq_index2='" + jq_index2 + "' jq_date_certainty_list='" + jq_date_certainty_list + "'/>" +
                 "</th><td><div class='field_group_date_certainty grey_box'></div></td></tr>" +
 
                     // Type
@@ -569,14 +569,18 @@ $(document).ready(function () {
             e.preventDefault(); // I think this prevents other events firing?
             var jq_attributes = $(this).attr('jq_attributes');
             var jq_index = $(this).attr('jq_index');
+            var jq_index2 = $(this).attr('jq_index2');
             var jq_type = $(this).attr('jq_type');
             var options = "<option value=''>--- select ---</option>";
             var list_array = $.parseJSON($(this).attr('jq_date_certainty_list')); //.replace(/ /g, "&#32;");
+
             for (i = 0; i < list_array.length; i++) {
                 options = options + "<option value='" + list_array[i] + "'>" + list_array[i] + "</option/>";
             }
-            var new_code_block = "<div class='field_single'><select name='" + jq_attributes + "[" + jq_index + "][" + jq_type + "][]'>" + options +
+
+            var new_code_block = "<div class='field_single'><select name='entry[entry_dates_attributes][" + jq_index + "][single_dates_attributes][" + jq_index2 + "][date_certainty][]'>" + options +
                 "</select>&nbsp;<img alt='Delete icon' src='/assets/delete.png' class='delete_icon_select click_remove_field_level1' jq_tag_type='select'></div>";
+
             $(this).parent('th').next('td').find('.field_group_date_certainty').append(new_code_block);
         } catch (err) {
             alert(err);
