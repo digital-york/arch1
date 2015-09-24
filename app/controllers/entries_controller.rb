@@ -141,8 +141,7 @@ class EntriesController < ApplicationController
       return
     end
 
-    #puts params
-    # update the rdf_types for all objects
+    # Update the rdf_types for all objects
     update_rdf_types
 
     # Check parameters are whitelisted

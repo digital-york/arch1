@@ -89,7 +89,8 @@ module RegisterFolio
     q['response']['docs'].each do |result|
       folio_id = result['id']
       preflabel_tesim = result['preflabel_tesim'].join()
-      folio_hash[folio_id] = preflabel_tesim.gsub(/Abp Reg \d+ /, "")
+      # Added [a-z] because some folios have a number like '1a' - might need to alter this later on if other folios do not follow this pattern
+      folio_hash[folio_id] = preflabel_tesim.gsub(/Abp Reg \d+[a-z]* /, '')
     end
 
     proxy_hash = {}
