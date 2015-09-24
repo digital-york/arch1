@@ -51,7 +51,7 @@ module Validation
         entry_params[:related_places_attributes][index.to_s][:place_note] = remove_empty_array_fields2(entry_params[:related_places_attributes][index.to_s][:place_note])
       end
     end
-puts entry_params[:related_person_groups_attributes]
+
     # Remove empty multi-value fields (person)
     if entry_params[:related_person_groups_attributes] != nil
       entry_params[:related_person_groups_attributes].each_with_index do |related_person, index|
