@@ -39,7 +39,7 @@ class PlacePopupController < ApplicationController
       @place_name = @place.parent_ADM1
 
       # If the 'Submit and Add' button has been clicked, pass these variables back to the page
-      # so that the javascript method is run and the page is closed
+      # so that the javascript method is run (post_value) and the page is closed
       if params[:commit] == 'Submit and Add'
         @commit_id = @place.id
         @commit_place_name = place_params[:parent_ADM1]

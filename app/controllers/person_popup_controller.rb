@@ -40,7 +40,7 @@ class PersonPopupController < ApplicationController
       @person_name = @person.family
 
       # If the 'Submit and Add' button has been clicked, pass these variables back to the page
-      # so that the javascript method is run and the page is closed
+      # so that the javascript method is run (place_value) and the page is closed
       if params[:commit] == 'Submit and Add'
         @commit_id = @person.id
         @commit_person_name = person_params[:family]
