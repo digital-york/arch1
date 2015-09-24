@@ -74,6 +74,11 @@
 
     <% else %>
 
+        <%# This adds the new place to the form and closes the page ehwn the 'Submit and Add' button has been clicked %>
+        <% if  @commit_place_name != nil && @commit_id != nil %>
+            <script type="text/javascript">post_value("<%= @commit_place_name %>", "<%= @commit_id %>", "<%= @place_field %>")</script>
+        <% end %>
+
         <%= form_for @place, url: place_popup_create_path, method: 'POST' do |f| %>
 
             <div class='tab1'>
@@ -156,6 +161,7 @@
 
               <p>
                 <%= f.submit 'Submit' %>
+                <%= f.submit 'Submit and Add' %>
               </p>
 
             </div>

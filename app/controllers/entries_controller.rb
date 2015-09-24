@@ -166,7 +166,7 @@ class EntriesController < ApplicationController
 
       # Note: it would be better to 'redirect' to the 'edit' controller rather than 'render' to the 'edit' page
       # because we wouldn't have to set_authority_lists, etc, but 'redirect' loses the state of the nested form, i.e.
-      # any fields which have been added are closed again??
+      # it seems that any fields which have been added with the + buttons are closed again
 
       # Get all the entries for this folio (so that they can be displayed as tabs)
       @entry_list = Entry.all.where(folio_ssim: session[:folio_id])

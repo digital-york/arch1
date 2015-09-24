@@ -74,6 +74,11 @@
 
     <% else %>
 
+        <%# This adds the new person to the form and closes the page when the 'Submit and Add' button has been clicked %>
+        <% if  @commit_person_name != nil && @commit_id != nil %>
+            <script type="text/javascript">post_value("<%= @commit_person_name %>", "<%= @commit_id %>", "<%= @person_field %>")</script>
+        <% end %>
+
         <%= form_for @person, url: person_popup_create_path, method: 'POST' do |f| %>
 
             <div class='tab1'>
@@ -157,6 +162,7 @@
 
               <p>
                 <%= f.submit 'Submit' %>
+                <%= f.submit 'Submit and Add' %>
               </p>
 
             </div>
