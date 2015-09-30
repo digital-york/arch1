@@ -12,7 +12,7 @@
 //
 //= require jquery
 // require jquery.turbolinks
-// require jquery_ujs
+//= require jquery_ujs
 //= require jquery-ui
 //
 // Required by Blacklight
