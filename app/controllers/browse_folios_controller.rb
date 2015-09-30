@@ -16,10 +16,10 @@ class BrowseFoliosController < ApplicationController
     end
   end
 
-  def session_timed_out
-    if session[:login] == '' || session[:login] == nil
-      render 'timed_out', :layout => 'session_timed_out'
-    end
-  end
+  #def session_timed_out
+  #  if session[:login] == '' || session[:login] == nil
+  #    render 'timed_out', :layout => 'session_timed_out'
+  #  end
+  #end
 
 end

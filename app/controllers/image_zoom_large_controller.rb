@@ -21,10 +21,10 @@ class ImageZoomLargeController < ApplicationController
     @dzi_xml = @dzi_xml.html_safe
   end
 
-  def session_timed_out
-    if session[:login] != 'true'
-      render 'timed_out', :layout => 'session_timed_out'
-    end
-  end
+  #def session_timed_out
+  #  if session[:login] != 'true'
+  #    render 'timed_out', :layout => 'session_timed_out'
+  #  end
+  #end
 
 end

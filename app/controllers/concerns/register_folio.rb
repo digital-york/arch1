@@ -296,4 +296,10 @@ module RegisterFolio
     order
   end
 
+  def session_timed_out
+    if session[:login] == '' || session[:login] == nil
+      render 'entries/timed_out', :layout => 'session_timed_out'
+    end
+  end
+
 end

@@ -15,10 +15,10 @@
   <div style="clear: both"></div>
 
   <div style="margin-top: 10px">
-    <%= form_tag place_search_path, :method => :get do |f| %>
+    <%= form_tag places_path, :method => :get do |f| %>
         <div class="search_box" style="float: left; width: 97%; border: 1px solid silver; border-radius: 4px; background-color: #f7f7f7; padding: 12px 8px">
           Enter Name:&nbsp;
-          <%= text_field_tag 'search_term', nil, class: 'text_field_search', id: 'search_box', value: @search_term %>
+          <%= text_field_tag 'search_term', nil, class: 'text_field_search', id: 'search_box', value: session[:place_search_term] %>
           &nbsp;&nbsp;<%= submit_tag 'Search' %>
         </div>
         <div style="clear: both"></div>
@@ -29,24 +29,27 @@
   <div style="margin: 20px 0px 20px 2px">
 
     <%
-       if @search_results_hash != nil && @search_results_hash != ''
+       if @search_hash != nil && @search_hash != ''
     %>
 
         <div style="font-weight: bold; font-size: 1.1em">Results:</div>
+
+        <% if @search_hash.empty? %>
+            <em>None</em>
+        <% end %>
 
         <div class="popup_search">
 
           <table border='1' style="width: 100%; font-size: 1.1em; margin-top: 10px">
 
             <%
-               @search_results_hash.each do |element|
+               @search_hash.each do |element|
                  place_name = element[0]
                  id = element[1]
             %>
                 <tr>
                   <td><%= link_to 'Add', '#', onclick: 'post_value(place_name, id, session[:place_field])' %>&nbsp;<%= place_name %></td>
                   <td style="width: 160px; text-align: center">
-                  <a href="#" onclick="return confirm('Are you sure?')">try me</a>
                     <%= button_to 'View / Edit', place_path(id), :method => :get, title: 'View place details', style: 'float: left' %>
                     <%= button_to 'Delete', place_path(id), :method => :delete, title: 'Delete place', style: 'float: left; margin-left: 6px', :data => {:confirm => 'Are you sure you want to delete this place?'} %>
                   </td>

@@ -11,17 +11,17 @@
 <body>
 
 <!-- Put this tag in because there was an exception sending the authenticity token with a link_to -->
-<!-- Not sure why it works and not sure if I need it anymore - text later on -->
+<!-- Not sure why it works and not sure if I need it anymore -->
 <%= csrf_meta_tag %>
 
-<div id="header" style="border-bottom: 1px solid #805E5E">
-
-  <div id="header_text">
-    Archbishops&#39; Registers Editing Tool
-  </div>
-</div>
-
 <div id="container">
+
+  <div id="header" style="border-bottom: 1px solid #805E5E">
+
+    <div id="header_text">
+      Archbishops&#39; Registers Editing Tool
+    </div>
+  </div>
 
   <%= yield %>
 

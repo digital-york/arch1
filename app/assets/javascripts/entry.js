@@ -348,7 +348,7 @@ $(document).ready(function () {
 
                 // Same As
                 "<tr><th>*Same As:</th><td class='input_single'>" +
-                "<a href='' onclick='popup(&#39;/places?place_field=place_" + jq_index + "&#39;, &#39;place&#39;); return false;' tabindex='-1'><img src='/assets/magnifying_glass_small.png' class='plus_icon'></a>" +
+                "<a href='' onclick='popup(&#39;/places?start=true&amp;place_field=place_" + jq_index + "&#39;, &#39;place&#39;); return false;' tabindex='-1'><img src='/assets/magnifying_glass_small.png' class='plus_icon'></a>" +
                 "&nbsp;<span id='place_" + jq_index + "'></span>" +
                 "<input type='hidden' id='place_" + jq_index + "_hidden' value='' name='entry[related_places_attributes][" + jq_index + "][place_same_as]'>" +
                 "</td></tr>" +

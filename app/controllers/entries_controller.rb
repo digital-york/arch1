@@ -319,11 +319,11 @@ class EntriesController < ApplicationController
 
   # Check if session has timed out
   # Note that the session timeout value is set in config/initializers/session_store.rb
-  def session_timed_out
-    if session[:login] != 'true'
-      redirect_to :controller => 'login', :action => 'timed_out'
-    end
-  end
+  #def session_timed_out
+  #  if session[:login] != 'true'
+  #    redirect_to :controller => 'login', :action => 'timed_out'
+  #  end
+  #end
 
   private
   def update_rdf_types

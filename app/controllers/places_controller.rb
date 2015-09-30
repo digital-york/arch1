@@ -1,10 +1,62 @@
 class PlacesController < ApplicationController
 
+  before_filter :session_timed_out
+
   # INDEX
   def index
+
     # This variable identifies the 'Same As' field on the form (i.e. it is used when the user selects a 'place')
     if params[:place_field] != nil
       session[:place_field] = params[:place_field]
+    end
+
+    # If the popup has just been opened, set the session variable to ''
+    if params[:start] == 'true'
+
+      session[:place_search_term] = ''
+
+    # Else do a search using the params[:search_term] or session[place_search_term]
+    else
+
+      # Update the session variable with the new search term
+      if params[:search_term] != '' && params[:search_term] != nil
+        session[:place_search_term] = params[:search_term]
+      end
+
+      # Get all the parent ADMs from solr
+      response = SolrQuery.new.solr_query(q='has_model_ssim:Place', fl='id, parent_ADM4_tesim, parent_ADM3_tesim, parent_ADM2_tesim, parent_ADM1_tesim', rows=1000, sort='')
+
+      temp_hash = {}
+
+      response['response']['docs'].map do |result|
+
+        id = result['id']
+        parent_ADM4 = result['parent_ADM4_tesim']
+        parent_ADM3 = result['parent_ADM3_tesim']
+        parent_ADM2 = result['parent_ADM2_tesim']
+        parent_ADM1 = result['parent_ADM1_tesim']
+        place_name = ''
+        if parent_ADM4 != nil
+          place_name = "#{parent_ADM4.join()}"
+        end
+        if parent_ADM3 != nil
+          place_name = "#{place_name}, #{parent_ADM3.join()}"
+        end
+        if parent_ADM2 != nil
+          place_name = "#{place_name}, #{parent_ADM2.join()}"
+        end
+        if parent_ADM1 != nil
+          place_name = "#{place_name}, #{parent_ADM1.join()}"
+        end
+        if place_name != nil
+          temp_hash[place_name] = id
+        end
+      end
+
+      # Get all the names which match the search term and sort them
+      @search_hash = temp_hash.select { |key, value| key.to_s.match(/#{session[:place_search_term]}/i) }
+      @search_hash = Hash[@search_hash.sort]
+
     end
   end
 
@@ -101,7 +153,7 @@ class PlacesController < ApplicationController
 
   # UPDATE
   def update
-puts "UPDATE"
+
     # Check parameters are permitted
     place_params = whitelist_place_params
 
@@ -170,55 +222,7 @@ puts "UPDATE"
   def destroy
     @place = Place.find(params[:id])
     @place.destroy
-    redirect_to :controller => 'places', :action => 'search', :search_term => session[:place_search_term]
-  end
-
-  # SEARCH
-  def search
-
-if @search_term == nil
-@search_term = ''
-end
-
-    @search_term = params[:search_term]
-
-    session[:place_search_term] = @search_term
-#puts "st = #{session[:place_search_term]}"
-    # Get all the parent ADM4s from solr
-    response = SolrQuery.new.solr_query(q='has_model_ssim:Place', fl='id, parent_ADM4_tesim, parent_ADM3_tesim, parent_ADM2_tesim, parent_ADM1_tesim', rows=1000, sort='')
-
-    temp_hash = {}
-
-    response['response']['docs'].map do |result|
-
-      id = result['id']
-      parent_ADM4 = result['parent_ADM4_tesim']
-      parent_ADM3 = result['parent_ADM3_tesim']
-      parent_ADM2 = result['parent_ADM2_tesim']
-      parent_ADM1 = result['parent_ADM1_tesim']
-      place_name = ''
-      if parent_ADM4 != nil
-        place_name = "#{parent_ADM4.join()}"
-      end
-      if parent_ADM3 != nil
-        place_name = "#{place_name}, #{parent_ADM3.join()}"
-      end
-      if parent_ADM2 != nil
-        place_name = "#{place_name}, #{parent_ADM2.join()}"
-      end
-      if parent_ADM1 != nil
-        place_name = "#{place_name}, #{parent_ADM1.join()}"
-      end
-      if place_name != nil
-        temp_hash[place_name] = id
-      end
-    end
-
-    # Get all the names which match the search term and sort them
-    @search_results_hash = temp_hash.select { |key, value| key.to_s.match(/#{@search_term}/i) }
-    @search_results_hash = Hash[@search_results_hash.sort]
-
-    render 'index'
+    redirect_to :controller => 'places', :action => 'index'
   end
 
   private
