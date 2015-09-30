@@ -45,7 +45,7 @@ function popup(page, type) {
         left = (screen.width - popupWidth) / 2;
     }
 
-    window.open(page, type + "_" + popup_id, 'status = 1, top = ' + top + ', left = ' + left + ', height = ' + popupHeight + ', width = ' + popupWidth + ', scrollbars=yes');
+    window.open(page, type + "_" + popup_id, 'status = 1, location = 1, top = ' + top + ', left = ' + left + ', height = ' + popupHeight + ', width = ' + popupWidth + ', scrollbars=yes');
 }
 
 var dummy_text = "\
@@ -100,6 +100,7 @@ function info(title) {
 // Methods which add/remove elements to the form
 $(document).ready(function () {
 
+    // Open subject popup group
     $('body').on('click', '.plus_icon_subject', function(e) {
 
         try {
@@ -115,6 +116,7 @@ $(document).ready(function () {
         }
     });
 
+    // Close subject popup group
     $('body').on('click', '.minus_icon_subject', function(e) {
 
         try {
@@ -128,6 +130,14 @@ $(document).ready(function () {
         } catch (err) {
             alert(err);
         }
+    });
+
+    // Called when the user chooses a folio from the menu drop-down list
+    $('body').on('change', '.choose_folio', function(e) {
+        var id = $(this).val();
+        var input = $("<input>").attr("type", "hidden").attr("name", "folio_id").val(id);
+        $("#choose_folio").append($(input));
+        $("#choose_folio").submit();
     });
 
     /*******************************/
@@ -160,13 +170,6 @@ $(document).ready(function () {
         } catch (err) {
             alert(err);
         }
-    });
-
-    $('body').on('change', '.choose_folio', function(e) {
-        var id = $(this).val();
-        var input = $("<input>").attr("type", "hidden").attr("name", "folio_id").val(id);
-        $("#choose_folio").append($(input));
-        $("#choose_folio").submit();
     });
 
     // Click multiple field subject button (Level 1)
@@ -345,7 +348,7 @@ $(document).ready(function () {
 
                 // Same As
                 "<tr><th>*Same As:</th><td class='input_single'>" +
-                "<a href='' onclick='popup(&#39;/place_popup?place_field=place_" + jq_index + "&#39;, &#39;place&#39;); return false;' tabindex='-1'><img src='/assets/magnifying_glass_small.png' class='plus_icon'></a>" +
+                "<a href='' onclick='popup(&#39;/places?place_field=place_" + jq_index + "&#39;, &#39;place&#39;); return false;' tabindex='-1'><img src='/assets/magnifying_glass_small.png' class='plus_icon'></a>" +
                 "&nbsp;<span id='place_" + jq_index + "'></span>" +
                 "<input type='hidden' id='place_" + jq_index + "_hidden' value='' name='entry[related_places_attributes][" + jq_index + "][place_same_as]'>" +
                 "</td></tr>" +
@@ -719,6 +722,25 @@ $(document).ready(function () {
         }
     }
 
+    // Click multiple field button on person / place popup
+    $('body').on('click', '.click_popup_multiple_field_button', function (e) {
+
+        try {
+            e.preventDefault(); // I think this prevents other events firing?
+            var field_group_div = $(this).parent('th').next('td').find('>:first-child');
+            //field_group_div.css("border", "1px solid red");
+            var jq_type_1 = $(this).attr('jq_type_1');
+            var jq_type_2 = $(this).attr('jq_type_2');
+            var new_code_block = "<div class='field_single'>"
+                + "<input type='text' value='' name='" + jq_type_1 + "[" + jq_type_2 + "][]'>"
+                + "&nbsp;<img alt='Delete icon' src='/assets/delete.png' class='delete_icon click_remove_field_level1' jq_tag_type='input'>"
+                + "</div>";
+            field_group_div.append(new_code_block);
+        } catch (err) {
+            alert(err);
+        }
+    });
+
     // Calls the function below when a place_as_written is changed (or added)
     $('body').on('change', '.place_as_written', function(e) {
         update_related_places();
@@ -742,6 +764,38 @@ $(document).ready(function () {
     $("input[name='commit']").click(function() {
         form_modified = 0;
     });
+
+
+    $("#popup_info").dialog({
+        autoOpen: false,
+        draggable: false,
+        resizable: false,
+        position: { my: "center", at: "top+3%", of: window },
+        width: 'auto',
+        height: 50,
+        show: {
+            effect: 'fade',
+            duration: 1000
+        },
+        hide: {
+            effect: 'fade',
+            duration: 3000
+        },
+        open: function(){
+            $(this).dialog('close');
+        },
+        close: function(){
+            $(this).dialog('destroy');
+        }
+    });
+
+    $(".ui-dialog-titlebar").remove();
+
+    // Finally open the dialog! The open function above will run once
+    // the dialog has opened. It runs the close function! After it has
+    // faded out the dialog is destroyed
+    $("#popup_info").dialog("open");
+
 
 });
 

@@ -1,0 +1,114 @@
+<div class="popup" style="min-height: 500px">
+
+  <div class="popup_title">View Place</div>
+
+  <div><%= button_to "Back to Search", places_path, method: :get %></div>
+
+  <div style="clear: both"></div>
+
+  <div class='tab1 popup_view' style="margin-top: 10px">
+
+    <table cellspacing="0" style="width: 100%; font-size: 0.95em">
+
+      <%# Person ADM4 %>
+      <tr>
+        <th style="width: 150px">*Parent ADM4:</th>
+        <td>
+          <%= @place.parent_ADM4 %>
+        </td>
+      </tr>
+
+      <%# Person ADM3 %>
+      <tr>
+        <th>Parent ADM3:</th>
+        <td>
+          <%= @place.parent_ADM3 %>
+        </td>
+      </tr>
+
+      <%# Person ADM2 %>
+      <tr>
+        <th>Parent ADM2:</th>
+        <td>
+          <%= @place.parent_ADM2 %>
+        </td>
+      </tr>
+
+      <%# Person ADM1 %>
+      <tr>
+        <th>Parent ADM1:</th>
+        <td>
+          <%= @place.parent_ADM1 %>
+        </td>
+      </tr>
+
+      <%# Parent Country %>
+      <tr>
+        <th>Parent Country:</th>
+        <td>
+          <%= @place.parent_country %>
+        </td>
+      </tr>
+
+      <%# Feature Code %>
+      <tr>
+        <th>Feature Code:</th>
+        <td>
+          <div class="field_group">
+            <% @place.feature_code.each do |feature_code| %>
+                <div class="field_single">
+                  <%= feature_code %>
+                </div>
+            <% end %>
+          </div>
+        </td>
+      </tr>
+
+      <%# Same As %>
+      <tr>
+        <th>Same As:</th>
+        <td>
+          <div class="same_as">
+            <% @place.same_as.each do |same_as| %>
+                <div class="field_single">
+                  <%= same_as %>
+                </div>
+            <% end %>
+          </div>
+        </td>
+      </tr>
+
+      <%# Related Authority %>
+      <tr>
+        <th>Related Authority:</th>
+        <td>
+          <div class="field_group">
+            <% @place.related_authority.each do |related_authority| %>
+                <div class="field_single">
+                  <%= related_authority %>
+                </div>
+            <% end %>
+          </div>
+        </td>
+      </tr>
+
+      <%# Variant Names %>
+      <%# Note that this is 'altlabel' in the model %>
+      <tr>
+        <th>Variant Names:</th>
+        <td>
+          <div class="field_group">
+            <% @place.altlabel.each do |altlabel| %>
+                <div class="field_single">
+                  <%= altlabel %>
+                </div>
+            <% end %>
+          </div>
+        </td>
+      </tr>
+    </table>
+  </div>
+
+  <div style="float: left"><%= button_to 'Edit', edit_place_path(@place), :method => :get, :class => 'buttonTo', style: 'margin-top: 10px' %>&nbsp;</div>
+
+</div>

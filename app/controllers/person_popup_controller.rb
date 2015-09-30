@@ -19,21 +19,52 @@ class PersonPopupController < ApplicationController
     # This variable identifies the 'Same As' field on the form (i.e. it is used when the user selects a person')
     @person_field = params[:person_field]
 
+
     # Check parameters are permitted
     person_params = whitelist_person_params
 
+    # Remove any empty fields
+    remove_person_popup_empty_fields(person_params)
+
+    @error = ''
+
     if person_params[:family] == ''
       @error = "Please enter a family name"
+    end
+
+    same_as = person_params[:same_as]
+
+    if same_as != nil
+      same_as = same_as.join()
+      if same_as !~ /^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$/
+        if @error != ''
+          @error = @error + "<br/>"
+        end
+        @error = @error + "Please enter a valid  URL for 'Same As'"
+      end
+    end
+
+    if @error != ''
       @person = Person.new(person_params)
     else
+
       # Create a new person with the parameters
-      # Note that a solr query is carried out to obtain the concept scheme id for 'people'
       @person = Person.new(person_params)
+
+      # Use a solr query to obtain the concept scheme id for 'people'
       response = SolrQuery.new.solr_query(q='has_model_ssim:ConceptScheme AND preflabel_tesim:people', fl='id', rows=1, sort='')
       id = response['response']['docs'][0]['id']
       @person.concept_scheme_id = id
+
       @person.rules = 'NCARules'
-      @person.preflabel = "#{@person.family}_#{@person.pre_title}"
+
+      # Add the appropriate preflabel values separated by an underscore
+      @person.preflabel = "#{@person.family}"
+      if @person.pre_title != '' then @person.preflabel = "#{@person.preflabel}_#{@person.pre_title}" end
+      if @person.given_name != '' then @person.preflabel = "#{@person.preflabel}_#{@person.given_name}" end
+      if @person.post_title != '' then @person.preflabel = "#{@person.preflabel}_#{@person.post_title}" end
+      if @person.epithet != '' then @person.preflabel = "#{@person.preflabel}_#{@person.epithet}" end
+
       @person.save
 
       # Pass variable to view page to notify user that person has been added

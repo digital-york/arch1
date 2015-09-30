@@ -1,0 +1,69 @@
+<% if @place_name != nil && @place_name != '' %>
+    <div class='popup_info'><%= @place_name %> has been added</div>
+<% end %>
+
+<% if @error != nil && @error != '' %>
+    <div class='popup_error'><%= @error.html_safe %></div>
+<% end %>
+
+<div class="popup">
+
+  <div class="popup_title">Search Places</div>
+
+  <div><%= button_to "Add Place", new_place_path, method: :get, class: 'add_place_button' %></div>
+
+  <div style="clear: both"></div>
+
+  <div style="margin-top: 10px">
+    <%= form_tag place_search_path, :method => :get do |f| %>
+        <div class="search_box" style="float: left; width: 97%; border: 1px solid silver; border-radius: 4px; background-color: #f7f7f7; padding: 12px 8px">
+          Enter Name:&nbsp;
+          <%= text_field_tag 'search_term', nil, class: 'text_field_search', id: 'search_box', value: @search_term %>
+          &nbsp;&nbsp;<%= submit_tag 'Search' %>
+        </div>
+        <div style="clear: both"></div>
+    <% end %>
+
+  </div>
+
+  <div style="margin: 20px 0px 20px 2px">
+
+    <%
+       if @search_results_hash != nil && @search_results_hash != ''
+    %>
+
+        <div style="font-weight: bold; font-size: 1.1em">Results:</div>
+
+        <div class="popup_search">
+
+          <table border='1' style="width: 100%; font-size: 1.1em; margin-top: 10px">
+
+            <%
+               @search_results_hash.each do |element|
+                 place_name = element[0]
+                 id = element[1]
+            %>
+                <tr>
+                  <td><%= link_to 'Add', '#', onclick: 'post_value(place_name, id, session[:place_field])' %>&nbsp;<%= place_name %></td>
+                  <td style="width: 160px; text-align: center">
+                  <a href="#" onclick="return confirm('Are you sure?')">try me</a>
+                    <%= button_to 'View / Edit', place_path(id), :method => :get, title: 'View place details', style: 'float: left' %>
+                    <%= button_to 'Delete', place_path(id), :method => :delete, title: 'Delete place', style: 'float: left; margin-left: 6px', :data => {:confirm => 'Are you sure you want to delete this place?'} %>
+                  </td>
+                </tr>
+        <%
+           end
+           end
+        %>
+
+    </table>
+    </div>
+
+    <script>
+        window.onload = function () {
+            document.getElementById("search_box").focus();
+        };
+    </script>
+  </div>
+
+</div>

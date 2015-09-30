@@ -1,0 +1,7 @@
+
+<%# This adds the new place to the form and closes the page when the 'Submit and Close' button has been clicked %>
+<% if @commit_place_name != nil && @commit_id != nil %>
+    <script type="text/javascript">post_value("<%= @commit_place_name %>", "<%= @commit_id %>", "<%= session[:place_field] %>")</script>
+<% end %>
+
+<%= render "form" %>

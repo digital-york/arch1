@@ -396,7 +396,7 @@
                                                 <th style="width: 110px">*Same As:</th>
                                                 <td class="input_single">
 
-                                                    <a href='' onclick="popup('/place_popup?place_field=place_<%= index1 %>', 'place'); return false;" tabindex="-1"><%= image_tag "magnifying_glass_small.png", class: "plus_icon" %></a>
+                                                    <a href='' onclick="popup('/places?place_field=place_<%= index1 %>', 'place'); return false;" tabindex="-1"><%= image_tag "magnifying_glass_small.png", class: "plus_icon" %></a>
                                                     <span id="place_<%= index1 %>"><%= terms.get_str_from_id(related_place.place_same_as, 'parent_ADM4_tesim') %></span>
                                                     <%= hidden_field_tag "entry[related_places_attributes][" + index1.to_s + "][place_same_as]", related_place.place_same_as, id: 'place_' + index1.to_s + '_hidden' %>
                                                 </td>

@@ -30,7 +30,7 @@ module Validation
 
   # Remove multi-value fields (i.e. arrays) such as 'Summary' and 'As Written'
   # This is required because empty array fields are submitted as [''] and an empty field will be added to Fedora
-  # Note that for the multi-value fields in Place and Person, I've used the full entry_params values rather tahn using the index variables, e.g. 'related_place'
+  # Note that for the multi-value fields in Place and Person, I've used the full entry_params values rather than using the index variables, e.g. 'related_place'
   # because the index variable is class Array rather than ActionController::Parameters (please see the Rails section of the wiki for more info on form parameters)
   def remove_empty_array_fields(entry_params)
 
@@ -342,5 +342,22 @@ module Validation
       else
         return ''
     end
+  end
+
+  # Remove place multi-value fields (i.e. arrays) such as 'Feature Code'
+  # This is required because empty array fields are submitted as [''] and an empty field will be added to Fedora
+  def remove_place_popup_empty_fields(place_params)
+    place_params[:feature_code] = remove_empty_array_fields2(place_params[:feature_code])
+    place_params[:same_as] = remove_empty_array_fields2(place_params[:same_as])
+    place_params[:related_authority] = remove_empty_array_fields2(place_params[:related_authority])
+    place_params[:altlabel] = remove_empty_array_fields2(place_params[:altlabel])
+  end
+
+  # Remove person multi-value fields (i.e. arrays) such as 'Same As'
+  # This is required because empty array fields are submitted as [''] and an empty field will be added to Fedora
+  def remove_person_popup_empty_fields(person_params)
+    person_params[:same_as] = remove_empty_array_fields2(person_params[:same_as])
+    person_params[:related_authority] = remove_empty_array_fields2(person_params[:related_authority])
+    person_params[:altlabel] = remove_empty_array_fields2(person_params[:altlabel])
   end
 end

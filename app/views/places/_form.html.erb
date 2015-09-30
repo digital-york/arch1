@@ -1,0 +1,160 @@
+<div class="popup" style="min-height: 500px">
+
+  <% if @place.new_record? %>
+      <div class="popup_title">Add Place</div>
+  <% else %>
+      <div class="popup_title">Edit Place</div>
+  <% end %>
+
+  <% if @place_name != nil && @place_name != '' %>
+      <div id="popup_info" class="popup_info" style="display: none; text-align: center"><%= @place_name %> has been added</div>
+  <% end %>
+
+  <% if @error != nil && @error != '' %>
+      <div class="popup_error"><%= @error.html_safe %></div>
+  <% end %>
+
+  <div>
+    <% if @place.new_record? %>
+        <%= button_to "Back to Search", places_path, method: :get %>
+    <% else %>
+        <%= button_to "Back to View", place_path, method: :get %>
+    <% end %>
+  </div>
+
+  <div style="clear: both"></div>
+
+  <%= form_for @place, html: {style: 'margin-top: 10px; margin-bottom: 0px'} do |f| %>
+
+      <div class='tab1'>
+
+        <table cellspacing="0" style="width: 100%; font-size: 0.95em">
+
+          <%# Person ADM4 %>
+          <tr>
+            <th style="width: 150px">*Parent ADM4:</th>
+            <td>
+              <%= text_field_tag "place[parent_ADM4]", @place.parent_ADM4 %>
+            </td>
+          </tr>
+
+          <%# Person ADM3 %>
+          <tr>
+            <th>Parent ADM3:</th>
+            <td>
+              <%= text_field_tag "place[parent_ADM3]", @place.parent_ADM3 %>
+            </td>
+          </tr>
+
+          <%# Person ADM2 %>
+          <tr>
+            <th>Parent ADM2:</th>
+            <td>
+              <%= text_field_tag "place[parent_ADM2]", @place.parent_ADM2 %>
+            </td>
+          </tr>
+
+          <%# Person ADM1 %>
+          <tr>
+            <th>Parent ADM1:</th>
+            <td>
+              <%= text_field_tag "place[parent_ADM1]", @place.parent_ADM1 %>
+            </td>
+          </tr>
+
+          <%# Parent Country %>
+          <tr>
+            <th>Parent Country:</th>
+            <td>
+              <%= text_field_tag "place[parent_country]", @place.parent_country %>
+            </td>
+          </tr>
+
+          <%# Feature Code %>
+          <tr>
+            <th>Feature Code:
+              <img src="/assets/plus_sign.png" alt="plus icon" class="plus_icon click_popup_multiple_field_button" jq_type_1='place' jq_type_2="feature_code"/>
+            </th>
+            <td>
+              <div class="field_group">
+                <% @place.feature_code.each do |feature_code| %>
+                    <div class="field_single">
+                      <%= text_field_tag 'place[feature_code][]', feature_code %>
+                      <img alt="Delete icon" src="/assets/delete.png" class="delete_icon click_remove_field_level1" jq_tag_type="input">
+                    </div>
+                <% end %>
+              </div>
+            </td>
+          </tr>
+
+          <%# Same As %>
+          <tr>
+            <th>Same As:
+              <img src="/assets/plus_sign.png" alt="plus icon" class="plus_icon click_popup_multiple_field_button" jq_type_1='place' jq_type_2="same_as"/>
+            </th>
+            <td>
+              <div class="same_as">
+                <% @place.same_as.each do |same_as| %>
+                    <div class="field_single">
+                      <%= text_field_tag 'place[same_as][]', same_as %>
+                      <img alt="Delete icon" src="/assets/delete.png" class="delete_icon click_remove_field_level1" jq_tag_type="input">
+                    </div>
+                <% end %>
+              </div>
+            </td>
+          </tr>
+
+          <%# Related Authority %>
+          <tr>
+            <th>Related Authority:
+              <img src="/assets/plus_sign.png" alt="plus icon" class="plus_icon click_popup_multiple_field_button" jq_type_1='place' jq_type_2="related_authority"/>
+            </th>
+            <td>
+              <div class="field_group">
+                <% @place.related_authority.each do |related_authority| %>
+                    <div class="field_single">
+                      <%= text_field_tag 'place[related_authority][]', related_authority %>
+                      <img alt="Delete icon" src="/assets/delete.png" class="delete_icon click_remove_field_level1" jq_tag_type="input">
+                    </div>
+                <% end %>
+              </div>
+            </td>
+          </tr>
+
+          <%# Variant Names %>
+          <%# Note that this is 'altlabel' in the model %>
+          <tr>
+            <th>Variant Names:
+              <img src="/assets/plus_sign.png" alt="plus icon" class="plus_icon click_popup_multiple_field_button" jq_type_1='place' jq_type_2="altlabel"/>
+            </th>
+            <td>
+              <div class="field_group">
+                <% @place.altlabel.each do |altlabel| %>
+                    <div class="field_single">
+                      <%= text_field_tag 'place[altlabel][]', altlabel %>
+                      <img alt="Delete icon" src="/assets/delete.png" class="delete_icon click_remove_field_level1" jq_tag_type="input">
+                    </div>
+                <% end %>
+              </div>
+            </td>
+          </tr>
+
+        </table>
+
+        <%# Submit %>
+        <p style="margin-top: 10px">
+          <% if @place.new_record? %>
+              <%= f.submit 'Submit' %>
+              <%= f.submit 'Submit and Close' %>
+          <% else %>
+              <%= f.submit 'Update' %>
+          <% end %>
+        </p>
+
+      </div>
+
+      <div style="clear: both"></div>
+
+  <% end %>
+
+</div>
