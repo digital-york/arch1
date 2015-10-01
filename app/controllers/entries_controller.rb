@@ -317,15 +317,6 @@ class EntriesController < ApplicationController
     #params.require(:entry).permit(:entry_no, :access_provided_by, editorial_notes_attributes: [:id, :editorial_note, :_destroy], people_attributes: [:id, :name_as_written, :note, :age, :gender, :name_authority, :_destroy])
   end
 
-  # Check if session has timed out
-  # Note that the session timeout value is set in config/initializers/session_store.rb
-  #def session_timed_out
-  #  if session[:login] != 'true'
-  #    redirect_to :controller => 'login', :action => 'timed_out'
-  #  end
-  #end
-
-  private
   def update_rdf_types
     unless params[:entry][:related_person_groups_attributes].nil?
       params[:entry][:related_person_groups_attributes].each do | key, value|
@@ -365,8 +356,7 @@ class EntriesController < ApplicationController
     end
   end
 
-  # this method adds relatedPlaceFor relations to RelatedPersonGroups by looking up the RelatedPlace id for each person_related_place
-  private
+  # This method adds relatedPlaceFor relations to RelatedPersonGroups by looking up the RelatedPlace id for each person_related_place
   def update_related_places
     begin
       q = 'relatedPlaceFor_ssim:"' + @entry.id + '"'
