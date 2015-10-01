@@ -126,7 +126,7 @@ body {
 #right_frame {
   padding-left: 23px;
   float: left;
-  width: 900px;
+  width: 870px;
 }
 
 #location1 {
@@ -387,6 +387,7 @@ table {
 
 .timed_out {
   text-align: center;
+  padding: 20px;
 }
 
 .message {
@@ -428,6 +429,7 @@ table {
 }
 
 .timeout {
+  display: inline-block;
   border-radius: 3px;
   background-color: #B7A17C;
 }

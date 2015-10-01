@@ -1,8 +1,8 @@
 class BrowseFoliosController < ApplicationController
 
-  layout 'browse_folios'
+  before_filter :session_timed_out_small
 
-  before_filter :session_timed_out
+  layout 'browse_folios'
 
   def index
 
@@ -15,11 +15,5 @@ class BrowseFoliosController < ApplicationController
       set_folio_and_image_browse(params[:browse_action], session[:browse_id])
     end
   end
-
-  #def session_timed_out
-  #  if session[:login] == '' || session[:login] == nil
-  #    render 'timed_out', :layout => 'session_timed_out'
-  #  end
-  #end
 
 end

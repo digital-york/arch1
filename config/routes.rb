@@ -18,10 +18,10 @@ Rails.application.routes.draw do
   get 'browse_folios' => 'browse_folios#index'
   get 'go_entries' => 'landing_page#go_entries'
   get 'subject_popup' => 'subject_popup#index'
+
   get 'person_popup' => 'person_popup#index'
   post 'person_popup_create' => 'person_popup#create'
   post 'person_popup_search' => 'person_popup#search'
-  get 'place_search' => 'places#search'
 
   #root :to => "catalog#login"
   blacklight_for :catalog

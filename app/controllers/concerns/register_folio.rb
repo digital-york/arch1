@@ -296,9 +296,17 @@ module RegisterFolio
     order
   end
 
+  # This displays the timed out message for the main page
   def session_timed_out
     if session[:login] == '' || session[:login] == nil
-      render 'entries/timed_out', :layout => 'session_timed_out'
+      render 'timed_out/timed_out', :layout => 'timed_out'
+    end
+  end
+
+  # This displays the timed out message for the browse folios, subject popup, person popup and place popup pages
+  def session_timed_out_small
+    if session[:login] == '' || session[:login] == nil
+      render 'timed_out/timed_out_small', :layout => 'timed_out'
     end
   end
 

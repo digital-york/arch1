@@ -1,6 +1,6 @@
 class PlacesController < ApplicationController
 
-  before_filter :session_timed_out
+  before_filter :session_timed_out_small
 
   # INDEX
   def index
