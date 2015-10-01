@@ -294,7 +294,17 @@
 
                                   <th style="width: 110px">*Same As:</th>
                                   <td>
-                                    <%= terms.get_str_from_id(related_place.place_same_as, 'parent_ADM4_tesim') %>
+                                    <%
+                                      parent_ADM4 = terms.get_str_from_id(related_place.place_same_as, 'parent_ADM4_tesim')
+                                      parent_ADM3 = terms.get_str_from_id(related_place.place_same_as, 'parent_ADM3_tesim')
+                                      parent_ADM2 = terms.get_str_from_id(related_place.place_same_as, 'parent_ADM2_tesim')
+                                      parent_ADM1 = terms.get_str_from_id(related_place.place_same_as, 'parent_ADM1_tesim')
+                                      place_same_as = parent_ADM4
+                                      if parent_ADM3 != nil then place_same_as = "#{place_same_as}, #{parent_ADM3}" end
+                                      if parent_ADM2 != nil then place_same_as = "#{place_same_as}, #{parent_ADM2}" end
+                                      if parent_ADM1 != nil then place_same_as = "#{place_same_as}, #{parent_ADM1}" end
+                                    %>
+                                    <%= place_same_as %>
                                   </td>
                                 </tr>
 
