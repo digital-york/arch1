@@ -310,4 +310,20 @@ module RegisterFolio
     end
   end
 
+  # Used in person / place popus to check that variable is a valid URL
+  # Check that same_as is a URL
+  def check_url(var_array, error, title)
+    if var_array != nil
+      var_array.each do |var|
+        if var !~ /^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$/
+          if error != ''
+            error = error + "<br/>"
+          end
+          error = error + "Please enter a valid  URL for '" + title + "'"
+        end
+      end
+    end
+    return error
+  end
+
 end

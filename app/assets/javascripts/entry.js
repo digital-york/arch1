@@ -418,7 +418,7 @@ $(document).ready(function () {
 
                     // Same As
                 "<tr><th>*Same As:</th><td class='input_single'>" +
-                "<a href='' onclick='popup(&#39;/person_popup?person_field=person_" + jq_index + "&#39;, &#39;person&#39;); return false;' tabindex='-1'><img src='/assets/magnifying_glass_small.png' class='plus_icon'></a>" +
+                "<a href='' onclick='popup(&#39;/people?start=true&amp;person_field=person_" + jq_index + "&#39;, &#39;person&#39;); return false;' tabindex='-1'><img src='/assets/magnifying_glass_small.png' class='plus_icon'></a>" +
                 "&nbsp;<span id='person_" + jq_index + "'></span>" +
                 "<input type='hidden' id='person_" + jq_index + "_hidden' value='' name='entry[related_person_groups_attributes][" + jq_index + "][person_same_as]'>" +
                 "</td></tr>" +

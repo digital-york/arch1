@@ -19,7 +19,7 @@ class PlacesController < ApplicationController
     else
 
       # Update the session variable with the new search term
-      if params[:search_term] != '' && params[:search_term] != nil
+      if params[:search_term] != nil
         session[:place_search_term] = params[:search_term]
       end
 
@@ -29,28 +29,17 @@ class PlacesController < ApplicationController
       temp_hash = {}
 
       response['response']['docs'].map do |result|
-
         id = result['id']
         parent_ADM4 = result['parent_ADM4_tesim']
         parent_ADM3 = result['parent_ADM3_tesim']
         parent_ADM2 = result['parent_ADM2_tesim']
         parent_ADM1 = result['parent_ADM1_tesim']
         place_name = ''
-        if parent_ADM4 != nil
-          place_name = "#{parent_ADM4.join()}"
-        end
-        if parent_ADM3 != nil
-          place_name = "#{place_name}, #{parent_ADM3.join()}"
-        end
-        if parent_ADM2 != nil
-          place_name = "#{place_name}, #{parent_ADM2.join()}"
-        end
-        if parent_ADM1 != nil
-          place_name = "#{place_name}, #{parent_ADM1.join()}"
-        end
-        if place_name != nil
-          temp_hash[place_name] = id
-        end
+        if parent_ADM4 != nil then place_name = "#{parent_ADM4.join()}" end
+        if parent_ADM3 != nil then place_name = "#{place_name}, #{parent_ADM3.join()}" end
+        if parent_ADM2 != nil then place_name = "#{place_name}, #{parent_ADM2.join()}" end
+        if parent_ADM1 != nil then place_name = "#{place_name}, #{parent_ADM1.join()}" end
+        if place_name != nil then temp_hash[place_name] = id end
       end
 
       # Get all the names which match the search term and sort them
@@ -90,29 +79,11 @@ class PlacesController < ApplicationController
       @error = "Please enter a 'Parent ADM4'"
     end
 
-    same_as = place_params[:same_as]
+    # Check that same_as is a URL
+    @error = check_url(place_params[:same_as], @error, "Same As")
 
-    if same_as != nil
-      same_as = same_as.join()
-      if same_as !~ /^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$/
-        if @error != ''
-          @error = @error + "<br/>"
-        end
-        @error = @error + "Please enter a valid  URL for 'Same As'"
-      end
-    end
-
-    place_authority = place_params[:related_authority]
-
-    if place_authority != nil
-      place_authority = place_authority.join()
-      if place_authority !~ /^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$/
-        if @error != ''
-          @error = @error + "<br/>"
-        end
-        @error = @error + "Please enter a valid  URL for 'Related Authority'"
-      end
-    end
+    # Check that related_authority is a URL
+    @error = check_url(place_params[:related_authority], @error, "Related Authority")
 
     if @error != ''
       @place = Place.new(place_params)
@@ -126,11 +97,8 @@ class PlacesController < ApplicationController
       id = response['response']['docs'][0]['id']
       @place.concept_scheme_id = id
 
-      # Add the parent ADM values to preflabel separated by an underscore
-      @place.preflabel = "#{@place.parent_ADM4}"
-      if @place.parent_ADM3 != '' then @place.preflabel = "#{@place.preflabel}_#{@place.parent_ADM3}" end
-      if @place.parent_ADM2 != '' then @place.preflabel = "#{@place.preflabel}_#{@place.parent_ADM2}" end
-      if @place.parent_ADM1 != '' then @place.preflabel = "#{@place.preflabel}_#{@place.parent_ADM1}" end
+      # Get preflabel
+      @place.preflabel = get_preflabel(@place.parent_ADM4, @place.parent_ADM3, @place.parent_ADM2, @place.parent_ADM1)
 
       @place.save
 
@@ -166,29 +134,11 @@ class PlacesController < ApplicationController
       @error = "Please enter a 'Parent ADM4'"
     end
 
-    same_as = place_params[:same_as]
+    # Check that same_as is a URL
+    @error = check_url(place_params[:same_as], @error, "Same As")
 
-    if same_as != nil
-      same_as = same_as.join()
-      if same_as !~ /^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$/
-        if @error != ''
-          @error = @error + "<br/>"
-        end
-        @error = @error + "Please enter a valid  URL for 'Same As'"
-      end
-    end
-
-    place_authority = place_params[:related_authority]
-
-    if place_authority != nil
-      place_authority = place_authority.join()
-      if place_authority !~ /^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$/
-        if @error != ''
-          @error = @error + "<br/>"
-        end
-        @error = @error + "Please enter a valid  URL for 'Related Authority'"
-      end
-    end
+    # Check that related_authority is a URL
+    @error = check_url(place_params[:related_authority], @error, "Related Authority")
 
     # Get a place object using the id and populate it with the place parameters
      @place = Place.find(params[:id])
@@ -197,16 +147,14 @@ class PlacesController < ApplicationController
     if @error != ''
       render 'edit'
     else
+
       # Use a solr query to obtain the concept scheme id for 'places'
       response = SolrQuery.new.solr_query(q='has_model_ssim:ConceptScheme AND preflabel_tesim:"places"', fl='id', rows=1, sort='')
       id = response['response']['docs'][0]['id']
       @place.concept_scheme_id = id
 
-      # Add the parent ADM values to preflabel separated by an underscore
-      @place.preflabel = "#{@place.parent_ADM4}"
-      if @place.parent_ADM3 != '' then @place.preflabel = "#{@place.preflabel}_#{@place.parent_ADM3}" end
-      if @place.parent_ADM2 != '' then @place.preflabel = "#{@place.preflabel}_#{@place.parent_ADM2}" end
-      if @place.parent_ADM1 != '' then @place.preflabel = "#{@place.preflabel}_#{@place.parent_ADM1}" end
+      # Get preflabel
+      @place.preflabel = get_preflabel(@place.parent_ADM4, @place.parent_ADM3, @place.parent_ADM2, @place.parent_ADM1)
 
       @place.save
 
@@ -218,7 +166,7 @@ class PlacesController < ApplicationController
 
   end
 
-  # DESTOY
+  # DESTROY
   def destroy
     @place = Place.find(params[:id])
     @place.destroy
@@ -230,6 +178,15 @@ class PlacesController < ApplicationController
   # Never trust parameters from the scary internet, only allow the white list through.
   def whitelist_place_params
     params.require(:place).permit! # Note - this needs changing because it allows through all params at the moment!!
+  end
+
+  # Get the preflabel from the solr parameters (separated by an underscore)
+  def get_preflabel(parent_ADM4, parent_ADM3, parent_ADM2, parent_ADM1)
+    preflabel = parent_ADM4
+    if parent_ADM3 != '' then preflabel = "#{preflabel}_#{parent_ADM3}" end
+    if parent_ADM2 != '' then preflabel = "#{preflabel}_#{parent_ADM2}" end
+    if parent_ADM1 != '' then preflabel = "#{preflabel}_#{parent_ADM1}" end
+    return preflabel
   end
 
 end

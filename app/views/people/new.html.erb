@@ -1,5 +1,5 @@
 
-<%# This adds the new place to the form and closes the page when the 'Submit and Close' button has been clicked %>
+<%# This adds the new person to the form and closes the page when the 'Submit and Close' button has been clicked %>
 <% if @commit_person_name != nil && @commit_id != nil %>
     <script type="text/javascript">post_value("<%= @commit_person_name %>", "<%= @commit_id %>", "<%= session[:person_field] %>")</script>
 <% end %>

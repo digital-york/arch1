@@ -1,8 +1,8 @@
 <div class="popup" style="min-height: 500px">
 
-  <div class="popup_title">View Place</div>
+  <div class="popup_title">View Person</div>
 
-  <div><%= button_to "Back to Search", places_path, method: :get %></div>
+  <div><%= button_to "Back to Search Page", people_path, method: :get %></div>
 
   <div style="clear: both"></div>
 
@@ -10,57 +10,51 @@
 
     <table cellspacing="0" style="width: 100%; font-size: 0.95em">
 
-      <%# Parent ADM4 %>
+      <%# Family Name %>
       <tr>
-        <th style="width: 150px">*Parent ADM4:</th>
+        <th style="width: 150px">*Family Name:</th>
         <td>
-          <%= @place.parent_ADM4 %>
+          <%= @person.family %>
         </td>
       </tr>
 
-      <%# Parent ADM3 %>
+      <%# Pre-Title %>
       <tr>
-        <th>Parent ADM3:</th>
+        <th style="width: 150px">Pre-Title:</th>
         <td>
-          <%= @place.parent_ADM3 %>
+          <%= @person.pre_title %>
         </td>
       </tr>
 
-      <%# Parent ADM2 %>
+      <%# Given Name %>
       <tr>
-        <th>Parent ADM2:</th>
+        <th style="width: 150px">Given Name:</th>
         <td>
-          <%= @place.parent_ADM2 %>
+          <%= @person.given_name %>
         </td>
       </tr>
 
-      <%# Parent ADM1 %>
+      <%# Dates %>
       <tr>
-        <th>Parent ADM1:</th>
+        <th>Dates:</th>
         <td>
-          <%= @place.parent_ADM1 %>
+          <%= @person.dates %>
         </td>
       </tr>
 
-      <%# Parent Country %>
+      <%# Title %>
       <tr>
-        <th>Parent Country:</th>
+        <th>Title:</th>
         <td>
-          <%= @place.parent_country %>
+          <%= @person.post_title %>
         </td>
       </tr>
 
-      <%# Feature Code %>
+      <%# Epithet %>
       <tr>
-        <th>Feature Code:</th>
+        <th>Epithet:</th>
         <td>
-          <div class="field_group">
-            <% @place.feature_code.each do |feature_code| %>
-                <div class="field_single">
-                  <%= feature_code %>
-                </div>
-            <% end %>
-          </div>
+          <%= @person.epithet %>
         </td>
       </tr>
 
@@ -68,8 +62,8 @@
       <tr>
         <th>Same As:</th>
         <td>
-          <div class="same_as">
-            <% @place.same_as.each do |same_as| %>
+          <div class="field_group">
+            <% @person.same_as.each do |same_as| %>
                 <div class="field_single">
                   <%= same_as %>
                 </div>
@@ -83,9 +77,9 @@
         <th>Related Authority:</th>
         <td>
           <div class="field_group">
-            <% @place.related_authority.each do |related_authority| %>
+            <% @person.same_as.each do |same_as| %>
                 <div class="field_single">
-                  <%= related_authority %>
+                  <%= same_as %>
                 </div>
             <% end %>
           </div>
@@ -98,7 +92,7 @@
         <th>Variant Names:</th>
         <td>
           <div class="field_group">
-            <% @place.altlabel.each do |altlabel| %>
+            <% @person.altlabel.each do |altlabel| %>
                 <div class="field_single">
                   <%= altlabel %>
                 </div>
@@ -106,10 +100,11 @@
           </div>
         </td>
       </tr>
+
     </table>
   </div>
 
-  <div style="float: left"><%= button_to 'Edit', edit_place_path(@place), :method => :get, :class => 'buttonTo', style: 'margin-top: 10px' %>&nbsp;</div>
+  <div style="float: left"><%= button_to 'Edit', edit_person_path(@person), :method => :get, :class => 'buttonTo', style: 'margin-top: 10px' %>&nbsp;</div>
 
   <div style="clear: both"></div>
 

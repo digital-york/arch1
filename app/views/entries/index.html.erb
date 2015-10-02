@@ -407,7 +407,19 @@
                                 <tr>
                                   <th style="width: 110px">*Same As:</th>
                                   <td>
-                                    <%= terms.get_str_from_id(related_person.person_same_as, 'family_tesim') %>
+                                    <%
+                                       family = terms.get_str_from_id(related_person.person_same_as, 'family_tesim')
+                                       pre_title = terms.get_str_from_id(related_person.person_same_as, 'pre_title_tesim')
+                                       given_name = terms.get_str_from_id(related_person.person_same_as, 'given_name_tesim')
+                                       post_title = terms.get_str_from_id(related_person.person_same_as, 'post_title_tesim')
+                                       epithet = terms.get_str_from_id(related_person.person_same_as, 'epithet_tesim')
+                                       person_same_as = family
+                                       if pre_title != nil then person_same_as = "#{person_same_as}, #{pre_title}" end
+                                       if given_name != nil then person_same_as = "#{person_same_as}, #{given_name}" end
+                                       if post_title != nil then person_same_as = "#{person_same_as}, #{post_title}" end
+                                       if epithet != nil then person_same_as = "#{person_same_as}, #{epithet}" end
+                                    %>
+                                    <%= person_same_as %>
                                   </td>
                                 </tr>
 

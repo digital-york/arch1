@@ -514,9 +514,21 @@
                                             <tr>
                                                 <th style="width: 110px">*Same As:</th>
                                                 <td class="input_single">
-                                                    <a href='' onclick="popup('/person_popup?person_field=person_<%= index1 %>', 'person'); return false;" tabindex="-1"><%= image_tag "magnifying_glass_small.png", class: "plus_icon" %></a>
-                                                    <span id="person_<%= index1 %>"><%= terms.get_str_from_id(related_person.person_same_as, 'family_tesim') %></span>
-                                                    <%= hidden_field_tag "entry[related_person_groups_attributes][" + index1.to_s + "][person_same_as]", related_person.person_same_as, id: 'person_' + index1.to_s + '_hidden' %>
+                                                  <%
+                                                     family = terms.get_str_from_id(related_person.person_same_as, 'family_tesim')
+                                                     pre_title = terms.get_str_from_id(related_person.person_same_as, 'pre_title_tesim')
+                                                     given_name = terms.get_str_from_id(related_person.person_same_as, 'given_name_tesim')
+                                                     post_title = terms.get_str_from_id(related_person.person_same_as, 'post_title_tesim')
+                                                     epithet = terms.get_str_from_id(related_person.person_same_as, 'epithet_tesim')
+                                                     person_same_as = family
+                                                     if pre_title != nil then person_same_as = "#{person_same_as}, #{pre_title}" end
+                                                     if given_name != nil then person_same_as = "#{person_same_as}, #{given_name}" end
+                                                     if post_title != nil then person_same_as = "#{person_same_as}, #{post_title}" end
+                                                     if epithet != nil then person_same_as = "#{person_same_as}, #{epithet}" end
+                                                  %>
+                                                  <a href='#' onclick="popup('/people?start=true&amp;person_field=person_<%= index1 %>', 'person'); return false;" tabindex="-1"><%= image_tag "magnifying_glass_small.png", class: "plus_icon" %></a>
+                                                  <span id="person_<%= index1 %>"><%= person_same_as %></span>
+                                                  <%= hidden_field_tag "entry[related_person_groups_attributes][" + index1.to_s + "][person_same_as]", related_person.person_same_as, id: 'person_' + index1.to_s + '_hidden' %>
                                                 </td>
                                             </tr>
 
