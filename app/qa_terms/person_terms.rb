@@ -30,11 +30,6 @@ class PersonTerms
     parse_authority_response(SolrQuery.new.solr_query(q='inScheme_ssim:"' + terms_id + '" AND preflabel_tesim:"' + q + '"', fl=''))
   end
 
-  # Dereference ids into strings in order to display them, e.g. on the form and the folio drop-down list (py)
-  def get_str_from_id(id, type)
-    parse_terms_response(SolrQuery.new.solr_query(q='id:' + id, fl=type, rows='1'), type);
-  end
-
   private
 
   # Reformats the data received from the service
@@ -59,17 +54,6 @@ class PersonTerms
       i = result['id']
     end
     i
-  end
-
-  # General method to parse ids into strings (py)
-  def parse_terms_response(response, type)
-    str = ''
-    response['response']['docs'].map do |result|
-      if result['numFound'] != '0'
-        str = result[type].join('') # 'join' is used to convert an array into a string because otherwise an error occurs
-      end
-    end
-    str
   end
 
 end

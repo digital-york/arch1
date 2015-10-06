@@ -5,13 +5,6 @@ module AuthorityList
   # Get authority lists
   def set_authority_lists
 
-    # Local lists
-    # Note: these lists use the yml files in config/authorities but we decided to use the hard-coded lists below because
-    # there are only a few terms in each
-    #@gender_list = Qa::Authorities::Local::FileBasedAuthority.new('genders').all.collect { |l| [l["label"]] }
-    #@date_certainty_list = Qa::Authorities::Local::FileBasedAuthority.new('certainty').all.collect { |l| [l["label"]] }
-    #@single_date_list = Qa::Authorities::Local::FileBasedAuthority.new('date_types').all.collect { |l| [l["label"]] }
-
     # Hard-coded lists
     @gender_list = [['female'], ['male'], ['unknown']]
     @date_certainty_list = [["certain"], ["uncertain"], ["inferred"], ["approximate"]]

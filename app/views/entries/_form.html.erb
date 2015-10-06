@@ -395,18 +395,12 @@
                                             <tr>
                                                 <th style="width: 110px">*Same As:</th>
                                                 <td class="input_single">
-                                                  <%
-                                                     parent_ADM4 = terms.get_str_from_id(related_place.place_same_as, 'parent_ADM4_tesim')
-                                                     parent_ADM3 = terms.get_str_from_id(related_place.place_same_as, 'parent_ADM3_tesim')
-                                                     parent_ADM2 = terms.get_str_from_id(related_place.place_same_as, 'parent_ADM2_tesim')
-                                                     parent_ADM1 = terms.get_str_from_id(related_place.place_same_as, 'parent_ADM1_tesim')
-                                                     place_same_as = parent_ADM4
-                                                     if parent_ADM3 != nil then place_same_as = "#{place_same_as}, #{parent_ADM3}" end
-                                                     if parent_ADM2 != nil then place_same_as = "#{place_same_as}, #{parent_ADM2}" end
-                                                     if parent_ADM1 != nil then place_same_as = "#{place_same_as}, #{parent_ADM1}" end
-                                                  %>
                                                   <a href='#' onclick="popup('/places?start=true&amp;place_field=place_<%= index1 %>', 'place'); return false;" tabindex="-1"><%= image_tag "magnifying_glass_small.png", class: "plus_icon" %></a>
-                                                  <span id="place_<%= index1 %>"><%= place_same_as %></span>
+                                                  <span id="place_<%= index1 %>">
+                                                  <% if related_place.place_same_as != nil %>
+                                                    <%= terms.get_place_same_as(related_place.place_same_as) %>
+                                                  <% end %>
+                                                  </span>
                                                   <%= hidden_field_tag "entry[related_places_attributes][" + index1.to_s + "][place_same_as]", related_place.place_same_as, id: 'place_' + index1.to_s + '_hidden' %>
                                                 </td>
                                             </tr>
@@ -514,20 +508,12 @@
                                             <tr>
                                                 <th style="width: 110px">*Same As:</th>
                                                 <td class="input_single">
-                                                  <%
-                                                     family = terms.get_str_from_id(related_person.person_same_as, 'family_tesim')
-                                                     pre_title = terms.get_str_from_id(related_person.person_same_as, 'pre_title_tesim')
-                                                     given_name = terms.get_str_from_id(related_person.person_same_as, 'given_name_tesim')
-                                                     post_title = terms.get_str_from_id(related_person.person_same_as, 'post_title_tesim')
-                                                     epithet = terms.get_str_from_id(related_person.person_same_as, 'epithet_tesim')
-                                                     person_same_as = family
-                                                     if pre_title != nil then person_same_as = "#{person_same_as}, #{pre_title}" end
-                                                     if given_name != nil then person_same_as = "#{person_same_as}, #{given_name}" end
-                                                     if post_title != nil then person_same_as = "#{person_same_as}, #{post_title}" end
-                                                     if epithet != nil then person_same_as = "#{person_same_as}, #{epithet}" end
-                                                  %>
                                                   <a href='#' onclick="popup('/people?start=true&amp;person_field=person_<%= index1 %>', 'person'); return false;" tabindex="-1"><%= image_tag "magnifying_glass_small.png", class: "plus_icon" %></a>
-                                                  <span id="person_<%= index1 %>"><%= person_same_as %></span>
+                                                  <span id="person_<%= index1 %>">
+                                                  <% if related_person.person_same_as != nil %>
+                                                    <%= terms.get_person_same_as(related_person.person_same_as) %>
+                                                  <% end %>
+                                                  </span>
                                                   <%= hidden_field_tag "entry[related_person_groups_attributes][" + index1.to_s + "][person_same_as]", related_person.person_same_as, id: 'person_' + index1.to_s + '_hidden' %>
                                                 </td>
                                             </tr>

@@ -1,4 +1,5 @@
 class Deep < Qa::Authorities::Base
+
     include Qa::Authorities::WebServiceBase
     include TermsHelper
 

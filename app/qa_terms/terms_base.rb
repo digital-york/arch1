@@ -20,6 +20,72 @@ class TermsBase
     parse_authority_response(SolrQuery.new.solr_query(q='inScheme_ssim:"' + terms_id + '"',fl='id,preflabel_tesim',rows=1000,sort=sort_order))
   end
 
+  def find id
+    parse_authority_response(SolrQuery.new.solr_query(q='inScheme_ssim:"' + terms_id + '" AND id:"' + id + '"',fl='id,preflabel_tesim'))
+  end
+
+  def find_id val
+    parse_terms_id_response(SolrQuery.new.solr_query(q='inScheme_ssim:"' + terms_id + '" AND preflabel_tesim:"' + val + '"', fl='id'))
+  end
+
+  def find_value_string id
+    parse_string(SolrQuery.new.solr_query(q='inScheme_ssim:"' + terms_id + '" AND id:"' + id + '"', fl='preflabel_tesim'))
+  end
+
+  def search q
+    parse_authority_response(SolrQuery.new.solr_query(q='inScheme_ssim:"' + terms_id + '" AND preflabel_tesim:"' + q + '"',fl='id,preflabel_tesim'))
+  end
+
+  # Dereference id into a string for display purposes - e.g. test:101 -> 'abbey'
+  def get_str_from_id(id, type)
+    response = SolrQuery.new.solr_query(q='id:"' + id + '"', fl=type, rows='1')
+    parse_terms_response(response, type);
+  end
+
+  # Construct place same_as string for the view / edit pages
+  def get_place_same_as(same_as)
+
+    response = SolrQuery.new.solr_query(q='id:' + same_as, fl='parent_ADM4_tesim, parent_ADM3_tesim, parent_ADM2_tesim, parent_ADM1_tesim', rows='1')
+
+    place_same_as = ''
+
+    response['response']['docs'].map do |result|
+        parent_ADM4 = result['parent_ADM4_tesim']
+        parent_ADM3 = result['parent_ADM3_tesim']
+        parent_ADM2 = result['parent_ADM2_tesim']
+        parent_ADM1 = result['parent_ADM1_tesim']
+        place_same_as = parent_ADM4.join()
+        if parent_ADM3 != nil then place_same_as = "#{place_same_as}, #{parent_ADM3.join()}" end
+        if parent_ADM2 != nil then place_same_as = "#{place_same_as}, #{parent_ADM2.join()}" end
+        if parent_ADM1 != nil then place_same_as = "#{place_same_as}, #{parent_ADM1.join()}" end
+    end
+
+    return place_same_as
+  end
+
+  # Construct person same_as string for the view / edit pages
+  def get_person_same_as(same_as)
+
+    response = SolrQuery.new.solr_query(q='id:' + same_as, fl='family_tesim, pre_title_tesim, given_name_tesim, post_title_tesim, epithet_tesim', rows='1')
+
+    person_same_as = ''
+
+    response['response']['docs'].map do |result|
+      family = result['family_tesim']
+      pre_title = result['pre_title_tesim']
+      given_name = result['given_name_tesim']
+      post_title = result['post_title_tesim']
+      epithet = result['epithet_tesim']
+      person_same_as = family.join()
+      if pre_title != nil then person_same_as = "#{person_same_as}, #{pre_title.join()}" end
+      if given_name != nil then person_same_as = "#{person_same_as}, #{given_name.join()}" end
+      if post_title != nil then person_same_as = "#{person_same_as}, #{post_title.join()}" end
+      if epithet != nil then person_same_as = "#{person_same_as}, #{epithet.join()}" end
+    end
+
+    return person_same_as
+  end
+
   # Returns an array of hashes (top-level terms) which contain an array of hashes (middle-level terms), etc
   # These are dereferenced in the subjects pop-up to dispay the subject list
   def all_top_level_subject_terms
@@ -55,32 +121,6 @@ class TermsBase
 
   end
 
-  def find id
-    parse_authority_response(SolrQuery.new.solr_query(q='inScheme_ssim:"' + terms_id + '" AND id:"' + id + '"',fl='id,preflabel_tesim'))
-  end
-
-  def find_id val
-    parse_terms_id_response(SolrQuery.new.solr_query(q='inScheme_ssim:"' + terms_id + '" AND preflabel_tesim:"' + val + '"', fl='id'))
-  end
-
-  def find_value_string id
-    parse_string(SolrQuery.new.solr_query(q='inScheme_ssim:"' + terms_id + '" AND id:"' + id + '"', fl='preflabel_tesim'))
-  end
-
-  def search q
-    parse_authority_response(SolrQuery.new.solr_query(q='inScheme_ssim:"' + terms_id + '" AND preflabel_tesim:"' + q + '"',fl='id,preflabel_tesim'))
-  end
-
-  # Dereference ids into strings in order to display them, e.g. on the form and the folio drop-down list (py)
-  def get_str_from_id(id, type)
-    begin
-      response = SolrQuery.new.solr_query(q='id:"' + id + '"', fl=type, rows='1')
-      parse_terms_response(response, type);
-    rescue
-      # TODO handle this error (happens when no id supplied, eg. no entry type)
-    end
-  end
-
   private
 
   # Reformats the data received from the service
@@ -91,11 +131,11 @@ class TermsBase
   end
 
   def parse_terms_id_response(response)
-    i = ''
+    id = ''
     response['response']['docs'].map do |result|
-      i = result['id']
+      id = result['id']
     end
-    i
+    id
   end
 
   def parse_string(response)
@@ -108,9 +148,10 @@ class TermsBase
 
   # General method to parse ids into strings (py)
   def parse_terms_response(response, type)
-    str = ''
-    response['response']['docs'].map do |result|
 
+    str = ''
+
+    response['response']['docs'].map do |result|
       if result['numFound'] != '0'
         str = result[type]
         if str.class == Array
@@ -118,7 +159,8 @@ class TermsBase
         end
       end
     end
-    str
+
+    return str
   end
 
 end

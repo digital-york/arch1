@@ -180,7 +180,6 @@ module RegisterFolio
       entry_id = result['id']
       SolrQuery.new.solr_query('id:"' + entry_id + '"', 'continues_on_tesim,entry_no_tesim', 1)['response']['docs'].each do |result|
         if result['continues_on_tesim'] != nil
-
           @folio_continues_id = result['entry_no_tesim']
           @folio_continues_id = @folio_continues_id.join('')
         end
