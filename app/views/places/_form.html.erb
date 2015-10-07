@@ -16,9 +16,9 @@
 
   <div>
     <% if @place.new_record? %>
-        <%= button_to "Back to Search", places_path, method: :get %>
+        <%= link_to "Go back to search page", places_path, method: :get %>
     <% else %>
-        <%= button_to "Back to View", place_path, method: :get %>
+        <%= link_to "Go back to view page", place_path, method: :get %>
     <% end %>
   </div>
 
