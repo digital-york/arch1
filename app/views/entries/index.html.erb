@@ -109,7 +109,7 @@
                         <td>
                           <% if @db_entry.continues_on != nil && @db_entry.continues_on != '' %>
                               <%= image_tag 'tick.png' %>
-                              &nbsp;&nbsp;<%= link_to 'Discontinue', entry_path(@db_entry.id, :discontinue => 'true'), :onclick => "return confirm('Are you sure you want to remove the link with the next folio?')" %>
+                              &nbsp;&nbsp;<%= link_to 'Discontinue', entry_path(@db_entry.entry_id, :discontinue => 'true'), :onclick => "return confirm('Are you sure you want to remove the link with the next folio?')" %>
                           <% end %>
                         </td>
                       </tr>

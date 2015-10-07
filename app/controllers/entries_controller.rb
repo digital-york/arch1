@@ -391,7 +391,7 @@ class EntriesController < ApplicationController
 
   def get_solr_data(db_entry)
 
-    SolrQuery.new.solr_query('id:' + db_entry.entry_id, 'entry_no_tesim, entry_type_tesim, section_type_tesim, summary_tesim, marginalia_tesim, language_tesim, subject_tesim, note_tesim, editorial_note_tesim, is_referenced_by_tesim', 1)['response']['docs'].map do |result|
+    SolrQuery.new.solr_query('id:' + db_entry.entry_id, 'entry_no_tesim, entry_type_tesim, section_type_tesim, continues_on_tesim, summary_tesim, marginalia_tesim, language_tesim, subject_tesim, note_tesim, editorial_note_tesim, is_referenced_by_tesim', 1)['response']['docs'].map do |result|
 
       if result['entry_no_tesim'] != nil
 
@@ -409,6 +409,10 @@ class EntriesController < ApplicationController
             db_section_type.name = tt
             db_entry.db_section_types << db_section_type
           end
+        end
+
+        if result['continues_on_tesim'] != nil
+          db_entry.continues_on = result['continues_on_tesim'].join()
         end
 
         summary = result['summary_tesim']
