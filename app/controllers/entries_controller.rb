@@ -493,7 +493,7 @@ class EntriesController < ApplicationController
 
                 db_single_date = DbSingleDate.new
 
-                date_certainty_list = result['date_certainty_tesim'];
+                date_certainty_list = result2['date_certainty_tesim'];
 
                 if date_certainty_list != nil
                   date_certainty_list.each do |tt|
