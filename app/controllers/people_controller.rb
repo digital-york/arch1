@@ -137,9 +137,8 @@ class PeopleController < ApplicationController
     end
 
     # Check that same_as is a URL
-    puts "1"
     @error = check_url(person_params[:same_as], @error, "Same As")
-    puts "2"
+
     # Check that related_authority is a URL
     @error = check_url(person_params[:related_authority], @error, "Related Authority")
 
