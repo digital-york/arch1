@@ -607,10 +607,10 @@ class EntriesController < ApplicationController
               db_related_person_group.person_same_as = person_same_as.join()
             end
 
-            gender = result['person_gender_tesim']
+            person_gender = result['person_gender_tesim']
 
-            if gender != nil
-              db_related_person_group.gender = gender.join()
+            if person_gender != nil
+              db_related_person_group.person_gender = person_gender.join()
             end
 
             person_as_written_list = result['person_as_written_tesim'];

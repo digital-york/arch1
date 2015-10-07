@@ -553,8 +553,7 @@
                                                     <div class="field_group grey_box">
                                                         <% related_person.person_role.each_with_index do |person_role, index2| %>
                                                             <div class="field_single">
-                                                                <!-- corrected this, OK? -->
-                                                                <%= select_tag "entry[related_person_groups_attributes][" + index2.to_s + "][person_role][]", options_for_select(@role_list.collect { |role| [role["label"].join(''), role["id"]] }.insert(0, ["--- select ---", ""]), person_role) %>
+                                                                <%= select_tag "entry[related_person_groups_attributes][" + index1.to_s + "][person_role][]", options_for_select(@role_list.collect { |role| [role["label"].join(''), role["id"]] }.insert(0, ["--- select ---", ""]), person_role) %>
                                                                 <img alt="Delete icon" src="/assets/delete.png" class="delete_icon_select click_remove_field_level1" jq_tag_type="select">
                                                             </div>
                                                         <% end %>
