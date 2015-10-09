@@ -10,9 +10,8 @@
 # you'll amass, the slower it'll run and the greater likelihood for issues).
 #
 # It's strongly recommended that you check this file into your version control system.
-#
 
-ActiveRecord::Schema.define(version: 20151006135919) do
+ActiveRecord::Schema.define(version: 20151007160634) do
 
   create_table "bookmarks", force: :cascade do |t|
     t.integer  "user_id",       null: false
@@ -46,6 +45,7 @@ ActiveRecord::Schema.define(version: 20151006135919) do
     t.string "summary"
     t.string "continues_on"
     t.string "entry_id"
+    t.string "rdftype"
   end
 
   create_table "db_entry_dates", force: :cascade do |t|

@@ -355,10 +355,6 @@ table {
 #header {
   background: url('/assets/header.jpg') repeat-x scroll 0 50% #000000;
   height: 100px;
-  /*border-bottom: 1px solid #805E5E;*/
-}
-.ui-datepicker-trigger {
-  margin-left: 5px;
 }
 
 .blank {
@@ -387,6 +383,7 @@ table {
 
 .timed_out {
   text-align: center;
+  margin-top: 25px;
   padding: 20px;
 }
 
@@ -636,4 +633,9 @@ img {
   right: 3px;
   top: 6px;
   height: 19px;
+}
+
+.tick_icon {
+  position: relative;
+  top: 3px;
 }

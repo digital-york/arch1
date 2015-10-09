@@ -137,7 +137,7 @@ module RegisterFolio
     end
   end
 
-  # Does an entry exist for the next folio?
+  # Determines which message is displayed when the user clicks the 'Continue' button
   def is_entry_on_next_folio
 
     next_folio_id = ''
@@ -149,7 +149,7 @@ module RegisterFolio
 
     @is_entry_on_next_folio = false
 
-    # ...then determine if an entry exists
+    # Then determine if an entry exists
     if next_folio_id != nil
       SolrQuery.new.solr_query('folio_ssim:"' + next_folio_id + '"', 'id', 1)['response']['docs'].map do |result|
         @is_entry_on_next_folio = true
@@ -160,6 +160,7 @@ module RegisterFolio
     @is_entry_on_next_folio
   end
 
+  # Determines if the 'Continues on next folio' row and 'Continues' button are to be displayed
   def is_last_entry(entry)
     if entry != nil
       @is_last_entry = false
@@ -170,8 +171,7 @@ module RegisterFolio
     end
   end
 
-  # Does the folio contain an entry which continues?
-  # (this determines if the 'New Entry' Tab and '(continues)' text are displayed)
+  # Determines if the 'New Entry' Tab and '(continues)' text are to be displayed
   def set_folio_continues_id
 
     @folio_continues_id = ''
@@ -180,14 +180,12 @@ module RegisterFolio
       entry_id = result['id']
       SolrQuery.new.solr_query('id:"' + entry_id + '"', 'continues_on_tesim,entry_no_tesim', 1)['response']['docs'].each do |result|
         if result['continues_on_tesim'] != nil
-          @folio_continues_id = result['entry_no_tesim']
-          @folio_continues_id = @folio_continues_id.join('')
+          @folio_continues_id = result['entry_no_tesim'].join()
         end
       end
     end
 
-    # Return value
-    @folio_continues_id
+    return @folio_continues_id
   end
 
   # If the entry is continued onto the next folio, creates the entry and
@@ -323,6 +321,85 @@ module RegisterFolio
       end
     end
     return error
+  end
+
+  # Set the entry tab list (i.e. at the top of the form)
+  def set_entry_list
+
+    # This is an array of array ('id' and 'entry_no')
+    @entry_list = []
+
+    SolrQuery.new.solr_query(q='has_model_ssim:Entry AND folio_ssim:' + session[:folio_id], fl='id,entry_no_tesim', rows=1000, sort='id asc')['response']['docs'].map.each do | result |
+      id = result['id']
+      entry_no = result['entry_no_tesim'].join
+      temp = []
+      temp[0] = id
+      temp[1] = entry_no
+      @entry_list << temp
+    end
+  end
+
+  # Update rdf types
+  def update_rdf_types
+    unless params[:entry][:related_person_groups_attributes].nil?
+      params[:entry][:related_person_groups_attributes].each do | key, value|
+        value.each do | k, v |
+          if k == 'rdftype'
+            params[:entry][:related_person_groups_attributes][key][k] = v.gsub!("[","").gsub!('"','').gsub!("]",'').gsub(' ','').split(',').collect { |s| s }
+          end
+        end
+      end
+    end
+    unless params[:entry][:related_places_attributes].nil?
+      params[:entry][:related_places_attributes].each do | key, value|
+        value.each do | k, v |
+          if k == 'rdftype'
+            params[:entry][:related_places_attributes][key][k] = v.gsub!("[","").gsub!('"','').gsub!("]",'').gsub(' ','').split(',').collect { |s| s }
+          end
+        end
+      end
+    end
+    unless params[:entry][:entry_dates_attributes].nil?
+      params[:entry][:entry_dates_attributes].each do | key, value|
+        value.each do | k, v |
+          if k == 'rdftype'
+            params[:entry][:entry_dates_attributes][key][k] = [v.gsub!("[","").gsub!('"','').gsub!("]",'').gsub(' ','')]
+          end
+          if k == 'single_dates_attributes'
+            v.each do | ke,va |
+              va.each do | keya, val|
+                if keya == 'rdftype'
+                  params[:entry][:entry_dates_attributes][key][k][ke][keya] = [val.gsub!("[","").gsub!('"','').gsub!("]",'').gsub(' ','')]
+                end
+              end
+            end
+          end
+        end
+      end
+    end
+  end
+
+  # This method adds relatedPlaceFor relations to RelatedPersonGroups by looking up the RelatedPlace id for each person_related_place
+  def update_related_places
+    begin
+      q = 'relatedPlaceFor_ssim:"' + @entry.id + '"'
+      SolrQuery.new.solr_query(q, 'id,place_as_written_tesim', 50)['response']['docs'].each do |result|
+        q = 'relatedAgentFor_ssim:"' + @entry.id + '" AND person_related_place_tesim:"' + result['place_as_written_tesim'][0] + '"'
+        begin
+          SolrQuery.new.solr_query(q, 'id,person_related_place_tesim', 50)['response']['docs'].each do |res|
+            place = RelatedPlace.where(id: result['id']).first
+            places = place.related_person_group
+            places += [RelatedPersonGroup.where(id: res['id']).first]
+            place.related_person_group = places
+            place.save
+          end
+        rescue
+          # move along
+        end
+      end
+    rescue
+      # move along
+    end
   end
 
 end

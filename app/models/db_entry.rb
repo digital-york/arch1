@@ -1,4 +1,5 @@
 class DbEntry < ActiveRecord::Base
+
   has_many :db_section_types
   has_many :db_marginalia
   has_many :db_languages
@@ -9,4 +10,8 @@ class DbEntry < ActiveRecord::Base
   has_many :db_entry_dates
   has_many :db_related_places
   has_many :db_related_person_groups
+
+  def add_rdf_types
+    ['http://dlib.york.ac.uk/ontologies/borthwick-registers#Entry','http://www.shared-canvas.org/ns/Zone','http://pcdm.org/models#Object']
+  end
 end

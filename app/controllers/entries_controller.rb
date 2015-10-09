@@ -13,6 +13,7 @@ class EntriesController < ApplicationController
     # Set the @folio_list for the folio drop-down
     set_folio_list
 
+    # Do this if a folio has been chosen...
     if session[:folio_id] != ''
 
       # Set the folio and image session variables when the '<' or '>' buttons are clicked
@@ -20,11 +21,12 @@ class EntriesController < ApplicationController
         set_folio_and_image(params[:small_zoom_action], session[:folio_id])
       end
 
-      # Get all the entries which match with the chosen register, folio and folio face
-      @entry_list = Entry.where(folio_ssim: session[:folio_id])
+      # Set the entry tab list (i.e. at the top of the form)
+      set_entry_list
 
       if @entry_list.length > 0
 
+        # Create top-level ActiveRecord object
         @db_entry = DbEntry.new
 
         # Get the first entry for the folio if there isn't an id
@@ -37,18 +39,17 @@ class EntriesController < ApplicationController
           @db_entry.entry_id = params[:id]
         end
 
+        # Populate db_entry with data from Solr
         get_solr_data(@db_entry)
 
         # Check if this is the last entry for the folio
-        # Determines if the 'Continues on next folio' row and 'Continues' button are displayed
+        # Determines if the 'Continues on next folio' row and 'Continues' button are to be displayed
         is_last_entry(@db_entry)
 
-        # Determines if the 'New Entry' Tab and '(continues)' text are displayed
+        # Determine if the 'New Entry' Tab and '(continues)' text are to be displayed
         set_folio_continues_id
       end
-
     end
-
   end
 
   # SHOW
@@ -60,7 +61,6 @@ class EntriesController < ApplicationController
       @entry = Entry.find(params[:id])
       @entry.continues_on = nil
       @entry.save
-      #@entry = Entry.find(params[:id])
     end
 
     redirect_to :controller => 'entries', :action => 'index', :id => params[:id]
@@ -69,59 +69,36 @@ class EntriesController < ApplicationController
   # NEW
   def new
 
-    # Create a new entry (but isn't saved to Fedora until the user clicks on submit)
-    @entry = Entry.new
+    # Create a new ActiveRecord entry
+    @db_entry = DbEntry.new
 
-    # Set the entry no for the current folio
-    max_entry_no = get_max_entry_no_for_folio
-    @entry.entry_no = max_entry_no + 1
+    # Set the next entry_no
+    @db_entry.entry_no = get_max_entry_no_for_folio + 1
 
-    # Get all the entries for this folio (so that they can be displayed as tabs)
-    @entry_list = Entry.where(folio_ssim: session[:folio_id])
+    # Set various lists, e.g. authority_list, folio_list
+    set_lists(@db_entry)
 
-    # Set the authority lists (e.g. subject)
-    set_authority_lists
-
-    # Set the folio drop-down list
-    set_folio_list
-
-    # Check if this is the last entry for the folio
-    # Determines if the 'Continues on next folio' row and 'Continues' button are displayed
-    is_last_entry(@entry)
-
-    # Determines which message is displayed on the 'Continue' button
-    is_entry_on_next_folio
+    # This tells the _form.html.erb page that this is a 'new' entry
+    @form_type = 'NEW'
 
   end
 
   # EDIT
   def edit
 
-    # Get all the entries for this folio (so that they can be displayed as tabs)
-    @entry_list = Entry.all.where(folio_ssim: session[:folio_id])
+    # Create a new ActiveRecord entry
+    @db_entry = DbEntry.new
+    @db_entry.entry_id = params[:id]
 
-    # Set the authority lists (e.g. subject)
-    set_authority_lists
+    # Populate db_entry with data from Solr
+    get_solr_data(@db_entry)
 
-    # Set the folio drop-down list
-    set_folio_list
-
-    # Set the current entry
-    @entry = Entry.find(params[:id])
-
-    # Check if this is the last entry for the folio
-    # Determines if the 'Continues on next folio' row and 'Continues' button are displayed
-    is_last_entry(@entry)
-
-    # Determines if the 'New Entry' Tab and '(continues)' text are displayed
-    set_folio_continues_id
-
-    # Determines which message is displayed on the 'Continue' button
-    is_entry_on_next_folio
+    # Set various lists, e.g. authority_list, folio_list
+    set_lists(@db_entry)
 
     # Define the related person list
-    # Note that this is a dynamic list which has to be initialised before
-    # editing the page so that the form displays the correct values
+    # Note that this is a dynamic list which has to be initialised before editing
+    # the page so that the form displays the correct values
     @related_place_list = []
 
     # Add default select option to the related place list
@@ -131,21 +108,24 @@ class EntriesController < ApplicationController
     @related_place_list << temp
 
     # Add other elements to the related place list, i.e. using RelatedPlace.place_as_written
-    # Note - only add the first place_as_written at index [0] for each RelatedPlace
-    @entry.related_places.each do |related_place|
+    # Note - only add the first place_as_written at index [0] for each RelatedPlace (because there can be more than one)
+    @db_entry.db_related_places.each do |related_place|
       temp = []
-      if related_place.place_as_written.count > 0
-        temp << related_place.place_as_written[0]
+      if related_place.db_place_as_writtens[0] != nil
+        temp << related_place.db_place_as_writtens[0].name
         @related_place_list << temp
       end
     end
+
+    # This tells the _form.html.erb page that this is an 'edit' entry
+    @form_type = 'EDIT'
 
   end
 
   # CREATE
   def create
 
-    # Redirects to 'index' when the user clicks the 'Back' button
+    # Redirect back to the index page if the user has clciked the 'Back' button
     if params['commit'] == 'Back'
       redirect_to :controller => 'entries', :action => 'index', :id => ''
       return
@@ -174,31 +154,12 @@ class EntriesController < ApplicationController
     # If there are errors, go back to the 'new' page and display the errors, else go to the 'index' page
     if @errors != '' && @errors != nil
 
+      # Set various lists, e.g. authority_list, folio_list
+      set_lists(@entry)
+
       # Note: it would be better to 'redirect' to the 'edit' controller rather than 'render' to the 'edit' page
       # because we wouldn't have to set_authority_lists, etc, but 'redirect' loses the state of the nested form, i.e.
       # it seems that any fields which have been added with the + buttons are closed again
-
-      # Get all the entries for this folio (so that they can be displayed as tabs)
-      @entry_list = Entry.all.where(folio_ssim: session[:folio_id])
-
-      # Set the authority lists (e.g. subject)
-      set_authority_lists
-
-      # Set the folio drop-down list
-      set_folio_list
-
-      # Check if this is the last entry for the folio
-      # Determines if the 'Continues on next folio' row and 'Continues' button are displayed
-      is_last_entry(@entry)
-
-      # Determines if the 'New Entry' Tab and '(continues)' text are displayed
-      set_folio_continues_id
-
-      # Determines which message is displayed on the 'Continue' button
-      is_entry_on_next_folio
-
-      # Add related place code freom 'edit' here?
-
       render 'new'
 
     else
@@ -213,7 +174,8 @@ class EntriesController < ApplicationController
 
       @entry.rdftype = @entry.add_rdf_types
       @entry.save
-      # add place relations onto people/groups
+
+      # Add place relations onto people/groups
       update_related_places
 
       # If entry continues, redirect to the first entry on the next folio
@@ -230,13 +192,15 @@ class EntriesController < ApplicationController
   # UPDATE
   def update
 
+    params[:id] = 'test:' + params[:id]
+
     # Redirects to 'show' when the user clicks the 'Back to View' button
     if params['commit'] == 'Back to View'
       redirect_to :controller => 'entries', :action => 'show', :id => params[:id]
       return
     end
 
-    # update the rdf_types for all objects
+    # Update the rdf_types for all objects
     update_rdf_types
 
     # Check parameters are whitelisted
@@ -254,37 +218,18 @@ class EntriesController < ApplicationController
 
     # Get an entry object using the id and populate it with the entry parameters
     @entry = Entry.find(params[:id])
+
     @entry.attributes = entry_params
 
     # If there are errors, render the go back to the 'edit' page and display the errors, else go to the 'index' page
     if @errors != '' && @errors != nil
 
+      # Set various lists, e.g. authority_list, folio_list
+      set_lists(@entry)
+
       # Note: it would be better to 'redirect' to the 'edit' controller rather than 'render' to the 'edit' page
       # because we wouldn't have to set_authority_lists, etc, but 'redirect' loses the state of the nested form, i.e.
       # any fields which have been added are closed again??
-
-      # Get all the entries for this folio (so that they can be displayed as tabs)
-      @entry_list = Entry.all.where(folio_ssim: session[:folio_id])
-
-      # Set the authority lists (e.g. subject)
-      set_authority_lists
-
-      # Set the folio drop-down list
-      set_folio_list
-
-      # Check if this is the last entry for the folio
-      # Determines if the 'Continues on next folio' row and 'Continues' button are displayed
-      is_last_entry(@entry)
-
-      # Determines if the 'New Entry' Tab and '(continues)' text are displayed
-      set_folio_continues_id
-
-      # Determines which message is displayed on the 'Continue' button
-      is_entry_on_next_folio
-
-      # Add related place code freom 'edit' here?
-
-      # Render the edit page
       render 'edit'
 
     else
@@ -299,6 +244,7 @@ class EntriesController < ApplicationController
 
       # Save form data to Fedora
       @entry.save
+
       update_related_places
 
       # If entry continues, redirect to the first entry on the next folio
@@ -315,11 +261,33 @@ class EntriesController < ApplicationController
   def destroy
     @entry = Entry.find(params[:id])
     @entry.destroy
-    redirect_to entries_path, notice: 'Entry deleted.'
+    redirect_to entries_path
   end
 
   # PRIVATE METHODS
   private
+
+  # Set various lists, e.g. authority_list, folio_list
+  def set_lists(entry)
+
+    # Set the folio drop-down list
+    set_folio_list
+
+    # Set the authority lists (e.g. subject)
+    set_authority_lists
+
+    # Set the entry tab list (i.e. at the top of the form)
+    set_entry_list
+
+    # Determines if the 'Continues on next folio' row and 'Continues' button are to be displayed
+    is_last_entry(entry)
+
+    # Determines if the 'New Entry' Tab and '(continues)' text are to be displayed
+    set_folio_continues_id
+
+    # Determines which message is displayed when the user clicks the 'Continue' button
+    is_entry_on_next_folio
+  end
 
   # Never trust parameters from the scary internet, only allow the white list through.
   def whitelist_entry_params
@@ -327,73 +295,13 @@ class EntriesController < ApplicationController
     #params.require(:entry).permit(:entry_no, :access_provided_by, editorial_notes_attributes: [:id, :editorial_note, :_destroy], people_attributes: [:id, :name_as_written, :note, :age, :gender, :name_authority, :_destroy])
   end
 
-  def update_rdf_types
-    unless params[:entry][:related_person_groups_attributes].nil?
-      params[:entry][:related_person_groups_attributes].each do | key, value|
-        value.each do | k, v |
-          if k == 'rdftype'
-            params[:entry][:related_person_groups_attributes][key][k] = v.gsub!("[","").gsub!('"','').gsub!("]",'').gsub(' ','').split(',').collect { |s| s }
-          end
-        end
-      end
-    end
-    unless params[:entry][:related_places_attributes].nil?
-      params[:entry][:related_places_attributes].each do | key, value|
-        value.each do | k, v |
-          if k == 'rdftype'
-            params[:entry][:related_places_attributes][key][k] = v.gsub!("[","").gsub!('"','').gsub!("]",'').gsub(' ','').split(',').collect { |s| s }
-          end
-        end
-      end
-    end
-    unless params[:entry][:entry_dates_attributes].nil?
-      params[:entry][:entry_dates_attributes].each do | key, value|
-        value.each do | k, v |
-          if k == 'rdftype'
-            params[:entry][:entry_dates_attributes][key][k] = [v.gsub!("[","").gsub!('"','').gsub!("]",'').gsub(' ','')]
-          end
-          if k == 'single_dates_attributes'
-            v.each do | ke,va |
-              va.each do | keya, val|
-                if keya == 'rdftype'
-                  params[:entry][:entry_dates_attributes][key][k][ke][keya] = [val.gsub!("[","").gsub!('"','').gsub!("]",'').gsub(' ','')]
-                end
-              end
-            end
-          end
-        end
-      end
-    end
-  end
-
-  # This method adds relatedPlaceFor relations to RelatedPersonGroups by looking up the RelatedPlace id for each person_related_place
-  def update_related_places
-    begin
-      q = 'relatedPlaceFor_ssim:"' + @entry.id + '"'
-      SolrQuery.new.solr_query(q, 'id,place_as_written_tesim', 50)['response']['docs'].each do |result|
-        q = 'relatedAgentFor_ssim:"' + @entry.id + '" AND person_related_place_tesim:"' + result['place_as_written_tesim'][0] + '"'
-        begin
-          SolrQuery.new.solr_query(q, 'id,person_related_place_tesim', 50)['response']['docs'].each do |res|
-            place = RelatedPlace.where(id: result['id']).first
-            places = place.related_person_group
-            places += [RelatedPersonGroup.where(id: res['id']).first]
-            place.related_person_group = places
-            place.save
-          end
-        rescue
-          # move along
-        end
-      end
-    rescue
-      # move along
-    end
-  end
-
   def get_solr_data(db_entry)
 
     SolrQuery.new.solr_query('id:' + db_entry.entry_id, 'entry_no_tesim, entry_type_tesim, section_type_tesim, continues_on_tesim, summary_tesim, marginalia_tesim, language_tesim, subject_tesim, note_tesim, editorial_note_tesim, is_referenced_by_tesim', 1)['response']['docs'].map do |result|
 
       if result['entry_no_tesim'] != nil
+
+        db_entry.id = db_entry.entry_id.gsub(/test:/, '').to_i
 
         db_entry.entry_no = result['entry_no_tesim'].join()
 
@@ -489,6 +397,8 @@ class EntriesController < ApplicationController
 
             db_entry_date = DbEntryDate.new
 
+            db_entry_date.id = date_id.gsub(/test:/, '').to_i
+
             SolrQuery.new.solr_query('has_model_ssim:SingleDate AND dateFor_ssim:' + date_id, 'id, date_tesim, date_type_tesim, date_certainty_tesim', 100)['response']['docs'].map do |result2|
 
               single_date_id = result2['id'];
@@ -496,6 +406,8 @@ class EntriesController < ApplicationController
               if single_date_id != nil
 
                 db_single_date = DbSingleDate.new
+
+                db_single_date.id = single_date_id.gsub(/test:/, '').to_i
 
                 date_certainty_list = result2['date_certainty_tesim'];
 
@@ -546,6 +458,8 @@ class EntriesController < ApplicationController
           if related_place_id != nil
 
             db_related_place = DbRelatedPlace.new
+
+            db_related_place.id = related_place_id.gsub(/test:/, '').to_i
 
             place_same_as = result['place_same_as_tesim']
 
@@ -604,6 +518,8 @@ class EntriesController < ApplicationController
           if related_person_group_id != nil
 
             db_related_person_group = DbRelatedPersonGroup.new
+
+            db_related_person_group.id = related_person_group_id.gsub(/test:/, '').to_i
 
             person_same_as = result['person_same_as_tesim']
 
