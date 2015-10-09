@@ -10,49 +10,57 @@
 
     <table cellspacing="0" style="width: 100%; font-size: 0.95em">
 
-      <%# Parent ADM4 %>
+      <%# Place Name %>
       <tr>
-        <th style="width: 150px">*Parent ADM4:</th>
+        <th style="width: 150px">*Place Name:</th>
+        <td>
+          <%= @place.place_name %>
+        </td>
+      </tr>
+
+      <%# Civil Parish or Township (parent_ADM4) %>
+      <tr>
+        <th style="width: 150px">Civil Parish or Township:</th>
         <td>
           <%= @place.parent_ADM4 %>
         </td>
       </tr>
 
-      <%# Parent ADM3 %>
+      <%# Town, City or District (parent_ADM3) %>
       <tr>
-        <th>Parent ADM3:</th>
+        <th>Town, City or District:</th>
         <td>
           <%= @place.parent_ADM3 %>
         </td>
       </tr>
 
-      <%# Parent ADM2 %>
+      <%# County (parent_ADM2) %>
       <tr>
-        <th>Parent ADM2:</th>
+        <th>County:</th>
         <td>
           <%= @place.parent_ADM2 %>
         </td>
       </tr>
 
-      <%# Parent ADM1 %>
+      <%# Country (e.g. England) (parent_ADM1) %>
       <tr>
-        <th>Parent ADM1:</th>
+        <th>Country (e.g. England):</th>
         <td>
           <%= @place.parent_ADM1 %>
         </td>
       </tr>
 
-      <%# Parent Country %>
+      <%# Country (parent_country) %>
       <tr>
-        <th>Parent Country:</th>
+        <th>Country:</th>
         <td>
           <%= @place.parent_country %>
         </td>
       </tr>
 
-      <%# Feature Code %>
+      <%# Place Type (feature_code) %>
       <tr>
-        <th>Feature Code:</th>
+        <th>Place Type:</th>
         <td>
           <div class="field_group">
             <% @place.feature_code.each do |feature_code| %>

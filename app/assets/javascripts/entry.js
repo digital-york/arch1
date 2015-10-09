@@ -59,20 +59,20 @@ var dummy_text = "\
 <p><strong>Subject</strong>: choose one or more subject headings from the pop-up</p>\
 <p><strong>Note</strong>: any general notes about the entry that do not fit elsewhere, intended for public users</p>\
 <p><strong>Editorial notes</strong>: notes about the editing process, eg. areas that were difficult to read, not intended for public users</p>\
-<p><strong>Is Referenced By</strong>: bibliographic reference for the entry in printed editions or citations in other works</p>\
+<p><strong>Referenced By</strong>: bibliographic reference for the entry in printed editions or citations in other works</p>\
 <p class='help_text_header'>Date: dates referenced in the entry</p>\
 <p><strong>Date</strong>: an individual date; for date ranges add two dates, one with type=start and one with type=end</p>\
 <p><strong>Date Role</strong>: the role of the date in the document, choose from the drop-down list</p>\
 <p><strong>Note</strong>: general notes about the date</p>\
 <p class='help_text_header'>Place: places referenced in the entry</p>\
-<p><strong>Same As</strong>: this field has not yet been implemented, please ignore</p>\
 <p><strong>As Written</strong>: transcribe the place as written</p>\
+<p><strong>Place Name Authority</strong>: this field has not yet been implemented, please ignore</p>\
 <p><strong>Place Role</strong>: the role of the place in the document, choose from the drop-down list</p>\
 <p><strong>Place Type</strong>: the type of place, choose from the drop-down list</p>\
 <p><strong>Note</strong>: general notes about the place</p>\
 <p class='help_text_header'>Person: persons referenced in the entry</p>\
-<p><strong>Same As</strong>: this field has not yet been implemented, please ignore</p>\
 <p><strong>As Written</strong>: transcribe the person’s name as written</p>\
+<p><strong>Person Name Authority</strong>: this field has not yet been implemented, please ignore</p>\
 <p><strong>Gender</strong>: choose from the drop-down list</p>\
 <p><strong>Person Role</strong>: the role of the person in the document, choose from the drop-down list</p>\
 <p><strong>Descriptor</strong>: the status, qualification or occupation of the person, choose from the drop-down list</p>\
@@ -152,7 +152,7 @@ $(document).ready(function () {
     // e.g. a solr lists could be passed as 'role_list.jo_json' in the HTML code
     // Note also that then the list is passed but used on the 2nd level rather than the first,
     // there appeared to be a problem with spaces and so these were replaced with HTML code &#32;
-    // This happened specifically with 'plac e type' but is the probably the same for 'role', etc
+    // This happened specifically with 'place type' but is the probably the same for 'role', etc
 
     // Click multiple field button (Level 1)
     // e.g. Editorial Note
@@ -346,17 +346,17 @@ $(document).ready(function () {
 
                 "<table class='tab3' cellspacing='0'>" +
 
-                // Same As
-                "<tr><th>*Same As:</th><td class='input_single'>" +
+                // As Written
+                "<tr><th>*As Written:" +
+                "&nbsp;<img jq_type='place_as_written' jq_index='" + jq_index + "' jq_attributes='related_places_attributes' class='plus_icon click_multiple_field_button_level2' src='/assets/plus_sign.png'>" +
+                "</th><td><div class='field_group grey_box'></div></td></tr>" +
+
+                // Place Name Authority (Same As)
+                "<tr><th>Place Name Authority:</th><td class='input_single'>" +
                 "<a href='' onclick='popup(&#39;/places?start=true&amp;place_field=place_" + jq_index + "&#39;, &#39;place&#39;); return false;' tabindex='-1'><img src='/assets/magnifying_glass_small.png' class='plus_icon'></a>" +
                 "&nbsp;<span id='place_" + jq_index + "'></span>" +
                 "<input type='hidden' id='place_" + jq_index + "_hidden' value='' name='entry[related_places_attributes][" + jq_index + "][place_same_as]'>" +
                 "</td></tr>" +
-
-                // As Written
-                "<tr><th>As Written:" +
-                "&nbsp;<img jq_type='place_as_written' jq_index='" + jq_index + "' jq_attributes='related_places_attributes' class='plus_icon click_multiple_field_button_level2' src='/assets/plus_sign.png'>" +
-                "</th><td><div class='field_group grey_box'></div></td></tr>" +
 
                 // Place Role
                 "<tr><th>Place Role:&nbsp;<img jq_place_role_list=" + jq_place_role_list +
@@ -373,7 +373,7 @@ $(document).ready(function () {
                 "&nbsp;<img jq_type='place_note' jq_index='" + jq_index + "' jq_attributes='related_places_attributes' class='plus_icon click_multiple_text_area_button_level2' src='/assets/plus_sign.png'>" +
                 "</th><td><div class='field_group grey_box'></div></td></tr>" +
 
-                    // Hidden field for RDFTYPE
+                // Hidden field for RDFTYPE
                 "<tr><input type='hidden' id='hidden_field' name='entry[related_places_attributes][" + jq_index + "][rdftype]' value='" + jq_rdftype + "'></tr>" +
 
 
@@ -416,47 +416,47 @@ $(document).ready(function () {
 
                 "<table class='tab3' cellspacing='0'>" +
 
-                    // Same As
-                "<tr><th>*Same As:</th><td class='input_single'>" +
+                 // As Written
+                "<tr><th style='width: 110px'>*As Written:" +
+                "&nbsp;<img jq_type='person_as_written' jq_index='" + jq_index + "' jq_attributes='related_person_groups_attributes' class='plus_icon click_multiple_field_button_level2' src='/assets/plus_sign.png'>" +
+                "</th><td><div class='field_group grey_box'></div></td></tr>" +
+
+                // Person Name Authority (Same As)
+                "<tr><th>Person Name Authority:</th><td class='input_single'>" +
                 "<a href='' onclick='popup(&#39;/people?start=true&amp;person_field=person_" + jq_index + "&#39;, &#39;person&#39;); return false;' tabindex='-1'><img src='/assets/magnifying_glass_small.png' class='plus_icon'></a>" +
                 "&nbsp;<span id='person_" + jq_index + "'></span>" +
                 "<input type='hidden' id='person_" + jq_index + "_hidden' value='' name='entry[related_person_groups_attributes][" + jq_index + "][person_same_as]'>" +
                 "</td></tr>" +
 
-                    // As Written
-                "<tr><th style='width: 110px'>As Written:" +
-                "&nbsp;<img jq_type='person_as_written' jq_index='" + jq_index + "' jq_attributes='related_person_groups_attributes' class='plus_icon click_multiple_field_button_level2' src='/assets/plus_sign.png'>" +
-                "</th><td><div class='field_group grey_box'></div></td></tr>" +
-
-                    // Gender
+                // Gender
                 "<tr><th>Gender:</th><td><select name='entry[related_person_groups_attributes][" + jq_index + "][person_gender]'>" + gender_options + "</select></td></tr>" +
 
-                    // Role
+                // Role
                 "<tr><th style='width: 110px'>Person Role:" +
                 "&nbsp;<img jq_role_list=" + jq_role_list + " jq_type='" + "person_role" + "' jq_index='" + jq_index + "' jq_attributes='related_person_groups_attributes' class='plus_icon click_select_field_button_level2' src='/assets/plus_sign.png'>" +
                 "</th><td><div class='field_group grey_box'></div></td></tr>" +
 
-                    // Descriptor
+                // Descriptor
                 "<tr><th style='width: 110px'>Descriptor:" +
                 "&nbsp;<img jq_descriptor_list=" + jq_descriptor_list + " jq_type='" + "person_descriptor" + "' jq_index='" + jq_index + "' jq_attributes='related_person_groups_attributes' class='plus_icon click_select_field_button_level2' src='/assets/plus_sign.png'>" +
                 "</th><td><div class='field_group grey_box'></div></td></tr>" +
 
-                    // Descriptor As Written
+                // Descriptor As Written
                 "<tr><th style='width: 110px'>Descriptor As Written:" +
                 "&nbsp;<img jq_type='person_descriptor_as_written' jq_index='" + jq_index + "' jq_attributes='related_person_groups_attributes' class='plus_icon click_multiple_field_button_level2' src='/assets/plus_sign.png'>" +
                 "</th><td><div class='field_group grey_box'></div></td></tr>" +
 
-                    // Note
+                // Note
                 "<tr><th>Note:" +
                 "&nbsp;<img jq_type='person_note' jq_index='" + jq_index + "' jq_attributes='related_person_groups_attributes' class='plus_icon click_multiple_text_area_button_level2' src='/assets/plus_sign.png'>" +
                 "</th><td><div class='field_group grey_box'></div></td></tr>" +
 
-                    // Related Place
+                // Related Place
                 "<tr><th>Related Place:" +
                 "&nbsp;<img jq_type='person_related_place' jq_index='" + jq_index + "' jq_attributes='related_person_groups_attributes' class='plus_icon click_related_place_field_button' src='/assets/plus_sign.png'>" +
                 "</th><td><div class='field_group grey_box'></div></td></tr>" +
 
-                    // Hidden field for RDFTYPE
+                // Hidden field for RDFTYPE
                 "<tr><input type='hidden' id='hidden_field' name='entry[related_person_groups_attributes][" + jq_index + "][rdftype]' value='" + jq_rdftype + "'></tr>" +
 
                 "</table>" +

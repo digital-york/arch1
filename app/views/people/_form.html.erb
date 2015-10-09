@@ -14,6 +14,10 @@
       <div class="popup_error"><%= @error.html_safe %></div>
   <% end %>
 
+  <p>
+    <em>* Please construct personal names according to <a href="http://archiveshub.ac.uk/ncarules/" target="_blank">NCARules</a></em>
+  </p>
+
   <div>
     <% if @person.new_record? %>
         <%= link_to "Go back to search page", people_path, method: :get %>
@@ -30,9 +34,9 @@
 
         <table cellspacing="0" style="width: 100%; font-size: 0.95em">
 
-          <%# Family %>
+          <%# Family Name (Family) %>
           <tr>
-            <th style="width: 150px">*Family:</th>
+            <th style="width: 150px">*Family Name:</th>
             <td>
               <%= text_field_tag "person[family]", @person.family %>
             </td>

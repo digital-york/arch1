@@ -30,49 +30,57 @@
 
         <table cellspacing="0" style="width: 100%; font-size: 0.95em">
 
-          <%# Person ADM4 %>
+          <%# Place Name %>
           <tr>
-            <th style="width: 150px">*Parent ADM4:</th>
+            <th style="width: 150px">*Place Name:</th>
+            <td>
+              <%= text_field_tag "place[place_name]", @place.place_name %>
+            </td>
+          </tr>
+
+          <%# Civil Parish or Township (place_ADM4) %>
+          <tr>
+            <th>Civil Parish or Township:</th>
             <td>
               <%= text_field_tag "place[parent_ADM4]", @place.parent_ADM4 %>
             </td>
           </tr>
 
-          <%# Person ADM3 %>
+          <%# Town, City or District (place_ADM3) %>
           <tr>
-            <th>Parent ADM3:</th>
+            <th>Town, City or District:</th>
             <td>
               <%= text_field_tag "place[parent_ADM3]", @place.parent_ADM3 %>
             </td>
           </tr>
 
-          <%# Person ADM2 %>
+          <%# County (place_ADM2) %>
           <tr>
-            <th>Parent ADM2:</th>
+            <th>County:</th>
             <td>
               <%= text_field_tag "place[parent_ADM2]", @place.parent_ADM2 %>
             </td>
           </tr>
 
-          <%# Person ADM1 %>
+          <%# Country (e.g. England) (place_ADM1) %>
           <tr>
-            <th>Parent ADM1:</th>
+            <th>Country (e.g. England):</th>
             <td>
               <%= text_field_tag "place[parent_ADM1]", @place.parent_ADM1 %>
             </td>
           </tr>
 
-          <%# Parent Country %>
+          <%# Country (parent_country) %>
           <tr>
-            <th>Parent Country:</th>
+            <th>Country:</th>
             <td>
               <%= text_field_tag "place[parent_country]", @place.parent_country %>
             </td>
           </tr>
 
-          <%# Feature Code %>
+          <%# Place Type (feature_code) %>
           <tr>
-            <th>Feature Code:
+            <th>Place Type:
               <img src="/assets/plus_sign.png" alt="plus icon" class="plus_icon click_popup_multiple_field_button" jq_type_1='place' jq_type_2="feature_code"/>
             </th>
             <td>

@@ -277,7 +277,7 @@ module Validation
     errors = errors + get_multi_field_errors(entry_params[:subject], 'Subject', MEDIUM_FIELD)
     errors = errors + get_multi_field_errors(entry_params[:note], 'Note', MEDIUM_FIELD)
     errors = errors + get_multi_field_errors(entry_params[:editorial_note], 'Editorial Note', MEDIUM_FIELD)
-    errors = errors + get_multi_field_errors(entry_params[:is_referenced_by], 'Is Referenced By', MEDIUM_FIELD)
+    errors = errors + get_multi_field_errors(entry_params[:is_referenced_by], 'Referenced By', MEDIUM_FIELD)
 
     # Validate related places
     related_places_params = entry_params[:related_places_attributes]

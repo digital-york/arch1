@@ -193,9 +193,9 @@
                     </td>
                   </tr>
 
-                  <%# Is Referenced By %>
+                  <%# Referenced By %>
                   <tr>
-                    <th>Is Referenced By:</th>
+                    <th>Referenced By:</th>
                     <td>
                       <% @db_entry.db_is_referenced_bys.each do |is_referenced_by| %>
                           <% if is_referenced_by != nil %>
@@ -302,17 +302,9 @@
 
                               <table class="tab3">
 
+                                <%# Place As Written %>
                                 <tr>
-                                  <th style="width: 110px">*Same As:</th>
-                                  <td>
-                                    <% if related_place.place_same_as != nil %>
-                                      <%= terms.get_place_same_as(related_place.place_same_as) %>
-                                    <% end %>
-                                  </td>
-                                </tr>
-
-                                <tr>
-                                  <th>As Written:</th>
+                                  <th>*As Written:</th>
                                   <td>
                                     <div style="padding: 4px 0px; min-height: 18px" class="field_group">
                                       <% related_place.db_place_as_writtens.each do |place_as_written| %>
@@ -324,6 +316,17 @@
                                   </td>
                                 </tr>
 
+                                <%# Place Name Authority (Same As) %>
+                                <tr>
+                                  <th style="width: 110px">Place Name Authority:</th>
+                                  <td>
+                                    <% if related_place.place_same_as != nil %>
+                                        <%= terms.get_place_same_as(related_place.place_same_as) %>
+                                    <% end %>
+                                  </td>
+                                </tr>
+
+                                <%# Place Role %>
                                 <tr>
                                   <th>Place Role:</th>
                                   <td>
@@ -339,6 +342,7 @@
                                   </td>
                                 </tr>
 
+                                <%# Place Type %>
                                 <tr>
                                   <th>Place Type:</th>
                                   <td>
@@ -354,6 +358,7 @@
                                   </td>
                                 </tr>
 
+                                <%# Place Note %>
                                 <tr>
                                   <th>Note:</th>
                                   <td>
@@ -366,7 +371,6 @@
                                     </div>
                                   </td>
                                 </tr>
-
                               </table>
                             </div>
                           </div>
@@ -389,20 +393,10 @@
 
                               <table class="tab3">
 
-                                <%# Same As %>
-                                <tr>
-                                  <th style="width: 110px">*Same As:</th>
-                                  <td>
-                                    <% if related_person.person_same_as != nil %>
-                                      <%= terms.get_person_same_as(related_person.person_same_as) %>
-                                    <% end %>
-                                  </td>
-                                </tr>
-
-                                <%# As Written %>
+                                <%# Person As Written %>
                                 <tr>
                                   <th>
-                                    As Written:
+                                    *As Written:
                                   </th>
                                   <td>
                                     <div style="padding: 4px 0px; min-height: 18px" class="field_group">
@@ -416,7 +410,17 @@
                                   </td>
                                 </tr>
 
-                                <%# Gender %>
+                                <%# Person Name Authority (Same As) %>
+                                <tr>
+                                  <th style="width: 110px">Person Name Authority:</th>
+                                  <td>
+                                    <% if related_person.person_same_as != nil %>
+                                        <%= terms.get_person_same_as(related_person.person_same_as) %>
+                                    <% end %>
+                                  </td>
+                                </tr>
+
+                                <%# Person Gender %>
                                 <tr>
                                   <th>Gender:</th>
                                   <td>
@@ -436,12 +440,11 @@
                                             <%= terms.get_str_from_id(person_role.name, 'preflabel_tesim') %>
                                           </div>
                                       <% end %>
-
                                     </div>
                                   </td>
                                 </tr>
 
-                                <%# Descriptor %>
+                                <%# Person Descriptor %>
                                 <tr>
                                   <th>
                                     Descriptor:
@@ -457,61 +460,55 @@
                                   </td>
                                 </tr>
 
+                                <%# Person Descriptor As Written %>
                                 <tr>
                                   <th>
                                     Descriptor As Written:
                                   </th>
                                   <td>
                                     <div style="padding: 4px 0px; min-height: 18px" class="field_group">
-
                                       <% related_person.db_person_descriptor_as_writtens.each do |person_descriptor_as_written| %>
                                           <div class="field_single" style="padding: 4px 0px">
                                             <%= person_descriptor_as_written.name %>
                                           </div>
                                       <% end %>
-
                                     </div>
                                   </td>
                                 </tr>
 
-                                <%# Note %>
+                                <%# Person Note %>
                                 <tr>
                                   <th>
                                     Note:
                                   </th>
                                   <td>
                                     <div style="padding: 4px 0px; min-height: 18px" class="field_group">
-
                                       <% related_person.db_person_notes.each do |person_note| %>
                                           <div class="field_single" style="padding: 4px 0px">
                                             <%= person_note.name %>
                                           </div>
                                       <% end %>
-
                                     </div>
                                   </td>
                                 </tr>
 
+                                <%# Person Related Place %>
                                 <tr>
                                   <th>
                                     Related Place:
                                   </th>
                                   <td>
                                     <div style="padding: 4px 0px; min-height: 18px" class="field_group">
-
                                       <% related_person.db_person_related_places.each do |related_place| %>
                                           <div class="field_single" style="padding: 4px 0px">
                                             <%= related_place.name %>
                                           </div>
                                       <% end %>
-
                                     </div>
                                   </td>
                                 </tr>
-
                               </table>
                             </div>
-
                           </div>
                       <% end %>
                     </td>

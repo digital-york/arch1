@@ -13,39 +13,56 @@ class PlacesController < ApplicationController
     # If the popup has just been opened, set the session variable to ''
     if params[:start] == 'true'
 
-      session[:place_search_term] = ''
+      session[:place_search_term] = nil
 
     # Else do a search using the params[:search_term] or session[place_search_term]
     else
 
       # Update the session variable with the new search term
-      if params[:search_term] != nil
-        session[:place_search_term] = params[:search_term]
+      if params[:search_term] != nil then session[:place_search_term] = params[:search_term] end
+
+      if session[:place_search_term] != nil
+
+        # Get all the parent ADMs from solr
+        response = SolrQuery.new.solr_query(q='has_model_ssim:Place', fl='id, place_name_tesim, parent_ADM4_tesim, parent_ADM3_tesim, parent_ADM2_tesim, parent_ADM1_tesim', rows=1000, sort='')
+
+        temp_hash = {}
+
+        response['response']['docs'].map do |result|
+
+          id = result['id']
+          place_name = result['place_name_tesim']
+          parent_ADM4 = result['parent_ADM4_tesim']
+          parent_ADM3 = result['parent_ADM3_tesim']
+          parent_ADM2 = result['parent_ADM2_tesim']
+          parent_ADM1 = result['parent_ADM1_tesim']
+
+          str = ''
+
+          if place_name != nil then
+            str = "#{place_name.join()}"
+          end
+          if parent_ADM4 != nil then
+            str = "#{str}, #{parent_ADM4.join()}"
+          end
+          if parent_ADM3 != nil then
+            str = "#{str}, #{parent_ADM3.join()}"
+          end
+          if parent_ADM2 != nil then
+            str = "#{str}, #{parent_ADM2.join()}"
+          end
+          if parent_ADM1 != nil then
+            str = "#{str}, #{parent_ADM1.join()}"
+          end
+          if str != nil then
+            temp_hash[str] = id
+          end
+        end
+
+        # Get all the names which match the search term and sort them
+        @search_hash = temp_hash.select { |key, value| key.to_s.match(/#{session[:place_search_term]}/i) }
+        @search_hash = Hash[@search_hash.sort]
       end
-
-      # Get all the parent ADMs from solr
-      response = SolrQuery.new.solr_query(q='has_model_ssim:Place', fl='id, parent_ADM4_tesim, parent_ADM3_tesim, parent_ADM2_tesim, parent_ADM1_tesim', rows=1000, sort='')
-
-      temp_hash = {}
-
-      response['response']['docs'].map do |result|
-        id = result['id']
-        parent_ADM4 = result['parent_ADM4_tesim']
-        parent_ADM3 = result['parent_ADM3_tesim']
-        parent_ADM2 = result['parent_ADM2_tesim']
-        parent_ADM1 = result['parent_ADM1_tesim']
-        place_name = ''
-        if parent_ADM4 != nil then place_name = "#{parent_ADM4.join()}" end
-        if parent_ADM3 != nil then place_name = "#{place_name}, #{parent_ADM3.join()}" end
-        if parent_ADM2 != nil then place_name = "#{place_name}, #{parent_ADM2.join()}" end
-        if parent_ADM1 != nil then place_name = "#{place_name}, #{parent_ADM1.join()}" end
-        if place_name != nil then temp_hash[place_name] = id end
-      end
-
-      # Get all the names which match the search term and sort them
-      @search_hash = temp_hash.select { |key, value| key.to_s.match(/#{session[:place_search_term]}/i) }
-      @search_hash = Hash[@search_hash.sort]
-
     end
   end
 
@@ -75,8 +92,8 @@ class PlacesController < ApplicationController
 
     @error = ''
 
-    if place_params[:parent_ADM4] == ''
-      @error = "Please enter a 'Parent ADM4'"
+    if place_params[:place_name] == ''
+      @error = "Please enter a 'Place Name'"
     end
 
     # Check that same_as is a URL
@@ -98,18 +115,19 @@ class PlacesController < ApplicationController
       @place.concept_scheme_id = id
 
       # Get preflabel
-      @place.preflabel = get_preflabel(@place.parent_ADM4, @place.parent_ADM3, @place.parent_ADM2, @place.parent_ADM1)
+      @place.preflabel = get_preflabel(@place.place_name, @place.parent_ADM4, @place.parent_ADM3, @place.parent_ADM2, @place.parent_ADM1)
 
       @place.save
 
       # Pass variable to view page to notify user that place has been added.
-      @place_name = @place.parent_ADM4
+      @place_name = @place.place_name
 
       # If the 'Submit and Close' button has been clicked, pass these variables back to the page
       # so that the javascript method is run (i.e. post_value()) and the page is closed
       if params[:commit] == 'Submit and Close'
+      puts "HERE!"
         @commit_id = @place.id
-        @commit_place_name = place_params[:parent_ADM4]
+        @commit_place_name = place_params[:place_name]
       end
 
       # Initialise place form again
@@ -130,8 +148,8 @@ class PlacesController < ApplicationController
 
     @error = ''
 
-    if place_params[:parent_ADM4] == ''
-      @error = "Please enter a 'Parent ADM4'"
+    if place_params[:plaxce_name] == ''
+      @error = "Please enter a 'Place Name'"
     end
 
     # Check that same_as is a URL
@@ -154,12 +172,12 @@ class PlacesController < ApplicationController
       @place.concept_scheme_id = id
 
       # Get preflabel
-      @place.preflabel = get_preflabel(@place.parent_ADM4, @place.parent_ADM3, @place.parent_ADM2, @place.parent_ADM1)
+      @place.preflabel = get_preflabel(@place.place_name, @place.parent_ADM4, @place.parent_ADM3, @place.parent_ADM2, @place.parent_ADM1)
 
       @place.save
 
       # Pass variable to view page to notify user that place has been updated.
-      @place_name = @place.parent_ADM4
+      @place_name = @place.place_name
 
       redirect_to :controller => 'places', :action => 'show', :id => @place.id
     end
@@ -181,11 +199,31 @@ class PlacesController < ApplicationController
   end
 
   # Get the preflabel from the solr parameters (separated by an underscore)
-  def get_preflabel(parent_ADM4, parent_ADM3, parent_ADM2, parent_ADM1)
-    preflabel = parent_ADM4
-    if parent_ADM3 != '' then preflabel = "#{preflabel}_#{parent_ADM3}" end
-    if parent_ADM2 != '' then preflabel = "#{preflabel}_#{parent_ADM2}" end
-    if parent_ADM1 != '' then preflabel = "#{preflabel}_#{parent_ADM1}" end
+  def get_preflabel(place_name, parent_ADM4, parent_ADM3, parent_ADM2, parent_ADM1)
+
+    preflabel = place_name
+
+    preflabel2 = ''
+
+    if parent_ADM4 != ''
+      preflabel2 = "#{parent_ADM4}"
+    end
+    if parent_ADM3 != ''
+      if preflabel2 != '' then preflabel2 = "#{preflabel2}, " end
+      preflabel2 = "#{preflabel2}#{parent_ADM3}"
+    end
+    if parent_ADM2 != ''
+      if preflabel2 != '' then preflabel2 = "#{preflabel2}, " end
+      preflabel2 = "#{preflabel2}#{parent_ADM2}"
+    end
+    if parent_ADM1 != ''
+      if preflabel2 != '' then preflabel2 = "#{preflabel2}, " end
+      preflabel2 = "#{preflabel2}#{parent_ADM1}"
+    end
+
+    # Put brackets around preflabel2 if it exists
+    if preflabel2 != '' then preflabel = "#{preflabel} (#{preflabel2})" end
+
     return preflabel
   end
 

@@ -10,7 +10,7 @@
 
     <table cellspacing="0" style="width: 100%; font-size: 0.95em">
 
-      <%# Family Name %>
+      <%# Family Name (Family) %>
       <tr>
         <th style="width: 150px">*Family Name:</th>
         <td>
@@ -34,17 +34,9 @@
         </td>
       </tr>
 
-      <%# Dates %>
+      <%# Post-Title %>
       <tr>
-        <th>Dates:</th>
-        <td>
-          <%= @person.dates %>
-        </td>
-      </tr>
-
-      <%# Title %>
-      <tr>
-        <th>Title:</th>
+        <th>Post-Title:</th>
         <td>
           <%= @person.post_title %>
         </td>
@@ -77,17 +69,16 @@
         <th>Related Authority:</th>
         <td>
           <div class="field_group">
-            <% @person.same_as.each do |same_as| %>
+            <% @person.related_authority.each do |related_authority| %>
                 <div class="field_single">
-                  <%= same_as %>
+                  <%= related_authority %>
                 </div>
             <% end %>
           </div>
         </td>
       </tr>
 
-      <%# Variant Names %>
-      <%# Note that this is 'altlabel' in the model %>
+      <%# Variant Names (altlabel) %>
       <tr>
         <th>Variant Names:</th>
         <td>

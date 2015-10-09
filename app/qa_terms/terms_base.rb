@@ -45,19 +45,35 @@ class TermsBase
   # Construct place same_as string for the view / edit pages
   def get_place_same_as(same_as)
 
-    response = SolrQuery.new.solr_query(q='id:' + same_as, fl='parent_ADM4_tesim, parent_ADM3_tesim, parent_ADM2_tesim, parent_ADM1_tesim', rows='1')
+    response = SolrQuery.new.solr_query(q='id:' + same_as, fl='place_name_tesim, parent_ADM4_tesim, parent_ADM3_tesim, parent_ADM2_tesim, parent_ADM1_tesim', rows='1')
 
     place_same_as = ''
 
     response['response']['docs'].map do |result|
-        parent_ADM4 = result['parent_ADM4_tesim']
-        parent_ADM3 = result['parent_ADM3_tesim']
-        parent_ADM2 = result['parent_ADM2_tesim']
-        parent_ADM1 = result['parent_ADM1_tesim']
-        place_same_as = parent_ADM4.join()
-        if parent_ADM3 != nil then place_same_as = "#{place_same_as}, #{parent_ADM3.join()}" end
-        if parent_ADM2 != nil then place_same_as = "#{place_same_as}, #{parent_ADM2.join()}" end
-        if parent_ADM1 != nil then place_same_as = "#{place_same_as}, #{parent_ADM1.join()}" end
+
+      place_name = result['place_name_tesim']
+      parent_ADM4 = result['parent_ADM4_tesim']
+      parent_ADM3 = result['parent_ADM3_tesim']
+      parent_ADM2 = result['parent_ADM2_tesim']
+      parent_ADM1 = result['parent_ADM1_tesim']
+
+      if (place_name != nil && place_name != '')
+        place_same_as = place_name.join()
+        if parent_ADM4 != nil then
+          place_same_as = "#{place_same_as}, #{parent_ADM4.join()}"
+        end
+        if parent_ADM3 != nil then
+          place_same_as = "#{place_same_as}, #{parent_ADM3.join()}"
+        end
+        if parent_ADM2 != nil then
+          place_same_as = "#{place_same_as}, #{parent_ADM2.join()}"
+        end
+        if parent_ADM1 != nil then
+          place_same_as = "#{place_same_as}, #{parent_ADM1.join()}"
+        end
+      else
+        place_same_as = "ERROR"
+      end
     end
 
     return place_same_as
@@ -71,16 +87,31 @@ class TermsBase
     person_same_as = ''
 
     response['response']['docs'].map do |result|
+
       family = result['family_tesim']
       pre_title = result['pre_title_tesim']
       given_name = result['given_name_tesim']
       post_title = result['post_title_tesim']
       epithet = result['epithet_tesim']
-      person_same_as = family.join()
-      if pre_title != nil then person_same_as = "#{person_same_as}, #{pre_title.join()}" end
-      if given_name != nil then person_same_as = "#{person_same_as}, #{given_name.join()}" end
-      if post_title != nil then person_same_as = "#{person_same_as}, #{post_title.join()}" end
-      if epithet != nil then person_same_as = "#{person_same_as}, #{epithet.join()}" end
+
+      if family != nil && family != ''
+        person_same_as = family.join()
+        if pre_title != nil then
+          person_same_as = "#{person_same_as}, #{pre_title.join()}"
+        end
+        if given_name != nil then
+          person_same_as = "#{person_same_as}, #{given_name.join()}"
+        end
+        if post_title != nil then
+          person_same_as = "#{person_same_as}, #{post_title.join()}"
+        end
+        if epithet != nil then
+          person_same_as = "#{person_same_as}, #{epithet.join()}"
+        end
+      else
+        person_same_as = "ERROR"
+      end
+
     end
 
     return person_same_as

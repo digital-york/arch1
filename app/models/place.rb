@@ -8,6 +8,11 @@ class Place < ActiveFedora::Base
     ['http://schema.org/Place']
   end
 
+  # eg. NCARules name.
+  property :place_name, predicate: ::RDF::URI.new('http://www.geonames.org/ontology#name'), multiple: false do |index|
+    index.as :stored_searchable
+  end
+
   # eg. NCARules civil parish.
   property :parent_ADM4, predicate: ::RDF::URI.new('http://www.geonames.org/ontology#parentADM4'), multiple: false do |index|
     index.as :stored_searchable

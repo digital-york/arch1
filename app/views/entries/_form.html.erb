@@ -278,9 +278,9 @@
                         </td>
                     </tr>
 
-                    <%# Is Referenced By %>
+                    <%# Referenced By %>
                     <tr>
-                        <th>Is Referenced By:
+                        <th>Referenced By:
                             <img src="/assets/plus_sign.png" alt="plus icon" class="plus_icon click_multiple_field_button" jq_type="is_referenced_by"/>
                         </th>
                         <td>
@@ -411,8 +411,28 @@
 
                                         <table class="tab3">
 
+                                          <%# Place As Written %>
+                                          <tr>
+                                            <th>
+                                              *As Written:
+                                              <img src="/assets/plus_sign.png" alt="plus icon" class="plus_icon click_multiple_field_button_level2" jq_attributes="related_places_attributes" jq_index="<%= index1 %>" jq_type="place_as_written" %>
+                                            </th>
+                                            <td>
+                                              <div class="field_group grey_box place_as_written_block">
+                                                <% related_place.db_place_as_writtens.each_with_index do |place_as_written, index2| %>
+                                                    <div class="field_single">
+                                                      <%#= text_field_tag "entry[related_places_attributes][" + index1.to_s + "][place_as_written][]", place_as_written, id: none %>
+                                                      <input type="text" name="entry[related_places_attributes][<%= index1.to_s %>][place_as_written][]" value="<%= place_as_written.name %>" class="place_as_written">
+                                                      &nbsp;<img src='/assets/delete.png' alt='Delete icon' class='delete_icon click_remove_field_level1' jq_tag_type='input'>
+                                                    </div>
+                                                <% end %>
+                                              </div>
+                                            </td>
+                                          </tr>
+
+                                            <%# Place Name Authority (Same As) %>
                                             <tr>
-                                                <th style="width: 110px">*Same As:</th>
+                                                <th style="width: 110px">Place Name Authority:</th>
                                                 <td class="input_single">
                                                   <a href='#' onclick="popup('/places?start=true&amp;place_field=place_<%= index1 %>', 'place'); return false;" tabindex="-1"><%= image_tag "magnifying_glass_small.png", class: "plus_icon" %></a>
                                                   <span id="place_<%= index1 %>">
@@ -424,24 +444,7 @@
                                                 </td>
                                             </tr>
 
-                                            <tr>
-                                                <th>
-                                                    As Written:
-                                                    <img src="/assets/plus_sign.png" alt="plus icon" class="plus_icon click_multiple_field_button_level2" jq_attributes="related_places_attributes" jq_index="<%= index1 %>" jq_type="place_as_written" %>
-                                                </th>
-                                                <td>
-                                                    <div class="field_group grey_box place_as_written_block">
-                                                        <% related_place.db_place_as_writtens.each_with_index do |place_as_written, index2| %>
-                                                            <div class="field_single">
-                                                                <%#= text_field_tag "entry[related_places_attributes][" + index1.to_s + "][place_as_written][]", place_as_written, id: none %>
-                                                                <input type="text" name="entry[related_places_attributes][<%= index1.to_s %>][place_as_written][]" value="<%= place_as_written.name %>" class="place_as_written">
-                                                                &nbsp;<img src='/assets/delete.png' alt='Delete icon' class='delete_icon click_remove_field_level1' jq_tag_type='input'>
-                                                            </div>
-                                                        <% end %>
-                                                    </div>
-                                                </td>
-                                            </tr>
-
+                                            <%# Place Role %>
                                             <tr>
                                                 <th>
                                                     Place Role:
@@ -459,6 +462,7 @@
                                                 </td>
                                             </tr>
 
+                                          <%# Place Type %>
                                             <tr>
                                                 <th>
                                                     Place Type:
@@ -476,6 +480,7 @@
                                                 </td>
                                             </tr>
 
+                                          <%# Place Note %>
                                             <tr>
                                                 <th>
                                                     Note:
@@ -523,24 +528,10 @@
 
                                         <table class="tab3">
 
-                                            <%# Same As %>
-                                            <tr>
-                                                <th style="width: 110px">*Same As:</th>
-                                                <td class="input_single">
-                                                  <a href='#' onclick="popup('/people?start=true&amp;person_field=person_<%= index1 %>', 'person'); return false;" tabindex="-1"><%= image_tag "magnifying_glass_small.png", class: "plus_icon" %></a>
-                                                  <span id="person_<%= index1 %>">
-                                                  <% if related_person.person_same_as != nil %>
-                                                    <%= terms.get_person_same_as(related_person.person_same_as) %>
-                                                  <% end %>
-                                                  </span>
-                                                  <%= hidden_field_tag "entry[related_person_groups_attributes][" + index1.to_s + "][person_same_as]", related_person.person_same_as, id: 'person_' + index1.to_s + '_hidden' %>
-                                                </td>
-                                            </tr>
-
-                                            <%# As Written %>
+                                            <%# Person As Written %>
                                             <tr>
                                                 <th>
-                                                    As Written:
+                                                    *As Written:
                                                     <img src="/assets/plus_sign.png" alt="plus icon" class="plus_icon click_multiple_field_button_level2" jq_attributes="related_person_groups_attributes" jq_index="<%= index1 %>" jq_type="person_as_written"/>
                                                 </th>
                                                 <td>
@@ -555,7 +546,21 @@
                                                 </td>
                                             </tr>
 
-                                            <%# Gender %>
+                                          <%# Person Related Authority (Same As) %>
+                                          <tr>
+                                            <th style="width: 110px">Person Name Authority:</th>
+                                            <td class="input_single">
+                                              <a href='#' onclick="popup('/people?start=true&amp;person_field=person_<%= index1 %>', 'person'); return false;" tabindex="-1"><%= image_tag "magnifying_glass_small.png", class: "plus_icon" %></a>
+                                                  <span id="person_<%= index1 %>">
+                                                  <% if related_person.person_same_as != nil %>
+                                                    <%= terms.get_person_same_as(related_person.person_same_as) %>
+                                                  <% end %>
+                                                  </span>
+                                              <%= hidden_field_tag "entry[related_person_groups_attributes][" + index1.to_s + "][person_same_as]", related_person.person_same_as, id: 'person_' + index1.to_s + '_hidden' %>
+                                            </td>
+                                          </tr>
+
+                                            <%# Person Gender %>
                                             <tr>
                                                 <th>Gender:</th>
                                                 <td>
@@ -580,7 +585,7 @@
                                                 </td>
                                             </tr>
 
-                                            <%# Descriptor %>
+                                            <%# Person Descriptor %>
                                             <tr>
                                                 <th>*Descriptor:
                                                     <img src="/assets/plus_sign.png" alt="plus icon" class="plus_icon click_select_field_button_level2" jq_attributes="related_person_groups_attributes" jq_index="<%= index1 %>" jq_type="person_descriptor" jq_descriptor_list="<%= @descriptor_list.to_json %>"/>
@@ -597,7 +602,7 @@
                                                 </td>
                                             </tr>
 
-                                            <%# Descriptor As Written %>
+                                            <%# Person Descriptor As Written %>
                                             <tr>
                                                 <th>
                                                     Descriptor As Written:
@@ -616,7 +621,7 @@
                                             </tr>
 
 
-                                            <%# Note %>
+                                            <%# Person Note %>
                                             <tr>
                                                 <th>
                                                     Note:
@@ -634,7 +639,7 @@
                                                 </td>
                                             </tr>
 
-                                            <%# Related Place %>
+                                            <%# Person Related Place %>
                                             <tr>
                                                 <th>
                                                     Related Place:

@@ -13,40 +13,56 @@ class PeopleController < ApplicationController
     # If the popup has just been opened, set the session variable to ''
     if params[:start] == 'true'
 
-      session[:person_search_term] = ''
+      session[:person_search_term] = nil
 
     # Else do a search using params[:search_term] or session[person_search_term]
     else
 
       # Update the session variable with the new search term
-      if params[:search_term] != nil
-        session[:person_search_term] = params[:search_term]
+      if params[:search_term] != nil then session[:person_search_term] = params[:search_term] end
+
+      if session[:person_search_term] != nil
+
+        # Get the necessary info from solr
+        response = SolrQuery.new.solr_query(q='has_model_ssim:Person', fl='id, family_tesim, pre_title_tesim, given_name_tesim, post_title_tesim, epithet_tesim', rows=1000, sort='')
+
+        temp_hash = {}
+
+        response['response']['docs'].map do |result|
+
+          id = result['id']
+          family = result['family_tesim']
+          pre_title = result['pre_title_tesim']
+          given_name = result['given_name_tesim']
+          post_title = result['post_title_tesim']
+          epithet = result['epithet_tesim']
+
+          person_name = ''
+
+          if family != nil then
+            person_name = "#{family.join()}"
+          end
+          if pre_title != nil then
+            person_name = "#{person_name}, #{pre_title.join()}"
+          end
+          if given_name != nil then
+            person_name = "#{person_name}, #{given_name.join()}"
+          end
+          if post_title != nil then
+            person_name = "#{person_name}, #{post_title.join()}"
+          end
+          if epithet != nil then
+            person_name = "#{person_name}, #{epithet.join()}"
+          end
+          if person_name != nil then
+            temp_hash[person_name] = id
+          end
+        end
+
+        # Get all the names which match the search term and sort them
+        @search_hash = temp_hash.select { |key, value| key.to_s.match(/#{session[:person_search_term]}/i) }
+        @search_hash = Hash[@search_hash.sort]
       end
-
-      # Get the necessary info from solr
-      response = SolrQuery.new.solr_query(q='has_model_ssim:Person', fl='id, family_tesim, pre_title_tesim, given_name_tesim, post_title_tesim, epithet_tesim', rows=1000, sort='')
-
-      temp_hash = {}
-
-      response['response']['docs'].map do |result|
-        id = result['id']
-        family = result['family_tesim']
-        pre_title = result['pre_title_tesim']
-        given_name = result['given_name_tesim']
-        post_title = result['post_title_tesim']
-        epithet = result['epithet_tesim']
-        person_name = ''
-        if family != nil then person_name = "#{family.join()}" end
-        if pre_title != nil then person_name = "#{person_name}, #{pre_title.join()}" end
-        if given_name != nil then person_name = "#{person_name}, #{given_name.join()}" end
-        if post_title != nil then person_name = "#{person_name}, #{post_title.join()}" end
-        if epithet != nil then person_name = "#{person_name}, #{epithet.join()}" end
-        if person_name != nil then temp_hash[person_name] = id end
-      end
-
-      # Get all the names which match the search term and sort them
-      @search_hash = temp_hash.select { |key, value| key.to_s.match(/#{session[:person_search_term]}/i) }
-      @search_hash = Hash[@search_hash.sort]
 
     end
   end
@@ -82,10 +98,10 @@ class PeopleController < ApplicationController
     end
 
     # Check that same_as is a URL
-    @error = check_url(place_params[:same_as], @error, "Same As")
+    @error = check_url(person_params[:same_as], @error, "Same As")
 
     # Check that related_authority is a URL
-    @error = check_url(place_params[:related_authority], @error, "Related Authority")
+    @error = check_url(person_params[:related_authority], @error, "Related Authority")
 
     if @error != ''
       @person = Person.new(person_params)
@@ -185,11 +201,30 @@ class PeopleController < ApplicationController
 
   # Get the preflabel from the solr parameters (separated by an underscore)
   def get_preflabel(family, pre_title, given_name, post_title, epithet)
+
     preflabel = family
-    if pre_title != '' then preflabel = "#{preflabel}_#{pre_title}" end
-    if given_name != '' then preflabel = "#{preflabel}_#{given_name}" end
-    if post_title != '' then preflabel = "#{preflabel}_#{post_title}" end
-    if epithet != '' then preflabel = "#{preflabel}_#{epithet}" end
+
+    preflabel2 = ''
+
+    if pre_title != '' then
+      preflabel2 = "#{pre_title}"
+    end
+    if given_name != '' then
+      if preflabel2 != '' then preflabel2 = "#{preflabel2}, " end
+      preflabel2 = "#{preflabel2}#{given_name}"
+    end
+    if post_title != '' then
+      if preflabel2 != '' then preflabel2 = "#{preflabel2}, " end
+      preflabel2 = "#{preflabel2}#{post_title}"
+    end
+    if epithet != '' then
+      if preflabel2 != '' then preflabel2 = "#{preflabel2}, " end
+      preflabel2 = "#{preflabel2}#{epithet}"
+    end
+
+    # Put brackets around preflabel2 if it exists
+    if preflabel2 != '' then preflabel = "#{preflabel} (#{preflabel2})" end
+
     return preflabel
   end
 
