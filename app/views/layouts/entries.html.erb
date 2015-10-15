@@ -20,33 +20,35 @@
       <%= link_to "Archbishops&#39; Registers Editing Tool".html_safe, entry_path("default") %>
     </div>
 
-  <span style="float: right; margin-right: 6px; margin-top: 25px">
-    <%= button_to 'Logout', logout_path, :method => 'get', :data => {:confirm => 'Are you sure you want to logout?'} %>
-  </span>
-
   </div>
 
   <div id="navbar">
 
-    <span style="float: left"><a href='/landing_page'><%= image_tag 'back_icon2.png', class: 'home_icon', :title => 'Back to Registers' %></a></span>
+    <div style="float: left"><a href='/landing_page'><%= image_tag 'back_icon2.png', class: 'home_icon', :title => 'Back to Registers' %></a></div>
 
-    <span style="float: left">&nbsp;&nbsp;<strong>Current Register</strong>: <span style="font-size: 0.95em; color: #FFFFFF"><%= session[:register_name] %></span></span>
+    <div style="float: left">&nbsp;&nbsp;<strong>Current Register</strong>: <span style="font-size: 0.95em; color: #FFFFFF"><%= session[:register_name] %></span></div>
 
     <form style="float: left" name="myForm" id="choose_folio">
-      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>Current Folio</strong>:
+
+      <strong style="margin-left: 20px">Current Folio</strong>:
+
       <select name="folio_id" style="width: 260px" class="choose_folio"
-              <% if controller.action_name.to_s != 'index' %>disabled
-              <% end %>>
-        <option value="">--- select folio ---</option>
-        <% @folio_list.each do |folio| %>
-            <option value="<%= folio[0] %>"
-                    <% if session[:folio_id] == folio[0] %>selected
-                    <% end %>><%= folio[1] %></option>
-        <% end %>
+
+        <% if controller.action_name.to_s != 'index' then %>disabled<% end %>>
+             <option value="">--- select folio ---</option>
+        <%   @folio_list.each do |folio| %>
+               <option value="<%= folio[0] %>"<% if session[:folio_id] == folio[0] then %>selected<% end %>><%= folio[1] %></option>
+        <%   end %>
       </select>
+
       <input type="hidden" name="set_folio" value="true"/>
     </form>
-    </span>
+
+    <div style="float: right; margin-right: 10px">
+      <a href="#" onclick="popup('/admins?start=true', 'admin'); return false;" tabindex="-1"><input type="button" value="Admin"/></a>
+      <a href="/logout" onclick="return confirm('Are you sure you want to logout?')" tabindex="-1"><input type="button" value="Logout"/></a>
+      <%#= button_to 'Logout', logout_path, :method => 'get', style: 'margin-left: 8px', :data => {:confirm => 'Are you sure you want to logout?'} %>
+    </div>
 
   </div>
 

@@ -360,4 +360,8 @@ module Validation
     person_params[:related_authority] = remove_empty_array_fields2(person_params[:related_authority])
     person_params[:altlabel] = remove_empty_array_fields2(person_params[:altlabel])
   end
+
+  def remove_concept_popup_empty_fields(concept_params)
+    concept_params[:altlabel] = remove_empty_array_fields2(concept_params[:altlabel])
+  end
 end

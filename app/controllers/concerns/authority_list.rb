@@ -17,7 +17,6 @@ module AuthorityList
     @descriptor_list = DescriptorTerms.new('subauthority').all
     @place_role_list = PlaceRoleTerms.new('subauthority').all
     @place_type_list = PlaceTypeTerms.new('subauthority').all
-    @place_role_list = PlaceRoleTerms.new('subauthority').all
     @date_role_list = DateRoleTerms.new('subauthority').all
     @entry_type_list = EntryTypeTerms.new('subauthority').all
     @section_type_list = SectionTypeTerms.new('subauthority').all

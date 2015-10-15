@@ -86,6 +86,7 @@ body {
 #header_text {
   color: #FFFFFF;
   font-size: 1.7em;
+   width: 500px;
   font-weight: bold;
   padding-top: 8px;
   padding-left: 10px;
@@ -422,7 +423,6 @@ table {
 
 .popup_error {
   background-color: #D74A4A;
-  width: 580px;
 }
 
 .timeout {
@@ -514,7 +514,7 @@ textarea {
 }
 
 .landing_page {
-  margin: 25px auto 0px auto;
+  margin: 0px auto 0px auto;
   padding: 0px;
   width: 1200px;
 }
@@ -566,8 +566,26 @@ img {
   border: none;
 }
 
+.search_box {
+  float: left;
+  width: 97%;
+  border: 1px solid silver;
+  border-radius: 4px;
+  background-color: #f7f7f7;
+  padding: 12px 8px;
+
+}
+
 .search_box input[type="text"] {
-  width: 360px;
+  width: 450px;
+}
+
+.search_box table {
+  margin: 0px;
+}
+
+.search_box td {
+  font-size: 1.2em;
 }
 
 .person_popup_menu ul {
@@ -582,7 +600,7 @@ img {
 
 .popup {
   margin: 0px auto 30px auto;
-  width: 600px;
+  width: 700px;
   border: 1px solid silver;
   min-height: 575px;
   background-color: #E1E1E1;
@@ -603,9 +621,14 @@ img {
 
 .popup_title {
   margin-bottom: 30px;
-  margin-top: 5px;
-  font-size: 1.3em;
+  margin-top: 15px;
+  font-size: 1.5em;
   font-weight: bold;
+}
+
+.popup_breadcrumb {
+  font-style: italic;
+  font-size: 0.9em;
 }
 
 .popup_view th {
@@ -617,11 +640,17 @@ img {
   border-color: #C1C0C0 transparent transparent #C1C0C0;
 }
 
-.popup_search td {
+.popup_search td, .popup_search th {
+font-size: 0.9em;
   background-color: #EFEFEF;
   color: #252323;
   border: 1px solid;
   border-color: transparent #C1C0C0 #C1C0C0 transparent;
+}
+
+.popup_search th {
+  text-align: center;
+  font-weight: bold;
 }
 
 .popup_search form {

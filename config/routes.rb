@@ -6,6 +6,7 @@ Rails.application.routes.draw do
   resources :entries
   resources :places
   resources :people
+  resources :concepts
 
   root 'login#login_temp'
 
@@ -20,6 +21,7 @@ Rails.application.routes.draw do
   get 'browse_folios' => 'browse_folios#index'
   get 'go_entries' => 'landing_page#go_entries'
   get 'subject_popup' => 'subject_popup#index'
+  get 'admins' => 'admins#index'
 
   #root :to => "catalog#login"
   blacklight_for :catalog

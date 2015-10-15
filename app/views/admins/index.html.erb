@@ -1,0 +1,28 @@
+
+<div class="popup">
+
+  <div class="popup_title">Admin</div>
+
+  <div style="margin-top: 10px">
+
+<p>Search / Edit Lists</p>
+
+    <ul>
+
+    <li><%= link_to 'Descriptors', concepts_path(list_type: 'descriptor') %></li>
+      <li><%= link_to 'Languages', concepts_path(list_type: 'language') %></li>
+      <li><%= link_to 'Formats', concepts_path(list_type: 'format') %></li>
+      <li><%= link_to 'Section Types', concepts_path(list_type: 'section_type') %></li>
+      <li><%= link_to 'Person Roles', concepts_path(list_type: 'person_role') %></li>
+      <li><%= link_to 'Place Roles', concepts_path(list_type: 'place_role') %></li>
+
+    <li>Person / Place List</li>
+
+    <li>Subject List</li>
+
+    </ul>
+
+  </div>
+
+
+</div>

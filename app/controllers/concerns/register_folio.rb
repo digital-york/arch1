@@ -303,7 +303,7 @@ module RegisterFolio
   # This displays the timed out message for the browse folios, subject popup, person popup and place popup pages
   def session_timed_out_small
     if session[:login] == '' || session[:login] == nil
-      render 'timed_out/timed_out_small', :layout => 'timed_out'
+      render 'timed_out/timed_out_small', :layout => 'timed_out_small'
     end
   end
 
