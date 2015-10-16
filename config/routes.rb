@@ -7,6 +7,8 @@ Rails.application.routes.draw do
   resources :places
   resources :people
   resources :concepts
+  resources :places
+  resources :people
 
   root 'login#login_temp'
 

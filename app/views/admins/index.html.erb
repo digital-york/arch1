@@ -5,24 +5,42 @@
 
   <div style="margin-top: 10px">
 
-<p>Search / Edit Lists</p>
+    <p>Concept Lists:</p>
 
-    <ul>
+    <div class="search_box">
+      <ul class="list_admin">
+        <li><%= link_to 'Date Role', concepts_path(list_type: 'date_role') %></li>
+        <li><%= link_to 'Descriptor', concepts_path(list_type: 'descriptor') %></li>
+        <li><%= link_to 'Entry Type', concepts_path(list_type: 'entry_type') %></li>
+        <li><%= link_to 'Format', concepts_path(list_type: 'format') %></li>
+        <li><%= link_to 'Language', concepts_path(list_type: 'language') %></li>
+        <li><%= link_to 'Person Role', concepts_path(list_type: 'person_role') %></li>
+        <li><%= link_to 'Place Role', concepts_path(list_type: 'place_role') %></li>
+        <li><%= link_to 'Place Type', concepts_path(list_type: 'place_type') %></li>
+        <li><%= link_to 'Section Type', concepts_path(list_type: 'section_type') %></li>
+      </ul>
+    </div>
 
-    <li><%= link_to 'Descriptors', concepts_path(list_type: 'descriptor') %></li>
-      <li><%= link_to 'Languages', concepts_path(list_type: 'language') %></li>
-      <li><%= link_to 'Formats', concepts_path(list_type: 'format') %></li>
-      <li><%= link_to 'Section Types', concepts_path(list_type: 'section_type') %></li>
-      <li><%= link_to 'Person Roles', concepts_path(list_type: 'person_role') %></li>
-      <li><%= link_to 'Place Roles', concepts_path(list_type: 'place_role') %></li>
+    <div style="clear: both"></div>
 
-    <li>Person / Place List</li>
+    <p>Person / Place Lists:</p>
 
-    <li>Subject List</li>
+    <div class="search_box">
+      <ul class="listAdmin">
+        <li><%= link_to 'Person', people_path(start: 'true') %></li>
+        <li><%= link_to 'Place', places_path(start: 'true') %></li>
+      </ul>
+    </div>
 
-    </ul>
+    <div style="clear:both"></div>
+
+    <p>Subject List:</p>
+
+    <div class="search_box">
+      <ul class="listAdmin">
+        <li><%= link_to 'Subject', concepts_path(list_type: 'subject_type') %></li>
+      </ul>
+    </div>
 
   </div>
-
-
 </div>

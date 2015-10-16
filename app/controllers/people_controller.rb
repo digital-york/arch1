@@ -2,74 +2,63 @@ class PeopleController < ApplicationController
 
   before_filter :session_timed_out_small
 
-  # INDEX
+  #INDEX
   def index
+
+    session[:person_list_type] = 'person'
+
+    if params[:start] == 'true' then session[:person_search_term] = '' end
 
     # This variable identifies the 'Same As' field on the form (i.e. it is used when the user selects a 'person')
     if params[:person_field] != nil
       session[:person_field] = params[:person_field]
     end
 
-    # If the popup has just been opened, set the session variable to ''
-    if params[:start] == 'true'
+    # Set the session search_term variable if it is passed as a parameter
+    if params[:search_term] != nil then session[:person_search_term] = params[:search_term] end
 
-      session[:person_search_term] = nil
+    @search_array = []
 
-    # Else do a search using params[:search_term] or session[person_search_term]
-    else
+    # Get Concepts for the Person ConceptScheme and filter according to search_term
+    SolrQuery.new.solr_query(q='has_model_ssim:Person', fl='id, family_tesim, pre_title_tesim, given_name_tesim, post_title_tesim, epithet_tesim', rows=1000, sort='id asc')['response']['docs'].map.each do |result|
 
-      # Update the session variable with the new search term
-      if params[:search_term] != nil then session[:person_search_term] = params[:search_term] end
+      id = result['id']
+      family = result['family_tesim'].join
+      pre_title = result['pre_title_tesim']
+      given_name = result['given_name_tesim']
+      post_title = result['post_title_tesim']
+      epithet = result['epithet_tesim']
 
-      if session[:person_search_term] != nil
+      tt = []
+      name = family
 
-        # Get the necessary info from solr
-        response = SolrQuery.new.solr_query(q='has_model_ssim:Person', fl='id, family_tesim, pre_title_tesim, given_name_tesim, post_title_tesim, epithet_tesim', rows=1000, sort='')
-
-        temp_hash = {}
-
-        response['response']['docs'].map do |result|
-
-          id = result['id']
-          family = result['family_tesim']
-          pre_title = result['pre_title_tesim']
-          given_name = result['given_name_tesim']
-          post_title = result['post_title_tesim']
-          epithet = result['epithet_tesim']
-
-          person_name = ''
-
-          if family != nil then
-            person_name = "#{family.join()}"
-          end
-          if pre_title != nil then
-            person_name = "#{person_name}, #{pre_title.join()}"
-          end
-          if given_name != nil then
-            person_name = "#{person_name}, #{given_name.join()}"
-          end
-          if post_title != nil then
-            person_name = "#{person_name}, #{post_title.join()}"
-          end
-          if epithet != nil then
-            person_name = "#{person_name}, #{epithet.join()}"
-          end
-          if person_name != nil then
-            temp_hash[person_name] = id
-          end
-        end
-
-        # Get all the names which match the search term and sort them
-        @search_hash = temp_hash.select { |key, value| key.to_s.match(/#{session[:person_search_term]}/i) }
-        @search_hash = Hash[@search_hash.sort]
+      if pre_title != nil then
+        name = "#{name}, #{pre_title.join()}"
+      end
+      if given_name != nil then
+        name = "#{name}, #{given_name.join()}"
+      end
+      if post_title != nil then
+        name = "#{name}, #{post_title.join()}"
+      end
+      if epithet != nil then
+        name = "#{name}, #{epithet.join()}"
       end
 
+      if name.match(/#{session[:person_search_term]}/i)
+        tt << id
+        tt << name
+        @search_array << tt
+      end
     end
+
+    # Sort the array by family
+    @search_array = @search_array.sort_by { |k| k[1] }
+
   end
 
   # SHOW
   def show
-    @person = Person.find(params[:id])
   end
 
   # NEW
@@ -158,30 +147,24 @@ class PeopleController < ApplicationController
     # Check that related_authority is a URL
     @error = check_url(person_params[:related_authority], @error, "Related Authority")
 
-
     # Get a person object using the id and populate it with the person parameters
     @person = Person.find(params[:id])
     @person.attributes = person_params
 
-    if @error != ''
-      render 'edit'
-    else
+    # Use a solr query to obtain the concept scheme id for 'people'
+    response = SolrQuery.new.solr_query(q='has_model_ssim:ConceptScheme AND preflabel_tesim:"people"', fl='id', rows=1, sort='')
+    id = response['response']['docs'][0]['id']
+    @person.concept_scheme_id = id
 
-      # Use a solr query to obtain the concept scheme id for 'people'
-      response = SolrQuery.new.solr_query(q='has_model_ssim:ConceptScheme AND preflabel_tesim:"people"', fl='id', rows=1, sort='')
-      id = response['response']['docs'][0]['id']
-      @person.concept_scheme_id = id
+    # Get preflabel
+    @person.preflabel = get_preflabel(@person.family, @person.pre_title, @person.given_name, @person.post_title, @person.epithet)
 
-      # Get preflabel
-      @person.preflabel = get_preflabel(@person.family, @person.pre_title, @person.given_name, @person.post_title, @person.epithet)
+    @person.save
 
-      @person.save
+    # Pass variable to view page to notify user that person has been updated.
+    @person_name = @person.family
 
-      # Pass variable to view page to notify user that person has been updated.
-      @person_name = @person.family
-
-      redirect_to :controller => 'people', :action => 'show', :id => @person.id
-    end
+    render 'edit'
 
   end
 

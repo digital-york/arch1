@@ -21,7 +21,6 @@ function popup(page, type) {
 
     var popup_id = Math.floor(Math.random() * 100000) + 1;
 
-
     var popupWidth = 0;
     var popupHeight = 0;
     var top = 0;
@@ -35,10 +34,22 @@ function popup(page, type) {
         popupWidth = 600;
         popupHeight = screen.height;
         left = screen.width - popupWidth;
-    } else if (type == "person" || type == "place" || type == "admin") {
+        popup_id = "101"
+    } else if (type == "person") {
         var popupWidth = 900;
         var popupHeight = screen.height / 1.25;
         var left = (screen.width - popupWidth) / 2;
+        popup_id = "102"
+    } else if (type == "place") {
+        var popupWidth = 900;
+        var popupHeight = screen.height / 1.25;
+        var left = (screen.width - popupWidth) / 2;
+        popup_id = "103"
+    } else if (type == "admin") {
+        var popupWidth = 900;
+        var popupHeight = screen.height / 1.25;
+        var left = (screen.width - popupWidth) / 2;
+        popup_id = "104"
     } else if (type == "browse_folios") {
         popupWidth = 522;
         popupHeight = 605;
@@ -770,12 +781,12 @@ $(document).ready(function () {
         autoOpen: false,
         draggable: false,
         resizable: false,
-        position: { my: "center", at: "top+20%", of: window },
-        width: 700,
+        position: { my: "center", at: "top+60px", of: window },
+        width: '740px',
         height: 50,
         show: {
             effect: 'fade',
-            duration: 1000
+            duration: 750
         },
         hide: {
             effect: 'fade',

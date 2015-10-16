@@ -1,35 +1,27 @@
 
-<div class="popup" style="min-height: 500px">
+<div class="popup">
 
   <%
     if @concept.new_record?
-      text = 'Add'
+      start_text = 'Add'
+      confirm_text = 'has been added'
+      form_url = 'concepts_path(@concept)'
+      form_method = ':post'
     else
-      text = 'Edit'
+      start_text = 'Edit'
+      confirm_text = 'has been updated'
+      form_url = 'concept_path(@concept)'
+      form_method = ':patch'
     end
-    type = capitalize_first_letter(session[:concept_list_type])
   %>
 
-  <div class="popup_breadcrumb">
-    <%= link_to 'Admin', admins_path %> &gt; <%= link_to "#{type} List", concepts_path %> &gt; <%= text %> <%= type %>
-  </div>
-
   <div class="popup_title">
-  <% if @concept.new_record? %>
-      Add <%= capitalize_first_letter(session[:concept_list_type]) %>
-  <% else %>
-      Edit <%= capitalize_first_letter(session[:concept_list_type]) %>
-  <% end %>
+    <%= start_text %> <%= capitalize_first_letter(session[:list_type]) %>
   </div>
 
   <% if @concept_name != nil && @concept_name != '' %>
       <div id="popup_info" class="popup_info" style="display: none; text-align: center">
-        '<%= @concept_name %>'
-        <% if @concept.new_record? %>
-           has been added
-        <% else %>
-           has been updated
-        <% end %>
+        '<%= @concept_name %>' <%=confirm_text %>
       </div>
   <% end %>
 
@@ -37,15 +29,10 @@
       <div class="popup_error"><%= @error.html_safe %></div>
   <% end %>
 
-  <%
-     if @concept.new_record?
-       form_url = 'concepts_path(@concept)'
-       form_method = ':post'
-     else
-       form_url = 'concept_path(@concept)'
-       form_method = ':patch'
-     end
-  %>
+  <div>
+    <%= link_to 'Go back to search page', concepts_path, style: "font-style: italic" %>
+
+  </div>
 
   <%= form_for @concept, url: eval(form_url), method: eval(form_method), html: {style: 'margin-top: 15px; margin-bottom: 0px'} do |f| %>
 

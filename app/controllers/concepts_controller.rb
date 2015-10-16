@@ -5,55 +5,44 @@ class ConceptsController < ApplicationController
   #INDEX
   def index
 
-    @concept_type = params[:concept_type]
+    # Only set the session variables if they are passed as parameters, i.e. when
+    # this comes from the search page (this 'index' action can also be called from the add and edit pages)
+    if params[:list_type] != nil then session[:list_type] = params[:list_type] end
+    if params[:search_term] != nil then session[:search_term] = params[:search_term] end
 
-    # If the popup has just been opened, set the session variable to ''
-    #if params[:start] == 'true' or params[:list_type] == '--- select ---'
-#
-    #  session[:concept_list_type] = nil
-     # session[:concept_search_term] = nil
+    @search_array = []
 
-    # Else do a search using the params[:search_term] or session[place_search_term]
-    #else
-
-      # Update the session variable with the new list type and search term
-      if params[:list_type] != nil then session[:concept_list_type] = params[:list_type] end
-      if params[:search_term] != nil then session[:concept_search_term] = params[:search_term] end
-
-      @search_array = []
-
-      # Get Concepts for this ConceptScheme
-      SolrQuery.new.solr_query(q='has_model_ssim:Concept AND inScheme_ssim:' + get_concept_scheme_id, fl='id, preflabel_tesim, altlabel_tesim, description_tesim', rows=1000, sort='id asc')['response']['docs'].map.each do |result|
-        concept_id = result['id']
-        preflabel = result['preflabel_tesim'].join
-        if preflabel.match(/#{session[:concept_search_term]}/i)
-          tt = []
-          tt << concept_id
-          tt << preflabel
-          altlabel = result['altlabel_tesim']
-          if altlabel != nil
-            altlabel = altlabel
-          else
-            altlabel = []
-          end
-          tt << altlabel
-          description = result['description_tesim']
-          if description != nil
-            description = description.join
-          end
-          tt << description
-          @search_array << tt
+    # Get Concepts for the ConceptScheme and filter according to search_term
+    SolrQuery.new.solr_query(q='has_model_ssim:Concept AND inScheme_ssim:' + get_concept_scheme_id, fl='id, preflabel_tesim, altlabel_tesim, description_tesim', rows=1000, sort='id asc')['response']['docs'].map.each do |result|
+      concept_id = result['id']
+      preflabel = result['preflabel_tesim'].join
+      if preflabel.match(/#{session[:search_term]}/i)
+        tt = []
+        tt << concept_id
+        tt << preflabel
+        altlabel = result['altlabel_tesim']
+        if altlabel != nil
+          altlabel = altlabel
+        else
+          altlabel = []
         end
+        tt << altlabel
+        description = result['description_tesim']
+        if description != nil
+          description = description.join
+        end
+        tt << description
+        @search_array << tt
       end
+    end
 
-      # Sort the array
-      @search_array = @search_array.sort_by { |k| k[1] }
-    #end
+    # Sort the array by preflabel
+    @search_array = @search_array.sort_by { |k| k[1] }
+
   end
 
   # SHOW
   def show
-    @concept = Concept.find(params[:id])
   end
 
   # NEW
@@ -149,8 +138,9 @@ class ConceptsController < ApplicationController
     params.require(:concept).permit! # Note - this needs changing because it allows through all params at the moment!!
   end
 
+  # Returns id for the concept
   def get_concept_scheme_id
-    concept_list_type = "#{session[:concept_list_type].downcase}s"
+    concept_list_type = "#{session[:list_type].downcase}s"
     concept_list_type = concept_list_type.sub ' ', '_'
     response = SolrQuery.new.solr_query(q='has_model_ssim:ConceptScheme AND preflabel_tesim:' + concept_list_type, fl='id', rows=1, sort='')
     concept_scheme_id = response['response']['docs'][0]['id']

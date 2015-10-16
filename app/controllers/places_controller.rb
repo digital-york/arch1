@@ -2,73 +2,63 @@ class PlacesController < ApplicationController
 
   before_filter :session_timed_out_small
 
-  # INDEX
+  #INDEX
   def index
+
+    session[:place_list_type] = 'place'
+
+    if params[:start] == 'true' then session[:place_search_term] = '' end
 
     # This variable identifies the 'Same As' field on the form (i.e. it is used when the user selects a 'place')
     if params[:place_field] != nil
       session[:place_field] = params[:place_field]
     end
 
-    # If the popup has just been opened, set the session variable to ''
-    if params[:start] == 'true'
+    # Set the session search_term variable if it is passed as a parameter
+    if params[:search_term] != nil then session[:place_search_term] = params[:search_term] end
 
-      session[:place_search_term] = nil
+    @search_array = []
 
-    # Else do a search using the params[:search_term] or session[place_search_term]
-    else
+    # Get Concepts for the Place ConceptScheme and filter according to search_term
+    SolrQuery.new.solr_query(q='has_model_ssim:Place', fl='id, place_name_tesim, parent_ADM4_tesim, parent_ADM3_tesim, parent_ADM2_tesim, parent_ADM1_tesim', rows=1000, sort='id asc')['response']['docs'].map.each do |result|
 
-      # Update the session variable with the new search term
-      if params[:search_term] != nil then session[:place_search_term] = params[:search_term] end
+      id = result['id']
+      place_name = result['place_name_tesim'].join
+      parent_ADM4 = result['parent_ADM4_tesim']
+      parent_ADM3 = result['parent_ADM3_tesim']
+      parent_ADM2 = result['parent_ADM2_tesim']
+      parent_ADM1 = result['parent_ADM1_tesim']
 
-      if session[:place_search_term] != nil
+      tt = []
+      name = place_name
 
-        # Get all the parent ADMs from solr
-        response = SolrQuery.new.solr_query(q='has_model_ssim:Place', fl='id, place_name_tesim, parent_ADM4_tesim, parent_ADM3_tesim, parent_ADM2_tesim, parent_ADM1_tesim', rows=1000, sort='')
+      if parent_ADM4 != nil then
+        name = "#{name}, #{parent_ADM4.join()}"
+      end
+      if parent_ADM3 != nil then
+        name = "#{name}, #{parent_ADM3.join()}"
+      end
+      if parent_ADM2 != nil then
+        name = "#{name}, #{parent_ADM2.join()}"
+      end
+      if parent_ADM1 != nil then
+        name = "#{name}, #{parent_ADM1.join()}"
+      end
 
-        temp_hash = {}
-
-        response['response']['docs'].map do |result|
-
-          id = result['id']
-          place_name = result['place_name_tesim']
-          parent_ADM4 = result['parent_ADM4_tesim']
-          parent_ADM3 = result['parent_ADM3_tesim']
-          parent_ADM2 = result['parent_ADM2_tesim']
-          parent_ADM1 = result['parent_ADM1_tesim']
-
-          str = ''
-
-          if place_name != nil then
-            str = "#{place_name.join()}"
-          end
-          if parent_ADM4 != nil then
-            str = "#{str}, #{parent_ADM4.join()}"
-          end
-          if parent_ADM3 != nil then
-            str = "#{str}, #{parent_ADM3.join()}"
-          end
-          if parent_ADM2 != nil then
-            str = "#{str}, #{parent_ADM2.join()}"
-          end
-          if parent_ADM1 != nil then
-            str = "#{str}, #{parent_ADM1.join()}"
-          end
-          if str != nil then
-            temp_hash[str] = id
-          end
-        end
-
-        # Get all the names which match the search term and sort them
-        @search_hash = temp_hash.select { |key, value| key.to_s.match(/#{session[:place_search_term]}/i) }
-        @search_hash = Hash[@search_hash.sort]
+      if name.match(/#{session[:place_search_term]}/i)
+        tt << id
+        tt << name
+        @search_array << tt
       end
     end
+
+    # Sort the array by place_name
+    @search_array = @search_array.sort_by { |k| k[1] }
+
   end
 
   # SHOW
   def show
-    @place = Place.find(params[:id])
   end
 
   # NEW
@@ -125,7 +115,6 @@ class PlacesController < ApplicationController
       # If the 'Submit and Close' button has been clicked, pass these variables back to the page
       # so that the javascript method is run (i.e. post_value()) and the page is closed
       if params[:commit] == 'Submit and Close'
-      puts "HERE!"
         @commit_id = @place.id
         @commit_place_name = place_params[:place_name]
       end
@@ -148,7 +137,7 @@ class PlacesController < ApplicationController
 
     @error = ''
 
-    if place_params[:plaxce_name] == ''
+    if place_params[:place_name] == ''
       @error = "Please enter a 'Place Name'"
     end
 
@@ -159,28 +148,23 @@ class PlacesController < ApplicationController
     @error = check_url(place_params[:related_authority], @error, "Related Authority")
 
     # Get a place object using the id and populate it with the place parameters
-     @place = Place.find(params[:id])
-     @place.attributes = place_params
+    @place = Place.find(params[:id])
+    @place.attributes = place_params
 
-    if @error != ''
-      render 'edit'
-    else
+    # Use a solr query to obtain the concept scheme id for 'places'
+    response = SolrQuery.new.solr_query(q='has_model_ssim:ConceptScheme AND preflabel_tesim:"places"', fl='id', rows=1, sort='')
+    id = response['response']['docs'][0]['id']
+    @place.concept_scheme_id = id
 
-      # Use a solr query to obtain the concept scheme id for 'places'
-      response = SolrQuery.new.solr_query(q='has_model_ssim:ConceptScheme AND preflabel_tesim:"places"', fl='id', rows=1, sort='')
-      id = response['response']['docs'][0]['id']
-      @place.concept_scheme_id = id
+    # Get preflabel
+    @place.preflabel = get_preflabel(@place.place_name, @place.parent_ADM4, @place.parent_ADM3, @place.parent_ADM2, @place.parent_ADM1)
 
-      # Get preflabel
-      @place.preflabel = get_preflabel(@place.place_name, @place.parent_ADM4, @place.parent_ADM3, @place.parent_ADM2, @place.parent_ADM1)
+    @place.save
 
-      @place.save
+    # Pass variable to view page to notify user that place has been updated.
+    @place_name = @place.place_name
 
-      # Pass variable to view page to notify user that place has been updated.
-      @place_name = @place.place_name
-
-      redirect_to :controller => 'places', :action => 'show', :id => @place.id
-    end
+    render 'edit'
 
   end
 

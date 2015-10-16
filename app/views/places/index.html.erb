@@ -1,58 +1,83 @@
 
 <div class="popup">
 
-  <div class="popup_title">Place Name Authorities</div>
+  <div class="popup_title">Places</div>
 
-  <div><%= button_to "Add Place", new_place_path, method: :get, class: 'add_place_button' %></div>
-
-  <div style="clear: both"></div>
-
-  <div style="margin-top: 10px">
-    <%= form_tag places_path, :method => :get do |f| %>
-        <div class="search_box" style="float: left; width: 97%; border: 1px solid silver; border-radius: 4px; background-color: #f7f7f7; padding: 12px 8px">
-          Enter Name:&nbsp;
-          <%= text_field_tag 'search_term', nil, class: 'text_field_search', id: 'search_box', value: session[:place_search_term] %>
-          &nbsp;&nbsp;<%= submit_tag 'Search' %>
-        </div>
-        <div style="clear: both"></div>
-    <% end %>
-
+  <% if session[:place_field] == nil %>
+  <div>
+    <a href="<%= new_place_path %>"><input type = "button" value="Add Place"/></a>
+    &nbsp;
+    <%= link_to 'Go back to admin page', admins_path, style: "font-style: italic" %>
   </div>
+  <% end %>
 
-  <div style="margin: 20px 0px 20px 2px">
+  <%= form_tag places_path, :method => :get, style: 'margin-top: 8px' do |f| %>
+      <div class="search_box">
+        <table>
+          <tr>
+            <td>Search Term:</td>
+            <td><%= text_field_tag 'search_term', nil, class: 'text_field_search', id: 'search_box', value: session[:place_search_term] %></td>
+            <td colspan='2'><%= submit_tag 'Search' %></td>
+          </tr>
+        </table>
+      </div>
+      <div style="clear: both"></div>
+  <% end %>
+
+  <div style="margin: 30px 0px 20px 2px">
 
     <%
-       if @search_hash != nil && @search_hash != ''
+       if @search_array != nil && @search_array != ''
     %>
 
-        <div style="font-weight: bold; font-size: 1.1em">Results:</div>
+        <div style="float: left; font-weight: bold; font-size: 1.1em">
+          Results:
+        </div>
 
-        <% if @search_hash.empty? %>
-            <em>None</em>
-        <% end %>
+        <div style="clear: both"></div>
 
         <div class="popup_search">
 
           <table border='1' style="width: 100%; font-size: 1.1em; margin-top: 10px">
 
+            <tr>
+              <th>Place Name</th>
+              <th style="width: 60px">Edit</th>
+              <th style="width: 60px">Delete</th>
+            </tr>
+
             <%
-               @search_hash.each do |element|
-                 place_name = element[0]
-                 id = element[1]
+               @search_array.each do |array_element|
+                 id = array_element[0]
+                 name = array_element[1]
             %>
                 <tr>
                   <td>
-                    <a href="#" title="Add this place to the form" onclick="post_value('<%= place_name %>', '<%= id %>', '<%= session[:place_field] %>')"><%= image_tag "popup_choice.png", class: "popup_choice" %></a>&nbsp;<%= place_name %>
+                    <% if session[:place_field] != nil %>
+                         <a href="#" title="Add this place to the form" onclick="post_value('<%= name %>', '<%= id %>', '<%= session[:place_field] %>')"><%= image_tag "popup_choice.png", class: "popup_choice" %></a>&nbsp;<%= name %>
+                    <% else %>
+                        <%= name %>
+                    <% end %>
                   </td>
-                  <td style="width: 160px; text-align: center">
-                    <%= button_to 'View / Edit', place_path(id), :method => :get, title: 'View place details', style: 'float: left' %>
-                    <%= button_to 'Delete', place_path(id), :method => :delete, title: 'Delete place', style: 'float: left; margin-left: 6px', :data => {:confirm => 'Are you sure you want to delete this place?'} %>
+                  <td style="width: 100px; text-align: center">
+                    <% if session[:place_field] == nil %>
+                         <%= button_to 'Edit', edit_place_path(id), :method => :get, title: 'Edit element details' %>
+                    <% else %>
+                         N/A
+                    <% end %>
+                  </td>
+                  <td style="width: 60px; text-align: center">
+                    <% if session[:place_field] == nil %>
+                    <%= button_to 'Delete', place_path(id), :method => :delete, title: 'Delete element', :data => {:confirm => "Are you sure you want to delete '#{name}'?"} %>
+                    <% else %>
+                        N/A
+                    <% end %>
                   </td>
                 </tr>
-           <%
-               end
-             end
-           %>
+        <%
+           end
+           end
+        %>
 
     </table>
     </div>
