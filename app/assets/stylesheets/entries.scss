@@ -672,3 +672,53 @@ font-size: 0.9em;
 .list_admin li {
   margin-top: 3px;
 }
+
+.subject_second_level {
+  border: none;
+  text-align: center;
+}
+
+.small_button {
+  font-size: 1em;
+  padding: 0px 3px;
+}
+
+.subjects_level1 {
+  padding: 10px 30px 3px 10px;
+  font-size: 1.4em;
+  color: #7e2c2c;
+}
+
+.subjects_level2 {
+  padding: 0px 0px 4px 0px;
+  color: #000000;
+  font-size: 1.2em;
+}
+
+.subjects_level3 {
+  padding: 0px 0px 3px 0px;
+  color: #262626;
+  font-style: italic;
+  font-size: 1.1em;
+}
+
+.subjects {
+  margin-top: 15px;
+}
+
+.subjects table {
+  background-color: #f2f0f0;
+  border: 1px solid #acadb7;
+  min-width: 300px;
+  padding-bottom: 10px;
+}
+
+// Useful?
+.subjects td {
+  text-align: left;
+}
+
+.popup_subject {
+  width: 670px;
+  padding: 25px 40px;
+}

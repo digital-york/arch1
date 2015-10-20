@@ -1,0 +1,50 @@
+
+<div class="popup popup_subject">
+
+  <div class="popup_title">Subject List</div>
+
+  <div>
+    <%= button_to 'Add Subject', new_subject_path, params: {:top_level_id => 'none'}, :method => :get, title: 'Add top_level subject', style: 'margin-top: -4px' %>
+    <%= link_to 'Go back to admin page', admins_path, style: "margin-left: 8px; float: left; font-style: italic" %>
+  </div>
+
+  <% if @subject_name != nil && @subject_name != '' %>
+      <div id="popup_info" class="popup_info" style="display: none; text-align: center">
+        '<%= @subject_name %>' has been added
+      </div>
+  <% end %>
+
+  <div style="clear: both"></div>
+
+  <hr style="margin: 10px 0px"/>
+
+  <table style="width: 100%; border: 0px solid #FFFFFF">
+  <%
+     @top_level_list.each_with_index do |top_level_term, index|
+  %>
+
+      <tr>
+        <td style="padding: 10px 0px 3px 0px; font-size: 1.4em; color: #7e2c2c">
+          <%= link_to top_level_term['label'].join, subject_path(top_level_term['id']), title: 'Edit subject' %>
+        </td>
+      </tr>
+
+    <%
+      top_level_term[:elements].each do |second_level_term|
+    %>
+        <tr>
+          <td style="padding: 0px 0px 4px 0px; color: #000000; font-size: 1.2em"><span style="margin-left: 40px"><%= second_level_term['label'].join %></span></td>
+        </tr>
+      <%
+        second_level_term[:elements].each do |third_level_term|
+      %>
+          <tr>
+            <td style="padding: 0px 0px 3px 0px; color: #262626; font-style: italic; font-size: 1.1em"><span style="margin-left: 70px;"><%= third_level_term['label'].join %></span></td>
+          </tr>
+ <%
+        end
+     end
+   end
+ %>
+  </table>
+</div>

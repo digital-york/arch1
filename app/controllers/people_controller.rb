@@ -5,8 +5,6 @@ class PeopleController < ApplicationController
   #INDEX
   def index
 
-    session[:person_list_type] = 'person'
-
     if params[:start] == 'true' then session[:person_search_term] = '' end
 
     # This variable identifies the 'Same As' field on the form (i.e. it is used when the user selects a 'person')

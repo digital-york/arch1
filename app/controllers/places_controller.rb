@@ -5,8 +5,6 @@ class PlacesController < ApplicationController
   #INDEX
   def index
 
-    session[:place_list_type] = 'place'
-
     if params[:start] == 'true' then session[:place_search_term] = '' end
 
     # This variable identifies the 'Same As' field on the form (i.e. it is used when the user selects a 'place')
