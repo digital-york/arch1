@@ -15,7 +15,10 @@
           <tr>
             <td>Search Term:</td>
             <td><%= text_field_tag 'search_term', nil, class: 'text_field_search', id: 'search_box', value: session[:search_term] %></td>
-            <td colspan='2'><%= submit_tag 'Search' %></td>
+            <td style="padding-left: 0px">
+              <%= submit_tag 'Search' %>
+              <input type="button" value="Clear" onclick="reset_box(); return false"/>
+            </td>
           </tr>
         </table>
       </div>

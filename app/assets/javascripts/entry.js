@@ -17,6 +17,10 @@ function post_value(value, id, field) {
     self.close();
 }
 
+function reset_box(id) {
+  document.getElementById('search_box').value = '';
+}
+
 function popup(page, type) {
 
     var popup_id = Math.floor(Math.random() * 100000) + 1;

@@ -14,8 +14,10 @@ class ConceptsController < ApplicationController
 
     # Get Concepts for the ConceptScheme and filter according to search_term
     SolrQuery.new.solr_query(q='has_model_ssim:Concept AND inScheme_ssim:' + get_concept_scheme_id, fl='id, preflabel_tesim, altlabel_tesim, description_tesim', rows=1000, sort='id asc')['response']['docs'].map.each do |result|
+
       concept_id = result['id']
       preflabel = result['preflabel_tesim'].join
+
       if preflabel.match(/#{session[:search_term]}/i)
         tt = []
         tt << concept_id
@@ -70,23 +72,15 @@ class ConceptsController < ApplicationController
       @error = "Please enter a 'Label'"
     end
 
-    if @error != ''
-      @concept = Concept.new(concept_params)
-    else
+    @concept = Concept.new(concept_params)
 
-      # Create a new concept and save
-      @concept = Concept.new(concept_params)
+    if @error != ''
+      render 'new'
+    else
       @concept.concept_scheme_id = get_concept_scheme_id
       @concept.save
-
-      # Pass variable to view page to notify user that place has been added.
-      @concept_name = @concept.preflabel
-
-      # Initialise form again
-      @concept = Concept.new
+      redirect_to :controller => 'concepts', :action => 'index'
     end
-
-    render 'new'
   end
 
   # UPDATE
@@ -104,7 +98,7 @@ class ConceptsController < ApplicationController
       @error = "Please enter a 'Label'"
     end
 
-    # Get a place object using the id and populate it with the place parameters
+    # Get a concept object using the id and populate it with the concept parameters
     @concept = Concept.find(params[:id])
     @concept.attributes = concept_params
 
@@ -116,11 +110,7 @@ class ConceptsController < ApplicationController
       @concept.concept_scheme_id = get_concept_scheme_id
       @concept.save
 
-      # Pass variable to view page to notify user that place has been updated.
-      @concept_name = @concept.preflabel
-      puts @concept_name
-
-      render 'edit'
+      redirect_to :controller => 'concepts', :action => 'index'
     end
   end
 
@@ -138,7 +128,7 @@ class ConceptsController < ApplicationController
     params.require(:concept).permit! # Note - this needs changing because it allows through all params at the moment!!
   end
 
-  # Returns id for the concept
+  # Returns concepty_scheme id for the particular concept
   def get_concept_scheme_id
     concept_list_type = "#{session[:list_type].downcase}s"
     concept_list_type = concept_list_type.sub ' ', '_'

@@ -81,7 +81,7 @@ class PeopleController < ApplicationController
     @error = ''
 
     if person_params[:family] == ''
-      @error = "Please enter a 'Family'"
+      @error = "Please enter a 'Family Name'"
     end
 
     # Check that same_as is a URL
@@ -90,12 +90,11 @@ class PeopleController < ApplicationController
     # Check that related_authority is a URL
     @error = check_url(person_params[:related_authority], @error, "Related Authority")
 
-    if @error != ''
-      @person = Person.new(person_params)
-    else
+    @person = Person.new(person_params)
 
-      # Create a new person with the parameters
-      @person = Person.new(person_params)
+    if @error != ''
+      render 'new'
+    else
 
       # Use a solr query to obtain the concept scheme id for 'people'
       response = SolrQuery.new.solr_query(q='has_model_ssim:ConceptScheme AND preflabel_tesim:"people"', fl='id', rows=1, sort='')
@@ -107,9 +106,6 @@ class PeopleController < ApplicationController
 
       @person.save
 
-      # Pass variable to view page to notify user that person has been added.
-      @person_name = @person.family
-
       # If the 'Submit and Close' button has been clicked, pass these variables back to the page
       # so that the javascript method is run (i.e. post_value()) and the page is closed
       if params[:commit] == 'Submit and Close'
@@ -117,11 +113,8 @@ class PeopleController < ApplicationController
         @commit_person_name = person_params[:family]
       end
 
-      # Initialise person form again
-      @person = Person.new
+      redirect_to :controller => 'people', :action => 'index'
     end
-
-    render 'new'
   end
 
   # UPDATE
@@ -136,7 +129,7 @@ class PeopleController < ApplicationController
     @error = ''
 
     if person_params[:family] == ''
-      @error = "Please enter a 'Family'"
+      @error = "Please enter a 'Family Name'"
     end
 
     # Check that same_as is a URL
@@ -149,21 +142,22 @@ class PeopleController < ApplicationController
     @person = Person.find(params[:id])
     @person.attributes = person_params
 
-    # Use a solr query to obtain the concept scheme id for 'people'
-    response = SolrQuery.new.solr_query(q='has_model_ssim:ConceptScheme AND preflabel_tesim:"people"', fl='id', rows=1, sort='')
-    id = response['response']['docs'][0]['id']
-    @person.concept_scheme_id = id
+    if @error != ''
+      render 'edit'
+    else
 
-    # Get preflabel
-    @person.preflabel = get_preflabel(@person.family, @person.pre_title, @person.given_name, @person.post_title, @person.epithet)
+      # Use a solr query to obtain the concept scheme id for 'people'
+      response = SolrQuery.new.solr_query(q='has_model_ssim:ConceptScheme AND preflabel_tesim:"people"', fl='id', rows=1, sort='')
+      id = response['response']['docs'][0]['id']
+      @person.concept_scheme_id = id
 
-    @person.save
+      # Get preflabel
+      @person.preflabel = get_preflabel(@person.family, @person.pre_title, @person.given_name, @person.post_title, @person.epithet)
 
-    # Pass variable to view page to notify user that person has been updated.
-    @person_name = @person.family
+      @person.save
 
-    render 'edit'
-
+      redirect_to :controller => 'people', :action => 'index'
+    end
   end
 
   # DESTROY

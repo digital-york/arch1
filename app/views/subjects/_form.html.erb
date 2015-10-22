@@ -2,40 +2,30 @@
 <div class="popup popup_subject">
 
   <%
+     # If this is a new record...
      if @concept.new_record?
-       confirm_text = 'has been added'
+       # The return path depends if the link was clicked on the index or add/edit pages
+       if @go_back_id == 'none'
+         title_text = 'Add Top-Level'
+         go_back_path = 'subjects_path' # Go back to the 'index' page
+       else
+         title_text = 'Add'
+         go_back_path = 'subject_path(@go_back_id)' # Go back to the 'show' page
+       end
        form_url = 'subjects_path(@concept)'
        form_method = ':post'
-       if @go_back_id == 'none'
-         start_text = 'Add Top-Level'
-         go_back_path = 'subjects_path'
-       else
-         start_text = 'Add'
-         go_back_path = 'subject_path(@go_back_id)'
-       end
+     # ELse if this is an edited record...
      else
-       if @go_back_id == 'none'
-         start_text = 'Edit Top-Level'
-       else
-         start_text = 'Edit'
-       end
-       confirm_text = 'has been updated'
+       title_text = 'Edit'
        form_url = 'subject_path(@concept.id)'
        form_method = ':patch'
-       go_back_path = 'subject_path(@go_back_id)'
+       go_back_path = 'subject_path(@go_back_id)' # Go back to the 'show' page
      end
   %>
 
   <div class="popup_title">
-    <%= start_text %> Subject
+    <%= title_text %> Subject
   </div>
-
-  <% if @subject_name != nil && @subject_name != '' %>
-      <div id="popup_info" class="popup_info" style="display: none; text-align: center">
-        '<%= @subject_name %>'
-        <%=confirm_text %>
-      </div>
-  <% end %>
 
   <% if @error != nil && @error != '' %>
       <div class="popup_error"><%= @error.html_safe %></div>
@@ -73,10 +63,12 @@
 
         <%= hidden_field_tag 'go_back_id', @go_back_id %>
 
-        <% if @go_back_id == 'none' %>
-         <%= hidden_field_tag 'concept[istopconcept][]', 'true' %>
+        <%# Set 'istopconcept' if there is no go_back_id, i.e. the add button was clicked on the index page %>
+        <%# Else set 'broader' if 'add' is clicked from the show' page %>
+        <% if @broader_id == nil %>
+         <%= hidden_field_tag 'concept[istopconcept]', 'true' %>
         <% else %>
-          <%= hidden_field_tag 'concept[broader][]', @up_level_id %>
+          <%= hidden_field_tag 'concept[broader][]', @broader_id %>
         <% end %>
       </div>
 

@@ -4,15 +4,9 @@
   <div class="popup_title">Subject List</div>
 
   <div>
-    <%= button_to 'Add Subject', new_subject_path, params: {:top_level_id => 'none'}, :method => :get, title: 'Add top_level subject', style: 'margin-top: -4px' %>
+    <%= button_to 'Add Subject', new_subject_path, params: {:go_back_id => 'none'}, :method => :get, title: 'Add top-level subject', style: 'margin-top: -4px' %>
     <%= link_to 'Go back to admin page', admins_path, style: "margin-left: 8px; float: left; font-style: italic" %>
   </div>
-
-  <% if @subject_name != nil && @subject_name != '' %>
-      <div id="popup_info" class="popup_info" style="display: none; text-align: center">
-        '<%= @subject_name %>' has been added
-      </div>
-  <% end %>
 
   <div style="clear: both"></div>
 

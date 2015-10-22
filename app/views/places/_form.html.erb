@@ -19,13 +19,6 @@
     <%= start_text %> Place
   </div>
 
-  <% if @place_name != nil && @place_name != '' %>
-      <div id="popup_info" class="popup_info" style="display: none; text-align: center">
-        '<%= @place_name %>'
-        <%=confirm_text %>
-      </div>
-  <% end %>
-
   <% if @error != nil && @error != '' %>
       <div class="popup_error"><%= @error.html_safe %></div>
   <% end %>

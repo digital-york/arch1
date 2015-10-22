@@ -90,12 +90,11 @@ class PlacesController < ApplicationController
     # Check that related_authority is a URL
     @error = check_url(place_params[:related_authority], @error, "Related Authority")
 
-    if @error != ''
-      @place = Place.new(place_params)
-    else
+    @place = Place.new(place_params)
 
-      # Create a new place with the parameters
-      @place = Place.new(place_params)
+    if @error != ''
+      render 'new'
+    else
 
       # Use a solr query to obtain the concept scheme id for 'places'
       response = SolrQuery.new.solr_query(q='has_model_ssim:ConceptScheme AND preflabel_tesim:"places"', fl='id', rows=1, sort='')
@@ -107,9 +106,6 @@ class PlacesController < ApplicationController
 
       @place.save
 
-      # Pass variable to view page to notify user that place has been added.
-      @place_name = @place.place_name
-
       # If the 'Submit and Close' button has been clicked, pass these variables back to the page
       # so that the javascript method is run (i.e. post_value()) and the page is closed
       if params[:commit] == 'Submit and Close'
@@ -117,11 +113,8 @@ class PlacesController < ApplicationController
         @commit_place_name = place_params[:place_name]
       end
 
-      # Initialise place form again
-      @place = Place.new
+      redirect_to :controller => 'places', :action => 'index'
     end
-
-    render 'new'
   end
 
   # UPDATE
@@ -149,21 +142,22 @@ class PlacesController < ApplicationController
     @place = Place.find(params[:id])
     @place.attributes = place_params
 
-    # Use a solr query to obtain the concept scheme id for 'places'
-    response = SolrQuery.new.solr_query(q='has_model_ssim:ConceptScheme AND preflabel_tesim:"places"', fl='id', rows=1, sort='')
-    id = response['response']['docs'][0]['id']
-    @place.concept_scheme_id = id
+    if @error != ''
+      render 'edit'
+    else
 
-    # Get preflabel
-    @place.preflabel = get_preflabel(@place.place_name, @place.parent_ADM4, @place.parent_ADM3, @place.parent_ADM2, @place.parent_ADM1)
+      # Use a solr query to obtain the concept scheme id for 'places'
+      response = SolrQuery.new.solr_query(q='has_model_ssim:ConceptScheme AND preflabel_tesim:"places"', fl='id', rows=1, sort='')
+      id = response['response']['docs'][0]['id']
+      @place.concept_scheme_id = id
 
-    @place.save
+      # Get preflabel
+      @place.preflabel = get_preflabel(@place.place_name, @place.parent_ADM4, @place.parent_ADM3, @place.parent_ADM2, @place.parent_ADM1)
 
-    # Pass variable to view page to notify user that place has been updated.
-    @place_name = @place.place_name
+      @place.save
 
-    render 'edit'
-
+      redirect_to :controller => 'places', :action => 'index'
+    end
   end
 
   # DESTROY
