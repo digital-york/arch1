@@ -402,4 +402,51 @@ module RegisterFolio
     end
   end
 
+  # Return array of folio / entry numbers which contain the specified concept / subject
+  def get_existing_location_list(type)
+
+    existing_location_list = []
+
+    search_term2 = ''
+
+    if type == 'entry_type' or type == 'language' or type == 'section_type'
+      search_term2 = type + '_tesim:' + @concept.id
+      SolrQuery.new.solr_query(q=search_term2, fl='id, folio_ssim, entry_no_tesim', rows=1000, sort='id ASC')['response']['docs'].map do |result|
+        folio_id = result['folio_ssim'].join
+        entry_no = result['entry_no_tesim'].join
+        folio = SolrQuery.new.solr_query(q='id:' + folio_id, fl='preflabel_tesim', rows=1000, sort='id ASC')['response']['docs'].map.first['preflabel_tesim'].join
+        existing_location_list << folio + ' (Entry No = ' + entry_no + ')'
+      end
+    else
+      search_term1 = ''
+
+      if type == 'date_role' then search_term1 = 'date_role_tesim'; fl_term = 'entryDateFor_ssim' end
+      if type == 'descriptor' then search_term1 = 'person_descriptor_tesim'; fl_term = 'relatedAgentFor_ssim' end
+      if type == 'person_role' then search_term1 = 'person_role_tesim'; fl_term = 'relatedAgentFor_ssim' end
+      if type == 'place_role' then search_term1 = 'place_role_tesim'; fl_term = 'relatedPlaceFor_ssim' end
+      if type == 'place_type' then search_term1 = 'place_type_tesim'; fl_term = 'relatedPlaceFor_ssim' end
+
+      SolrQuery.new.solr_query(q=search_term1 + ':' + @concept.id, fl=fl_term, rows=1000, sort='id ASC')['response']['docs'].map do |result|
+        search_term2 = 'id:' + result[fl_term].join
+        SolrQuery.new.solr_query(q=search_term2, fl='id, folio_ssim, entry_no_tesim', rows=1000, sort='id ASC')['response']['docs'].map do |result|
+          folio_id = result['folio_ssim'].join
+          entry_no = result['entry_no_tesim'].join
+          folio = SolrQuery.new.solr_query(q='id:' + folio_id, fl='preflabel_tesim', rows=1000, sort='id ASC')['response']['docs'].map.first['preflabel_tesim'].join
+          existing_location_list << folio + ' (Entry No = ' + entry_no + ')'
+        end
+      end
+   end
+
+    return existing_location_list
+  end
+
+  # Returns concept_scheme id for the particular concept
+  def get_concept_scheme_id
+    concept_list_type = "#{session[:list_type].downcase}s"
+    concept_list_type = concept_list_type.sub ' ', '_'
+    response = SolrQuery.new.solr_query(q='has_model_ssim:ConceptScheme AND preflabel_tesim:' + concept_list_type, fl='id', rows=1, sort='')
+    concept_scheme_id = response['response']['docs'][0]['id']
+    return concept_scheme_id
+  end
+
 end

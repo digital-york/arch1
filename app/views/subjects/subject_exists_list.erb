@@ -2,7 +2,7 @@
 
   <div class="popup_title">Subject exists in one or more entries</div>
 
-  <div style="margin-top: 10px">The subject '<strong><%= @subject %></strong>' exists in one or more entries.
+  <div style="margin-top: 10px">The subject '<strong><%= @subject_name %></strong>' exists in one or more entries.
     Please remove it from the records displayed below (using the main interface)
     <%= link_to 'then click here to go back and delete the subject', subject_path(@go_back_id), title: 'Go back' %>.
   </div>
@@ -10,7 +10,7 @@
   <hr style="margin: 10px 0px"/>
 
   <div style="margin-top: 10px">
-    <% @delete_list.each_with_index do |t| %>
+    <% @subject_location_lists.each do |t| %>
         <em><%= t %></em>
         <br/>
     <% end %>

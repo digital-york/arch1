@@ -120,18 +120,25 @@ class SubjectsController < ApplicationController
 
   # DESTROY
   def destroy
+
     @concept = Concept.find(params[:id])
-    # Find all child subjects and destroy
-    delete_list = get_deleted_ids
-    if delete_list.size > 1
-     #redirect_to :controller => 'subjects', :action => 'delete_confirm', :id => params[:go_back_id], :delete_list => delete_list
-      error = "'#{@concept.preflabel}' contains child elements - please delete them first"
-      redirect_to :controller => 'subjects', :action => 'show', :id => params[:go_back_id], :error => error
+
+    # Check if the subject is present in any of the entries
+    # If so, direct the user to a page with the entry locations so that they can remove them
+    subject_location_list = get_subject_locations
+
+    if subject_location_list.size > 0
+      render 'subject_exists_list', :locals => { :@subject_name => @concept.preflabel, :@subject_location_list => subject_location_list, :@go_back_id =>  params[:go_back_id] }
     else
-      # Check if the subject is present in any of the entries
-      subject_location_list = get_subject_locations
-      if subject_location_list.size > 0
-        render 'subject_exists_list', :locals => { :@subject => @concept.preflabel, :@delete_list => subject_location_list, :@go_back_id =>  params[:go_back_id] }
+
+      # Get the parent / child list for the specified id
+      # The list should only contain the parent subject
+      # If it contains children then an error message is displayed on the page to tell the user that they must delete them first
+      parent_child_list = get_parent_child_list
+
+      if parent_child_list.size > 1
+        error = "'#{@concept.preflabel}' contains child elements - please delete them first"
+        redirect_to :controller => 'subjects', :action => 'show', :id => params[:go_back_id], :error => error
       else
         @concept.destroy
         redirect_to :controller => 'subjects', :action => 'show', :id => params[:go_back_id]
@@ -146,39 +153,39 @@ class SubjectsController < ApplicationController
     params.require(:concept).permit! # Note - this needs changing because it allows through all params at the moment!!
   end
 
+  # Return array of folio / entry numbers which contain the specified subject
   def get_subject_locations
 
     subject_location_list = []
 
     SolrQuery.new.solr_query(q='subject_tesim:' + @concept.id, fl='id, folio_ssim, entry_no_tesim', rows=1000, sort='id ASC')['response']['docs'].map do |result|
-      id = result['id']
       folio_id = result['folio_ssim'].join
       entry_no = result['entry_no_tesim'].join
       folio = SolrQuery.new.solr_query(q='id:' + folio_id, fl='preflabel_tesim', rows=1000, sort='id ASC')['response']['docs'].map.first['preflabel_tesim'].join
-      #puts "#{id} - #{folio} - #{entry_no}"
       subject_location_list << folio + ' (Entry No = ' + entry_no + ')'
     end
 
     return subject_location_list
   end
 
-  def get_deleted_ids
+  # Return hash of parent /child ids and labels
+  def parent_child_list
 
-    delete_list = {}
-    delete_list[@concept.id] = @concept.preflabel
+    parent_child_list = {}
+    parent_child_list[@concept.id] = @concept.preflabel
 
     SolrQuery.new.solr_query(q='broader_tesim:' + @concept.id, fl='id, preflabel_tesim', rows=1000, sort='id ASC')['response']['docs'].map do |result|
       id = result['id']
       preflabel = result['preflabel_tesim'].join
-      delete_list[id] = preflabel
+      parent_child_list[id] = preflabel
       SolrQuery.new.solr_query(q='broader_tesim:' + id, fl='id, preflabel_tesim', rows=1000, sort='id ASC')['response']['docs'].map do |result|
         id2 = result['id']
         preflabel2 = result['preflabel_tesim'].join
-        delete_list[id2] = preflabel2
+        parent_child_list[id2] = preflabel2
       end
     end
 
-   return delete_list
+   return parent_child_list
   end
 
 end

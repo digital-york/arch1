@@ -4,11 +4,11 @@
   <div class="popup_title"><%= capitalize_first_letter(session[:list_type]) %></div>
 
   <div>
-    <a href="<%= new_concept_path %>?list_type=<%= @list_type %>&amp;search_term=<%= @search_term %>"><input type = "button" value="Add <%= capitalize_first_letter(session[:list_type]) %>"/></a>
-    &nbsp;
-    <%= link_to 'Go back to admin page', admins_path, style: "font-style: italic" %>
+    <%= button_to "Add #{capitalize_first_letter(session[:list_type])}", new_concept_path, method: :get, style: 'margin-top: -4px' %>
+    <%= link_to 'Go back to admin page', admins_path, style: "font-style: italic; margin-left: 6px" %>
   </div>
 
+  <div style="margin-top: 5px">
   <%= form_tag concepts_path, :method => :get, style: 'margin-top: 8px' do |f| %>
       <div class="search_box">
         <table>
@@ -24,7 +24,7 @@
       </div>
       <div style="clear: both"></div>
   <% end %>
-
+  </div>
 
   <div style="margin: 30px 0px 20px 2px">
 
@@ -74,7 +74,7 @@
                     <%= button_to 'Edit', edit_concept_path(id), :method => :get, title: 'Edit element details' %>
                   </td>
                   <td style="width: 60px; text-align: center">
-                    <%= button_to 'Delete', concept_path(id), :method => :delete, title: 'Delete label', :data => {:confirm => "Are you sure you want to delete '#{label}'?"} %>
+                    <%= button_to 'Delete', concept_path(id), params: { :list_type => @list_type }, :method => :delete, title: 'Delete label', :data => {:confirm => "Are you sure you want to delete '#{label}'?"} %>
                   </td>
                 </tr>
         <%

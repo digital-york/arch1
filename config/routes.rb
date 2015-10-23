@@ -25,7 +25,6 @@ Rails.application.routes.draw do
   get 'go_entries' => 'landing_page#go_entries'
   get 'subject_popup' => 'subject_popup#index'
   get 'admins' => 'admins#index'
-  get 'delete_confirm' => 'subjects#delete_confirm'
 
   #root :to => "catalog#login"
   blacklight_for :catalog

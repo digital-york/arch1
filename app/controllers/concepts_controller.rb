@@ -116,9 +116,18 @@ class ConceptsController < ApplicationController
 
   # DESTROY
   def destroy
+
     @concept = Concept.find(params[:id])
-    @concept.destroy
-    redirect_to :controller => 'concepts', :action => 'index'
+
+    # Check if the concept is present in any of the entries
+    # If so, direct the user to a page with the entry locations so that they can remove them
+    existing_location_list = get_existing_location_list(session[:list_type])
+    if existing_location_list.size > 0
+      render 'concept_exists_list', :locals => { :@concept_name => @concept.preflabel, :@existing_location_list => existing_location_list, :@go_back_id =>  params[:go_back_id] }
+    else
+      @concept.destroy
+      redirect_to :controller => 'concepts', :action => 'index'
+    end
   end
 
   private
@@ -126,15 +135,6 @@ class ConceptsController < ApplicationController
   # Never trust parameters from the scary internet, only allow the white list through.
   def whitelist_concept_params
     params.require(:concept).permit! # Note - this needs changing because it allows through all params at the moment!!
-  end
-
-  # Returns concepty_scheme id for the particular concept
-  def get_concept_scheme_id
-    concept_list_type = "#{session[:list_type].downcase}s"
-    concept_list_type = concept_list_type.sub ' ', '_'
-    response = SolrQuery.new.solr_query(q='has_model_ssim:ConceptScheme AND preflabel_tesim:' + concept_list_type, fl='id', rows=1, sort='')
-    concept_scheme_id = response['response']['docs'][0]['id']
-    return concept_scheme_id
   end
 
 end
