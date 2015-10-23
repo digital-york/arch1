@@ -125,10 +125,10 @@ class SubjectsController < ApplicationController
 
     # Check if the subject is present in any of the entries
     # If so, direct the user to a page with the entry locations so that they can remove them
-    subject_location_list = get_subject_locations
+    existing_location_list = get_existing_location_list('subject', @concept.id)
 
-    if subject_location_list.size > 0
-      render 'subject_exists_list', :locals => { :@subject_name => @concept.preflabel, :@subject_location_list => subject_location_list, :@go_back_id =>  params[:go_back_id] }
+    if existing_location_list.size > 0
+      render 'subject_exists_list', :locals => { :@subject_name => @concept.preflabel, :@existing_location_list => existing_location_list, :@go_back_id =>  params[:go_back_id] }
     else
 
       # Get the parent / child list for the specified id
@@ -151,41 +151,6 @@ class SubjectsController < ApplicationController
   # Never trust parameters from the scary internet, only allow the white list through.
   def whitelist_subject_params
     params.require(:concept).permit! # Note - this needs changing because it allows through all params at the moment!!
-  end
-
-  # Return array of folio / entry numbers which contain the specified subject
-  def get_subject_locations
-
-    subject_location_list = []
-
-    SolrQuery.new.solr_query(q='subject_tesim:' + @concept.id, fl='id, folio_ssim, entry_no_tesim', rows=1000, sort='id ASC')['response']['docs'].map do |result|
-      folio_id = result['folio_ssim'].join
-      entry_no = result['entry_no_tesim'].join
-      folio = SolrQuery.new.solr_query(q='id:' + folio_id, fl='preflabel_tesim', rows=1000, sort='id ASC')['response']['docs'].map.first['preflabel_tesim'].join
-      subject_location_list << folio + ' (Entry No = ' + entry_no + ')'
-    end
-
-    return subject_location_list
-  end
-
-  # Return hash of parent /child ids and labels
-  def parent_child_list
-
-    parent_child_list = {}
-    parent_child_list[@concept.id] = @concept.preflabel
-
-    SolrQuery.new.solr_query(q='broader_tesim:' + @concept.id, fl='id, preflabel_tesim', rows=1000, sort='id ASC')['response']['docs'].map do |result|
-      id = result['id']
-      preflabel = result['preflabel_tesim'].join
-      parent_child_list[id] = preflabel
-      SolrQuery.new.solr_query(q='broader_tesim:' + id, fl='id, preflabel_tesim', rows=1000, sort='id ASC')['response']['docs'].map do |result|
-        id2 = result['id']
-        preflabel2 = result['preflabel_tesim'].join
-        parent_child_list[id2] = preflabel2
-      end
-    end
-
-   return parent_child_list
   end
 
 end

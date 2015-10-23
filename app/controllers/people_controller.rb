@@ -162,9 +162,19 @@ class PeopleController < ApplicationController
 
   # DESTROY
   def destroy
+
     @person = Person.find(params[:id])
-    @person.destroy
-    redirect_to :controller => 'people', :action => 'index'
+
+    # Check if the person is present in any of the entries
+    # If so, direct the user to a page with the entry locations so that they can remove them
+    existing_location_list = get_existing_location_list('person_same_as', @person.id)
+
+    if existing_location_list.size > 0
+      render 'person_exists_list', :locals => { :@person_name => @person.family, :@existing_location_list => existing_location_list, :@go_back_id =>  params[:go_back_id] }
+    else
+      @person.destroy
+      redirect_to :controller => 'people', :action => 'index'
+    end
   end
 
   private

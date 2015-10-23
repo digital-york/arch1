@@ -121,7 +121,8 @@ class ConceptsController < ApplicationController
 
     # Check if the concept is present in any of the entries
     # If so, direct the user to a page with the entry locations so that they can remove them
-    existing_location_list = get_existing_location_list(session[:list_type])
+    existing_location_list = get_existing_location_list(session[:list_type], @concept.id)
+
     if existing_location_list.size > 0
       render 'concept_exists_list', :locals => { :@concept_name => @concept.preflabel, :@existing_location_list => existing_location_list, :@go_back_id =>  params[:go_back_id] }
     else

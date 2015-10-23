@@ -403,14 +403,15 @@ module RegisterFolio
   end
 
   # Return array of folio / entry numbers which contain the specified concept / subject
-  def get_existing_location_list(type)
+  def get_existing_location_list(type, element_id)
 
     existing_location_list = []
 
-    search_term2 = ''
 
-    if type == 'entry_type' or type == 'language' or type == 'section_type'
-      search_term2 = type + '_tesim:' + @concept.id
+    if type == 'entry_type' or type == 'language' or type == 'section_type' or type == 'subject'
+
+      search_term2 = type + '_tesim:' + element_id
+
       SolrQuery.new.solr_query(q=search_term2, fl='id, folio_ssim, entry_no_tesim', rows=1000, sort='id ASC')['response']['docs'].map do |result|
         folio_id = result['folio_ssim'].join
         entry_no = result['entry_no_tesim'].join
@@ -418,6 +419,7 @@ module RegisterFolio
         existing_location_list << folio + ' (Entry No = ' + entry_no + ')'
       end
     else
+
       search_term1 = ''
 
       if type == 'date_role' then search_term1 = 'date_role_tesim'; fl_term = 'entryDateFor_ssim' end
@@ -425,9 +427,12 @@ module RegisterFolio
       if type == 'person_role' then search_term1 = 'person_role_tesim'; fl_term = 'relatedAgentFor_ssim' end
       if type == 'place_role' then search_term1 = 'place_role_tesim'; fl_term = 'relatedPlaceFor_ssim' end
       if type == 'place_type' then search_term1 = 'place_type_tesim'; fl_term = 'relatedPlaceFor_ssim' end
+      if type == 'person_same_as' then search_term1 = 'person_same_as_tesim'; fl_term = 'relatedAgentFor_ssim' end
+      if type == 'place_same_as' then search_term1 = 'place_same_as_tesim'; fl_term = 'relatedPlaceFor_ssim' end
 
-      SolrQuery.new.solr_query(q=search_term1 + ':' + @concept.id, fl=fl_term, rows=1000, sort='id ASC')['response']['docs'].map do |result|
+      SolrQuery.new.solr_query(q=search_term1 + ':' + element_id, fl=fl_term, rows=1000, sort='id ASC')['response']['docs'].map do |result|
         search_term2 = 'id:' + result[fl_term].join
+        puts search_term2
         SolrQuery.new.solr_query(q=search_term2, fl='id, folio_ssim, entry_no_tesim', rows=1000, sort='id ASC')['response']['docs'].map do |result|
           folio_id = result['folio_ssim'].join
           entry_no = result['entry_no_tesim'].join
@@ -447,6 +452,26 @@ module RegisterFolio
     response = SolrQuery.new.solr_query(q='has_model_ssim:ConceptScheme AND preflabel_tesim:' + concept_list_type, fl='id', rows=1, sort='')
     concept_scheme_id = response['response']['docs'][0]['id']
     return concept_scheme_id
+  end
+
+  # Return hash of parent /child ids and labels
+  def get_parent_child_list
+
+    parent_child_list = {}
+    parent_child_list[@concept.id] = @concept.preflabel
+
+    SolrQuery.new.solr_query(q='broader_tesim:' + @concept.id, fl='id, preflabel_tesim', rows=1000, sort='id ASC')['response']['docs'].map do |result|
+      id = result['id']
+      preflabel = result['preflabel_tesim'].join
+      parent_child_list[id] = preflabel
+      SolrQuery.new.solr_query(q='broader_tesim:' + id, fl='id, preflabel_tesim', rows=1000, sort='id ASC')['response']['docs'].map do |result|
+        id2 = result['id']
+        preflabel2 = result['preflabel_tesim'].join
+        parent_child_list[id2] = preflabel2
+      end
+    end
+
+    return parent_child_list
   end
 
 end

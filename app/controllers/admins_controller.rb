@@ -6,6 +6,8 @@ class AdminsController < ApplicationController
   def index
     session[:list_type] = ''
     session[:search_term] = ''
+    session[:person_field] = nil
+    session[:place_field] = nil
   end
 
 end

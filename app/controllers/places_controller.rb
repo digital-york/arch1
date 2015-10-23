@@ -162,9 +162,19 @@ class PlacesController < ApplicationController
 
   # DESTROY
   def destroy
+
     @place = Place.find(params[:id])
-    @place.destroy
-    redirect_to :controller => 'places', :action => 'index'
+
+    # Check if the place is present in any of the entries
+    # If so, direct the user to a page with the entry locations so that they can remove them
+    existing_location_list = get_existing_location_list('place_same_as', @place.id)
+
+    if existing_location_list.size > 0
+      render 'place_exists_list', :locals => { :@place_name => @place.place_name, :@existing_location_list => existing_location_list, :@go_back_id =>  params[:go_back_id] }
+    else
+      @place.destroy
+      redirect_to :controller => 'places', :action => 'index'
+    end
   end
 
   private
