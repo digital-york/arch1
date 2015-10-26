@@ -2,13 +2,23 @@
 
   <div class="popup_title">'<%= @person_name %>'</div>
 
-  <div style="margin-top: 10px">The person '<%= @person_name %>'  exists in one or more entries. Please remove it from the records displayed below (using the main interface)
-    <%= link_to 'then click here to go back and delete the person', people_path(@go_back_id), title: 'Go back' %>.
+  <div><%= link_to 'Go back to search page', people_path(@go_back_id, :search_term => @search_term, :person_field => @person_field) %></div>
+
+  <div style="margin-top: 10px">
+    The person '<%= @person_name %>' exists in one or more entries. Please remove it from the records displayed below (using the main interface) and then click on this button:
   </div>
+
+  <div style="margin-top: 5px">
+    <%= button_to 'Delete', person_path(id), :method => :delete, params: { :search_term => @search_term, :person_field => @person_field }, title: "Delete '#{@person_name}'" %>
+  </div>
+
+  <div style="clear: both"></div>
+
+  <hr/>
 
   <div style="margin-top: 10px; margin-left: 0px">
     <% @existing_location_list.each do |t| %>
-        <div style="margin-top: 5px">-&nbsp;&nbsp;<%= t %></div>
+        <div style="margin-top: 5px"><%= t %></div>
     <% end %>
   </div>
 </div>

@@ -432,8 +432,7 @@ module RegisterFolio
 
       SolrQuery.new.solr_query(q=search_term1 + ':' + element_id, fl=fl_term, rows=1000, sort='id ASC')['response']['docs'].map do |result|
         search_term2 = 'id:' + result[fl_term].join
-        puts search_term2
-        SolrQuery.new.solr_query(q=search_term2, fl='id, folio_ssim, entry_no_tesim', rows=1000, sort='id ASC')['response']['docs'].map do |result|
+       SolrQuery.new.solr_query(q=search_term2, fl='id, folio_ssim, entry_no_tesim', rows=1000, sort='id ASC')['response']['docs'].map do |result|
           folio_id = result['folio_ssim'].join
           entry_no = result['entry_no_tesim'].join
           folio = SolrQuery.new.solr_query(q='id:' + folio_id, fl='preflabel_tesim', rows=1000, sort='id ASC')['response']['docs'].map.first['preflabel_tesim'].join
@@ -446,8 +445,8 @@ module RegisterFolio
   end
 
   # Returns concept_scheme id for the particular concept
-  def get_concept_scheme_id
-    concept_list_type = "#{session[:list_type].downcase}s"
+  def get_concept_scheme_id(list_type)
+    concept_list_type = "#{list_type.downcase}s"
     concept_list_type = concept_list_type.sub ' ', '_'
     response = SolrQuery.new.solr_query(q='has_model_ssim:ConceptScheme AND preflabel_tesim:' + concept_list_type, fl='id', rows=1, sort='')
     concept_scheme_id = response['response']['docs'][0]['id']

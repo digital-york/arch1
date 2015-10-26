@@ -5,15 +5,16 @@ class PlacesController < ApplicationController
   #INDEX
   def index
 
-    if params[:start] == 'true' then session[:place_search_term] = '' end
-
     # This variable identifies the 'Same As' field on the form (i.e. it is used when the user selects a 'place')
-    if params[:place_field] != nil
-      session[:place_field] = params[:place_field]
-    end
+    @place_field = params[:place_field]
 
-    # Set the session search_term variable if it is passed as a parameter
-    if params[:search_term] != nil then session[:place_search_term] = params[:search_term] end
+    # Set the search_term variable if it is passed as a parameter
+    @search_term = ''
+    if params[:search_term_index] != nil
+      @search_term = params[:search_term_index]
+    else
+      @search_term = params[:search_term]
+    end
 
     @search_array = []
 
@@ -43,7 +44,7 @@ class PlacesController < ApplicationController
         name = "#{name}, #{parent_ADM1.join()}"
       end
 
-      if name.match(/#{session[:place_search_term]}/i)
+      if name.match(/#{@search_term}/i)
         tt << id
         tt << name
         @search_array << tt
@@ -52,7 +53,6 @@ class PlacesController < ApplicationController
 
     # Sort the array by place_name
     @search_array = @search_array.sort_by { |k| k[1] }
-
   end
 
   # SHOW
@@ -62,11 +62,15 @@ class PlacesController < ApplicationController
   # NEW
   def new
     @place = Place.new
+    @search_term = params[:search_term]
+    @place_field = params[:place_field]
   end
 
   # EDIT
   def edit
     @place = Place.find(params[:id])
+    @search_term = params[:search_term]
+    @place_field = params[:place_field]
   end
 
   # CREATE
@@ -93,7 +97,7 @@ class PlacesController < ApplicationController
     @place = Place.new(place_params)
 
     if @error != ''
-      render 'new'
+      render 'new', :locals => { :@search_term => params[:search_term], :@place_field => params[:place_field] }
     else
 
       # Use a solr query to obtain the concept scheme id for 'places'
@@ -113,7 +117,7 @@ class PlacesController < ApplicationController
         @commit_place_name = place_params[:place_name]
       end
 
-      redirect_to :controller => 'places', :action => 'index'
+      redirect_to :controller => 'places', :action => 'index', :search_term => params[:search_term], :place_field => params[:place_field]
     end
   end
 
@@ -143,7 +147,7 @@ class PlacesController < ApplicationController
     @place.attributes = place_params
 
     if @error != ''
-      render 'edit'
+      render 'edit', :locals => { :@search_term => params[:search_term], :@place_field => params[:place_field] }
     else
 
       # Use a solr query to obtain the concept scheme id for 'places'
@@ -156,7 +160,7 @@ class PlacesController < ApplicationController
 
       @place.save
 
-      redirect_to :controller => 'places', :action => 'index'
+      redirect_to :controller => 'places', :action => 'index', :search_term => params[:search_term], :place_field => params[:place_field]
     end
   end
 
@@ -170,10 +174,10 @@ class PlacesController < ApplicationController
     existing_location_list = get_existing_location_list('place_same_as', @place.id)
 
     if existing_location_list.size > 0
-      render 'place_exists_list', :locals => { :@place_name => @place.place_name, :@existing_location_list => existing_location_list, :@go_back_id =>  params[:go_back_id] }
+      render 'place_exists_list', :locals => { :@place_name => @place.place_name, :id => @place.id, :@existing_location_list => existing_location_list, :@go_back_id =>  params[:go_back_id], :@search_term => params[:search_term], :@place_field => params[:place_field] }
     else
       @place.destroy
-      redirect_to :controller => 'places', :action => 'index'
+      redirect_to :controller => 'places', :action => 'index', :search_term => params[:search_term], :place_field => params[:place_field]
     end
   end
 

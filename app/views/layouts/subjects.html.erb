@@ -1,5 +1,3 @@
-<!DOCTYPE html>
-
 <html lang="en" class="no-js">
 
 <head>
@@ -8,13 +6,15 @@
   <title>Archbishops&#39; Registers</title>
   <%= stylesheet_link_tag "application", media: "all" %>
   <%= javascript_include_tag "application" %>
+  <%= csrf_meta_tags %>
 </head>
 
-<body>
+<body <% if @subject_field == nil %>style="background-color: #004976"<% end %>>
 
-</body>
-
-<%= yield %>
+<div style="margin-top: 40px">
+  <%= yield %>
+</div>
 
 </body>
 </html>
+

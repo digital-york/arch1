@@ -4,12 +4,10 @@
   <%
     if @place.new_record?
       start_text = 'Add'
-      confirm_text = 'has been added'
       form_url = 'places_path(@place)'
       form_method = ':post'
     else
       start_text = 'Edit'
-      confirm_text = 'has been updated'
       form_url = 'place_path(@place)'
       form_method = ':patch'
     end
@@ -24,10 +22,10 @@
   <% end %>
 
   <div>
-    <%= link_to 'Go back to search page', places_path, style: "font-style: italic" %>
+    <%= link_to 'Go back to search page', places_path(:search_term => @search_term, :place_field => @place_field) %>
   </div>
 
-  <%= form_for @place, url: eval(form_url), method: eval(form_method), html: {style: 'margin-top: 15px; margin-bottom: 0px'} do |f| %>
+  <%= form_for @place, url: eval(form_url), method: eval(form_method), html: { style: 'margin-top: 15px; margin-bottom: 0px' } do |f| %>
 
       <div class='tab1'>
 
@@ -149,14 +147,15 @@
               </div>
             </td>
           </tr>
-
         </table>
+
+        <%= hidden_field_tag 'search_term', @search_term %>
+        <%= hidden_field_tag 'place_field', @place_field %>
 
         <%# Submit %>
         <p style="margin-top: 10px">
           <% if @place.new_record? %>
               <%= f.submit 'Submit' %>
-              <%#= f.submit 'Submit and Close' %>
           <% else %>
               <%= f.submit 'Update' %>
           <% end %>

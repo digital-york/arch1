@@ -1,11 +1,20 @@
-
 <div class="popup popup_subject">
 
-  <div class="popup_title">Subject List</div>
+  <div class="popup_title">
+    <% if @subject_field == nil %>
+        Subject List
+    <% else %>
+        Choose Subject
+    <% end %>
+  </div>
 
   <div>
-    <%= button_to 'Add Top-Level Subject', new_subject_path, params: {:go_back_id => 'none'}, :method => :get, title: 'Add top-level subject', style: 'margin-top: -4px' %>
-    <%= link_to 'Go back to admin page', admins_path, style: "margin-left: 8px; float: left; font-style: italic" %>
+    <% if @subject_field == nil %>
+        <%= button_to "Add Top-Level Subject", new_subject_path, method: :get, params: { :go_back_id => 'none' }, style: 'margin-top: -5px', title: 'Add top-level subject' %>
+        <%= link_to 'Go back to admin page', admins_path, style: 'margin-left: 6px' %>
+    <% else %>
+        <%= link_to 'Click here to open the admin interface (to edit subjects)', '#', onclick: "popup('/admins?start=true', 'admin'); return false;" %>
+    <% end %>
   </div>
 
   <div style="clear: both"></div>

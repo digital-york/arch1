@@ -24,7 +24,7 @@
               <%= top_level_term['label'].join %>
             </td>
             <td style="width: 135px; padding: 2px">
-              <%= button_to 'Add', new_subject_path, params: {:go_back_id => top_level_term['id'], :broader_id => top_level_term['id']}, :method => :get, title: 'Add subject to this element', class: 'small_button' %>
+              <%= button_to 'Add', new_subject_path, params: {:go_back_id => top_level_term['id'], :broader => top_level_term['id']}, :method => :get, title: 'Add subject to this element', class: 'small_button' %>
               <%= button_to 'Edit', edit_subject_path(top_level_term['id']), params: {:go_back_id => top_level_term['id']}, :method => :get, title: 'Edit subject', style: 'margin-left: 5px', class: 'small_button' %>
               <%= button_to 'Delete', subject_path(top_level_term['id']), params: {:go_back_id => top_level_term['id']}, method: 'delete', title: 'Delete subject', class: 'small_button', style: 'margin-left: 5px', :data => {:confirm => "Are you sure you want to delete this subject'?"} %>
             </td>
@@ -37,7 +37,7 @@
                 <td class="subjects_level2">
                   <span style="margin-left: 30px"><%= second_level_term['label'].join %></span></td>
                 <td style="padding: 2px">
-                  <%= button_to 'Add', new_subject_path, params: {:go_back_id => top_level_term['id'], :broader_id => second_level_term['id']}, :method => :get, title: 'Add subject to this element', class: 'small_button' %>
+                  <%= button_to 'Add', new_subject_path, params: {:go_back_id => top_level_term['id'], :broader => second_level_term['id']}, :method => :get, title: 'Add subject to this element', class: 'small_button' %>
                   <%= button_to 'Edit', edit_subject_path(second_level_term['id']), params: {:go_back_id => top_level_term['id']}, :method => :get, title: 'Edit subject', style: 'margin-left: 5px', class: 'small_button' %>
                   <%= button_to 'Delete', subject_path(second_level_term['id']), params: {:go_back_id => top_level_term['id']}, method: 'delete', title: 'Delete subject', class: 'small_button', style: 'margin-left: 5px', :data => {:confirm => "Are you sure you want to delete this subject'?"} %>
                 </td>

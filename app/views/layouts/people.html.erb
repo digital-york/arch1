@@ -6,9 +6,10 @@
   <title>Archbishops&#39; Registers</title>
   <%= stylesheet_link_tag "application", media: "all" %>
   <%= javascript_include_tag "application" %>
-  </head>
+  <%= csrf_meta_tags %>
+</head>
 
-<body>
+<body <% if @person_field == 'none' %>style="background-color: #004976"<% end %>>
 
 <div style="margin-top: 40px">
   <%= yield %>

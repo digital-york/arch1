@@ -1,22 +1,30 @@
-
 <div class="popup">
 
-  <div class="popup_title">Person List</div>
-
-  <% if session[:person_field] == nil %>
-  <div>
-    <a href="<%= new_person_path %>"><input type = "button" value="Add Person"/></a>
-    &nbsp;
-    <%= link_to 'Go back to admin page', admins_path, style: "font-style: italic" %>
+  <div class="popup_title">
+    <% if @person_field == 'none' %>
+        Person List
+    <% else %>
+        Choose Person Name Authority
+    <% end %>
   </div>
-  <% end %>
+
+  <div>
+    <% if @person_field == 'none' %>
+        <%= button_to "Add Person", new_person_path, method: :get, params: { :search_term => @search_term, :person_field => @person_field }, style: 'margin-top: -5px', title: 'Add element' %>
+        <%= link_to 'Go back to admin page', admins_path, style: 'margin-left: 6px' %>
+    <% else %>
+        <%= link_to 'Click here to open the admin interface (to edit people)', '#', onclick: "popup('/admins?start=true', 'admin'); return false;" %>
+    <% end %>
+  </div>
+
+  <div style="clear: both"></div>
 
   <%= form_tag people_path, :method => :get, style: 'margin-top: 8px' do |f| %>
       <div class="search_box">
         <table>
           <tr>
             <td>Search Term:</td>
-            <td><%= text_field_tag 'search_term', nil, class: 'text_field_search', id: 'search_box', value: session[:person_search_term] %></td>
+            <td><%= text_field_tag 'search_term', @search_term, class: 'text_field_search', id: 'search_box' %></td>
             <td>
               <%= submit_tag 'Search' %>
               <input type="button" value="Clear" onclick="reset_box(); return false"/>
@@ -25,8 +33,8 @@
         </table>
       </div>
       <div style="clear: both"></div>
+      <%= hidden_field_tag "person_field", @person_field %>
   <% end %>
-
 
   <div style="margin: 30px 0px 20px 2px">
 
@@ -34,63 +42,64 @@
        if @search_array != nil && @search_array != ''
     %>
 
-        <div style="float: left; font-weight: bold; font-size: 1.1em">
-          Results:
+        <div style="float: left; font-size: 1.1em">
+          Search Term:
+          <% if @search_term != '' %>
+            '<strong><%= @search_term %></strong>'
+          <% else %>
+            <strong><em>None</em></strong>
+          <% end %>
         </div>
 
         <div style="clear: both"></div>
 
         <div class="popup_search">
 
-          <table border='1' style="width: 100%; font-size: 1.1em; margin-top: 10px">
+          <% if @person_field == 'none' %>
 
-            <tr>
-              <th>Person Name</th>
-              <th style="width: 60px">Edit</th>
-              <th style="width: 60px">Delete</th>
-            </tr>
+              <table border='1' style="width: 100%; font-size: 1.1em; margin-top: 10px">
 
-            <%
-               @search_array.each do |array_element|
-                 id = array_element[0]
-                 name = array_element[1]
-            %>
                 <tr>
-                  <td>
-                    <% if session[:person_field] != nil %>
-                        <a href="#" title="Add this person to the form" onclick="post_value('<%= name %>', '<%= id %>', '<%= session[:person_field] %>')"><%= image_tag "popup_choice.png", class: "popup_choice" %></a>&nbsp;<%= name %>
-                    <% else %>
-                        <%= name %>
-                    <% end %>
-                  </td>
-                  <td style="width: 100px; text-align: center">
-                    <% if session[:person_field] == nil %>
-                         <%= button_to 'Edit', edit_person_path(id), :method => :get, title: 'Edit element details' %>
-                    <% else %>
-                         N/A
-                    <% end %>
-                  </td>
-                  <td style="width: 60px; text-align: center">
-                    <% if session[:person_field] == nil %>
-                         <%= button_to 'Delete', person_path(id), :method => :delete, title: 'Delete element', :data => {:confirm => "Are you sure you want to delete '#{name}'?"} %>
-                    <% else %>
-                         N/A
-                    <% end %>
-                  </td>
+                  <th>Person Name</th>
+                  <th style="width: 60px">Edit</th>
+                  <th style="width: 60px">Delete</th>
                 </tr>
-        <%
-           end
-           end
-        %>
 
-    </table>
-    </div>
+                <%
+                   @search_array.each do |array_element|
+                     id = array_element[0]
+                     name = array_element[1]
+                %>
+                    <tr>
+                      <td><%= name %></td>
+                      <td style="width: 100px; text-align: center">
+                        <%= button_to 'Edit', edit_person_path(id), :method => :get, params: { :search_term => @search_term, :person_field => @person_field }, title: 'Edit element' %>
+                      </td>
+                      <td style="width: 60px; text-align: center">
+                        <%= button_to 'Delete', person_path(id), :method => :delete, params: { :search_term => @search_term, :person_field => @person_field }, title: 'Delete element', :data => { :confirm => "Are you sure you want to delete '#{name}'?" } %>
+                      </td>
+                    </tr>
+                <% end %>
 
-    <script>
-        window.onload = function () {
-            document.getElementById("search_box").focus();
-        };
-    </script>
-  </div>
+              </table>
+          <% else %>
+              <%
+                 @search_array.each do |array_element|
+                   id = array_element[0]
+                   name = array_element[1]
+              %>
+                  <a href="#" title="Add this person to the form" onclick="post_value('<%= name %>', '<%= id %>', '<%= @person_field %>')"><%= image_tag "popup_choice.png", class: "popup_choice" %></a>&nbsp;<%= name %>
+                  <br/>
+              <% end %>
+          <% end %>
+        </div>
+      <% end %>
 
-</div>
+      <script>
+            window.onload = function () {
+                document.getElementById("search_box").focus();
+            };
+        </script>
+        </div>
+
+        </div>

@@ -2,22 +2,12 @@ class SubjectsController < ApplicationController
 
   before_filter :session_timed_out_small
 
-  layout 'concepts'
-
   #INDEX
   def index
+    # This variable identifies the 'Subject' field on the form (i.e. it is used when the user clicks a subject magniying glass)
+    @subject_field = params[:subject_field]
 
-    if params[:start] == 'true' then session[:subject_search_term] = '' end
-
-    # This variable identifies the 'Same As' field on the form (i.e. it is used when the user selects a 'subject')
-    #if params[:subject_field] != nil
-    #  session[:subject_field] = params[:subject_field]
-    #end
-
-    # Set the session search_term variable if it is passed as a parameter
-    if params[:search_term] != nil then session[:subject_search_term] = params[:search_term] end
-
-    # Get the top-level list (which contains the 2nd level and 3rd level lists)
+    # Get the top-level list (this is a hash which contains the 2nd level and 3rd level lists)
     @top_level_list = SubjectTerms.new('subauthority').get_subject_list_top_level
   end
 
@@ -32,14 +22,16 @@ class SubjectsController < ApplicationController
   def new
     @concept = Concept.new
     @go_back_id = params[:go_back_id] # This is for the link to go back to the previous page (i.e. on the index, add or edit pages)
-    @broader_id = params[:broader_id] # This creates an association between a subject and the parent subject
+    @broader = params[:broader] # This creates an association between a subject and the parent subject
+    #@subject_field = params[:subject_field]
   end
 
   # EDIT
   def edit
     @concept = Concept.find(params[:id])
     @go_back_id = params[:go_back_id]
-    @broader_id = @concept.broader
+    @broader = @concept.broader
+    #@subject_field = params[:subject_field]
   end
 
   # CREATE
@@ -54,15 +46,12 @@ class SubjectsController < ApplicationController
       @error = "Please enter a 'Subject'"
     end
 
-    if @error != ''
-      @concept = Concept.new(subject_params)
-      @go_back_id = params[:go_back_id]
-      @broader_id = params[:concept][:broader]
-      render 'new'
-    else
+    @concept = Concept.new(subject_params)
 
-      # Create a new subject with the parameters
-      @concept = Concept.new(subject_params)
+    if @error != ''
+    puts params
+      render 'new', :locals => { :@go_back_id => params[:go_back_id], :@broader => params[:concept][:broader] } #, @subject_field => params[:subject_field] }
+    else
 
       # Use a solr query to obtain the concept scheme id for 'subjects'
       response = SolrQuery.new.solr_query(q='has_model_ssim:ConceptScheme AND preflabel_tesim:"Borthwick Institute for Archives Subject Headings"', fl='id', rows=1, sort='')
@@ -74,13 +63,10 @@ class SubjectsController < ApplicationController
       # Pass variable to view page to notify user that subject has been added
       @subject_name = @concept.preflabel
 
-      # Initialise subject form again
-      @concept = Concept.new
-
       if params[:concept][:istopconcept] == 'true'
-        redirect_to :controller => 'subjects', :action => 'index', :subject_name => @subject_name
+        redirect_to :controller => 'subjects', :action => 'index'#, :subject_name => @subject_name#, :subject_field => @subject_field
       else
-        redirect_to :controller => 'subjects', :action => 'show', :id => params[:go_back_id], :subject_name => @subject_name
+        redirect_to :controller => 'subjects', :action => 'show', :id => params[:go_back_id]#, :subject_name => @subject_name#, :subject_field => @subject_field
       end
     end
   end
@@ -102,9 +88,7 @@ class SubjectsController < ApplicationController
     @concept.attributes = subject_params
 
     if @error != ''
-      @go_back_id = params[:go_back_id]
-      @broader_id = params[:concept][:broader]
-      render 'edit'
+      render 'edit', :locals => { :@go_back_id => params[:go_back_id], :@broader => params[:concept][:broader].join } #, @subject_field => params[:subject_field] }
     else
 
       # Use a solr query to obtain the concept scheme id for 'subjects'
@@ -114,7 +98,7 @@ class SubjectsController < ApplicationController
 
       @concept.save
 
-      redirect_to :controller => 'subjects', :action => 'show', :id => params[:go_back_id]
+      redirect_to :controller => 'subjects', :action => 'show', :id => params[:go_back_id]#, :subject_field => params[:subject_field]
     end
   end
 
@@ -128,7 +112,7 @@ class SubjectsController < ApplicationController
     existing_location_list = get_existing_location_list('subject', @concept.id)
 
     if existing_location_list.size > 0
-      render 'subject_exists_list', :locals => { :@subject_name => @concept.preflabel, :@existing_location_list => existing_location_list, :@go_back_id =>  params[:go_back_id] }
+      render 'subject_exists_list', :locals => { :@subject_name => @concept.preflabel, :@existing_location_list => existing_location_list, :@go_back_id =>  params[:go_back_id] } #, :@subject_field =>  params[:subject_field] }
     else
 
       # Get the parent / child list for the specified id
@@ -138,10 +122,10 @@ class SubjectsController < ApplicationController
 
       if parent_child_list.size > 1
         error = "'#{@concept.preflabel}' contains child elements - please delete them first"
-        redirect_to :controller => 'subjects', :action => 'show', :id => params[:go_back_id], :error => error
+        redirect_to :controller => 'subjects', :action => 'show', :id => params[:go_back_id], :error => error#, :subject_field => params[:subject_field]
       else
         @concept.destroy
-        redirect_to :controller => 'subjects', :action => 'show', :id => params[:go_back_id]
+        redirect_to :controller => 'subjects', :action => 'show', :id => params[:go_back_id]#, :subject_field => params[:subject_field]
       end
     end
   end

@@ -35,24 +35,25 @@ function popup(page, type) {
         popupHeight = 800;
         left = (screen.width - popupWidth) / 2;
     } else if (type == "subject") {
-        popupWidth = 600;
-        popupHeight = screen.height;
-        left = screen.width - popupWidth;
+        popupWidth = 900;
+        popupHeight = screen.height / 1.25;
+        left = (screen.width - popupWidth) / 2;
         popup_id = "101"
     } else if (type == "person") {
-        var popupWidth = 900;
-        var popupHeight = screen.height / 1.25;
-        var left = (screen.width - popupWidth) / 2;
+        popupWidth = 900;
+        popupHeight = screen.height / 1.25;
+        left = (screen.width - popupWidth) / 2;
         popup_id = "102"
     } else if (type == "place") {
-        var popupWidth = 900;
-        var popupHeight = screen.height / 1.25;
-        var left = (screen.width - popupWidth) / 2;
+        popupWidth = 900;
+        popupHeight = screen.height / 1.25;
+        left = (screen.width - popupWidth) / 2;
         popup_id = "103"
     } else if (type == "admin") {
-        var popupWidth = 900;
-        var popupHeight = screen.height / 1.25;
-        var left = (screen.width - popupWidth) / 2;
+        popupWidth = 900;
+        popupHeight = screen.height / 1.25;
+        left = (screen.width - popupWidth) / 2;
+        top = 100;
         popup_id = "104"
     } else if (type == "browse_folios") {
         popupWidth = 522;
@@ -197,7 +198,7 @@ $(document).ready(function () {
             var no_elements = field_group_div.children('.field_single').length;
             var jq_type = $(this).attr('jq_type');
             var new_code_block = "<div class='field_single'>"
-                + "<a href='' onclick='popup(&#39;/subject_popup?subject_field=subject_" + no_elements + "&#39;, &#39;subject&#39;); return false;' tabindex='-1'><img src='/assets/magnifying_glass_small.png' class='plus_icon'></a>"
+                + "<a href='#' onclick='popup(&#39;/subjects?subject_field=subject_" + no_elements + "&#39;, &#39;subject&#39;); return false;' tabindex='-1'><img src='/assets/magnifying_glass_small.png' class='plus_icon'></a>"
                 + "&nbsp;<span id='subject_" + no_elements + "'></span>"
                 + "<input id='subject_" + no_elements + "_hidden' type='hidden' value='' name='entry[" + jq_type + "][]'>"
                 + "<img alt='Delete icon' src='/assets/delete.png' class='delete_icon click_remove_field_level1' jq_tag_type='input'>"

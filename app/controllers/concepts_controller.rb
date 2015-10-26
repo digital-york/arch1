@@ -2,23 +2,31 @@ class ConceptsController < ApplicationController
 
   before_filter :session_timed_out_small
 
+  layout 'admins'
+
   #INDEX
   def index
 
-    # Only set the session variables if they are passed as parameters, i.e. when
-    # this comes from the search page (this 'index' action can also be called from the add and edit pages)
-    if params[:list_type] != nil then session[:list_type] = params[:list_type] end
-    if params[:search_term] != nil then session[:search_term] = params[:search_term] end
+    # Set the list_type, e.g. 'data_role'
+    @list_type = params[:list_type]
+
+    # Set the search_term variable if it is passed as a parameter
+    @search_term = ''
+    if params[:search_term_index] != nil
+      @search_term = params[:search_term_index]
+    else
+      @search_term = params[:search_term]
+    end
 
     @search_array = []
 
     # Get Concepts for the ConceptScheme and filter according to search_term
-    SolrQuery.new.solr_query(q='has_model_ssim:Concept AND inScheme_ssim:' + get_concept_scheme_id, fl='id, preflabel_tesim, altlabel_tesim, description_tesim', rows=1000, sort='id asc')['response']['docs'].map.each do |result|
+    SolrQuery.new.solr_query(q='has_model_ssim:Concept AND inScheme_ssim:' + get_concept_scheme_id(@list_type), fl='id, preflabel_tesim, altlabel_tesim, description_tesim', rows=1000, sort='id asc')['response']['docs'].map.each do |result|
 
       concept_id = result['id']
       preflabel = result['preflabel_tesim'].join
 
-      if preflabel.match(/#{session[:search_term]}/i)
+      if preflabel.match(/#{@search_term}/i)
         tt = []
         tt << concept_id
         tt << preflabel
@@ -50,11 +58,15 @@ class ConceptsController < ApplicationController
   # NEW
   def new
     @concept = Concept.new
+    @search_term = params[:search_term]
+    @list_type = params[:list_type]
   end
 
   # EDIT
   def edit
     @concept = Concept.find(params[:id])
+    @search_term = params[:search_term]
+    @list_type = params[:list_type]
   end
 
   # CREATE
@@ -75,11 +87,11 @@ class ConceptsController < ApplicationController
     @concept = Concept.new(concept_params)
 
     if @error != ''
-      render 'new'
+      render 'new', :locals => { :@search_term => params[:search_term], :@list_type => params[:list_type] }
     else
-      @concept.concept_scheme_id = get_concept_scheme_id
+      @concept.concept_scheme_id = get_concept_scheme_id(params[:list_type])
       @concept.save
-      redirect_to :controller => 'concepts', :action => 'index'
+      redirect_to :controller => 'concepts', :action => 'index', :search_term => params[:search_term], :list_type => params[:list_type]
     end
   end
 
@@ -103,14 +115,14 @@ class ConceptsController < ApplicationController
     @concept.attributes = concept_params
 
     if @error != ''
-      render 'edit'
+      render 'edit', :locals => { :@search_term => params[:search_term], :@list_type => params[:list_type] }
     else
 
       # Save the concept
-      @concept.concept_scheme_id = get_concept_scheme_id
+      @concept.concept_scheme_id = get_concept_scheme_id(params[:list_type])
       @concept.save
 
-      redirect_to :controller => 'concepts', :action => 'index'
+      redirect_to :controller => 'concepts', :action => 'index', :search_term => params[:search_term], :list_type => params[:list_type]
     end
   end
 
@@ -121,13 +133,13 @@ class ConceptsController < ApplicationController
 
     # Check if the concept is present in any of the entries
     # If so, direct the user to a page with the entry locations so that they can remove them
-    existing_location_list = get_existing_location_list(session[:list_type], @concept.id)
+    existing_location_list = get_existing_location_list(params[:list_type], @concept.id)
 
     if existing_location_list.size > 0
-      render 'concept_exists_list', :locals => { :@concept_name => @concept.preflabel, :@existing_location_list => existing_location_list, :@go_back_id =>  params[:go_back_id] }
+      render 'concept_exists_list', :locals => { :@concept_name => @concept.preflabel, :id => @concept.id, :@existing_location_list => existing_location_list, :@go_back_id =>  params[:go_back_id] , :@search_term => params[:search_term], :@list_type => params[:list_type] }
     else
       @concept.destroy
-      redirect_to :controller => 'concepts', :action => 'index'
+      redirect_to :controller => 'concepts', :action => 'index', :search_term => params[:search_term], :list_type => params[:list_type]
     end
   end
 

@@ -1,20 +1,20 @@
-
 <div class="popup">
 
-  <div class="popup_title"><%= capitalize_first_letter(session[:list_type]) %></div>
+  <div class="popup_title"><%= capitalize_first_letter(@list_type) %></div>
 
   <div>
-    <%= button_to "Add #{capitalize_first_letter(session[:list_type])}", new_concept_path, method: :get, style: 'margin-top: -4px' %>
-    <%= link_to 'Go back to admin page', admins_path, style: "font-style: italic; margin-left: 6px" %>
+    <%= button_to "Add #{capitalize_first_letter(@list_type)}", new_concept_path, method: :get, params: {:search_term => @search_term, :list_type => @list_type}, style: 'margin-top: -5px' %>
+    <%= link_to 'Go back to admin page', admins_path, style: 'margin-left: 6px' %>
   </div>
 
-  <div style="margin-top: 5px">
+  <div style="clear: both"></div>
+
   <%= form_tag concepts_path, :method => :get, style: 'margin-top: 8px' do |f| %>
       <div class="search_box">
         <table>
           <tr>
             <td>Search Term:</td>
-            <td><%= text_field_tag 'search_term', nil, class: 'text_field_search', id: 'search_box', value: session[:search_term] %></td>
+            <td><%= text_field_tag 'search_term', @search_term, class: 'text_field_search', id: 'search_box' %></td>
             <td style="padding-left: 0px">
               <%= submit_tag 'Search' %>
               <input type="button" value="Clear" onclick="reset_box(); return false"/>
@@ -23,8 +23,8 @@
         </table>
       </div>
       <div style="clear: both"></div>
+      <%= hidden_field_tag 'list_type', @list_type %>
   <% end %>
-  </div>
 
   <div style="margin: 30px 0px 20px 2px">
 
@@ -32,8 +32,13 @@
        if @search_array != nil && @search_array != ''
     %>
 
-        <div style="float: left; font-weight: bold; font-size: 1.1em">
-          Results:
+        <div style="float: left; font-size: 1.1em">
+          Search Term:
+          <% if @search_term != '' && @search_term != nil %>
+              '<strong><%= @search_term %></strong>'
+          <% else %>
+              <strong><em>None</em></strong>
+          <% end %>
         </div>
 
         <div style="clear: both"></div>
@@ -60,30 +65,27 @@
                 <tr>
                   <td><%= label %></td>
                   <td>
-                  <%
-                      altlabel.each do |tt|
-                  %>
-                      <%= tt %>
-                      <br/>
-                  <%
-                      end
-                  %>
+                    <%
+                       altlabel.each do |tt|
+                    %>
+                        <%= tt %>
+                        <br/>
+                    <%
+                       end
+                    %>
                   </td>
                   <td><%= description %></td>
                   <td style="width: 100px; text-align: center">
-                    <%= button_to 'Edit', edit_concept_path(id), :method => :get, title: 'Edit element details' %>
+                    <%= button_to 'Edit', edit_concept_path(id), :method => :get, params: { :search_term => @search_term, :list_type => @list_type }, title: 'Edit element' %>
                   </td>
                   <td style="width: 60px; text-align: center">
-                    <%= button_to 'Delete', concept_path(id), params: { :list_type => @list_type }, :method => :delete, title: 'Delete label', :data => {:confirm => "Are you sure you want to delete '#{label}'?"} %>
+                    <%= button_to 'Delete', concept_path(id), params: { :list_type => @list_type }, :method => :delete, params: { :search_term => @search_term, :list_type => @list_type }, title: 'Delete element', :data => { :confirm => "Are you sure you want to delete '#{label}'?" } %>
                   </td>
                 </tr>
-        <%
-           end
-           end
-        %>
-
-    </table>
-    </div>
+            <% end %>
+          </table>
+        </div>
+    <% end %>
 
     <script>
         window.onload = function () {

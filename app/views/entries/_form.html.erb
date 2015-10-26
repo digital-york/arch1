@@ -232,7 +232,7 @@
                             <div class="field_group">
                                 <% @db_entry.db_subjects.each_with_index do |subject, index| %>
                                     <div class="field_single">
-                                        <a href='' onclick="popup('/subject_popup?subject_field=subject_<%= index.to_s %>', 'subject'); return false;" tabindex="-1"><%= image_tag "magnifying_glass_small.png", class: "plus_icon" %></a>
+                                        <a href='#' onclick="popup('/subjects?subject_field=subject_<%= index.to_s %>', 'subject'); return false;" tabindex="-1"><%= image_tag "magnifying_glass_small.png", class: "plus_icon" %></a>
                                         <span id="subject_<%= index.to_s %>">
                                           <%= terms.get_str_from_id(subject.name, 'preflabel_tesim') %>
                                         </span>

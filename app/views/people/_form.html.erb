@@ -22,10 +22,10 @@
   <% end %>
 
   <div>
-    <%= link_to 'Go back to search page', people_path, style: "font-style: italic" %>
+    <%= link_to 'Go back to search page', people_path(:search_term => @search_term, :person_field => @person_field) %>
   </div>
 
-  <%= form_for @person, url: eval(form_url), method: eval(form_method), html: {style: 'margin-top: 15px; margin-bottom: 0px'} do |f| %>
+  <%= form_for @person, url: eval(form_url), method: eval(form_method), html: { style: 'margin-top: 15px; margin-bottom: 0px' } do |f| %>
 
       <div class='tab1'>
 
@@ -122,14 +122,15 @@
               </div>
             </td>
           </tr>
-
         </table>
+
+        <%= hidden_field_tag 'search_term', @search_term %>
+        <%= hidden_field_tag 'person_field', @person_field %>
 
         <%# Submit %>
         <p style="margin-top: 10px">
           <% if @person.new_record? %>
               <%= f.submit 'Submit' %>
-              <%#= f.submit 'Submit and Close' %>
           <% else %>
               <%= f.submit 'Update' %>
           <% end %>

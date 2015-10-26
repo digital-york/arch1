@@ -65,10 +65,10 @@
 
         <%# Set 'istopconcept' if there is no go_back_id, i.e. the add button was clicked on the index page %>
         <%# Else set 'broader' if 'add' is clicked from the show' page %>
-        <% if @broader_id == nil %>
+        <% if @broader == nil %>
          <%= hidden_field_tag 'concept[istopconcept]', 'true' %>
         <% else %>
-          <%= hidden_field_tag 'concept[broader][]', @broader_id %>
+          <%= hidden_field_tag 'concept[broader][]', @broader %>
         <% end %>
       </div>
 

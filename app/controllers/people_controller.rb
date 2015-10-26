@@ -5,15 +5,16 @@ class PeopleController < ApplicationController
   #INDEX
   def index
 
-    if params[:start] == 'true' then session[:person_search_term] = '' end
-
     # This variable identifies the 'Same As' field on the form (i.e. it is used when the user selects a 'person')
-    if params[:person_field] != nil
-      session[:person_field] = params[:person_field]
-    end
+    @person_field = params[:person_field]
 
-    # Set the session search_term variable if it is passed as a parameter
-    if params[:search_term] != nil then session[:person_search_term] = params[:search_term] end
+    # Set the search_term variable if it is passed as a parameter
+    @search_term = ''
+    if params[:search_term_index] != nil
+      @search_term = params[:search_term_index]
+    else
+      @search_term = params[:search_term]
+    end
 
     @search_array = []
 
@@ -43,7 +44,7 @@ class PeopleController < ApplicationController
         name = "#{name}, #{epithet.join()}"
       end
 
-      if name.match(/#{session[:person_search_term]}/i)
+      if name.match(/#{@search_term}/i)
         tt << id
         tt << name
         @search_array << tt
@@ -62,11 +63,15 @@ class PeopleController < ApplicationController
   # NEW
   def new
     @person = Person.new
+    @search_term = params[:search_term]
+    @person_field = params[:person_field]
   end
 
   # EDIT
   def edit
     @person = Person.find(params[:id])
+    @search_term = params[:search_term]
+    @person_field = params[:person_field]
   end
 
   # CREATE
@@ -93,7 +98,7 @@ class PeopleController < ApplicationController
     @person = Person.new(person_params)
 
     if @error != ''
-      render 'new'
+      render 'new', :locals => { :@search_term => params[:search_term], :@person_field => params[:person_field] }
     else
 
       # Use a solr query to obtain the concept scheme id for 'people'
@@ -113,7 +118,7 @@ class PeopleController < ApplicationController
         @commit_person_name = person_params[:family]
       end
 
-      redirect_to :controller => 'people', :action => 'index'
+      redirect_to :controller => 'people', :action => 'index', :search_term => params[:search_term], :person_field => params[:person_field]
     end
   end
 
@@ -143,7 +148,7 @@ class PeopleController < ApplicationController
     @person.attributes = person_params
 
     if @error != ''
-      render 'edit'
+      render 'edit', :locals => { :@search_term => params[:search_term], :@person_field => params[:person_field] }
     else
 
       # Use a solr query to obtain the concept scheme id for 'people'
@@ -156,7 +161,7 @@ class PeopleController < ApplicationController
 
       @person.save
 
-      redirect_to :controller => 'people', :action => 'index'
+      redirect_to :controller => 'people', :action => 'index', :search_term => params[:search_term], :person_field => params[:person_field]
     end
   end
 
@@ -170,10 +175,10 @@ class PeopleController < ApplicationController
     existing_location_list = get_existing_location_list('person_same_as', @person.id)
 
     if existing_location_list.size > 0
-      render 'person_exists_list', :locals => { :@person_name => @person.family, :@existing_location_list => existing_location_list, :@go_back_id =>  params[:go_back_id] }
+      render 'person_exists_list', :locals => { :@person_name => @person.family, :id => @person.id, :@existing_location_list => existing_location_list, :@go_back_id =>  params[:go_back_id], :@search_term => params[:search_term], :@person_field => params[:person_field] }
     else
       @person.destroy
-      redirect_to :controller => 'people', :action => 'index'
+      redirect_to :controller => 'people', :action => 'index', :search_term => params[:search_term], :person_field => params[:person_field]
     end
   end
 
