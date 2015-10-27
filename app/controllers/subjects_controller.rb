@@ -104,7 +104,7 @@ class SubjectsController < ApplicationController
 
   # DESTROY
   def destroy
-
+puts "DESTROY"
     @concept = Concept.find(params[:id])
 
     # Check if the subject is present in any of the entries
@@ -112,7 +112,8 @@ class SubjectsController < ApplicationController
     existing_location_list = get_existing_location_list('subject', @concept.id)
 
     if existing_location_list.size > 0
-      render 'subject_exists_list', :locals => { :@subject_name => @concept.preflabel, :@existing_location_list => existing_location_list, :@go_back_id =>  params[:go_back_id] } #, :@subject_field =>  params[:subject_field] }
+    puts "HERE!"
+      render 'subject_exists_list', :locals => { :@subject_name => @concept.preflabel, :@existing_location_list => existing_location_list, :id => @concept.id, :@go_back_id =>  params[:go_back_id] } #, :@subject_field =>  params[:subject_field] }
     else
 
       # Get the parent / child list for the specified id

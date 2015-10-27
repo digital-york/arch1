@@ -1,18 +1,24 @@
 <div class="popup popup_subject">
 
-  <div class="popup_title">Subject exists in one or more entries</div>
+  <div class="popup_title">'<%= @subject_name %>'</div>
 
-  <div style="margin-top: 10px">The subject '<strong><%= @subject_name %></strong>' exists in one or more entries.
-    Please remove it from the records displayed below (using the main interface)
-    <%= link_to 'then click here to go back and delete the subject', subject_path(@go_back_id), title: 'Go back' %>.
-  </div>
-
-  <hr style="margin: 10px 0px"/>
+  <div><%= link_to 'Go back to search page', subject_path(@go_back_id) %></div>
 
   <div style="margin-top: 10px">
+    The place '<%= @subject_name %>' exists in one or more entries. Please remove it from the records displayed below (using the main interface) and then click on this button:
+  </div>
+
+  <div style="margin-top: 5px">
+    <%= button_to 'Delete', subject_path(id, :go_back_id => @go_back_id), :method => :delete, title: "Delete '#{@subject_name}'" %>
+  </div>
+
+  <div style="clear: both"></div>
+
+  <hr/>
+
+  <div style="margin-top: 10px; margin-left: 0px">
     <% @existing_location_list.each do |t| %>
-        <em><%= t %></em>
-        <br/>
+        <div style="margin-top: 5px"><%= t %></div>
     <% end %>
   </div>
 </div>
