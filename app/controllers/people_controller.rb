@@ -19,12 +19,13 @@ class PeopleController < ApplicationController
     @search_array = []
 
     # Get Concepts for the Person ConceptScheme and filter according to search_term
-    SolrQuery.new.solr_query(q='has_model_ssim:Person', fl='id, family_tesim, pre_title_tesim, given_name_tesim, post_title_tesim, epithet_tesim', rows=1000, sort='id asc')['response']['docs'].map.each do |result|
+    SolrQuery.new.solr_query(q='has_model_ssim:Person', fl='id, family_tesim, pre_title_tesim, given_name_tesim, dates_tesim, post_title_tesim, epithet_tesim', rows=1000, sort='id asc')['response']['docs'].map.each do |result|
 
       id = result['id']
       family = result['family_tesim'].join
       pre_title = result['pre_title_tesim']
       given_name = result['given_name_tesim']
+      dates = result['dates_tesim']
       post_title = result['post_title_tesim']
       epithet = result['epithet_tesim']
 
@@ -36,6 +37,9 @@ class PeopleController < ApplicationController
       end
       if given_name != nil then
         name = "#{name}, #{given_name.join()}"
+      end
+      if dates != nil then
+        name = "#{name}, #{dates.join()}"
       end
       if post_title != nil then
         name = "#{name}, #{post_title.join()}"
@@ -107,7 +111,7 @@ class PeopleController < ApplicationController
       @person.concept_scheme_id = id
 
       # Get preflabel
-      @person.preflabel = get_preflabel(@person.family, @person.pre_title, @person.given_name, @person.post_title, @person.epithet)
+      @person.preflabel = get_preflabel(@person.family, @person.pre_title, @person.given_name, @person.dates, @person.post_title, @person.epithet)
 
       @person.save
 
@@ -157,7 +161,7 @@ class PeopleController < ApplicationController
       @person.concept_scheme_id = id
 
       # Get preflabel
-      @person.preflabel = get_preflabel(@person.family, @person.pre_title, @person.given_name, @person.post_title, @person.epithet)
+      @person.preflabel = get_preflabel(@person.family, @person.pre_title, @person.given_name, @person.dates, @person.post_title, @person.epithet)
 
       @person.save
 
@@ -190,7 +194,7 @@ class PeopleController < ApplicationController
   end
 
   # Get the preflabel from the solr parameters (separated by an underscore)
-  def get_preflabel(family, pre_title, given_name, post_title, epithet)
+  def get_preflabel(family, pre_title, given_name, dates, post_title, epithet)
 
     preflabel = family
 
@@ -202,6 +206,10 @@ class PeopleController < ApplicationController
     if given_name != '' then
       if preflabel2 != '' then preflabel2 = "#{preflabel2}, " end
       preflabel2 = "#{preflabel2}#{given_name}"
+    end
+    if dates != '' then
+      if preflabel2 != '' then preflabel2 = "#{preflabel2}, " end
+      preflabel2 = "#{preflabel2}#{dates}"
     end
     if post_title != '' then
       if preflabel2 != '' then preflabel2 = "#{preflabel2}, " end

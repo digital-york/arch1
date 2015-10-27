@@ -55,6 +55,14 @@
             </td>
           </tr>
 
+          <%# Dates %>
+          <tr>
+            <th>Dates:</th>
+            <td>
+              <%= text_field_tag "person[dates]", @person.dates %>
+            </td>
+          </tr>
+
           <%# Post_title %>
           <tr>
             <th>Post-Title:</th>
@@ -68,6 +76,14 @@
             <th>Epithet:</th>
             <td>
               <%= text_field_tag "person[epithet]", @person.epithet %>
+            </td>
+          </tr>
+
+          <%# Dates of Office %>
+          <tr>
+            <th>Dates of Office:</th>
+            <td>
+              <%= text_field_tag "person[dates_of_office]", @person.dates_of_office %>
             </td>
           </tr>
 
@@ -116,6 +132,23 @@
                 <% @person.altlabel.each do |altlabel| %>
                     <div class="field_single">
                       <%= text_field_tag 'person[altlabel][]', altlabel %>
+                      <img alt="Delete icon" src="/assets/delete.png" class="delete_icon click_remove_field_level1" jq_tag_type="input">
+                    </div>
+                <% end %>
+              </div>
+            </td>
+          </tr>
+
+          <%# Note %>
+          <tr>
+            <th>Note:
+              <img src="/assets/plus_sign.png" alt="plus icon" class="plus_icon click_popup_multiple_field_button" jq_type_1='person' jq_type_2="note"/>
+            </th>
+            <td>
+              <div class="note">
+                <% @person.note.each do |note| %>
+                    <div class="field_single">
+                      <%= text_field_tag 'person[note][]', note %>
                       <img alt="Delete icon" src="/assets/delete.png" class="delete_icon click_remove_field_level1" jq_tag_type="input">
                     </div>
                 <% end %>

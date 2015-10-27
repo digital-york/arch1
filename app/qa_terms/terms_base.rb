@@ -82,7 +82,7 @@ class TermsBase
   # Construct person same_as string for the view / edit pages
   def get_person_same_as(same_as)
 
-    response = SolrQuery.new.solr_query(q='id:' + same_as, fl='family_tesim, pre_title_tesim, given_name_tesim, post_title_tesim, epithet_tesim', rows='1')
+    response = SolrQuery.new.solr_query(q='id:' + same_as, fl='family_tesim, pre_title_tesim, given_name_tesim, dates_tesim, post_title_tesim, epithet_tesim', rows='1')
 
     person_same_as = ''
 
@@ -91,6 +91,7 @@ class TermsBase
       family = result['family_tesim']
       pre_title = result['pre_title_tesim']
       given_name = result['given_name_tesim']
+      dates = result['dates_tesim']
       post_title = result['post_title_tesim']
       epithet = result['epithet_tesim']
 
@@ -101,6 +102,9 @@ class TermsBase
         end
         if given_name != nil then
           person_same_as = "#{person_same_as}, #{given_name.join()}"
+        end
+        if dates != nil then
+          person_same_as = "#{person_same_as}, #{dates.join()}"
         end
         if post_title != nil then
           person_same_as = "#{person_same_as}, #{post_title.join()}"

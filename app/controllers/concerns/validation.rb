@@ -359,6 +359,7 @@ module Validation
     person_params[:same_as] = remove_empty_array_fields2(person_params[:same_as])
     person_params[:related_authority] = remove_empty_array_fields2(person_params[:related_authority])
     person_params[:altlabel] = remove_empty_array_fields2(person_params[:altlabel])
+    person_params[:note] = remove_empty_array_fields2(person_params[:note])
   end
 
   def remove_concept_popup_empty_fields(concept_params)
