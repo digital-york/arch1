@@ -42,16 +42,12 @@
        if @search_array != nil && @search_array != ''
     %>
 
-        <div style="float: left; font-size: 1.1em">
-          Search Term:
-          <% if @search_term != '' %>
-            '<strong><%= @search_term %></strong>'
-          <% else %>
-            <strong><em>None</em></strong>
+        <div style="font-size: 1.1em">
+          Results: <strong><%= @search_array.size %></strong>
+          <% if @search_array.size > 0 %>
+              &nbsp;(please choose a person from the list below):
           <% end %>
         </div>
-
-        <div style="clear: both"></div>
 
         <div class="popup_search">
 
@@ -88,8 +84,7 @@
                    id = array_element[0]
                    name = array_element[1]
               %>
-                  <a href="#" title="Add this person to the form" onclick="post_value('<%= name %>', '<%= id %>', '<%= @person_field %>')"><%= image_tag "popup_choice.png", class: "popup_choice" %></a>&nbsp;<%= name %>
-                  <br/>
+                  <div style="margin-top: 5px"><%= link_to name, '#', onClick: "post_value('#{name}', '#{id}', '#{params[:person_field]}')", style: 'color: #7e2c2c' %></div>
               <% end %>
           <% end %>
         </div>

@@ -12,8 +12,11 @@
     <% if @subject_field == nil %>
         <%= button_to "Add Top-Level Subject", new_subject_path, method: :get, params: { :go_back_id => 'none' }, style: 'margin-top: -5px', title: 'Add top-level subject' %>
         <%= link_to 'Go back to admin page', admins_path, style: 'margin-left: 6px' %>
-    <% else %>
-        <%= link_to 'Click here to open the admin interface (to edit subjects)', '#', onclick: "popup('/admins?start=true', 'admin'); return false;" %>
+  <% else %>
+        <div>
+          Please click on a link below to choose a subject:
+          <%= link_to '(click here to edit subjects)', '#', onclick: "popup('/admins?start=true', 'admin'); return false;" %>
+        </div>
     <% end %>
   </div>
 
@@ -22,27 +25,56 @@
   <hr style="margin: 10px 0px"/>
 
   <table style="width: 100%; border: 0px solid #FFFFFF">
+
   <%
      @top_level_list.each_with_index do |top_level_term, index|
+       top_level_id = top_level_term['id']
+       top_level_label = top_level_term['label'].join
   %>
 
       <tr>
-        <td style="padding: 10px 0px 3px 0px; font-size: 1.4em; color: #7e2c2c">
-          <%= link_to top_level_term['label'].join, subject_path(top_level_term['id']), title: 'Edit subject' %>
+        <td style="padding: 10px 0px 3px 0px; font-size: 1.4em">
+          <% if @subject_field == nil %>
+            <%= link_to top_level_label, subject_path(top_level_id), title: 'Edit subject', style: 'color: #7e2c2c' %>
+          <% else %>
+            <%= link_to top_level_label, '#', onClick: "post_value('#{top_level_label}', '#{top_level_id}', '#{params[:subject_field]}')", style: 'color: #7e2c2c' %>
+          <% end %>
         </td>
       </tr>
 
     <%
       top_level_term[:elements].each do |second_level_term|
+        second_level_id = second_level_term['id']
+        second_level_label = second_level_term['label'].join
     %>
         <tr>
-          <td style="padding: 0px 0px 4px 0px; color: #000000; font-size: 1.2em"><span style="margin-left: 40px"><%= second_level_term['label'].join %></span></td>
+          <td style="padding: 0px 0px 4px 0px; color: #000000; font-size: 1.2em">
+            <span style="margin-left: 40px">
+              <% if @subject_field == nil %>
+                <%= second_level_label %>
+              <% else %>
+                <%= link_to second_level_label, '#', onClick: "post_value('#{second_level_label}', '#{second_level_id}', '#{params[:subject_field]}')", style: 'color: #0B51FE' %>
+              <% end %>
+             </span>
+           </td>
         </tr>
+
       <%
         second_level_term[:elements].each do |third_level_term|
+          third_level_id = third_level_term['id']
+          third_level_label = third_level_term['label'].join
       %>
           <tr>
-            <td style="padding: 0px 0px 3px 0px; color: #262626; font-style: italic; font-size: 1.1em"><span style="margin-left: 70px;"><%= third_level_term['label'].join %></span></td>
+            <td style="padding: 0px 0px 3px 0px; color: #262626; font-style: italic; font-size: 1.1em">
+              <span style="margin-left: 70px;">
+                <% if @subject_field == nil %>
+                  <%= third_level_label %>
+                <% else %>
+                  <%= link_to third_level_label, '#', onClick: "post_value('#{third_level_label}', '#{third_level_id }', '#{params[:subject_field]}')", style: 'color: #434141' %>
+                <% end %>
+             </span>
+              </span>
+            </td>
           </tr>
  <%
         end

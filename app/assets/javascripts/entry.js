@@ -17,6 +17,11 @@ function post_value(value, id, field) {
     self.close();
 }
 
+function remove_authority(type, index) {
+    document.getElementById(type + "_" + index).innerHTML = '';
+    document.getElementById(type + "_" + index + "_hidden").value = '';
+}
+
 function reset_box(id) {
   document.getElementById('search_box').value = '';
 }
@@ -116,8 +121,9 @@ function info(title) {
 // Methods which add/remove elements to the form
 $(document).ready(function () {
 
+    // Not used any more - keep here just in case they're needed again
     // Open subject popup group
-    $('body').on('click', '.plus_icon_subject', function(e) {
+    /*$('body').on('click', '.plus_icon_subject', function(e) {
 
         try {
             e.preventDefault(); // I think this prevents other events firing?
@@ -146,7 +152,7 @@ $(document).ready(function () {
         } catch (err) {
             alert(err);
         }
-    });
+    });*/
 
     // Called when the user chooses a folio from the menu drop-down list
     $('body').on('change', '.choose_folio', function(e) {
@@ -173,7 +179,6 @@ $(document).ready(function () {
     // Click multiple field button (Level 1)
     // e.g. Editorial Note
     $('body').on('click', '.click_multiple_field_button', function (e) {
-
         try {
             e.preventDefault(); // I think this prevents other events firing?
             var field_group_div = $(this).parent('th').next('td').find('>:first-child');

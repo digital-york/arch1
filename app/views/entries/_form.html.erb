@@ -441,6 +441,9 @@
                                                   <% end %>
                                                   </span>
                                                   <%= hidden_field_tag "entry[related_places_attributes][" + index1.to_s + "][place_same_as]", related_place.place_same_as, id: 'place_' + index1.to_s + '_hidden' %>
+                                                  <div style="float: right; margin-right: 6px">
+                                                    <img src='/assets/delete.png' alt='Delete icon' class='delete_icon' onclick="remove_authority('place', '<%= index1 %>'); return false">
+                                                  </div>
                                                 </td>
                                             </tr>
 
@@ -557,6 +560,9 @@
                                                   <% end %>
                                                   </span>
                                               <%= hidden_field_tag "entry[related_person_groups_attributes][" + index1.to_s + "][person_same_as]", related_person.person_same_as, id: 'person_' + index1.to_s + '_hidden' %>
+                                              <div style="float: right; margin-right: 6px">
+                                                <img src='/assets/delete.png' alt='Delete icon' class='delete_icon' onclick="remove_authority('person', '<%= index1 %>'); return false">
+                                              </div>
                                             </td>
                                           </tr>
 

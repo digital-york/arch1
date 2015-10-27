@@ -2,18 +2,16 @@ Rails.application.routes.draw do
 
   mount Qa::Engine => '/qa'
 
-  # Create multiple routes, e.g. for entries
+  root 'login#login_temp'
+
+  # Create multiple routes,
   resources :entries
-  resources :places
-  resources :people
   resources :concepts
   resources :places
   resources :people
   resources :subjects
 
-  root 'login#login_temp'
-
-  # Single routes
+  # Create single routes
   get 'image_zoom_large' => 'image_zoom_large#index'
   get 'logout' => 'login#logout'
   get 'login' => 'login#index'
@@ -23,12 +21,12 @@ Rails.application.routes.draw do
   get 'landing_page' => 'landing_page#index'
   get 'browse_folios' => 'browse_folios#index'
   get 'go_entries' => 'landing_page#go_entries'
-  get 'subject_popup' => 'subject_popup#index'
   get 'admins' => 'admins#index'
 
   #root :to => "catalog#login"
-  blacklight_for :catalog
-  devise_for :users
+  #blacklight_for :catalog
+  #devise_for :users
+
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
 
