@@ -38,7 +38,7 @@ class Person < ActiveFedora::Base
     index.as :stored_searchable
   end
 
-  property :dates_of_office, predicate: ::RDF::URI.new('hhttp://dlib.york.ac.uk/ontologies/borthwick-registers#datesOfOffice'), multiple: false do |index|
+  property :dates_of_office, predicate: ::RDF::URI.new('hhttp://dlib.york.ac.uk/ontologies/generic#datesOfOffice'), multiple: false do |index|
     index.as :stored_searchable
   end
 

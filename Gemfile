@@ -2,15 +2,25 @@ source 'https://rubygems.org'
 
 gem 'dotenv-rails', :groups => [:development, :test, :production]
 
-gem 'cocoon'
+# gem 'cocoon' # remove?
 # gem 'qa'
 # use latest qa code
 gem 'qa', :git => 'https://github.com/projecthydra-labs/questioning_authority.git', :branch => 'master'
-gem 'jquery-ui-rails'
-gem 'hydra', '9.0.0'
+
+# gem 'hydra', '9.0.0'
+# install hydra gems individually
+gem 'active-fedora'
+gem 'hydra-head'
+gem 'om'
+gem 'solrizer'
+gem 'rsolr'
+gem 'blacklight'
+gem 'active-triples'
+gem 'nom-xml'
+
 gem 'active_fedora-noid'
 gem 'nokogiri'
-gem 'thin'
+# gem 'thin'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '4.2.0'
@@ -27,7 +37,7 @@ gem 'therubyracer', platforms: :ruby
 
 # Use jquery as the JavaScript library
 gem 'jquery-rails'
-#gem 'jquery-ui-rails'
+gem 'jquery-ui-rails'
 # Turbolinks makes following links in your web application faster. Read more: https://github.com/rails/turbolinks
 gem 'turbolinks'
 gem 'jquery-turbolinks'
@@ -54,12 +64,9 @@ group :development, :test do
 
   # Spring speeds up development by keeping your application running in the background. Read more: https://github.com/rails/spring
   gem 'spring'
-end
-
-
-gem 'devise'
-gem 'devise-guests', '~> 0.3'
-group :development, :test do
   gem 'rspec-rails'
   gem 'jettywrapper'
 end
+
+gem 'devise'
+gem 'devise-guests', '~> 0.3'

@@ -8,12 +8,16 @@ class Concept < ActiveFedora::Base
   def add_rdf_types
     ['http://www.w3.org/2004/02/skos/core#Concept']
   end
-  # http://fedora.info/definitions/v4/indexing#Indexable
 
   property :definition, predicate: ::RDF::SKOS.definition, multiple: false do |index|
     index.as :stored_searchable
   end
 
+  property :see_also, predicate: ::RDF::SKOS.related, multiple: true do |index|
+    index.as :stored_searchable
+  end
+
+  #this could be a has and belongs to many?
   property :broader, predicate: ::RDF::SKOS.broader, multiple: true do |index|
     index.as :stored_searchable
   end
