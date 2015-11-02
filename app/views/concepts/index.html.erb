@@ -50,7 +50,7 @@
             <tr>
               <th>Label</th>
               <th>Alternate Label(s)</th>
-              <th>Description</th>
+              <th>Definition</th>
               <th style="width: 60px">Edit</th>
               <th style="width: 60px">Delete</th>
             </tr>
@@ -60,7 +60,7 @@
                  id = array_element[0]
                  label = array_element[1]
                  altlabel = array_element[2]
-                 description = array_element[3]
+                 definition = array_element[3]
             %>
                 <tr>
                   <td><%= label %></td>
@@ -74,7 +74,7 @@
                        end
                     %>
                   </td>
-                  <td><%= description %></td>
+                  <td><%= definition %></td>
                   <td style="width: 100px; text-align: center">
                     <%= button_to 'Edit', edit_concept_path(id), :method => :get, params: { :search_term => @search_term, :list_type => @list_type }, title: 'Edit element' %>
                   </td>

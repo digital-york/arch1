@@ -110,9 +110,9 @@ class PeopleController < ApplicationController
       id = response['response']['docs'][0]['id']
       @person.concept_scheme_id = id
 
-      # Get preflabel
+      # Get preflabel, rdftype and save
       @person.preflabel = get_preflabel(@person.family, @person.pre_title, @person.given_name, @person.dates, @person.post_title, @person.epithet)
-
+      @person.rdftype << @person.add_rdf_types
       @person.save
 
       # If the 'Submit and Close' button has been clicked, pass these variables back to the page
@@ -156,13 +156,12 @@ class PeopleController < ApplicationController
     else
 
       # Use a solr query to obtain the concept scheme id for 'people'
-      response = SolrQuery.new.solr_query(q='has_model_ssim:ConceptScheme AND preflabel_tesim:"people"', fl='id', rows=1, sort='')
-      id = response['response']['docs'][0]['id']
-      @person.concept_scheme_id = id
+      #response = SolrQuery.new.solr_query(q='has_model_ssim:ConceptScheme AND preflabel_tesim:"people"', fl='id', rows=1, sort='')
+      #id = response['response']['docs'][0]['id']
+      #@person.concept_scheme_id = id
 
-      # Get preflabel
+      # Get preflabel and save
       @person.preflabel = get_preflabel(@person.family, @person.pre_title, @person.given_name, @person.dates, @person.post_title, @person.epithet)
-
       @person.save
 
       redirect_to :controller => 'people', :action => 'index', :search_term => params[:search_term], :person_field => params[:person_field]
@@ -190,10 +189,10 @@ class PeopleController < ApplicationController
 
   # Never trust parameters from the scary internet, only allow the white list through.
   def whitelist_person_params
-    params.require(:person).permit! # Note - this needs changing because it allows through all params at the moment!!
+    params.require(:person).permit(:family, :pre_title, :given_name, :dates, :post_title, :epithet, :dates_of_office, :same_as => [], :related_authority => [], :altlabel => [], :note => [])  # Note - arrays need to go at the end or an error occurs!
   end
 
-  # Get the preflabel from the solr parameters (separated by an underscore)
+  # Get the preflabel from the solr parameters (separated by commas)
   def get_preflabel(family, pre_title, given_name, dates, post_title, epithet)
 
     preflabel = family

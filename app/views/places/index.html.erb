@@ -44,8 +44,8 @@
 
         <div style="font-size: 1.1em">
           Results: <strong><%= @search_array.size %></strong>
-          <% if @search_array.size > 0 %>
-            &nbsp;(please choose a place from the list below):
+          <% if @place_field != 'none' and @search_array.size > 0 %>
+            &nbsp;- please choose a place from the list below:
          <% end %>
         </div>
 

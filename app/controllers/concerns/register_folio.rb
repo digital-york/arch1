@@ -329,7 +329,7 @@ module RegisterFolio
     # This is an array of array ('id' and 'entry_no')
     @entry_list = []
 
-    SolrQuery.new.solr_query(q='has_model_ssim:Entry AND folio_ssim:' + session[:folio_id], fl='id,entry_no_tesim', rows=1000, sort='id asc')['response']['docs'].map.each do | result |
+    SolrQuery.new.solr_query(q='has_model_ssim:Entry AND folio_ssim:' + session[:folio_id], fl='id,entry_no_tesim', rows=1000, sort='entry_no_si asc')['response']['docs'].map.each do | result |
       id = result['id']
       entry_no = result['entry_no_tesim'].join
       temp = []

@@ -49,7 +49,6 @@ class SubjectsController < ApplicationController
     @concept = Concept.new(subject_params)
 
     if @error != ''
-    puts params
       render 'new', :locals => { :@go_back_id => params[:go_back_id], :@broader => params[:concept][:broader] } #, @subject_field => params[:subject_field] }
     else
 
@@ -58,6 +57,7 @@ class SubjectsController < ApplicationController
       id = response['response']['docs'][0]['id']
       @concept.concept_scheme_id = id
 
+      @concept.rdftype << @concept.add_rdf_types
       @concept.save
 
       # Pass variable to view page to notify user that subject has been added
@@ -92,9 +92,9 @@ class SubjectsController < ApplicationController
     else
 
       # Use a solr query to obtain the concept scheme id for 'subjects'
-      response = SolrQuery.new.solr_query(q='has_model_ssim:ConceptScheme AND preflabel_tesim:"subjects"', fl='id', rows=1, sort='')
-      id = response['response']['docs'][0]['id']
-      @concept.concept_scheme_id = id
+      #response = SolrQuery.new.solr_query(q='has_model_ssim:ConceptScheme AND preflabel_tesim:"subjects"', fl='id', rows=1, sort='')
+      #id = response['response']['docs'][0]['id']
+      #@concept.concept_scheme_id = id
 
       @concept.save
 
@@ -104,7 +104,7 @@ class SubjectsController < ApplicationController
 
   # DESTROY
   def destroy
-puts "DESTROY"
+
     @concept = Concept.find(params[:id])
 
     # Check if the subject is present in any of the entries
@@ -112,7 +112,6 @@ puts "DESTROY"
     existing_location_list = get_existing_location_list('subject', @concept.id)
 
     if existing_location_list.size > 0
-    puts "HERE!"
       render 'subject_exists_list', :locals => { :@subject_name => @concept.preflabel, :@existing_location_list => existing_location_list, :id => @concept.id, :@go_back_id =>  params[:go_back_id] } #, :@subject_field =>  params[:subject_field] }
     else
 
@@ -135,7 +134,7 @@ puts "DESTROY"
 
   # Never trust parameters from the scary internet, only allow the white list through.
   def whitelist_subject_params
-    params.require(:concept).permit! # Note - this needs changing because it allows through all params at the moment!!
+    params.require(:concept).permit(:preflabel, :definition, :istopconcept, :broader => [])  # Note - arrays need to go at the end or an error occurs!
   end
 
 end

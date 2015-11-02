@@ -105,9 +105,9 @@ class PlacesController < ApplicationController
       id = response['response']['docs'][0]['id']
       @place.concept_scheme_id = id
 
-      # Get preflabel
+      # Get preflabel, rdftype and save
       @place.preflabel = get_preflabel(@place.place_name, @place.parent_ADM4, @place.parent_ADM3, @place.parent_ADM2, @place.parent_ADM1)
-
+      @place.rdftype << @place.add_rdf_types
       @place.save
 
       # If the 'Submit and Close' button has been clicked, pass these variables back to the page
@@ -151,13 +151,12 @@ class PlacesController < ApplicationController
     else
 
       # Use a solr query to obtain the concept scheme id for 'places'
-      response = SolrQuery.new.solr_query(q='has_model_ssim:ConceptScheme AND preflabel_tesim:"places"', fl='id', rows=1, sort='')
-      id = response['response']['docs'][0]['id']
-      @place.concept_scheme_id = id
+      #response = SolrQuery.new.solr_query(q='has_model_ssim:ConceptScheme AND preflabel_tesim:"places"', fl='id', rows=1, sort='')
+      #id = response['response']['docs'][0]['id']
+      #@place.concept_scheme_id = id
 
-      # Get preflabel
+      # Get preflabel and save
       @place.preflabel = get_preflabel(@place.place_name, @place.parent_ADM4, @place.parent_ADM3, @place.parent_ADM2, @place.parent_ADM1)
-
       @place.save
 
       redirect_to :controller => 'places', :action => 'index', :search_term => params[:search_term], :place_field => params[:place_field]
@@ -185,10 +184,10 @@ class PlacesController < ApplicationController
 
   # Never trust parameters from the scary internet, only allow the white list through.
   def whitelist_place_params
-    params.require(:place).permit! # Note - this needs changing because it allows through all params at the moment!!
+    params.require(:place).permit(:place_name, :parent_ADM4, :parent_ADM3, :parent_ADM2, :parent_ADM1, :parent_country, :feature_code => [], :same_as => [], :related_authority => [], :altlabel => [])  # Note - arrays need to go at the end or an error occurs!
   end
 
-  # Get the preflabel from the solr parameters (separated by an underscore)
+  # Get the preflabel from the solr parameters (separated by commas)
   def get_preflabel(place_name, parent_ADM4, parent_ADM3, parent_ADM2, parent_ADM1)
 
     preflabel = place_name

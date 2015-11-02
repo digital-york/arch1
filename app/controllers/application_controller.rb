@@ -14,5 +14,5 @@ class ApplicationController < ActionController::Base
   include Validation
   include RegisterFolio
   include AuthorityList
-  include Terms
+  include Solr
 end
