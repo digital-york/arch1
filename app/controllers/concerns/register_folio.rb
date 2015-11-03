@@ -4,13 +4,10 @@ module RegisterFolio
   # the '<' and '>' icons if the limits are reached
   def set_first_and_last_folio
 
-    SolrQuery.new.solr_query('id:"' + session[:register_id] + '"', 'fst_tesim', 1)['response']['docs'].map do |result|
-      session[:first_folio_id] = result['fst_tesim'][0]
-    end
+    register = Register.find(session[:register_id])
+    session[:first_folio_id] = register.ordered_folio_proxies.first.target_id
+    session[:last_folio_id] = register.ordered_folio_proxies.last.target_id
 
-    SolrQuery.new.solr_query('id:"' + session[:register_id] + '"', 'lst_tesim', 1)['response']['docs'].map do |result|
-      session[:last_folio_id] = result['lst_tesim'][0]
-    end
   end
 
   # Set the folio and image session variables when the user selects an option from the drop-down list
@@ -37,34 +34,46 @@ module RegisterFolio
     next_image = ''
 
     if action != nil && id != nil
-
-      # Set the folio id session variable
-      SolrQuery.new.solr_query('proxyFor_ssim:"' + id + '"', action, 1)['response']['docs'].map do |result|
-        next_id = result[action][0]
+      SolrQuery.new.solr_query('id:"' + session[:register] + '/list_source"', 'ordered_targets_ssim')['response']['docs'].map.each do |result|
+        order = result['ordered_targets_ssim']
+        # convert the list of folios in order into a hash so we can access the position of our id
+        hash = Hash[order.map.with_index.to_a]
+        if action == 'next_tesim'
+          next_id = order[hash[id] + 1]
+        elsif action == 'prev_tesim'
+          next_id = order[hash[id] - 1]
+        end
       end
-
-      # Set the folio image session variable
-      SolrQuery.new.solr_query('hasTarget_ssim:"' + next_id + '"', 'file_tesim', 1)['response']['docs'].map do |result|
-        next_image = result['file_tesim'][0]
-      end
-
-      session[:folio_id] = next_id
-      session[:folio_image] = next_image
     end
- end
+
+    # Set the folio image session variable
+    SolrQuery.new.solr_query('hasTarget_ssim:"' + next_id + '"', 'file_tesim', 1)['response']['docs'].map do |result|
+      next_image = result['file_tesim'][0]
+    end
+
+    session[:folio_id] = next_id
+    session[:folio_image] = next_image
+  end
 
   # Set the next (or previous) folio and image session variables (when the '>' or '<' buttons are clicked)
   # action = 'prev_tesim' or 'next_tesim'
   def set_folio_and_image_browse(action, id)
 
-    next_id = ''
-    next_image = ''
+    next_id = '', next_image = ''
 
     # Set the browse id
-    SolrQuery.new.solr_query('proxyFor_ssim:"' + id + '"', action, 1)['response']['docs'].map do |result|
-      next_id = result[action][0]
+    if action != nil && id != nil
+      SolrQuery.new.solr_query('id:"' + session[:register] + '/list_source"', 'ordered_targets_ssim')['response']['docs'].map.each do |result|
+        order = result['ordered_targets_ssim']
+        # convert the list of folios in order into a hash so we can access the position of our id
+        hash = Hash[order.map.with_index.to_a]
+        if action == 'next_tesim'
+          next_id = order[hash[id] + 1]
+        elsif action == 'prev_tesim'
+          next_id = order[hash[id] - 1]
+        end
+      end
     end
-
     # Set the browse image
     SolrQuery.new.solr_query('hasTarget_ssim:"' + next_id + '"', 'file_tesim', 1)['response']['docs'].map do |result|
       next_image = result['file_tesim'][0]
@@ -78,62 +87,24 @@ module RegisterFolio
   def set_folio_list
 
     register = session[:register_id]
-
     @folio_list = []
-
     folio_hash = {}
 
-    # Populate the folio_hash with folio_id => preflabel_tesim - this is used to get the title for each id later on
-    q = SolrQuery.new.solr_query('has_model_ssim:Folio AND isPartOf_ssim:' + register, 'id, preflabel_tesim', 5000, 'id ASC')
-
-    q['response']['docs'].each do |result|
-      folio_id = result['id']
-      preflabel_tesim = result['preflabel_tesim'].join()
-      # Added [a-z] because some folios have a number like '1a' - might need to alter this later on if other folios do not follow this pattern
-      folio_hash[folio_id] = preflabel_tesim.gsub(/Abp Reg \d+[a-z]* /, '')
-    end
-
-    proxy_hash = {}
-
-    q = SolrQuery.new.solr_query('has_model_ssim:Proxy AND proxyIn_ssim:' + register, 'next_tesim, prev_tesim, proxyFor_ssim', 5000, 'id ASC')
-
-    next_tesim_start = ''
-    proxy_for_ssim_start = ''
-
-    # Populate the proxy_hash with proxy_for_ssim => next_tesim
-    q['response']['docs'].each do |result|
-
-      next_tesim = result['next_tesim']
-      prev_tesim = result['prev_tesim']
-      proxy_for_ssim = result['proxyFor_ssim'].join()
-
-      if next_tesim == nil || next_tesim == ''
-        next_tesim = ''
-      else
-        next_tesim = next_tesim.join()
+    # Get the list of folios in order
+    SolrQuery.new.solr_query('id:"' + register + '/list_source"', 'ordered_targets_ssim')['response']['docs'].map.each do |result|
+      order = result['ordered_targets_ssim']
+      q = ''
+      order.each do |o|
+        q += 'id:"' + o + '" OR '
       end
-
-      # If it is the first object, do not add it to the proxy_hash but store the start values for later on
-      if prev_tesim == nil || prev_tesim == ''
-        next_tesim_start = next_tesim
-        proxy_for_ssim_start = proxy_for_ssim
-      else
-        proxy_hash[proxy_for_ssim] = next_tesim
+      # there is probably a neater way of doing this
+      if q.end_with? ' OR '
+        q = q[0..q.length - 4]
       end
-
-    end
-
-    # Add the first object to the folio list
-    @folio_list += [[proxy_for_ssim_start, folio_hash[proxy_for_ssim_start]]]
-
-    # Initialise next_tesim
-    next_tesim = next_tesim_start
-
-    # Use next_tesim to find each object in turn and add them the folio_list
-    # Repeat until there isn't a next_tesim (i.e. the last object)
-    until next_tesim == nil || next_tesim == ''
-      @folio_list += [[next_tesim, folio_hash[next_tesim]]]
-      next_tesim = proxy_hash[next_tesim]
+      SolrQuery.new.solr_query(q, 'id,preflabel_tesim')['response']['docs'].map.each do |res|
+        folio_hash[res['id']] = res['preflabel_tesim'].join()
+        @folio_list += [res['id'],folio_hash[res['id']]]
+      end
     end
   end
 
@@ -143,8 +114,11 @@ module RegisterFolio
     next_folio_id = ''
 
     # First get the next_folio_id...
-    SolrQuery.new.solr_query('proxyFor_ssim:"' + session[:folio_id] + '"', 'next_tesim', 1)['response']['docs'].map do |result|
-      next_folio_id = result['next_tesim'][0]
+    SolrQuery.new.solr_query('id:"' + session[:register] + '/list_source"', 'ordered_targets_ssim')['response']['docs'].map.each do |result|
+      order = result['ordered_targets_ssim']
+      # convert the list of folios in order into a hash so we can access the position of our id
+      hash = Hash[order.map.with_index.to_a]
+      next_folio_id = hash[session[:folio_id] + 1]
     end
 
     @is_entry_on_next_folio = false
@@ -191,41 +165,45 @@ module RegisterFolio
   # If the entry is continued onto the next folio, creates the entry and
   # sets the new session variables
   # Also sets the entry 'continues_on' attribute
+  # HERE
   def create_next_entry(create_entry_status)
 
-      next_folio_id = ''
+    next_folio_id = ''
 
-      SolrQuery.new.solr_query('proxyFor_ssim:"' + @entry.folio_id + '"', 'next_tesim', 1)['response']['docs'].map do |result|
-        next_folio_id = result['next_tesim'][0]
+    SolrQuery.new.solr_query('id:"' + session[:register] + '/list_source"', 'ordered_targets_ssim')['response']['docs'].map.each do |result|
+      order = result['ordered_targets_ssim']
+      # convert the list of folios in order into a hash so we can access the position of our id
+      hash = Hash[order.map.with_index.to_a]
+      next_folio_id = hash[session[:folio_id] + 1]
+    end
+
+    # Only create a new entry if one doesn't already exist on the next folio
+    if @is_entry_on_next_folio == false
+      new_entry = Entry.new
+      new_entry.entry_no = '1'
+      new_entry.entry_type = ''
+      new_entry.continues_on = ''
+      new_entry.folio_id = next_folio_id
+      new_entry.save
+    end
+
+    # Add the next folio id to the entry
+    @entry.continues_on = next_folio_id
+
+    # Set the next folio_id and folio_image session variables
+    set_folio_and_image('next_tesim', session[:folio_id])
+
+    # Return the new id if an entry has been created
+    # Else return the first entry id of the next folio
+    if @is_entry_on_next_folio == false
+      return new_entry.id
+    else
+      id = ''
+      SolrQuery.new.solr_query('folio_ssim:"' + next_folio_id + '"', 'entry_no_tesim, id', 1)['response']['docs'].map do |result|
+        id = result['id']
       end
-
-      # Only create a new entry if one doesn't already exist on the next folio
-      if @is_entry_on_next_folio == false
-        new_entry = Entry.new
-        new_entry.entry_no = '1'
-        new_entry.entry_type = ''
-        new_entry.continues_on = ''
-        new_entry.folio_id = next_folio_id
-        new_entry.save
-      end
-
-      # Add the next folio id to the entry
-      @entry.continues_on = next_folio_id
-
-      # Set the next folio_id and folio_image session variables
-      set_folio_and_image('next_tesim', session[:folio_id])
-
-      # Return the new id if an entry has been created
-      # Else return the first entry id of the next folio
-      if @is_entry_on_next_folio == false
-        return new_entry.id
-      else
-        id = ''
-        SolrQuery.new.solr_query('folio_ssim:"' + next_folio_id + '"', 'entry_no_tesim, id', 1)['response']['docs'].map do |result|
-          id = result['id']
-        end
-        return id
-      end
+      return id
+    end
   end
 
   # Get the max entry no for the folio
@@ -248,49 +226,31 @@ module RegisterFolio
   end
 
   # Return list of registers (fedora id, register id and title), in order
+  # TODO there will be two collections, get both and combine
   def get_registers_in_order
-
+    # Get the collection so that we can get a list of registers in order
     collection = ''
-    first_register = ''
-
-    # Get the collection so that we can get a list of registers and the first register in the sequence
-    SolrQuery.new.solr_query('has_model_ssim:OrderedCollection AND coll_id_tesim:"Abp Reg"','id,fst_tesim')['response']['docs'].map.each do | result |
+    SolrQuery.new.solr_query('has_model_ssim:OrderedCollection AND coll_id_tesim:"Abp Reg"', 'id')['response']['docs'].map.each do |result|
       collection = result['id']
-      first_register = result['fst_tesim']
     end
-
     registers = Hash.new
-    num = 0
-
-    # Get the number of registers and the register ids and names
-    SolrQuery.new.solr_query('isPartOf_ssim:"' + collection + '"','id,preflabel_tesim,reg_id_tesim')['response'].each do | result |
-      if result[0] == 'numFound'
-        num = result[1]
-      elsif result[0] == 'docs'
-        result[1].each do | res |
-          registers[res['id']] = [res['reg_id_tesim'][0],res['preflabel_tesim'][0]]
-        end
+    # Get the ordered list of registers
+    SolrQuery.new.solr_query('id:"' + collection + '/list_source"', 'ordered_targets_ssim')['response']['docs'].map.each do |result|
+      order = result['ordered_targets_ssim']
+      q = ''
+      order.each do |o|
+        q += 'id:"' + o + '" OR '
+      end
+      # there is probably a neater way of doing this
+      if q.end_with? ' OR '
+        q = q[0..q.length - 4]
+      end
+      # run a single query for all registers
+      SolrQuery.new.solr_query(q, 'id,preflabel_tesim,reg_id_tesim')['response']['docs'].map.each do |res|
+          registers[res['id']] = [res['reg_id_tesim'][0], res['preflabel_tesim'][0]]
       end
     end
-
-    order = Hash.new
-    next_un = ''
-
-    # Order the registers
-    for i in 1..num.to_i
-      case i
-        when 1
-          order[first_register[0]] = registers[first_register[0]]
-          next_un = SolrQuery.new.solr_query('proxyFor_ssim:"' + first_register[0] + '"','next_tesim')['response']['docs'].map.first['next_tesim']
-          order[next_un[0]] = registers[next_un[0]]
-        when 9
-          # we don't need to process the last one
-        else
-          next_un = SolrQuery.new.solr_query('proxyFor_ssim:"' + next_un[0] + '"','next_tesim')['response']['docs'].map.first['next_tesim']
-          order[next_un[0]] = registers[next_un[0]]
-      end
-    end
-    order
+    registers
   end
 
   # This displays the timed out message for the main page
@@ -329,7 +289,7 @@ module RegisterFolio
     # This is an array of array ('id' and 'entry_no')
     @entry_list = []
 
-    SolrQuery.new.solr_query(q='has_model_ssim:Entry AND folio_ssim:' + session[:folio_id], fl='id,entry_no_tesim', rows=1000, sort='id asc')['response']['docs'].map.each do | result |
+    SolrQuery.new.solr_query(q='has_model_ssim:Entry AND folio_ssim:' + session[:folio_id], fl='id,entry_no_tesim', rows=1000, sort='id asc')['response']['docs'].map.each do |result|
       id = result['id']
       entry_no = result['entry_no_tesim'].join
       temp = []
@@ -342,34 +302,34 @@ module RegisterFolio
   # Update rdf types
   def update_rdf_types
     unless params[:entry][:related_person_groups_attributes].nil?
-      params[:entry][:related_person_groups_attributes].each do | key, value|
-        value.each do | k, v |
+      params[:entry][:related_person_groups_attributes].each do |key, value|
+        value.each do |k, v|
           if k == 'rdftype'
-            params[:entry][:related_person_groups_attributes][key][k] = v.gsub!("[","").gsub!('"','').gsub!("]",'').gsub(' ','').split(',').collect { |s| s }
+            params[:entry][:related_person_groups_attributes][key][k] = v.gsub!("[", "").gsub!('"', '').gsub!("]", '').gsub(' ', '').split(',').collect { |s| s }
           end
         end
       end
     end
     unless params[:entry][:related_places_attributes].nil?
-      params[:entry][:related_places_attributes].each do | key, value|
-        value.each do | k, v |
+      params[:entry][:related_places_attributes].each do |key, value|
+        value.each do |k, v|
           if k == 'rdftype'
-            params[:entry][:related_places_attributes][key][k] = v.gsub!("[","").gsub!('"','').gsub!("]",'').gsub(' ','').split(',').collect { |s| s }
+            params[:entry][:related_places_attributes][key][k] = v.gsub!("[", "").gsub!('"', '').gsub!("]", '').gsub(' ', '').split(',').collect { |s| s }
           end
         end
       end
     end
     unless params[:entry][:entry_dates_attributes].nil?
-      params[:entry][:entry_dates_attributes].each do | key, value|
-        value.each do | k, v |
+      params[:entry][:entry_dates_attributes].each do |key, value|
+        value.each do |k, v|
           if k == 'rdftype'
-            params[:entry][:entry_dates_attributes][key][k] = [v.gsub!("[","").gsub!('"','').gsub!("]",'').gsub(' ','')]
+            params[:entry][:entry_dates_attributes][key][k] = [v.gsub!("[", "").gsub!('"', '').gsub!("]", '').gsub(' ', '')]
           end
           if k == 'single_dates_attributes'
-            v.each do | ke,va |
-              va.each do | keya, val|
+            v.each do |ke, va|
+              va.each do |keya, val|
                 if keya == 'rdftype'
-                  params[:entry][:entry_dates_attributes][key][k][ke][keya] = [val.gsub!("[","").gsub!('"','').gsub!("]",'').gsub(' ','')]
+                  params[:entry][:entry_dates_attributes][key][k][ke][keya] = [val.gsub!("[", "").gsub!('"', '').gsub!("]", '').gsub(' ', '')]
                 end
               end
             end
@@ -422,24 +382,38 @@ module RegisterFolio
 
       search_term1 = ''
 
-      if type == 'date_role' then search_term1 = 'date_role_tesim'; fl_term = 'entryDateFor_ssim' end
-      if type == 'descriptor' then search_term1 = 'person_descriptor_tesim'; fl_term = 'relatedAgentFor_ssim' end
-      if type == 'person_role' then search_term1 = 'person_role_tesim'; fl_term = 'relatedAgentFor_ssim' end
-      if type == 'place_role' then search_term1 = 'place_role_tesim'; fl_term = 'relatedPlaceFor_ssim' end
-      if type == 'place_type' then search_term1 = 'place_type_tesim'; fl_term = 'relatedPlaceFor_ssim' end
-      if type == 'person_same_as' then search_term1 = 'person_same_as_tesim'; fl_term = 'relatedAgentFor_ssim' end
-      if type == 'place_same_as' then search_term1 = 'place_same_as_tesim'; fl_term = 'relatedPlaceFor_ssim' end
+      if type == 'date_role' then
+        search_term1 = 'date_role_tesim'; fl_term = 'entryDateFor_ssim'
+      end
+      if type == 'descriptor' then
+        search_term1 = 'person_descriptor_tesim'; fl_term = 'relatedAgentFor_ssim'
+      end
+      if type == 'person_role' then
+        search_term1 = 'person_role_tesim'; fl_term = 'relatedAgentFor_ssim'
+      end
+      if type == 'place_role' then
+        search_term1 = 'place_role_tesim'; fl_term = 'relatedPlaceFor_ssim'
+      end
+      if type == 'place_type' then
+        search_term1 = 'place_type_tesim'; fl_term = 'relatedPlaceFor_ssim'
+      end
+      if type == 'person_same_as' then
+        search_term1 = 'person_same_as_tesim'; fl_term = 'relatedAgentFor_ssim'
+      end
+      if type == 'place_same_as' then
+        search_term1 = 'place_same_as_tesim'; fl_term = 'relatedPlaceFor_ssim'
+      end
 
       SolrQuery.new.solr_query(q=search_term1 + ':' + element_id, fl=fl_term, rows=1000, sort='id ASC')['response']['docs'].map do |result|
         search_term2 = 'id:' + result[fl_term].join
-       SolrQuery.new.solr_query(q=search_term2, fl='id, folio_ssim, entry_no_tesim', rows=1000, sort='id ASC')['response']['docs'].map do |result|
+        SolrQuery.new.solr_query(q=search_term2, fl='id, folio_ssim, entry_no_tesim', rows=1000, sort='id ASC')['response']['docs'].map do |result|
           folio_id = result['folio_ssim'].join
           entry_no = result['entry_no_tesim'].join
           folio = SolrQuery.new.solr_query(q='id:' + folio_id, fl='preflabel_tesim', rows=1000, sort='id ASC')['response']['docs'].map.first['preflabel_tesim'].join
           existing_location_list << folio + ' (Entry No = ' + entry_no + ')'
         end
       end
-   end
+    end
 
     return existing_location_list
   end

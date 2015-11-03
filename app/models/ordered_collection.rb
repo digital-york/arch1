@@ -1,9 +1,13 @@
 class OrderedCollection < ActiveFedora::Base
   include AssignId,RdfType,DCTerms,SkosLabels,Iana
+  require 'active_fedora/aggregation'
 
   has_many :registers # do not destroy
-  has_many :proxies, :dependent => :destroy
-  accepts_nested_attributes_for :proxies, :allow_destroy => true, :reject_if => :all_blank # ???
+  has_many :ordered_collections # do not destroy
+  #has_many :proxies, :dependent => :destroy
+  #accepts_nested_attributes_for :proxies, :allow_destroy => true, :reject_if => :all_blank # ???
+  ordered_aggregation :registers, through: :list_source
+  ordered_aggregation :ordered_collection, through: :list_source
 
   def add_rdf_types
     ['http://pcdm.org/models#OrderedCollection','http://www.openarchives.org/ore/terms/Aggregation']

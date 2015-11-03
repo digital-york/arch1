@@ -28,6 +28,12 @@ namespace :persons do
 
     puts 'Processing the person. This may take some time ... '
 
+    AUTHS =
+        { 'Oxford Dictionary of Popes' => 'http://www.oxfordreference.com/view/10.1093/acref/9780199295814.001.0001/acref-9780199295814',
+          'Heads of Religious Houses, III' => 'http://www.cambridge.org/gb/academic/subjects/history/british-history-1066-1450/heads-religious-houses-england-and-wales-iii-13771540?format=PB',
+          'Fasti' => 'http://www.british-history.ac.uk/search/series/fasti-ecclesiae',
+          'ODNB' => 'http://www.oxforddnb.com/' }
+
     arr = CSV.read(Rails.root + 'lib/assets/lists/persons.csv')
 
     arr.each do |c|
@@ -81,9 +87,12 @@ namespace :persons do
               rel.gsub!('; ',';')
             end
             a = rel.split(';')
-            p.related_authority += a
+            a.each do | |
+              p.related_authority += [AUTHS[a]]
+            end
+
           else
-            p.related_authority += [c[9]]
+            p.related_authority += [AUTHS[c[9]]]
           end
         end
         unless c[10].nil?

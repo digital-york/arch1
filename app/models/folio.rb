@@ -5,17 +5,17 @@ class Folio < ActiveFedora::Base
   include DCTerms,RdfType,AssignId,Generic,SkosLabels
 
   belongs_to :register, predicate: ::RDF::DC.isPartOf
-  has_many :proxies, :dependent => :destroy
-  has_many :entries, :dependent => :destroy
+  has_many :entries #, :dependent => :destroy
   has_many :images, :dependent => :destroy
-  accepts_nested_attributes_for :entry, :allow_destroy => true, :reject_if => :all_blank
-  accepts_nested_attributes_for :proxy, :allow_destroy => true, :reject_if => :all_blank
+  #accepts_nested_attributes_for :entry, :allow_destroy => true, :reject_if => :all_blank
   accepts_nested_attributes_for :image, :allow_destroy => true, :reject_if => :all_blank
+  directly_contains :images, has_member_relation: ::RDF::URI.new("http://pcdm.org/models#hasMember"), class_name: 'Image'
 
   # Adding a lot of relationships (eg. hasMember) with has_and_belongs_to_many causes an error (solr query too large);
   # use has_many and a property instead;
   # or a reciprocal belongs_to (like isPartOf)
   # also won't delete
+  # or directly contains like I have done now
   # has_and_belongs_to_many :images, predicate: ::RDF::URI.new('http://pcdm.org/models#hasFile')
 
   def add_rdf_types

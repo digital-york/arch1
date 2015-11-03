@@ -6,9 +6,10 @@ require 'active_fedora/noid'
 # For Mellon, we'll be using RDFSource, with a link to the image file in F3
 
 class Image < ActiveFedora::Base
-  include DCTerms,RdfType,AssignId,SkosLabels
+  include DCTerms,RdfType,SkosLabels #,AssignId
 
   belongs_to :folio, predicate: ::RDF::URI.new('http://www.w3.org/ns/oa#hasTarget')
+  directly_contains :files, has_member_relation: ::RDF::URI.new("http://pcdm.org/models#hasFile"), class_name: 'ContainedFile'
 
   # File is wrong here
   def add_rdf_types
@@ -22,6 +23,19 @@ class Image < ActiveFedora::Base
 
   property :file, predicate: ::RDF::URI.new('http://pcdm.org/models#hasFile'), multiple: false do |index|
     index.as :stored_searchable
+  end
+
+  def create_id(path)
+    "#{path}#{noid_service.mint}"
+  end
+
+  def create_container_id(path)
+    "#{path}/images/#{noid_service.mint}"
+  end
+
+  private
+  def noid_service
+    @noid_service ||= ActiveFedora::Noid::Service.new
   end
 
 end
