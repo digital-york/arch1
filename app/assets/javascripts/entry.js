@@ -239,9 +239,13 @@ $(document).ready(function () {
             var jq_attributes = $(this).attr('jq_attributes');
             var jq_index = $(this).attr('jq_index');
             var jq_type = $(this).attr('jq_type');
-
+            // NOTE: 'place_as_written' is required for 'related places' to work - see the 'update_related_places' method below
+            var input_class = "";
+            if (jq_type == "place_as_written") {
+                input_class="class='place_as_written' ";
+            }
             var new_code_block = "<div class='field_single'>"
-                + "<input type='text' name='entry[" + jq_attributes + "][" + jq_index + "][" + jq_type + "][]'>"
+                + "<input type='text'" + input_class + "name='entry[" + jq_attributes + "][" + jq_index + "][" + jq_type + "][]'>"
                 + "&nbsp;<img alt='Delete icon' src='/assets/delete.png' class='delete_icon click_remove_field_level1' jq_tag_type='input'>"
                 + "</div>";
             $(this).parent('th').next('td').find('.field_group').append(new_code_block);
@@ -368,9 +372,10 @@ $(document).ready(function () {
                 "<table class='tab3' cellspacing='0'>" +
 
                 // As Written
+                // NOTE: 'place_as_written_block' is required for 'related places' to work - see the 'update_related_places' method below
                 "<tr><th>*As Written:" +
                 "&nbsp;<img jq_type='place_as_written' jq_index='" + jq_index + "' jq_attributes='related_places_attributes' class='plus_icon click_multiple_field_button_level2' src='/assets/plus_sign.png'>" +
-                "</th><td><div class='field_group grey_box'></div></td></tr>" +
+                "</th><td><div class='field_group grey_box place_as_written_block'></div></td></tr>" +
 
                 // Place Name Authority (Same As)
                 "<tr><th>Place Name Authority:</th><td class='input_single'>" +
@@ -765,7 +770,6 @@ $(document).ready(function () {
     // Calls the function below when a place_as_written is changed (or added)
     $('body').on('change', '.place_as_written', function(e) {
         update_related_places();
-
     });
 
     var form_modified = 0;
@@ -824,13 +828,15 @@ $(document).ready(function () {
 // It updates all the person 'Related Place' drop-down lists by adding new terms and removing old terms
 // Note that I tried to do it when the user actually clicked on the 'Related Place' list but there was
 // a problem with removing elements and someone on StackOverflow said that the options are being
-// destroyed everytime and that's why you can't select from the list - see here:
+// destroyed every time and that's why you can't select from the list - see here:
 // http://stackoverflow.com/questions/30736354/choosing-options-after-dynamically-changing-a-select-list-with-jquery/30737208#30737208
+// Note that this code also relies on a 'place_as_written' class and 'place_as_written_block' class
+// which are put on the appropriate divs
 function update_related_places() {
 
     try {
 
-        // Get all the place 'As Written' values into an array
+        // Get all the Place As Written values into an array
         place_as_written_array = new Array();
 
         // Note that we only get the first place 'As Written' value for each place (because there can be more than one)
@@ -846,7 +852,7 @@ function update_related_places() {
             }
         });
 
-        // Firstly, remove any 'Related Place' options which don't exist anymore in the place 'As Written' textfields
+        // Firstly, remove any 'Related Place' options which don't exist anymore in the place 'As Written' text fields
         $('.related_place').each(function () {
 
             var select_tag = $(this);
@@ -892,7 +898,7 @@ function update_related_places() {
                     });
 
                     // Add the option if it doesn't exist.
-                    if (exists == false) {
+                    if (exists == false && place_as_written_value != null) {
                         select_tag.append("<option value='" + place_as_written_value + "'>" + place_as_written_value + "</option>");
                     }
                 });
