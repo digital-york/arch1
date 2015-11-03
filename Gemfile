@@ -7,8 +7,18 @@ gem 'cocoon'
 # use latest qa code
 gem 'qa', :git => 'https://github.com/projecthydra-labs/questioning_authority.git', :branch => 'master'
 gem 'jquery-ui-rails'
-gem 'hydra', '9.0.0'
-gem 'active_fedora-noid'
+
+# Install hydra gems individually
+gem 'active-fedora'
+gem 'hydra-head'
+gem 'om'
+gem 'solrizer'
+gem 'rsolr'
+gem 'blacklight'
+gem 'active-triples'
+gem 'nom-xml'
+
+gem 'active_fedora-noid', '1.0.0'
 gem 'nokogiri'
 gem 'thin'
 

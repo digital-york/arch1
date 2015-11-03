@@ -74,7 +74,6 @@ class ConceptsController < ApplicationController
 
     # Check parameters are permitted
     concept_params = whitelist_concept_params
-    puts concept_params
 
     # Remove any empty fields
     remove_concept_popup_empty_fields(concept_params)
