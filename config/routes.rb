@@ -2,7 +2,7 @@ Rails.application.routes.draw do
 
   mount Qa::Engine => '/qa'
 
-  root 'login#login_temp'
+  root 'login#index'
 
   # Create multiple routes,
   resources :entries

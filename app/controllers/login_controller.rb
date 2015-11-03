@@ -6,7 +6,7 @@ class LoginController < ApplicationController
   def login_submit
 
     # Proper authorisation will be added later on
-    if params[:submit] == 'true'
+    if params[:username] == 'test' && params[:password] == 'test'
 
         # Reset all the session variables at this point
         reset_session_variables
@@ -18,10 +18,12 @@ class LoginController < ApplicationController
 
     # Else request has come from the session timeout page so do this...
     else
-      redirect_to login_path
+      @invalid_login = 'true'
+      render 'index'
     end
   end
 
+  # Temporary code to bypass the login page
   def login_temp
     reset_session_variables
     session[:login] = 'true'
