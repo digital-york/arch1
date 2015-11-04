@@ -13,7 +13,7 @@
         <%= button_to "Add Place", new_place_path, method: :get, params: {:search_term => @search_term, :place_field => @place_field}, style: 'margin-top: -5px', title: 'Add element' %>
         <%= link_to 'Go back to admin page', admins_path, style: 'margin-left: 6px' %>
     <% else %>
-        <%= link_to 'Click here to open the admin interface (to edit places)', '#', onclick: "popup('/admins?start=true', 'admin'); return false;" %>
+        <%= link_to 'Click here to edit places in the Admin interface', '#', onclick: "popup('/admins?start=true', 'admin'); return false;" %>
     <% end %>
   </div>
 
