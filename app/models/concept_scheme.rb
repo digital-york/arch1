@@ -10,6 +10,7 @@ class ConceptScheme < ActiveFedora::Base
   directly_contains :concepts, has_member_relation: ::RDF::URI.new("http://pcdm.org/models#hasMember"), class_name: 'Concept'
   directly_contains :people, has_member_relation: ::RDF::URI.new("http://pcdm.org/models#hasMember"), class_name: 'Person'
   directly_contains :places, has_member_relation: ::RDF::URI.new("http://pcdm.org/models#hasMember"), class_name: 'Place'
+  #contains :concept, class_name: 'Concept'
 
   def add_rdf_types
     ['http://www.w3.org/2004/02/skos/core#ConceptScheme']

@@ -286,7 +286,7 @@ module RegisterFolio
   # Set the entry tab list (i.e. at the top of the form)
   def set_entry_list
 
-    # This is an array of array ('id' and 'entry_no')
+    # This is an array of arrays ('id' and 'entry_no')
     @entry_list = []
 
     SolrQuery.new.solr_query(q='has_model_ssim:Entry AND folio_ssim:' + session[:folio_id], fl='id,entry_no_tesim', rows=1000, sort='id asc')['response']['docs'].map.each do |result|
@@ -299,7 +299,7 @@ module RegisterFolio
     end
   end
 
-  # Update rdf types
+  # Update rdf types ... this appears to be just stripping out [] and space - why is this necessary?
   def update_rdf_types
     unless params[:entry][:related_person_groups_attributes].nil?
       params[:entry][:related_person_groups_attributes].each do |key, value|
