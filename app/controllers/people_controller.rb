@@ -175,6 +175,8 @@ class PeopleController < ApplicationController
     params.require(:person).permit(:family, :pre_title, :given_name, :dates, :post_title, :epithet, :dates_of_office, :same_as => [], :related_authority => [], :altlabel => [], :note => [])  # Note - arrays need to go at the end or an error occurs!
   end
 
+  # This method is used to get the preflabel and to get the label which is displayed on the view page
+  # is_join is required if the data comes from solr, i.e. when getting the data to display on the view page
   def get_label(is_join, family, pre_title, given_name, dates, post_title, epithet)
 
     name = ''
