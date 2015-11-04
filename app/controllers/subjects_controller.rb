@@ -49,7 +49,10 @@ class SubjectsController < ApplicationController
     @concept = Concept.new(subject_params)
 
     if @error != ''
-      render 'new', :locals => { :@go_back_id => params[:go_back_id], :@broader => params[:concept][:broader] } #, @subject_field => params[:subject_field] }
+      @go_back_id = params[:go_back_id]
+      @broader = params[:concept][:broader]
+      #render 'new', :locals => { :@go_back_id => params[:go_back_id], :@broader => params[:concept][:broader] } #, @subject_field => params[:subject_field] }
+      render 'new'
     else
 
       # Use a solr query to obtain the concept scheme id for 'subjects'
@@ -88,16 +91,12 @@ class SubjectsController < ApplicationController
     @concept.attributes = subject_params
 
     if @error != ''
-      render 'edit', :locals => { :@go_back_id => params[:go_back_id], :@broader => params[:concept][:broader].join } #, @subject_field => params[:subject_field] }
+      @go_back_id = params[:go_back_id]
+      @broader = params[:concept][:broader]
+      #render 'edit', :locals => { :@go_back_id => params[:go_back_id], :@broader => params[:concept][:broader].join } #, @subject_field => params[:subject_field] }
+      render 'edit'
     else
-
-      # Use a solr query to obtain the concept scheme id for 'subjects'
-      #response = SolrQuery.new.solr_query(q='has_model_ssim:ConceptScheme AND preflabel_tesim:"subjects"', fl='id', rows=1, sort='')
-      #id = response['response']['docs'][0]['id']
-      #@concept.concept_scheme_id = id
-
       @concept.save
-
       redirect_to :controller => 'subjects', :action => 'show', :id => params[:go_back_id]#, :subject_field => params[:subject_field]
     end
   end

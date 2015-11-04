@@ -27,7 +27,7 @@ class PlacesController < ApplicationController
       parent_ADM3 = result['parent_ADM3_tesim']
       parent_ADM2 = result['parent_ADM2_tesim']
       parent_ADM1 = result['parent_ADM1_tesim']
-puts place_name, parent_ADM4
+
       tt = []
       name = get_label(true, place_name, parent_ADM4, parent_ADM3, parent_ADM2, parent_ADM1)
 
@@ -84,7 +84,9 @@ puts place_name, parent_ADM4
     @place = Place.new(place_params)
 
     if @error != ''
-      render 'new', :locals => { :@search_term => params[:search_term], :@place_field => params[:place_field] }
+      @search_term = params[:search_term]
+      @place_field = params[:place_field]
+      render 'new'
     else
 
       # Use a solr query to obtain the concept scheme id for 'places'
@@ -134,18 +136,12 @@ puts place_name, parent_ADM4
     @place.attributes = place_params
 
     if @error != ''
-      render 'edit', :locals => { :@search_term => params[:search_term], :@place_field => params[:place_field] }
+      @search_term = params[:search_term]
+      @place_field = params[:place_field]
+      render 'edit'
     else
-
-      # Use a solr query to obtain the concept scheme id for 'places'
-      #response = SolrQuery.new.solr_query(q='has_model_ssim:ConceptScheme AND preflabel_tesim:"places"', fl='id', rows=1, sort='')
-      #id = response['response']['docs'][0]['id']
-      #@place.concept_scheme_id = id
-
-      # Get preflabel and save
       @place.preflabel = get_label(false, @place.place_name, @place.parent_ADM4, @place.parent_ADM3, @place.parent_ADM2, @place.parent_ADM1)
       @place.save
-
       redirect_to :controller => 'places', :action => 'index', :search_term => params[:search_term], :place_field => params[:place_field]
     end
   end

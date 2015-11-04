@@ -32,7 +32,7 @@ class EntriesController < ApplicationController
         # Get the first entry for the folio if there isn't an id
         # Else get the specified entry
         if params[:id] == nil or params[:id] == ''
-          SolrQuery.new.solr_query('folio_ssim:"' + session[:folio_id] + '"', 'id', 1, 'id asc')['response']['docs'].map do |result|
+          SolrQuery.new.solr_query('folio_ssim:"' + session[:folio_id] + '"', 'id', 1, 'entry_no_si asc')['response']['docs'].map do |result|
             @db_entry.entry_id = result['id']
           end
         else
@@ -48,6 +48,10 @@ class EntriesController < ApplicationController
 
         # Determine if the 'New Entry' Tab and '(continues)' text are to be displayed
         set_folio_continues_id
+
+        # Determines if this is the last entry on a folio which is continued from the previous folio
+        # i.e. the previous folio 'continues_on' field is populated
+        is_last_entry_for_continues_on(@db_entry)
       end
     end
   end
@@ -146,22 +150,14 @@ class EntriesController < ApplicationController
     remove_empty_fields(entry_params)
 
     # Check for errors
-    @errors = check_for_errors(entry_params)
+    #@errors = check_for_errors(entry_params)
 
     # Populate new entry with the entry_params
     @entry = Entry.new(entry_params)
 
     # If there are errors, go back to the 'new' page and display the errors, else go to the 'index' page
     if @errors != '' && @errors != nil
-
-      # Set various lists, e.g. authority_list, folio_list
-      set_lists(@entry)
-
-      # Note: it would be better to 'redirect' to the 'edit' controller rather than 'render' to the 'edit' page
-      # because we wouldn't have to set_authority_lists, etc, but 'redirect' loses the state of the nested form, i.e.
-      # it seems that any fields which have been added with the + buttons are closed again
-      render 'new'
-
+      # No checks
     else
 
       # If entry continues, create a new entry on the next folio and save
@@ -215,7 +211,7 @@ class EntriesController < ApplicationController
     remove_empty_fields(entry_params)
 
     # Check for errors
-    @errors = check_for_errors(entry_params)
+    #@errors = check_for_errors(entry_params)
 
     # Get an entry object using the id and populate it with the entry parameters
     @entry = Entry.find(params[:id])
@@ -224,15 +220,7 @@ class EntriesController < ApplicationController
 
     # If there are errors, render the go back to the 'edit' page and display the errors, else go to the 'index' page
     if @errors != '' && @errors != nil
-
-      # Set various lists, e.g. authority_list, folio_list
-      set_lists(@entry)
-
-      # Note: it would be better to 'redirect' to the 'edit' controller rather than 'render' to the 'edit' page
-      # because we wouldn't have to set_authority_lists, etc, but 'redirect' loses the state of the nested form, i.e.
-      # any fields which have been added are closed again??
-      render 'edit'
-
+      # No checks
     else
 
       # If entry continues, create a new entry on the next folio and save
@@ -260,9 +248,25 @@ class EntriesController < ApplicationController
 
   # DESTROY
   def destroy
+
     @entry = Entry.find(params[:id])
-    @entry.destroy
-    redirect_to entries_path
+
+    can_delete = true
+
+    SolrQuery.new.solr_query('continues_on_tesim:' + session[:folio_id], 'id', 1, 'entry_no_si asc')['response']['docs'].map do |result|
+      entry_count = SolrQuery.new.solr_query('folio_ssim:' + session[:folio_id], 'id', 100, 'id asc')['response']['docs'].map.size
+      if entry_count <= 1
+        can_delete = false
+      end
+    end
+
+    if can_delete == true
+      @entry.destroy
+    else
+      delete_error = "Please 'Discontinue' the last entry on the previous folio before deleting this entry"
+    end
+
+    redirect_to :controller => 'entries', :action => 'index', :delete_error => delete_error
   end
 
   # PRIVATE METHODS

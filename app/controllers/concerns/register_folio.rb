@@ -162,11 +162,25 @@ module RegisterFolio
 
   # Determines if the 'Continues on next folio' row and 'Continues' button are to be displayed
   def is_last_entry(entry)
+    @is_last_entry = false
     if entry != nil
-      @is_last_entry = false
       max_entry_no = get_max_entry_no_for_folio
       if entry.entry_no.to_i >= max_entry_no.to_i
         @is_last_entry = true
+      end
+    end
+  end
+
+  # Determines if this is the last entry on a folio which is continued from the previous folio
+  # i.e. the previous folio 'continues_on' field is populated
+  def is_last_entry_for_continues_on(entry)
+    @is_last_entry_for_continues_on = false
+    if entry != nil
+      SolrQuery.new.solr_query('continues_on_tesim:' + session[:folio_id], 'id', 1, 'entry_no_si asc')['response']['docs'].map do |result|
+        entry_count = SolrQuery.new.solr_query('folio_ssim:' + session[:folio_id], 'id', 100, 'id asc')['response']['docs'].map.size
+        if entry_count <= 1
+          @is_last_entry_for_continues_on = true
+        end
       end
     end
   end

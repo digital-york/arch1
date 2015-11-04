@@ -87,7 +87,10 @@ class ConceptsController < ApplicationController
     @concept = Concept.new(concept_params)
 
     if @error != ''
-      render 'new', :locals => { :@search_term => params[:search_term], :@list_type => params[:list_type] }
+      @list_type = params[:list_type]
+      @search_term = params[:search_term]
+      #render 'new', :locals => { :@search_term => params[:search_term], :@list_type => params[:list_type] }
+      render 'new'
     else
       @concept.concept_scheme_id = get_concept_scheme_id(params[:list_type])
       @concept.rdftype << @concept.add_rdf_types
@@ -116,13 +119,11 @@ class ConceptsController < ApplicationController
     @concept.attributes = concept_params
 
     if @error != ''
-      render 'edit', :locals => { :@search_term => params[:search_term], :@list_type => params[:list_type] }
+      @search_term = params[:search_term]
+      @list_type = params[:list_type]
+      render 'edit'
     else
-
-      # Save the concept
-      #@concept.concept_scheme_id = get_concept_scheme_id(params[:list_type])
       @concept.save
-
       redirect_to :controller => 'concepts', :action => 'index', :search_term => params[:search_term], :list_type => params[:list_type]
     end
   end

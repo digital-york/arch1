@@ -19,7 +19,8 @@
     </div>
 
     <div style="float: right; margin-right: 6px; margin-top: 25px">
-      <%= button_to 'Logout', logout_path, :method => 'get', :data => {:confirm => 'Are you sure you want to logout?'} %>
+      <%= button_to 'Admin', '#', onclick: "popup('/admins?start=true', 'admin'); return false;" %>
+      <%= button_to 'Logout', logout_path, :method => 'get', style: 'margin-left: 6px', :data => {:confirm => 'Are you sure you want to logout?'} %>
     </div>
 
   </div>

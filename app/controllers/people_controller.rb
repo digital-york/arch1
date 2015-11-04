@@ -85,7 +85,9 @@ class PeopleController < ApplicationController
     @person = Person.new(person_params)
 
     if @error != ''
-      render 'new', :locals => { :@search_term => params[:search_term], :@person_field => params[:person_field] }
+      @search_term = params[:search_term]
+      @person_field = params[:person_field]
+      render 'new'
     else
 
       # Use a solr query to obtain the concept scheme id for 'people'
@@ -135,18 +137,12 @@ class PeopleController < ApplicationController
     @person.attributes = person_params
 
     if @error != ''
-      render 'edit', :locals => { :@search_term => params[:search_term], :@person_field => params[:person_field] }
+      @search_term = params[:search_term]
+      @person_field = params[:person_field]
+      render 'edit'
     else
-
-      # Use a solr query to obtain the concept scheme id for 'people'
-      #response = SolrQuery.new.solr_query(q='has_model_ssim:ConceptScheme AND preflabel_tesim:"people"', fl='id', rows=1, sort='')
-      #id = response['response']['docs'][0]['id']
-      #@person.concept_scheme_id = id
-
-      # Get preflabel and save
       @person.preflabel = get_label(false, @person.family, @person.pre_title, @person.given_name, @person.dates, @person.post_title, @person.epithet)
       @person.save
-
       redirect_to :controller => 'people', :action => 'index', :search_term => params[:search_term], :person_field => params[:person_field]
     end
   end

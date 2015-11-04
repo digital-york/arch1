@@ -56,7 +56,6 @@
 
   <%= form_for @db_entry, url: eval(form_url), method: eval(form_method) do |f| %>
 
-        <%#= f.hidden_field :folio, :value => session[:folio_id] %>
       <input type="hidden" name="entry[folio]" value="<%= session[:folio_id] %>"/>
 
         <div id='form_modified'>

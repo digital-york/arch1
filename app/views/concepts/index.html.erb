@@ -32,13 +32,8 @@
        if @search_array != nil && @search_array != ''
     %>
 
-        <div style="float: left; font-size: 1.1em">
-          Search Term:
-          <% if @search_term != '' && @search_term != nil %>
-              '<strong><%= @search_term %></strong>'
-          <% else %>
-              <strong><em>None</em></strong>
-          <% end %>
+        <div style="font-size: 1.1em">
+          Results: <strong><%= @search_array.size %></strong>
         </div>
 
         <div style="clear: both"></div>

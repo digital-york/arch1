@@ -58,7 +58,7 @@ function popup(page, type) {
         popupWidth = 1000;
         popupHeight = screen.height / 1.25;
         left = (screen.width - popupWidth) / 2;
-        top = 100;
+        top = 50;
         popup_id = "104"
     } else if (type == "browse_folios") {
         popupWidth = 522;
