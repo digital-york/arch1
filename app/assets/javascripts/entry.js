@@ -40,22 +40,22 @@ function popup(page, type) {
         popupHeight = 800;
         left = (screen.width - popupWidth) / 2;
     } else if (type == "subject") {
-        popupWidth = 900;
+        popupWidth = 1000;
         popupHeight = screen.height / 1.25;
         left = (screen.width - popupWidth) / 2;
         popup_id = "101"
     } else if (type == "person") {
-        popupWidth = 900;
+        popupWidth = 1000;
         popupHeight = screen.height / 1.25;
         left = (screen.width - popupWidth) / 2;
         popup_id = "102"
     } else if (type == "place") {
-        popupWidth = 900;
+        popupWidth = 1000;
         popupHeight = screen.height / 1.25;
         left = (screen.width - popupWidth) / 2;
         popup_id = "103"
     } else if (type == "admin") {
-        popupWidth = 900;
+        popupWidth = 1000;
         popupHeight = screen.height / 1.25;
         left = (screen.width - popupWidth) / 2;
         top = 100;

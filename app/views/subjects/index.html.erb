@@ -15,7 +15,7 @@
   <% else %>
         <div>
           Please click on a link below to choose a subject:
-          <%= link_to '(click here to edit subjects)', '#', onclick: "popup('/admins?start=true', 'admin'); return false;" %>
+          (<%= link_to 'click here to edit subjects', '#', onclick: "popup('/admins?start=true', 'admin'); return false;" %>)
         </div>
     <% end %>
   </div>
@@ -53,7 +53,7 @@
               <% if @subject_field == nil %>
                 <%= second_level_label %>
               <% else %>
-                <%= link_to second_level_label, '#', onClick: "post_value('#{second_level_label}', '#{second_level_id}', '#{params[:subject_field]}')", style: 'color: #0B51FE' %>
+                <%= link_to second_level_label, '#', onClick: "post_value('#{second_level_label}', '#{second_level_id}', '#{params[:subject_field]}')", style: 'color: #9C5D17' %>
               <% end %>
              </span>
            </td>
@@ -70,7 +70,7 @@
                 <% if @subject_field == nil %>
                   <%= third_level_label %>
                 <% else %>
-                  <%= link_to third_level_label, '#', onClick: "post_value('#{third_level_label}', '#{third_level_id }', '#{params[:subject_field]}')", style: 'color: #434141' %>
+                  <%= link_to third_level_label, '#', onClick: "post_value('#{third_level_label}', '#{third_level_id }', '#{params[:subject_field]}')", style: 'color: #9C5D17' %>
                 <% end %>
              </span>
               </span>

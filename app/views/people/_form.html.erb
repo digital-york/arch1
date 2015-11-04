@@ -1,16 +1,15 @@
-
 <div class="popup">
 
   <%
-    if @person.new_record?
-      start_text = 'Add'
-      form_url = 'people_path(@person)'
-      form_method = ':post'
-    else
-      start_text = 'Edit'
-      form_url = 'person_path(@person)'
-      form_method = ':patch'
-    end
+     if @person.new_record?
+       start_text = 'Add'
+       form_url = 'people_path(@person)'
+       form_method = ':post'
+     else
+       start_text = 'Edit'
+       form_url = 'person_path(@person)'
+       form_method = ':patch'
+     end
   %>
 
   <div class="popup_title">
@@ -25,7 +24,7 @@
     <%= link_to 'Go back to search page', people_path(:search_term => @search_term, :person_field => @person_field) %>
   </div>
 
-  <%= form_for @person, url: eval(form_url), method: eval(form_method), html: { style: 'margin-top: 15px; margin-bottom: 0px' } do |f| %>
+  <%= form_for @person, url: eval(form_url), method: eval(form_method), html: {style: 'margin-top: 15px; margin-bottom: 0px'} do |f| %>
 
       <div class='tab1'>
 
@@ -33,7 +32,7 @@
 
           <%# Family Name (Family) %>
           <tr>
-            <th style="width: 150px">*Family Name:</th>
+            <th style="width: 150px">Family Name:</th>
             <td>
               <%= text_field_tag "person[family]", @person.family %>
             </td>
@@ -172,8 +171,5 @@
       </div>
 
       <div style="clear: both"></div>
-
-
-<% end %>
-
+  <% end %>
 </div>

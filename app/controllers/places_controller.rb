@@ -22,27 +22,14 @@ class PlacesController < ApplicationController
     SolrQuery.new.solr_query(q='has_model_ssim:Place', fl='id, place_name_tesim, parent_ADM4_tesim, parent_ADM3_tesim, parent_ADM2_tesim, parent_ADM1_tesim', rows=1000, sort='id asc')['response']['docs'].map.each do |result|
 
       id = result['id']
-      place_name = result['place_name_tesim'].join
+      place_name = result['place_name_tesim']
       parent_ADM4 = result['parent_ADM4_tesim']
       parent_ADM3 = result['parent_ADM3_tesim']
       parent_ADM2 = result['parent_ADM2_tesim']
       parent_ADM1 = result['parent_ADM1_tesim']
-
+puts place_name, parent_ADM4
       tt = []
-      name = place_name
-
-      if parent_ADM4 != nil then
-        name = "#{name}, #{parent_ADM4.join()}"
-      end
-      if parent_ADM3 != nil then
-        name = "#{name}, #{parent_ADM3.join()}"
-      end
-      if parent_ADM2 != nil then
-        name = "#{name}, #{parent_ADM2.join()}"
-      end
-      if parent_ADM1 != nil then
-        name = "#{name}, #{parent_ADM1.join()}"
-      end
+      name = get_label(true, place_name, parent_ADM4, parent_ADM3, parent_ADM2, parent_ADM1)
 
       if name.match(/#{@search_term}/i)
         tt << id
@@ -106,7 +93,7 @@ class PlacesController < ApplicationController
       @place.concept_scheme_id = id
 
       # Get preflabel, rdftype and save
-      @place.preflabel = get_preflabel(@place.place_name, @place.parent_ADM4, @place.parent_ADM3, @place.parent_ADM2, @place.parent_ADM1)
+      @place.preflabel = get_label(false, @place.place_name, @place.parent_ADM4, @place.parent_ADM3, @place.parent_ADM2, @place.parent_ADM1)
       @place.rdftype << @place.add_rdf_types
       @place.save
 
@@ -156,7 +143,7 @@ class PlacesController < ApplicationController
       #@place.concept_scheme_id = id
 
       # Get preflabel and save
-      @place.preflabel = get_preflabel(@place.place_name, @place.parent_ADM4, @place.parent_ADM3, @place.parent_ADM2, @place.parent_ADM1)
+      @place.preflabel = get_label(false, @place.place_name, @place.parent_ADM4, @place.parent_ADM3, @place.parent_ADM2, @place.parent_ADM1)
       @place.save
 
       redirect_to :controller => 'places', :action => 'index', :search_term => params[:search_term], :place_field => params[:place_field]
@@ -187,33 +174,40 @@ class PlacesController < ApplicationController
     params.require(:place).permit(:place_name, :parent_ADM4, :parent_ADM3, :parent_ADM2, :parent_ADM1, :parent_country, :feature_code => [], :same_as => [], :related_authority => [], :altlabel => [])  # Note - arrays need to go at the end or an error occurs!
   end
 
-  # Get the preflabel from the solr parameters (separated by commas)
-  def get_preflabel(place_name, parent_ADM4, parent_ADM3, parent_ADM2, parent_ADM1)
+  def get_label(is_join, place_name, parent_ADM4, parent_ADM3, parent_ADM2, parent_ADM1)
 
-    preflabel = place_name
+    name = ''
 
-    preflabel2 = ''
-
-    if parent_ADM4 != ''
-      preflabel2 = "#{parent_ADM4}"
-    end
-    if parent_ADM3 != ''
-      if preflabel2 != '' then preflabel2 = "#{preflabel2}, " end
-      preflabel2 = "#{preflabel2}#{parent_ADM3}"
-    end
-    if parent_ADM2 != ''
-      if preflabel2 != '' then preflabel2 = "#{preflabel2}, " end
-      preflabel2 = "#{preflabel2}#{parent_ADM2}"
-    end
-    if parent_ADM1 != ''
-      if preflabel2 != '' then preflabel2 = "#{preflabel2}, " end
-      preflabel2 = "#{preflabel2}#{parent_ADM1}"
+    if place_name != nil
+      if is_join == true then place_name = place_name.join end
+      name = place_name
     end
 
-    # Put brackets around preflabel2 if it exists
-    if preflabel2 != '' then preflabel = "#{preflabel} (#{preflabel2})" end
+    if parent_ADM4 != nil
+      if is_join == true then parent_ADM4 = parent_ADM4.join end
+      if name != '' then name = "#{name}," end
+      name = "#{name} #{parent_ADM4}"
+    end
 
-    return preflabel
+    if parent_ADM3 != nil
+      if is_join == true then parent_ADM3 = parent_ADM3.join end
+      if name != '' then name = "#{name}," end
+      name = "#{name} #{parent_ADM3}"
+    end
+
+    if parent_ADM2 != nil
+      if is_join == true then parent_ADM2 = parent_ADM2.join end
+      if name != '' then name = "#{name}," end
+      name = "#{name} #{parent_ADM2}"
+    end
+
+    if parent_ADM1 != nil
+      if is_join == true then parent_ADM1 = parent_ADM1.join end
+      if name != '' then name = "#{name}," end
+      name = "#{name} #{parent_ADM1}"
+    end
+
+    return name
   end
 
 end
