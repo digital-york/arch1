@@ -56,8 +56,8 @@ namespace :direct do
     # Create the image
     f = Image.new
     # create the id (otherwise we'll get a fedora uuid)
-    f.id = f.create_id(i.id)
-
+    f.id = f.create_container_id(i.id)
+    f.folio = i
 
     f.rdftype = f.add_rdf_types
     f.preflabel = 'Hello'
@@ -68,7 +68,8 @@ namespace :direct do
     # Create the image
     f = Image.new
     # create the id (otherwise we'll get a fedora uuid)
-    f.id = f.create_id(i.id)
+    f.id = f.create_container_id(i.id)
+    f.folio = i
 
     # add content and metadata
     f.preflabel = 'whatever 2'

@@ -1,6 +1,6 @@
 class Concept < ActiveFedora::Base
 
-  include RdfType,Generic,AssignId,SameAs,SkosLabels,DCTerms,SkosLabels
+  include RdfType,Generic,SameAs,SkosLabels,DCTerms,SkosLabels,AssignId
 
   belongs_to :concept_scheme, predicate: ::RDF::SKOS.inScheme
 
@@ -23,6 +23,10 @@ class Concept < ActiveFedora::Base
   end
 
   property :narrower, predicate: ::RDF::SKOS.narrower, multiple: true do |index|
+    index.as :stored_searchable
+  end
+
+  property :see_also, predicate: ::RDF::SKOS.related, multiple: true do |index|
     index.as :stored_searchable
   end
 

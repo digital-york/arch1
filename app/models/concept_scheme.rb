@@ -7,6 +7,9 @@ class ConceptScheme < ActiveFedora::Base
   accepts_nested_attributes_for :concept, :allow_destroy => true, :reject_if => :all_blank
   #accepts_nested_attributes_for :person, :allow_destroy => true, :reject_if => :all_blank
   #accepts_nested_attributes_for :place, :allow_destroy => true, :reject_if => :all_blank
+  directly_contains :concepts, has_member_relation: ::RDF::URI.new("http://pcdm.org/models#hasMember"), class_name: 'Concept'
+  directly_contains :people, has_member_relation: ::RDF::URI.new("http://pcdm.org/models#hasMember"), class_name: 'Person'
+  directly_contains :places, has_member_relation: ::RDF::URI.new("http://pcdm.org/models#hasMember"), class_name: 'Place'
 
   def add_rdf_types
     ['http://www.w3.org/2004/02/skos/core#ConceptScheme']

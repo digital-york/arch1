@@ -3,10 +3,8 @@ class Register < ActiveFedora::Base
   require 'active_fedora/aggregation'
 
   has_many :folios, :dependent => :destroy
-  #has_many :proxies, :dependent => :destroy
   belongs_to :ordered_collection, predicate: ::RDF::DC.isPartOf
   accepts_nested_attributes_for :folios, :allow_destroy => true, :reject_if => :all_blank
-  #accepts_nested_attributes_for :proxies, :allow_destroy => true, :reject_if => :all_blank
   ordered_aggregation :folios, through: :list_source
 
   def add_rdf_types

@@ -32,6 +32,9 @@ namespace :regfols do
             register.reg_id = r[1]
             register.date = r[2]
             register.preflabel = r[3]
+            # isPartOf
+            register.ordered_collection = o
+            # hasPart
             o.ordered_register_proxies.append_target register
             o.registers += [register]
           elsif r[0].start_with? 'Abp Inst AB'
