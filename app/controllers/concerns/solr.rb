@@ -10,8 +10,14 @@ module Solr
 
         db_entry.entry_no = result['entry_no_tesim'].join()
 
-        if result['entry_type_tesim'] != nil
-          db_entry.entry_type = result['entry_type_tesim'].join()
+        entry_type_list = result['entry_type_tesim'];
+
+        if entry_type_list != nil
+          entry_type_list.each do |tt|
+            db_entry_type = DbEntryType.new
+            db_entry_type.name = tt
+            db_entry.db_entry_types << db_entry_type
+          end
         end
 
         section_type_list = result['section_type_tesim'];

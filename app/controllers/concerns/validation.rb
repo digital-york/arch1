@@ -34,6 +34,7 @@ module Validation
   # because the index variable is class Array rather than ActionController::Parameters (please see the Rails section of the wiki for more info on form parameters)
   def remove_empty_array_fields(entry_params)
 
+    entry_params[:entry_type] = remove_empty_array_fields2(entry_params[:entry_type])
     entry_params[:section_type] = remove_empty_array_fields2(entry_params[:section_type])
     entry_params[:marginalia] = remove_empty_array_fields2(entry_params[:marginalia])
     entry_params[:language] = remove_empty_array_fields2(entry_params[:language])
@@ -269,9 +270,9 @@ module Validation
     errors = ''
 
     errors = errors + get_errors(entry_params[:entry_no], 'Entry No', SMALL_FIELD, 'M')
-    errors = errors + get_errors(entry_params[:entry_type], 'Entry Type', MEDIUM_FIELD, '')
-    errors = errors + get_errors(entry_params[:summary], 'Summary', MEDIUM_FIELD, '')
+    errors = errors + get_multi_field_errors(entry_params[:entry_type], 'Entry Type', MEDIUM_FIELD)
     errors = errors + get_multi_field_errors(entry_params[:section_type], 'Section Type', MEDIUM_FIELD)
+    errors = errors + get_errors(entry_params[:summary], 'Summary', MEDIUM_FIELD, '')
     errors = errors + get_multi_field_errors(entry_params[:marginalia], 'Marginalia', MEDIUM_FIELD)
     errors = errors + get_multi_field_errors(entry_params[:language], 'Language', MEDIUM_FIELD)
     errors = errors + get_multi_field_errors(entry_params[:subject], 'Subject', MEDIUM_FIELD)

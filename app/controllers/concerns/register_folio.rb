@@ -422,16 +422,25 @@ module RegisterFolio
     existing_location_list = []
 
 
+    # One solr search required for these types - this is because they exist in the Entry object
     if type == 'entry_type' or type == 'language' or type == 'section_type' or type == 'subject'
 
       search_term2 = type + '_tesim:' + element_id
 
-      SolrQuery.new.solr_query(q=search_term2, fl='id, folio_ssim, entry_no_tesim', rows=1000, sort='id ASC')['response']['docs'].map do |result|
+      SolrQuery.new.solr_query(q=search_term2, fl='id, folio_ssim, entry_no_tesim', rows=100000, sort='id ASC')['response']['docs'].map do |result|
+        element = []
+        id = result['id']
         folio_id = result['folio_ssim'].join
         entry_no = result['entry_no_tesim'].join
-        folio = SolrQuery.new.solr_query(q='id:' + folio_id, fl='preflabel_tesim', rows=1000, sort='id ASC')['response']['docs'].map.first['preflabel_tesim'].join
-        existing_location_list << folio + ' (Entry No = ' + entry_no + ')'
+        folio = SolrQuery.new.solr_query(q='id:' + folio_id, fl='preflabel_tesim', rows=100000, sort='id ASC')['response']['docs'].map.first['preflabel_tesim'].join
+        element[0] = id
+        element[1] = folio_id
+        element[2] = folio + ' (Entry No = ' + entry_no + ')'
+        existing_location_list << element
       end
+
+    # Two solr searches required for these types - this is because they exist in sub-objects of the ENtry object
+    # i.e. Date, Related Place and Related Person Group
     else
 
       search_term1 = ''
@@ -444,13 +453,20 @@ module RegisterFolio
       if type == 'person_same_as' then search_term1 = 'person_same_as_tesim'; fl_term = 'relatedAgentFor_ssim' end
       if type == 'place_same_as' then search_term1 = 'place_same_as_tesim'; fl_term = 'relatedPlaceFor_ssim' end
 
-      SolrQuery.new.solr_query(q=search_term1 + ':' + element_id, fl=fl_term, rows=1000, sort='id ASC')['response']['docs'].map do |result|
+      # First find the Date, Related Place or Related Person Group objects which contain the element
+      SolrQuery.new.solr_query(q=search_term1 + ':' + element_id, fl=fl_term, rows=100000, sort='id ASC')['response']['docs'].map do |result|
         search_term2 = 'id:' + result[fl_term].join
-       SolrQuery.new.solr_query(q=search_term2, fl='id, folio_ssim, entry_no_tesim', rows=1000, sort='id ASC')['response']['docs'].map do |result|
+        # Then find out which entries contain them
+        SolrQuery.new.solr_query(q=search_term2, fl='id, folio_ssim, entry_no_tesim', rows=100000, sort='id ASC')['response']['docs'].map do |result|
+          element = []
+          id = result['id']
           folio_id = result['folio_ssim'].join
           entry_no = result['entry_no_tesim'].join
-          folio = SolrQuery.new.solr_query(q='id:' + folio_id, fl='preflabel_tesim', rows=1000, sort='id ASC')['response']['docs'].map.first['preflabel_tesim'].join
-          existing_location_list << folio + ' (Entry No = ' + entry_no + ')'
+          folio = SolrQuery.new.solr_query(q='id:' + folio_id, fl='preflabel_tesim', rows=100000, sort='id ASC')['response']['docs'].map.first['preflabel_tesim'].join
+          element[0] = id
+          element[1] = folio_id
+          element[2] = folio + ' (Entry No = ' + entry_no + ')'
+          existing_location_list << element
         end
       end
    end

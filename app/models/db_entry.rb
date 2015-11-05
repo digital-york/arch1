@@ -1,5 +1,6 @@
 class DbEntry < ActiveRecord::Base
 
+  has_many :db_entry_types
   has_many :db_section_types
   has_many :db_marginalia
   has_many :db_languages

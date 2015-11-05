@@ -1,7 +1,6 @@
 class ErrorsController < ApplicationController
 
   def not_found
-    puts "NOT FOUND"
     render(:status => 404)
   end
 

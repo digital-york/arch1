@@ -1,16 +1,16 @@
 
 <div class="popup popup_subject">
 
-  <div class="popup_title">'<%= @concept_name %>'</div>
+  <div class="popup_title">Concept Exists in Entry</div>
 
   <div><%= link_to 'Go back to search page', concepts_path(@go_back_id, :search_term => @search_term, :list_type => @list_type) %></div>
 
   <div style="margin-top: 10px">
-    The concept '<%= @concept_name %>' exists in one or more entries. Please remove it from the records displayed below (using the main interface) and then click on this button:
+    The concept <strong><%= @concept_name %></strong> exists in one or more entries. Please remove it from the records displayed below (using the main interface) and then click on this button:
   </div>
 
   <div style="margin-top: 5px">
-    <%= button_to 'Delete', concept_path(id), :method => :delete, params: { :search_term => @search_term, :list_type => @list_type }, title: "Delete '#{@concept_name}'" %>
+    <%= button_to 'Refresh', concept_path(id), :method => :delete, params: { :search_term => @search_term, :list_type => @list_type }, title: "Delete '#{@concept_name}'" %>
   </div>
 
   <div style="clear: both"></div>
@@ -19,7 +19,7 @@
 
   <div style="margin-top: 10px; margin-left: 0px">
     <% @existing_location_list.each do |t| %>
-        <div style="margin-top: 5px"><%= t %></div>
+        <div style="margin-top: 5px"><a href="javascript:void(0);" onClick="window.opener.location.href='/entries?id=<%= t[0] %>&amp;folio_id=<%= t[1] %>&amp;set_folio=true'"><%= t[2] %></a></div>
     <% end %>
   </div>
 </div>

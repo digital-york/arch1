@@ -89,25 +89,29 @@
                   <tr>
                     <th>Entry Type:</th>
                     <td>
-                      <% if @db_entry.entry_type != nil %>
-                        <%= terms.get_str_from_id(@db_entry.entry_type, 'preflabel_tesim') %>
+                      <% @db_entry.db_entry_types.each do |entry_type| %>
+                          <div style="padding: 4px 0px">
+                            <% if entry_type != nil %>
+                                <%= terms.get_str_from_id(entry_type.name, 'preflabel_tesim') %>
+                            <% end %>
+                          </div>
                       <% end %>
                     </td>
                   </tr>
 
-                    <%# Section Type %>
-                    <tr>
-                        <th>Section Type:</th>
-                        <td>
-                            <% @db_entry.db_section_types.each do |section_type| %>
-                                <div style="padding: 4px 0px">
-                                    <% if section_type != nil %>
-                                        <%= terms.get_str_from_id(section_type.name, 'preflabel_tesim') %>
-                                    <% end %>
-                                </div>
-                            <% end %>
-                        </td>
-                    </tr>
+                  <%# Section Type %>
+                  <tr>
+                      <th>Section Type:</th>
+                      <td>
+                          <% @db_entry.db_section_types.each do |section_type| %>
+                            <div style="padding: 4px 0px">
+                              <% if section_type != nil %>
+                                <%= terms.get_str_from_id(section_type.name, 'preflabel_tesim') %>
+                              <% end %>
+                            </div>
+                          <% end %>
+                      </td>
+                  </tr>
 
                   <%# Continues On %>
                   <% if @is_last_entry == true %>
@@ -215,7 +219,7 @@
                   <%# Entry Date %>
                   <tr>
 
-                    <th>Date:</th>
+                    <th>Entry Date:</th>
 
                     <td class="tab2">
 

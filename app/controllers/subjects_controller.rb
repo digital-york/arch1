@@ -40,6 +40,9 @@ class SubjectsController < ApplicationController
     # Check parameters are permitted
     subject_params = whitelist_subject_params
 
+    # Remove any empty fields
+    remove_concept_popup_empty_fields(subject_params)
+
     @error = ''
 
     if subject_params[:preflabel] == ''
@@ -79,6 +82,9 @@ class SubjectsController < ApplicationController
 
     # Check parameters are permitted
     subject_params = whitelist_subject_params
+
+    # Remove any empty fields
+    remove_concept_popup_empty_fields(subject_params)
 
     @error = ''
 
@@ -133,7 +139,7 @@ class SubjectsController < ApplicationController
 
   # Never trust parameters from the scary internet, only allow the white list through.
   def whitelist_subject_params
-    params.require(:concept).permit(:preflabel, :definition, :istopconcept, :broader => [])  # Note - arrays need to go at the end or an error occurs!
+    params.require(:concept).permit(:preflabel, :definition, :istopconcept, :broader => [], :altlabel => [])  # Note - arrays need to go at the end or an error occurs!
   end
 
 end

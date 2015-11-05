@@ -286,6 +286,8 @@ $(document).ready(function () {
             var list_array = "";
             if (jq_type == 'language') {
                 list_array = $.parseJSON($(this).attr('jq_language_list'));
+            } else if (jq_type == 'entry_type') {
+                list_array = $.parseJSON($(this).attr('jq_entry_type_list'));
             } else if (jq_type == 'section_type') {
                 list_array = $.parseJSON($(this).attr('jq_section_type_list'));
             }
