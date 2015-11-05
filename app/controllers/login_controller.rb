@@ -6,7 +6,10 @@ class LoginController < ApplicationController
   def login_submit
 
     # Proper authorisation will be added later on
-    if params[:username] == 'test' && params[:password] == 'test'
+    username = params[:username]
+    password = params[:password]
+
+    if (username == 'allinson' or username == 'watt' or username =='young') && password == 'iteotwawki'
 
         # Reset all the session variables at this point
         reset_session_variables

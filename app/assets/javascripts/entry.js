@@ -567,7 +567,7 @@ $(document).ready(function () {
                 "<table>" +
 
                     // Date
-                "<tr><th style='width: 80px'>Date:</th>" +
+                "<tr><th style='width: 120px'>Date (yyyy/mm/dd):</th>" +
                 "<td class='input_single'><input id='' type='text' name='entry[entry_dates_attributes][" + jq_index + "][single_dates_attributes][" + jq_index2 + "][date]'></td>" +
 
                     // Date Certainty
