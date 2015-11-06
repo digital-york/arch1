@@ -112,7 +112,7 @@ class EntriesController < ApplicationController
     @related_place_list << temp
 
     # Add other elements to the related place list, i.e. using RelatedPlace.place_as_written
-    # Note - only add the first place_as_written at index [0] for each RelatedPlace (because there can be more than one)
+    # Note - only add the first place_as_written at index [0] for each Related Place (because there can be more than one)
     @db_entry.db_related_places.each do |related_place|
       temp = []
       if related_place.db_place_as_writtens[0] != nil
@@ -175,8 +175,7 @@ class EntriesController < ApplicationController
       # Add place relations onto people/groups
       update_related_places
 
-      # If entry continues, redirect to the first entry on the next folio
-      # Else redirect to the index page
+      # If entry continues, redirect to the first entry on the next folio, else redirect to the index page
       if next_entry_id != ''
         redirect_to :controller => 'entries', :action => 'edit', :id => next_entry_id
       else

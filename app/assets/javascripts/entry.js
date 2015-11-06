@@ -629,10 +629,11 @@ $(document).ready(function () {
 
         try {
             e.preventDefault(); // I think this prevents other events firing?
+
             var field_single_div = $(this).parent('div');
             field_single_div.css({'display': 'none'});
-            // If the tag type is not null it must be 'select' otherwise it must be 'input'
-            // There could be more types later on though
+
+            // Delete the value from the field
             if ($(this).attr('jq_tag_type') == 'select') {
                 field_single_div.find('select').val('');
             } else if ($(this).attr('jq_tag_type') == 'input') {
@@ -649,7 +650,7 @@ $(document).ready(function () {
         }
     });
 
-    // This code hides Level 2 elements such as Place
+    // This code hides Level 2 elements, i.e. Entry Date, Related Place and Related Person Group elements
     // Note that a hidden field is also added with '_destroy' = '1' - this is necessary to remove associations in Fedora
     $('body').on('click', '.click_remove_field_level2', function (e) {
 
@@ -657,24 +658,33 @@ $(document).ready(function () {
             e.preventDefault(); // I think this prevents other events firing?
             var field_single_div = $(this).parent('div');
             field_single_div.css({'display': 'none'});
+
             // Add a '_destroy' = '1' hidden element to make sure that the block is deleted from Fedora
-            // Note that the code uses the 'Same As' input field to get the index for Place and Person
-            // and the 'Date Role' select field to get the index for Date - maybe there is a better way to get the index?
+            // To do this, need to find out the index of the element we are using
+            // To get the correct index, the code uses the hidden 'input' field for 'Place Name Authority' for 'Related Place',
+            // the 'Person Name Authority' field for 'Related Person Group'
+            // and the 'Note' field for 'Entry Date'
+            // If these fields change, this code will have to be modified
             var params_type = $(this).attr('params_type');
             var target_tag = '';
-            /* WHAT IS THE PURPOSE OF THIS CSS! */
+
             if (params_type == 'entry_dates') {
-                target_tag = field_single_div.find('select');
-                target_tag.css("border", "1px solid red");
+                target_tag = field_single_div.find('textarea');
             } else {
                 target_tag = field_single_div.find('input');
-                target_tag.css("border", "1px solid red");
             }
-            var name = target_tag.attr('name');
-            var index = get_index(name);
-            field_single_div.append("<input type='hidden' name='entry[" + params_type + "_attributes][" + index + "][_destroy]' value='1'>");
 
-            // Update the person 'Related Place' list because an element which is removed shouldn't be shown
+            // Add the hidden field with 'destroy=1' so that this element is deleted when the form is submitted
+            field_single_div.append("<input type='hidden' name='entry[" + params_type + "_attributes][" + get_index(target_tag.attr('name')) + "][_destroy]' value='1'>");
+
+            // Remove the Place As Written value because otherwise it will appear in the 'Related Places' drop-down list
+            if (params_type == 'related_places') {
+                place_as_written_input = field_single_div.find('.place_as_written');
+                place_as_written_input.css('border', '1px solid green');
+                place_as_written_input.val('');
+            }
+
+            // Update the person 'Related Place' list because this element has been removed and shouldn't be in the drop-down list
             update_related_places();
 
         } catch (err) {
@@ -826,7 +836,7 @@ $(document).ready(function () {
 
 });
 
-// This is called if the user changes a place 'As Written' field or the user adds a person
+// This is called if the user changes a place 'As Written' field or the user adds a new place
 // It updates all the person 'Related Place' drop-down lists by adding new terms and removing old terms
 // Note that I tried to do it when the user actually clicked on the 'Related Place' list but there was
 // a problem with removing elements and someone on StackOverflow said that the options are being
@@ -838,20 +848,23 @@ function update_related_places() {
 
     try {
 
-        // Get all the Place As Written values into an array
-        place_as_written_array = new Array();
+        var place_as_written_array = new Array();
 
-        // Note that we only get the first place 'As Written' value for each place (because there can be more than one)
+        // Get all the Place As Written values into an array
+        // nOte that we only look for the first value which is not equal to '' because there can be more than one
         $('.place_as_written_block').each(function (index) {
-            var place_as_written = $(this).find('.place_as_written');
-            if (place_as_written.length > 0) { // This makes sure that the input tag exists before trying to get the value
-                place_as_written_value = place_as_written.val();
-                var field_single_div = $(this).parent('td').parent('tr').parent('tbody').parent('table').parent('div');
-                var is_visible = field_single_div.is(':visible');
-                if (is_visible == true) {
-                    place_as_written_array[index] = place_as_written_value;
-                }
-            }
+
+           var place_as_written_class = $(this).find('.place_as_written')
+
+           place_as_written_class.each(function() {
+
+               place_as_written_value = $(this).val();
+
+               if (place_as_written_value != '') {
+                   place_as_written_array[index] = place_as_written_value;
+                   return false;
+               }
+           });
         });
 
         // Firstly, remove any 'Related Place' options which don't exist anymore in the place 'As Written' text fields

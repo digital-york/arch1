@@ -393,14 +393,17 @@ module RegisterFolio
     end
   end
 
-  # This method adds relatedPlaceFor relations to RelatedPersonGroups by looking up the RelatedPlace id for each person_related_place
+  # This method adds adds Related Person Group ids to the relatedPlaceFor field in Related Place
   def update_related_places
     begin
+      # Get each Related Place for the Entry...
       q = 'relatedPlaceFor_ssim:"' + @entry.id + '"'
       SolrQuery.new.solr_query(q, 'id,place_as_written_tesim', 50)['response']['docs'].each do |result|
-        q = 'relatedAgentFor_ssim:"' + @entry.id + '" AND person_related_place_tesim:"' + result['place_as_written_tesim'][0] + '"'
+        # Get each person_related_place string (i.e. as chosen from the drop-down list) for each Related Person Group in the Entry
         begin
+          q = 'relatedAgentFor_ssim:"' + @entry.id + '" AND person_related_place_tesim:"' + result['place_as_written_tesim'][0] + '"'
           SolrQuery.new.solr_query(q, 'id,person_related_place_tesim', 50)['response']['docs'].each do |res|
+            # add the Related Person id to the related_place_for field in the Related Place
             place = RelatedPlace.where(id: result['id']).first
             places = place.related_person_group
             places += [RelatedPersonGroup.where(id: res['id']).first]
