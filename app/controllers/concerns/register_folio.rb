@@ -136,11 +136,25 @@ module RegisterFolio
 
   # Determines if the 'Continues on next folio' row and 'Continues' button are to be displayed
   def is_last_entry(entry)
+    @is_last_entry = false
     if entry != nil
-      @is_last_entry = false
       max_entry_no = get_max_entry_no_for_folio
       if entry.entry_no.to_i >= max_entry_no.to_i
         @is_last_entry = true
+      end
+    end
+  end
+
+  # Determines if this is the last entry on a folio which is continued from the previous folio
+  # i.e. the previous folio 'continues_on' field is populated
+  def is_last_entry_for_continues_on(entry)
+    @is_last_entry_for_continues_on = false
+    if entry != nil
+      SolrQuery.new.solr_query('continues_on_tesim:' + session[:folio_id], 'id', 1, 'entry_no_si asc')['response']['docs'].map do |result|
+        entry_count = SolrQuery.new.solr_query('folio_ssim:' + session[:folio_id], 'id', 100, 'id asc')['response']['docs'].map.size
+        if entry_count <= 1
+          @is_last_entry_for_continues_on = true
+        end
       end
     end
   end
@@ -289,7 +303,7 @@ module RegisterFolio
     # This is an array of arrays ('id' and 'entry_no')
     @entry_list = []
 
-    SolrQuery.new.solr_query(q='has_model_ssim:Entry AND folio_ssim:' + session[:folio_id], fl='id,entry_no_tesim', rows=1000, sort='id asc')['response']['docs'].map.each do |result|
+    SolrQuery.new.solr_query(q='has_model_ssim:Entry AND folio_ssim:' + session[:folio_id], fl='id,entry_no_tesim', rows=1000, sort='entry_no_si asc')['response']['docs'].map.each do | result |
       id = result['id']
       entry_no = result['entry_no_tesim'].join
       temp = []
@@ -339,14 +353,17 @@ module RegisterFolio
     end
   end
 
-  # This method adds relatedPlaceFor relations to RelatedPersonGroups by looking up the RelatedPlace id for each person_related_place
+  # This method adds adds Related Person Group ids to the relatedPlaceFor field in Related Place
   def update_related_places
     begin
+      # Get each Related Place for the Entry...
       q = 'relatedPlaceFor_ssim:"' + @entry.id + '"'
       SolrQuery.new.solr_query(q, 'id,place_as_written_tesim', 50)['response']['docs'].each do |result|
-        q = 'relatedAgentFor_ssim:"' + @entry.id + '" AND person_related_place_tesim:"' + result['place_as_written_tesim'][0] + '"'
+        # Get each person_related_place string (i.e. as chosen from the drop-down list) for each Related Person Group in the Entry
         begin
+          q = 'relatedAgentFor_ssim:"' + @entry.id + '" AND person_related_place_tesim:"' + result['place_as_written_tesim'][0] + '"'
           SolrQuery.new.solr_query(q, 'id,person_related_place_tesim', 50)['response']['docs'].each do |res|
+            # add the Related Person id to the related_place_for field in the Related Place
             place = RelatedPlace.where(id: result['id']).first
             places = place.related_person_group
             places += [RelatedPersonGroup.where(id: res['id']).first]
@@ -368,16 +385,25 @@ module RegisterFolio
     existing_location_list = []
 
 
+    # One solr search required for these types - this is because they exist in the Entry object
     if type == 'entry_type' or type == 'language' or type == 'section_type' or type == 'subject'
 
       search_term2 = type + '_tesim:' + element_id
 
-      SolrQuery.new.solr_query(q=search_term2, fl='id, folio_ssim, entry_no_tesim', rows=1000, sort='id ASC')['response']['docs'].map do |result|
+      SolrQuery.new.solr_query(q=search_term2, fl='id, folio_ssim, entry_no_tesim', rows=100000, sort='id ASC')['response']['docs'].map do |result|
+        element = []
+        id = result['id']
         folio_id = result['folio_ssim'].join
         entry_no = result['entry_no_tesim'].join
-        folio = SolrQuery.new.solr_query(q='id:' + folio_id, fl='preflabel_tesim', rows=1000, sort='id ASC')['response']['docs'].map.first['preflabel_tesim'].join
-        existing_location_list << folio + ' (Entry No = ' + entry_no + ')'
+        folio = SolrQuery.new.solr_query(q='id:' + folio_id, fl='preflabel_tesim', rows=100000, sort='id ASC')['response']['docs'].map.first['preflabel_tesim'].join
+        element[0] = id
+        element[1] = folio_id
+        element[2] = folio + ' (Entry No = ' + entry_no + ')'
+        existing_location_list << element
       end
+
+    # Two solr searches required for these types - this is because they exist in sub-objects of the ENtry object
+    # i.e. Date, Related Place and Related Person Group
     else
 
       search_term1 = ''
@@ -404,13 +430,20 @@ module RegisterFolio
         search_term1 = 'place_same_as_tesim'; fl_term = 'relatedPlaceFor_ssim'
       end
 
-      SolrQuery.new.solr_query(q=search_term1 + ':' + element_id, fl=fl_term, rows=1000, sort='id ASC')['response']['docs'].map do |result|
+      # First find the Date, Related Place or Related Person Group objects which contain the element
+      SolrQuery.new.solr_query(q=search_term1 + ':' + element_id, fl=fl_term, rows=100000, sort='id ASC')['response']['docs'].map do |result|
         search_term2 = 'id:' + result[fl_term].join
-        SolrQuery.new.solr_query(q=search_term2, fl='id, folio_ssim, entry_no_tesim', rows=1000, sort='id ASC')['response']['docs'].map do |result|
+        # Then find out which entries contain them
+        SolrQuery.new.solr_query(q=search_term2, fl='id, folio_ssim, entry_no_tesim', rows=100000, sort='id ASC')['response']['docs'].map do |result|
+          element = []
+          id = result['id']
           folio_id = result['folio_ssim'].join
           entry_no = result['entry_no_tesim'].join
-          folio = SolrQuery.new.solr_query(q='id:' + folio_id, fl='preflabel_tesim', rows=1000, sort='id ASC')['response']['docs'].map.first['preflabel_tesim'].join
-          existing_location_list << folio + ' (Entry No = ' + entry_no + ')'
+          folio = SolrQuery.new.solr_query(q='id:' + folio_id, fl='preflabel_tesim', rows=100000, sort='id ASC')['response']['docs'].map.first['preflabel_tesim'].join
+          element[0] = id
+          element[1] = folio_id
+          element[2] = folio + ' (Entry No = ' + entry_no + ')'
+          existing_location_list << element
         end
       end
     end

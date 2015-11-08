@@ -17,15 +17,24 @@ namespace :persons do
     puts 'Creating the Concept Scheme'
 
     begin
+<<<<<<< HEAD
       @scheme = ConceptScheme.new
       @scheme.preflabel = "people"
       @scheme.rdftype = @scheme.add_rdf_types
       @scheme.save
       puts "Concept scheme for person created at #{@scheme.id}"
+=======
+      #@scheme = ConceptScheme.new
+      #@scheme.preflabel = "people"
+      #@scheme.rdftype = @scheme.add_rdf_types
+      #@scheme.save
+      #puts "Concept scheme for person created at #{@scheme.id}"
+>>>>>>> origin/master
     rescue
       puts $!
     end
 
+<<<<<<< HEAD
     puts 'Processing the person. This may take some time ... '
 
     AUTHS =
@@ -33,6 +42,12 @@ namespace :persons do
           'Heads of Religious Houses, III' => 'http://www.cambridge.org/gb/academic/subjects/history/british-history-1066-1450/heads-religious-houses-england-and-wales-iii-13771540?format=PB',
           'Fasti' => 'http://www.british-history.ac.uk/search/series/fasti-ecclesiae',
           'ODNB' => 'http://www.oxforddnb.com/' }
+=======
+    # added by py
+    @scheme = ConceptScheme.where(preflabel_tesim: 'people').first;
+
+    puts 'Processing the person. This may take some time ... '
+>>>>>>> origin/master
 
     arr = CSV.read(Rails.root + 'lib/assets/lists/persons.csv')
 
@@ -87,12 +102,18 @@ namespace :persons do
               rel.gsub!('; ',';')
             end
             a = rel.split(';')
+<<<<<<< HEAD
             a.each do | |
               p.related_authority += [AUTHS[a]]
             end
 
           else
             p.related_authority += [AUTHS[c[9]]]
+=======
+            p.related_authority += a
+          else
+            p.related_authority += [c[9]]
+>>>>>>> origin/master
           end
         end
         unless c[10].nil?

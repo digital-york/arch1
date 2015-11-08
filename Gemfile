@@ -8,7 +8,10 @@ gem 'dotenv-rails', :groups => [:development, :test, :production]
 gem 'qa', :git => 'https://github.com/projecthydra-labs/questioning_authority.git', :branch => 'master'
 
 # gem 'hydra', '9.0.0'
-# install hydra gems individually
+
+gem 'jquery-ui-rails'
+
+# Install hydra gems individually
 gem 'active-fedora'
 gem 'hydra-head'
 gem 'om'
@@ -19,7 +22,9 @@ gem 'active-triples'
 gem 'nom-xml'
 gem 'activefedora-aggregation', '~> 0.5.0'
 
-gem 'active_fedora-noid'
+#gem 'active_fedora-noid'
+gem 'active_fedora-noid', '1.0.0'
+
 gem 'nokogiri'
 # gem 'thin'
 

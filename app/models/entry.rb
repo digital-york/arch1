@@ -20,7 +20,7 @@ class Entry < ActiveFedora::Base
     index.as :stored_searchable, :sortable
   end
 
-  property :entry_type, predicate: ::RDF::URI.new('http://dlib.york.ac.uk/ontologies/borthwick-registers#entryType'), multiple: false do |index|
+  property :entry_type, predicate: ::RDF::URI.new('http://dlib.york.ac.uk/ontologies/borthwick-registers#entryType'), multiple: true do |index|
     index.as :stored_searchable
   end
 

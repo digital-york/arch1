@@ -13,7 +13,7 @@
         <%= button_to "Add Place", new_place_path, method: :get, params: {:search_term => @search_term, :place_field => @place_field}, style: 'margin-top: -5px', title: 'Add element' %>
         <%= link_to 'Go back to admin page', admins_path, style: 'margin-left: 6px' %>
     <% else %>
-        <%= link_to 'Click here to open the admin interface (to edit places)', '#', onclick: "popup('/admins?start=true', 'admin'); return false;" %>
+        <%= link_to 'Click here to edit places in the Admin interface', '#', onclick: "popup('/admins?start=true', 'admin'); return false;" %>
     <% end %>
   </div>
 
@@ -44,9 +44,6 @@
 
         <div style="font-size: 1.1em">
           Results: <strong><%= @search_array.size %></strong>
-          <% if @search_array.size > 0 %>
-            &nbsp;(please choose a place from the list below):
-         <% end %>
         </div>
 
         <div style="clear: both"></div>
@@ -86,7 +83,7 @@
                    id = array_element[0]
                    name = array_element[1]
               %>
-                  <div style="margin-top: 5px"><%= link_to name, '#', onClick: "post_value('#{name}', '#{id}', '#{params[:place_field]}')", style: 'color: #7e2c2c' %></div>
+                  <div style="margin-top: 5px"><%= link_to name, '#', onClick: "post_value('#{name}', '#{id}', '#{params[:place_field]}')", style: 'color: #7e2c2c; font-style: italic' %></div>
               <% end %>
           <% end %>
         </div>

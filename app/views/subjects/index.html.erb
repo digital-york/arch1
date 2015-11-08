@@ -12,10 +12,10 @@
     <% if @subject_field == nil %>
         <%= button_to "Add Top-Level Subject", new_subject_path, method: :get, params: { :go_back_id => 'none' }, style: 'margin-top: -5px', title: 'Add top-level subject' %>
         <%= link_to 'Go back to admin page', admins_path, style: 'margin-left: 6px' %>
-  <% else %>
+    <% else %>
         <div>
-          Please click on a link below to choose a subject:
-          <%= link_to '(click here to edit subjects)', '#', onclick: "popup('/admins?start=true', 'admin'); return false;" %>
+          <a href="/subjects?subject_field=<%= params[:subject_field] %>"><input type="button" value="Refresh Page"></a>
+          <%= link_to 'Click here to edit subjects', '#', onclick: "popup('/admins?start=true', 'admin'); return false;" %>
         </div>
     <% end %>
   </div>
@@ -51,9 +51,9 @@
           <td style="padding: 0px 0px 4px 0px; color: #000000; font-size: 1.2em">
             <span style="margin-left: 40px">
               <% if @subject_field == nil %>
-                <%= second_level_label %>
+                - <%= second_level_label %>
               <% else %>
-                <%= link_to second_level_label, '#', onClick: "post_value('#{second_level_label}', '#{second_level_id}', '#{params[:subject_field]}')", style: 'color: #0B51FE' %>
+                - <%= link_to second_level_label, '#', onClick: "post_value('#{second_level_label}', '#{second_level_id}', '#{params[:subject_field]}')", style: 'color: #7e2c2c' %>
               <% end %>
              </span>
            </td>
@@ -68,9 +68,9 @@
             <td style="padding: 0px 0px 3px 0px; color: #262626; font-style: italic; font-size: 1.1em">
               <span style="margin-left: 70px;">
                 <% if @subject_field == nil %>
-                  <%= third_level_label %>
+                  - <%= third_level_label %>
                 <% else %>
-                  <%= link_to third_level_label, '#', onClick: "post_value('#{third_level_label}', '#{third_level_id }', '#{params[:subject_field]}')", style: 'color: #434141' %>
+                  - <%= link_to third_level_label, '#', onClick: "post_value('#{third_level_label}', '#{third_level_id }', '#{params[:subject_field]}')", style: 'color: #7e2c2c' %>
                 <% end %>
              </span>
               </span>

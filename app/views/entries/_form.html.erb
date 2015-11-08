@@ -56,7 +56,6 @@
 
   <%= form_for @db_entry, url: eval(form_url), method: eval(form_method) do |f| %>
 
-        <%#= f.hidden_field :folio, :value => session[:folio_id] %>
       <input type="hidden" name="entry[folio]" value="<%= session[:folio_id] %>"/>
 
         <div id='form_modified'>
@@ -145,10 +144,19 @@
 
                     <%# Entry Type %>
                     <tr>
-                        <th>Entry Type:</th>
-                        <td>
-                            <%= select_tag 'entry[entry_type]', options_for_select(@entry_type_list.collect { |entry_type| [entry_type["label"].join(''), entry_type["id"]] }.insert(0, ["--- select ---", ""]), @db_entry.entry_type) %>
-                        </td>
+                      <th>Entry Type:
+                        <img src="/assets/plus_sign.png" alt="plus icon" class="plus_icon click_select_field_button" jq_type="entry_type" jq_entry_type_list="<%= @entry_type_list.to_json %>"/>
+                      </th>
+                      <td>
+                        <div class="field_group">
+                          <% @db_entry.db_entry_types.each do |entry_type| %>
+                              <div class="field_single">
+                                <%= select_tag 'entry[entry_type][]', options_for_select(@entry_type_list.collect { |entry_type| [entry_type["label"].join(''), entry_type["id"]] }.insert(0, ["--- select ---", ""]), entry_type.name) %>
+                                <img alt="Delete icon" src="/assets/delete.png" class="delete_icon_select click_remove_field_level1" jq_tag_type="select">
+                              </div>
+                          <% end %>
+                        </div>
+                      </td>
                     </tr>
 
                     <%# Section Type %>
@@ -299,7 +307,7 @@
                     <tr>
 
                         <th>
-                          Date:
+                          Entry Date:
                           <img src="/assets/plus_sign.png" alt="plus icon" class="plus_icon click_date_button" jq_date_certainty_list="<%= @date_certainty_list %>" jq_single_date_list="<%= @single_date_list %>" jq_date_role_list="<%= @date_role_list.to_json %>" jq_rdftype='["http://dlib.york.ac.uk/ontologies/borthwick-registers#EntryDate"]'/>
                         </th>
 
@@ -325,7 +333,7 @@
 
                                                                     <%# Date %>
                                                                     <tr>
-                                                                       <th style='width: 80px'>Date:</th>
+                                                                       <th style='width: 120px'>Date (yyyy/mm/dd):</th>
                                                                         <td class="input_single"><%= text_field_tag "entry[entry_dates_attributes][" + index1.to_s + "][single_dates_attributes][" + index2.to_s + "][date]", single_date.date, id: '' %></td>
                                                                     </tr>
 

@@ -1,9 +1,7 @@
 <div class="login" style="margin-top: 100px">
 
-  <% if @error == 'true' %>
-      <div class='message error' style="display: inline-block; padding: 5px 20px 8px 20px">Invalid username and / or
-        password
-      </div>
+  <% if @invalid_login == 'true' %>
+      <div class='message error' style="text-align: center; width: 300px; margin: 5px auto 12px auto">Invalid username and / or password</div>
   <% end %>
 
   <div style="">

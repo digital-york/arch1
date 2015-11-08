@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system
 
-ActiveRecord::Schema.define(version: 20151007160634) do
+ActiveRecord::Schema.define(version: 20151105103041) do
 
   create_table "bookmarks", force: :cascade do |t|
     t.integer  "user_id",       null: false
@@ -41,7 +41,6 @@ ActiveRecord::Schema.define(version: 20151007160634) do
 
   create_table "db_entries", force: :cascade do |t|
     t.string "entry_no"
-    t.string "entry_type"
     t.string "summary"
     t.string "continues_on"
     t.string "entry_id"
@@ -55,6 +54,15 @@ ActiveRecord::Schema.define(version: 20151007160634) do
   end
 
   add_index "db_entry_dates", ["db_entry_id"], name: "index_db_entry_dates_on_db_entry_id"
+
+  create_table "db_entry_types", force: :cascade do |t|
+    t.string   "name"
+    t.integer  "db_entry_id"
+    t.datetime "created_at",  null: false
+    t.datetime "updated_at",  null: false
+  end
+
+  add_index "db_entry_types", ["db_entry_id"], name: "index_db_entry_types_on_db_entry_id"
 
   create_table "db_is_referenced_bies", force: :cascade do |t|
     t.string  "name"

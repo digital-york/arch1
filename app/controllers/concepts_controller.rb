@@ -21,7 +21,7 @@ class ConceptsController < ApplicationController
     @search_array = []
 
     # Get Concepts for the ConceptScheme and filter according to search_term
-    SolrQuery.new.solr_query(q='has_model_ssim:Concept AND inScheme_ssim:' + get_concept_scheme_id(@list_type), fl='id, preflabel_tesim, altlabel_tesim, description_tesim', rows=1000, sort='id asc')['response']['docs'].map.each do |result|
+    SolrQuery.new.solr_query(q='has_model_ssim:Concept AND inScheme_ssim:' + get_concept_scheme_id(@list_type), fl='id, preflabel_tesim, altlabel_tesim, definition_tesim', rows=1000, sort='id asc')['response']['docs'].map.each do |result|
 
       concept_id = result['id']
       preflabel = result['preflabel_tesim'].join
@@ -37,11 +37,11 @@ class ConceptsController < ApplicationController
           altlabel = []
         end
         tt << altlabel
-        description = result['description_tesim']
-        if description != nil
-          description = description.join
+        definition = result['definition_tesim']
+        if definition != nil
+          definition = definition.join
         end
-        tt << description
+        tt << definition
         @search_array << tt
       end
     end
@@ -87,9 +87,13 @@ class ConceptsController < ApplicationController
     @concept = Concept.new(concept_params)
 
     if @error != ''
-      render 'new', :locals => { :@search_term => params[:search_term], :@list_type => params[:list_type] }
+      @list_type = params[:list_type]
+      @search_term = params[:search_term]
+      #render 'new', :locals => { :@search_term => params[:search_term], :@list_type => params[:list_type] }
+      render 'new'
     else
       @concept.concept_scheme_id = get_concept_scheme_id(params[:list_type])
+      @concept.rdftype << @concept.add_rdf_types
       @concept.save
       redirect_to :controller => 'concepts', :action => 'index', :search_term => params[:search_term], :list_type => params[:list_type]
     end
@@ -115,13 +119,11 @@ class ConceptsController < ApplicationController
     @concept.attributes = concept_params
 
     if @error != ''
-      render 'edit', :locals => { :@search_term => params[:search_term], :@list_type => params[:list_type] }
+      @search_term = params[:search_term]
+      @list_type = params[:list_type]
+      render 'edit'
     else
-
-      # Save the concept
-      @concept.concept_scheme_id = get_concept_scheme_id(params[:list_type])
       @concept.save
-
       redirect_to :controller => 'concepts', :action => 'index', :search_term => params[:search_term], :list_type => params[:list_type]
     end
   end
@@ -147,7 +149,7 @@ class ConceptsController < ApplicationController
 
   # Never trust parameters from the scary internet, only allow the white list through.
   def whitelist_concept_params
-    params.require(:concept).permit! # Note - this needs changing because it allows through all params at the moment!!
+    params.require(:concept).permit(:preflabel, :definition, :altlabel => []) # Note - arrays need to go at the end or an error occurs!
   end
 
 end

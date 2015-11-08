@@ -3,7 +3,10 @@ class RelatedPersonGroup < ActiveFedora::Base
   include AssignId,RdfType
 
   belongs_to :entry, predicate: ::RDF::URI.new('http://dlib.york.ac.uk/ontologies/borthwick-registers#relatedAgentFor')
-  has_many :related_places, :dependent => :destroy
+
+  # Commented out 'dependent => destrpy' because it causes problems when a 'Related Place' is chosen from the drop-down list
+  # Basically, deleting a Related Person with such a link results in a 'tombstone' error because of the 'related_place_for' field
+  has_many :related_places #, :dependent => :destroy
   accepts_nested_attributes_for :related_places, :allow_destroy => true, :reject_if => :all_blank
 
   def add_rdf_types_p

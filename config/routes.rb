@@ -2,7 +2,7 @@ Rails.application.routes.draw do
 
   mount Qa::Engine => '/qa'
 
-  root 'login#login_temp'
+  root 'login#index'
 
   # Create multiple routes,
   resources :entries
@@ -10,6 +10,7 @@ Rails.application.routes.draw do
   resources :places
   resources :people
   resources :subjects
+  resources :errors
 
   # Create single routes
   get 'image_zoom_large' => 'image_zoom_large#index'
@@ -22,6 +23,9 @@ Rails.application.routes.draw do
   get 'browse_folios' => 'browse_folios#index'
   get 'go_entries' => 'landing_page#go_entries'
   get 'admins' => 'admins#index'
+
+  get "/404" => "errors#not_found"
+  get "/500" => "errors#internal_server_error"
 
   #root :to => "catalog#login"
   #blacklight_for :catalog

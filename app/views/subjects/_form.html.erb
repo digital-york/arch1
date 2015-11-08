@@ -43,16 +43,36 @@
 
           <%# Subject Name (preflabel) %>
           <tr>
-            <th style="width: 50px">Subject:</th>
+            <th style="width: 120px">*Subject:</th>
             <td>
               <%= text_field_tag "concept[preflabel]", @concept.preflabel %>
             </td>
           </tr>
+
+          <%# Alternate Label %>
+          <tr>
+            <th>
+              Alternate Label:
+              <img src="/assets/plus_sign.png" alt="plus icon" class="plus_icon click_popup_multiple_field_button" jq_type_1='concept' jq_type_2="altlabel"/>
+            </th>
+            <td>
+              <div class="field_group">
+                <% @concept.altlabel.each do |altlabel| %>
+                    <div class="field_single">
+                      <%= text_field_tag 'concept[altlabel][]', altlabel %>
+                      <img alt="Delete icon" src="/assets/delete.png" class="delete_icon click_remove_field_level1" jq_tag_type="input">
+                    </div>
+                <% end %>
+              </div>
+            </td>
           </tr>
-          <th>Definition</th>
-           <td>
-             <%= text_field_tag "concept[definition]", @concept.definition %>
-           </td>
+
+          <%# Definition %>
+          <tr>
+            <th>Definition</th>
+            <td>
+              <%= text_field_tag "concept[definition]", @concept.definition %>
+            </td>
           </tr>
 
         </table>

@@ -32,7 +32,7 @@ class EntriesController < ApplicationController
         # Get the first entry for the folio if there isn't an id
         # Else get the specified entry
         if params[:id] == nil or params[:id] == ''
-          SolrQuery.new.solr_query('folio_ssim:"' + session[:folio_id] + '"', 'id', 1, 'id asc')['response']['docs'].map do |result|
+          SolrQuery.new.solr_query('folio_ssim:"' + session[:folio_id] + '"', 'id', 1, 'entry_no_si asc')['response']['docs'].map do |result|
             @db_entry.entry_id = result['id']
           end
         else
@@ -48,6 +48,10 @@ class EntriesController < ApplicationController
 
         # Determine if the 'New Entry' Tab and '(continues)' text are to be displayed
         set_folio_continues_id
+
+        # Determines if this is the last entry on a folio which is continued from the previous folio
+        # i.e. the previous folio 'continues_on' field is populated
+        is_last_entry_for_continues_on(@db_entry)
       end
     end
   end
@@ -108,7 +112,7 @@ class EntriesController < ApplicationController
     @related_place_list << temp
 
     # Add other elements to the related place list, i.e. using RelatedPlace.place_as_written
-    # Note - only add the first place_as_written at index [0] for each RelatedPlace (because there can be more than one)
+    # Note - only add the first place_as_written at index [0] for each Related Place (because there can be more than one)
     @db_entry.db_related_places.each do |related_place|
       temp = []
       if related_place.db_place_as_writtens[0] != nil
@@ -125,7 +129,7 @@ class EntriesController < ApplicationController
   # CREATE
   def create
 
-    # Redirect back to the index page if the user has clciked the 'Back' button
+    # Redirect back to the index page if the user has clicked the 'Back' button
     if params['commit'] == 'Back'
       redirect_to :controller => 'entries', :action => 'index', :id => ''
       return
@@ -146,22 +150,14 @@ class EntriesController < ApplicationController
     remove_empty_fields(entry_params)
 
     # Check for errors
-    @errors = check_for_errors(entry_params)
+    #@errors = check_for_errors(entry_params)
 
     # Populate new entry with the entry_params
     @entry = Entry.new(entry_params)
 
     # If there are errors, go back to the 'new' page and display the errors, else go to the 'index' page
     if @errors != '' && @errors != nil
-
-      # Set various lists, e.g. authority_list, folio_list
-      set_lists(@entry)
-
-      # Note: it would be better to 'redirect' to the 'edit' controller rather than 'render' to the 'edit' page
-      # because we wouldn't have to set_authority_lists, etc, but 'redirect' loses the state of the nested form, i.e.
-      # it seems that any fields which have been added with the + buttons are closed again
-      render 'new'
-
+      # No checks
     else
 
       # If entry continues, create a new entry on the next folio and save
@@ -172,14 +168,14 @@ class EntriesController < ApplicationController
         next_entry_id = create_next_entry(@is_entry_on_next_folio)
       end
 
-      @entry.rdftype = @entry.add_rdf_types
+     # Add rdftype and save
+      @entry.rdftype << @entry.add_rdf_types
       @entry.save
 
       # Add place relations onto people/groups
       update_related_places
 
-      # If entry continues, redirect to the first entry on the next folio
-      # Else redirect to the index page
+      # If entry continues, redirect to the first entry on the next folio, else redirect to the index page
       if next_entry_id != ''
         redirect_to :controller => 'entries', :action => 'edit', :id => next_entry_id
       else
@@ -214,7 +210,7 @@ class EntriesController < ApplicationController
     remove_empty_fields(entry_params)
 
     # Check for errors
-    @errors = check_for_errors(entry_params)
+    #@errors = check_for_errors(entry_params)
 
     # Get an entry object using the id and populate it with the entry parameters
     @entry = Entry.find(params[:id])
@@ -223,15 +219,7 @@ class EntriesController < ApplicationController
 
     # If there are errors, render the go back to the 'edit' page and display the errors, else go to the 'index' page
     if @errors != '' && @errors != nil
-
-      # Set various lists, e.g. authority_list, folio_list
-      set_lists(@entry)
-
-      # Note: it would be better to 'redirect' to the 'edit' controller rather than 'render' to the 'edit' page
-      # because we wouldn't have to set_authority_lists, etc, but 'redirect' loses the state of the nested form, i.e.
-      # any fields which have been added are closed again??
-      render 'edit'
-
+      # No checks
     else
 
       # If entry continues, create a new entry on the next folio and save
@@ -242,7 +230,7 @@ class EntriesController < ApplicationController
         next_entry_id = create_next_entry(@is_entry_on_next_folio)
       end
 
-      # Save form data to Fedora
+      # Save entry
       @entry.save
 
       update_related_places
@@ -259,9 +247,25 @@ class EntriesController < ApplicationController
 
   # DESTROY
   def destroy
+
     @entry = Entry.find(params[:id])
-    @entry.destroy
-    redirect_to entries_path
+
+    can_delete = true
+
+    SolrQuery.new.solr_query('continues_on_tesim:' + session[:folio_id], 'id', 1, 'entry_no_si asc')['response']['docs'].map do |result|
+      entry_count = SolrQuery.new.solr_query('folio_ssim:' + session[:folio_id], 'id', 100, 'id asc')['response']['docs'].map.size
+      if entry_count <= 1
+        can_delete = false
+      end
+    end
+
+    if can_delete == true
+      @entry.destroy
+    else
+      delete_error = "Please 'Discontinue' the last entry on the previous folio before deleting this entry"
+    end
+
+    redirect_to :controller => 'entries', :action => 'index', :delete_error => delete_error
   end
 
   # PRIVATE METHODS
@@ -291,313 +295,10 @@ class EntriesController < ApplicationController
 
   # Never trust parameters from the scary internet, only allow the white list through.
   def whitelist_entry_params
-    params.require(:entry).permit! # Note - this needs changing because it allows through all params at the moment!!
-    #params.require(:entry).permit(:entry_no, :access_provided_by, editorial_notes_attributes: [:id, :editorial_note, :_destroy], people_attributes: [:id, :name_as_written, :note, :age, :gender, :name_authority, :_destroy])
+    params.require(:entry).permit(:folio, :entry_no, :summary, :entry_type => [], :section_type => [], :marginalia => [],  :language => [], :subject => [], :note => [], :editorial_note => [], :is_referenced_by => [],
+    :entry_dates_attributes => [:id, :_destroy, :date_role, :date_note, :single_dates_attributes => [:id, :_destroy, :date, :date_type, :date_certainty => []]],
+    :related_places_attributes => [:id, :_destroy, :place_same_as, :place_as_written => [], :place_role => [], :place_type => [], :place_note => []],
+    :related_person_groups_attributes => [:id, :_destroy, :person_same_as, :person_gender, :person_as_written => [], :person_role => [], :person_descriptor => [], :person_descriptor_as_written => [], :person_note => [], :person_related_place => []])
   end
 
-  def get_solr_data(db_entry)
-
-    SolrQuery.new.solr_query('id:' + db_entry.entry_id, 'entry_no_tesim, entry_type_tesim, section_type_tesim, continues_on_tesim, summary_tesim, marginalia_tesim, language_tesim, subject_tesim, note_tesim, editorial_note_tesim, is_referenced_by_tesim', 1)['response']['docs'].map do |result|
-
-      if result['entry_no_tesim'] != nil
-
-        db_entry.id = db_entry.entry_id.gsub(/test:/, '').to_i
-
-        db_entry.entry_no = result['entry_no_tesim'].join()
-
-        if result['entry_type_tesim'] != nil
-          db_entry.entry_type = result['entry_type_tesim'].join()
-        end
-
-        section_type_list = result['section_type_tesim'];
-
-        if section_type_list != nil
-          section_type_list.each do |tt|
-            db_section_type = DbSectionType.new
-            db_section_type.name = tt
-            db_entry.db_section_types << db_section_type
-          end
-        end
-
-        if result['continues_on_tesim'] != nil
-          db_entry.continues_on = result['continues_on_tesim'].join()
-        end
-
-        summary = result['summary_tesim']
-
-        if summary != nil
-          db_entry.summary = summary.join()
-        end
-
-        marginalium_list = result['marginalia_tesim'];
-
-        if marginalium_list != nil
-          marginalium_list.each do |tt|
-            db_marginalium = DbMarginalium.new
-            db_marginalium.name = tt
-            db_entry.db_marginalia << db_marginalium
-          end
-        end
-
-        language_list = result['language_tesim'];
-
-        if language_list != nil
-          language_list.each do |tt|
-            db_language = DbLanguage.new
-            db_language.name = tt
-            db_entry.db_languages << db_language
-          end
-        end
-
-        subject_list = result['subject_tesim'];
-
-        if subject_list != nil
-          subject_list.each do |tt|
-            db_subject = DbSubject.new
-            db_subject.name = tt
-            db_entry.db_subjects << db_subject
-          end
-        end
-
-        note_list = result['note_tesim'];
-
-        if note_list != nil
-          note_list.each do |tt|
-            db_note = DbNote.new
-            db_note.name = tt
-            db_entry.db_notes << db_note
-          end
-        end
-
-        editorial_note_list = result['editorial_note_tesim'];
-
-        if editorial_note_list != nil
-          editorial_note_list.each do |tt|
-            db_editorial_note = DbEditorialNote.new
-            db_editorial_note.name = tt
-            db_entry.db_editorial_notes << db_editorial_note
-          end
-        end
-
-        is_referenced_by_list = result['is_referenced_by_tesim'];
-
-        if is_referenced_by_list != nil
-          is_referenced_by_list.each do |tt|
-            db_is_referenced_by = DbIsReferencedBy.new
-            db_is_referenced_by.name = tt
-            db_entry.db_is_referenced_bys << db_is_referenced_by
-          end
-        end
-
-        SolrQuery.new.solr_query('has_model_ssim:EntryDate AND entryDateFor_ssim:' + db_entry.entry_id, 'id, date_role_tesim, date_note_tesim', 100)['response']['docs'].map do |result|
-
-          date_id = result['id'];
-
-          if date_id != nil
-
-            db_entry_date = DbEntryDate.new
-
-            db_entry_date.id = date_id.gsub(/test:/, '').to_i
-
-            SolrQuery.new.solr_query('has_model_ssim:SingleDate AND dateFor_ssim:' + date_id, 'id, date_tesim, date_type_tesim, date_certainty_tesim', 100)['response']['docs'].map do |result2|
-
-              single_date_id = result2['id'];
-
-              if single_date_id != nil
-
-                db_single_date = DbSingleDate.new
-
-                db_single_date.id = single_date_id.gsub(/test:/, '').to_i
-
-                date_certainty_list = result2['date_certainty_tesim'];
-
-                if date_certainty_list != nil
-                  date_certainty_list.each do |tt|
-                    db_date_certainty = DbDateCertainty.new
-                    db_date_certainty.name = tt
-                    db_single_date.db_date_certainties << db_date_certainty
-                  end
-                end
-
-                date = result2['date_tesim']
-
-                if date != nil
-                  db_single_date.date = date.join()
-                end
-
-                date_type = result2['date_type_tesim']
-
-                if date_type != nil
-                  db_single_date.date_type = date_type.join()
-                end
-
-                db_entry_date.db_single_dates << db_single_date
-              end
-            end
-
-            date_role = result['date_role_tesim']
-
-            if date_role != nil
-              db_entry_date.date_role = date_role.join()
-            end
-
-            date_note = result['date_note_tesim']
-
-            if date_note != nil
-              db_entry_date.date_note = date_note.join()
-            end
-
-            db_entry.db_entry_dates << db_entry_date
-          end
-        end
-
-        SolrQuery.new.solr_query('has_model_ssim:RelatedPlace AND relatedPlaceFor_ssim:"' + db_entry.entry_id + '"', 'id, place_same_as_tesim, place_as_written_tesim, place_role_tesim, place_type_tesim, place_note_tesim', 100)['response']['docs'].map do |result|
-
-          related_place_id = result['id'];
-
-          if related_place_id != nil
-
-            db_related_place = DbRelatedPlace.new
-
-            db_related_place.id = related_place_id.gsub(/test:/, '').to_i
-
-            place_same_as = result['place_same_as_tesim']
-
-            if place_same_as != nil
-              db_related_place.place_same_as = place_same_as.join()
-            end
-
-            place_as_written_list = result['place_as_written_tesim'];
-
-            if place_as_written_list != nil
-              place_as_written_list.each do |tt|
-                db_place_as_written = DbPlaceAsWritten.new
-                db_place_as_written.name = tt
-                db_related_place.db_place_as_writtens << db_place_as_written
-              end
-            end
-
-            place_role_list = result['place_role_tesim'];
-
-            if place_role_list != nil
-              place_role_list.each do |tt|
-                db_place_role = DbPlaceRole.new
-                db_place_role.name = tt
-                db_related_place.db_place_roles << db_place_role
-              end
-            end
-
-            place_type_list = result['place_type_tesim'];
-
-            if place_type_list != nil
-              place_type_list.each do |tt|
-                db_place_type = DbPlaceType.new
-                db_place_type.name = tt
-                db_related_place.db_place_types << db_place_type
-              end
-            end
-
-            place_note_list = result['place_note_tesim'];
-
-            if place_note_list != nil
-              place_note_list.each do |tt|
-                db_place_note = DbPlaceNote.new
-                db_place_note.name = tt
-                db_related_place.db_place_notes << db_place_note
-              end
-            end
-
-            db_entry.db_related_places << db_related_place
-          end
-        end
-
-        SolrQuery.new.solr_query('has_model_ssim:RelatedPersonGroup AND relatedAgentFor_ssim:"' + db_entry.entry_id + '"', 'id, person_same_as_tesim, person_gender_tesim, person_as_written_tesim, person_role_tesim, person_descriptor_tesim, person_descriptor_as_written_tesim, person_note_tesim, person_related_place_tesim', 100)['response']['docs'].map do |result|
-
-          related_person_group_id = result['id'];
-
-          if related_person_group_id != nil
-
-            db_related_person_group = DbRelatedPersonGroup.new
-
-            db_related_person_group.id = related_person_group_id.gsub(/test:/, '').to_i
-
-            person_same_as = result['person_same_as_tesim']
-
-            if person_same_as != nil
-              db_related_person_group.person_same_as = person_same_as.join()
-            end
-
-            person_gender = result['person_gender_tesim']
-
-            if person_gender != nil
-              db_related_person_group.person_gender = person_gender.join()
-            end
-
-            person_as_written_list = result['person_as_written_tesim'];
-
-            if person_as_written_list != nil
-              person_as_written_list.each do |tt|
-                db_person_as_written = DbPersonAsWritten.new
-                db_person_as_written.name = tt
-                db_related_person_group.db_person_as_writtens << db_person_as_written
-              end
-            end
-
-            person_role_list = result['person_role_tesim'];
-
-            if person_role_list != nil
-              person_role_list.each do |tt|
-                db_person_role = DbPersonRole.new
-                db_person_role.name = tt
-                db_related_person_group.db_person_roles << db_person_role
-              end
-            end
-
-            person_descriptor_list = result['person_descriptor_tesim'];
-
-            if person_descriptor_list != nil
-              person_descriptor_list.each do |tt|
-                db_person_descriptor = DbPersonDescriptor.new
-                db_person_descriptor.name = tt
-                db_related_person_group.db_person_descriptors << db_person_descriptor
-              end
-            end
-
-            person_descriptor_as_written_list = result['person_descriptor_as_written_tesim'];
-
-            if person_descriptor_as_written_list != nil
-              person_descriptor_as_written_list.each do |tt|
-                db_person_descriptor_as_written = DbPersonDescriptorAsWritten.new
-                db_person_descriptor_as_written.name = tt
-                db_related_person_group.db_person_descriptor_as_writtens << db_person_descriptor_as_written
-              end
-            end
-
-            person_note_list = result['person_note_tesim'];
-
-            if person_note_list != nil
-              person_note_list.each do |tt|
-                db_person_note = DbPersonNote.new
-                db_person_note.name = tt
-                db_related_person_group.db_person_notes << db_person_note
-              end
-            end
-
-            person_related_place_list = result['person_related_place_tesim'];
-
-            if person_related_place_list != nil
-              person_related_place_list.each do |tt|
-                db_person_related_place = DbPersonRelatedPlace.new
-                db_person_related_place.name = tt
-                db_related_person_group.db_person_related_places << db_person_related_place
-              end
-            end
-
-            db_entry.db_related_person_groups << db_related_person_group
-          end
-        end
-
-      end
-    end
-  end
 end

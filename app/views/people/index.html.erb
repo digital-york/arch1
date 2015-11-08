@@ -13,7 +13,7 @@
         <%= button_to "Add Person", new_person_path, method: :get, params: { :search_term => @search_term, :person_field => @person_field }, style: 'margin-top: -5px', title: 'Add element' %>
         <%= link_to 'Go back to admin page', admins_path, style: 'margin-left: 6px' %>
     <% else %>
-        <%= link_to 'Click here to open the admin interface (to edit people)', '#', onclick: "popup('/admins?start=true', 'admin'); return false;" %>
+        <%= link_to 'Click here to edit people in the Admin interface', '#', onclick: "popup('/admins?start=true', 'admin'); return false;" %>
     <% end %>
   </div>
 
@@ -44,9 +44,6 @@
 
         <div style="font-size: 1.1em">
           Results: <strong><%= @search_array.size %></strong>
-          <% if @person_field != 'none' and @search_array.size > 0 %>
-              &nbsp;(please choose a person from the list below):
-          <% end %>
         </div>
 
         <div class="popup_search">
@@ -84,7 +81,7 @@
                    id = array_element[0]
                    name = array_element[1]
               %>
-                  <div style="margin-top: 5px"><%= link_to name, '#', onClick: "post_value('#{name}', '#{id}', '#{params[:person_field]}')", style: 'color: #7e2c2c' %></div>
+                  <div style="margin-top: 5px; font-style: italic"><%= link_to name, '#', onClick: "post_value('#{name}', '#{id}', '#{params[:person_field]}')", style: 'color: #7e2c2c' %></div>
               <% end %>
           <% end %>
         </div>

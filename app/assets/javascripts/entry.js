@@ -40,25 +40,25 @@ function popup(page, type) {
         popupHeight = 800;
         left = (screen.width - popupWidth) / 2;
     } else if (type == "subject") {
-        popupWidth = 900;
+        popupWidth = 1000;
         popupHeight = screen.height / 1.25;
         left = (screen.width - popupWidth) / 2;
         popup_id = "101"
     } else if (type == "person") {
-        popupWidth = 900;
+        popupWidth = 1000;
         popupHeight = screen.height / 1.25;
         left = (screen.width - popupWidth) / 2;
         popup_id = "102"
     } else if (type == "place") {
-        popupWidth = 900;
+        popupWidth = 1000;
         popupHeight = screen.height / 1.25;
         left = (screen.width - popupWidth) / 2;
         popup_id = "103"
     } else if (type == "admin") {
-        popupWidth = 900;
+        popupWidth = 1000;
         popupHeight = screen.height / 1.25;
         left = (screen.width - popupWidth) / 2;
-        top = 100;
+        top = 50;
         popup_id = "104"
     } else if (type == "browse_folios") {
         popupWidth = 522;
@@ -239,9 +239,13 @@ $(document).ready(function () {
             var jq_attributes = $(this).attr('jq_attributes');
             var jq_index = $(this).attr('jq_index');
             var jq_type = $(this).attr('jq_type');
-
+            // NOTE: 'place_as_written' is required for 'related places' to work - see the 'update_related_places' method below
+            var input_class = "";
+            if (jq_type == "place_as_written") {
+                input_class="class='place_as_written' ";
+            }
             var new_code_block = "<div class='field_single'>"
-                + "<input type='text' name='entry[" + jq_attributes + "][" + jq_index + "][" + jq_type + "][]'>"
+                + "<input type='text'" + input_class + "name='entry[" + jq_attributes + "][" + jq_index + "][" + jq_type + "][]'>"
                 + "&nbsp;<img alt='Delete icon' src='/assets/delete.png' class='delete_icon click_remove_field_level1' jq_tag_type='input'>"
                 + "</div>";
             $(this).parent('th').next('td').find('.field_group').append(new_code_block);
@@ -282,6 +286,8 @@ $(document).ready(function () {
             var list_array = "";
             if (jq_type == 'language') {
                 list_array = $.parseJSON($(this).attr('jq_language_list'));
+            } else if (jq_type == 'entry_type') {
+                list_array = $.parseJSON($(this).attr('jq_entry_type_list'));
             } else if (jq_type == 'section_type') {
                 list_array = $.parseJSON($(this).attr('jq_section_type_list'));
             }
@@ -368,9 +374,10 @@ $(document).ready(function () {
                 "<table class='tab3' cellspacing='0'>" +
 
                 // As Written
+                // NOTE: 'place_as_written_block' is required for 'related places' to work - see the 'update_related_places' method below
                 "<tr><th>*As Written:" +
                 "&nbsp;<img jq_type='place_as_written' jq_index='" + jq_index + "' jq_attributes='related_places_attributes' class='plus_icon click_multiple_field_button_level2' src='/assets/plus_sign.png'>" +
-                "</th><td><div class='field_group grey_box'></div></td></tr>" +
+                "</th><td><div class='field_group grey_box place_as_written_block'></div></td></tr>" +
 
                 // Place Name Authority (Same As)
                 "<tr><th>Place Name Authority:</th><td class='input_single'>" +
@@ -560,7 +567,7 @@ $(document).ready(function () {
                 "<table>" +
 
                     // Date
-                "<tr><th style='width: 80px'>Date:</th>" +
+                "<tr><th style='width: 120px'>Date (yyyy/mm/dd):</th>" +
                 "<td class='input_single'><input id='' type='text' name='entry[entry_dates_attributes][" + jq_index + "][single_dates_attributes][" + jq_index2 + "][date]'></td>" +
 
                     // Date Certainty
@@ -622,10 +629,11 @@ $(document).ready(function () {
 
         try {
             e.preventDefault(); // I think this prevents other events firing?
+
             var field_single_div = $(this).parent('div');
             field_single_div.css({'display': 'none'});
-            // If the tag type is not null it must be 'select' otherwise it must be 'input'
-            // There could be more types later on though
+
+            // Delete the value from the field
             if ($(this).attr('jq_tag_type') == 'select') {
                 field_single_div.find('select').val('');
             } else if ($(this).attr('jq_tag_type') == 'input') {
@@ -642,7 +650,7 @@ $(document).ready(function () {
         }
     });
 
-    // This code hides Level 2 elements such as Place
+    // This code hides Level 2 elements, i.e. Entry Date, Related Place and Related Person Group elements
     // Note that a hidden field is also added with '_destroy' = '1' - this is necessary to remove associations in Fedora
     $('body').on('click', '.click_remove_field_level2', function (e) {
 
@@ -650,24 +658,33 @@ $(document).ready(function () {
             e.preventDefault(); // I think this prevents other events firing?
             var field_single_div = $(this).parent('div');
             field_single_div.css({'display': 'none'});
+
             // Add a '_destroy' = '1' hidden element to make sure that the block is deleted from Fedora
-            // Note that the code uses the 'Same As' input field to get the index for Place and Person
-            // and the 'Date Role' select field to get the index for Date - maybe there is a better way to get the index?
+            // To do this, need to find out the index of the element we are using
+            // To get the correct index, the code uses the hidden 'input' field for 'Place Name Authority' for 'Related Place',
+            // the 'Person Name Authority' field for 'Related Person Group'
+            // and the 'Note' field for 'Entry Date'
+            // If these fields change, this code will have to be modified
             var params_type = $(this).attr('params_type');
             var target_tag = '';
-            /* WHAT IS THE PURPOSE OF THIS CSS! */
+
             if (params_type == 'entry_dates') {
-                target_tag = field_single_div.find('select');
-                target_tag.css("border", "1px solid red");
+                target_tag = field_single_div.find('textarea');
             } else {
                 target_tag = field_single_div.find('input');
-                target_tag.css("border", "1px solid red");
             }
-            var name = target_tag.attr('name');
-            var index = get_index(name);
-            field_single_div.append("<input type='hidden' name='entry[" + params_type + "_attributes][" + index + "][_destroy]' value='1'>");
 
-            // Update the person 'Related Place' list because an element which is removed shouldn't be shown
+            // Add the hidden field with 'destroy=1' so that this element is deleted when the form is submitted
+            field_single_div.append("<input type='hidden' name='entry[" + params_type + "_attributes][" + get_index(target_tag.attr('name')) + "][_destroy]' value='1'>");
+
+            // Remove the Place As Written value because otherwise it will appear in the 'Related Places' drop-down list
+            if (params_type == 'related_places') {
+                place_as_written_input = field_single_div.find('.place_as_written');
+                place_as_written_input.css('border', '1px solid green');
+                place_as_written_input.val('');
+            }
+
+            // Update the person 'Related Place' list because this element has been removed and shouldn't be in the drop-down list
             update_related_places();
 
         } catch (err) {
@@ -765,7 +782,6 @@ $(document).ready(function () {
     // Calls the function below when a place_as_written is changed (or added)
     $('body').on('change', '.place_as_written', function(e) {
         update_related_places();
-
     });
 
     var form_modified = 0;
@@ -820,33 +836,38 @@ $(document).ready(function () {
 
 });
 
-// This is called if the user changes a place 'As Written' field or the user adds a person
+// This is called if the user changes a place 'As Written' field or the user adds a new place
 // It updates all the person 'Related Place' drop-down lists by adding new terms and removing old terms
 // Note that I tried to do it when the user actually clicked on the 'Related Place' list but there was
 // a problem with removing elements and someone on StackOverflow said that the options are being
-// destroyed everytime and that's why you can't select from the list - see here:
+// destroyed every time and that's why you can't select from the list - see here:
 // http://stackoverflow.com/questions/30736354/choosing-options-after-dynamically-changing-a-select-list-with-jquery/30737208#30737208
+// Note that this code also relies on a 'place_as_written' class and 'place_as_written_block' class
+// which are put on the appropriate divs
 function update_related_places() {
 
     try {
 
-        // Get all the place 'As Written' values into an array
-        place_as_written_array = new Array();
+        var place_as_written_array = new Array();
 
-        // Note that we only get the first place 'As Written' value for each place (because there can be more than one)
+        // Get all the Place As Written values into an array
+        // nOte that we only look for the first value which is not equal to '' because there can be more than one
         $('.place_as_written_block').each(function (index) {
-            var place_as_written = $(this).find('.place_as_written');
-            if (place_as_written.length > 0) { // This makes sure that the input tag exists before trying to get the value
-                place_as_written_value = place_as_written.val();
-                var field_single_div = $(this).parent('td').parent('tr').parent('tbody').parent('table').parent('div');
-                var is_visible = field_single_div.is(':visible');
-                if (is_visible == true) {
-                    place_as_written_array[index] = place_as_written_value;
-                }
-            }
+
+           var place_as_written_class = $(this).find('.place_as_written')
+
+           place_as_written_class.each(function() {
+
+               place_as_written_value = $(this).val();
+
+               if (place_as_written_value != '') {
+                   place_as_written_array[index] = place_as_written_value;
+                   return false;
+               }
+           });
         });
 
-        // Firstly, remove any 'Related Place' options which don't exist anymore in the place 'As Written' textfields
+        // Firstly, remove any 'Related Place' options which don't exist anymore in the place 'As Written' text fields
         $('.related_place').each(function () {
 
             var select_tag = $(this);
@@ -892,7 +913,7 @@ function update_related_places() {
                     });
 
                     // Add the option if it doesn't exist.
-                    if (exists == false) {
+                    if (exists == false && place_as_written_value != null) {
                         select_tag.append("<option value='" + place_as_written_value + "'>" + place_as_written_value + "</option>");
                     }
                 });

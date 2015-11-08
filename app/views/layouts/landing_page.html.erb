@@ -10,49 +10,24 @@
 
 <body>
 
-<!--<div id="header" style="border-bottom: 1px solid #805E5E">
-
-  <div id="header_text">
-    Archbishops&#39; Registers Editing Tool
-  </div>
-
-  <span style="float: right; margin-right: 6px; margin-top: 25px">
-    <%#= button_to 'Logout', logout_path, :method => 'get', :data => {:confirm => 'Are you sure you want to logout?'} %>
-  </span>
-
-</div>
--->
-
-<!--<div id="container" style="margin-top: 1px">
-
-  <%#= yield %>
-
-  <div style="clear: both"></div>
-
-</div>
-
-<div style="clear: both"></div>-->
-
 <div id="container">
 
-  <div id="header">
+  <div id="header" style="border-bottom: 1px solid #898989">
 
     <div id="header_text">
-      <%= link_to "Archbishops&#39; Registers Editing Tool".html_safe, entry_path("default") %>
+      <%= link_to "Archbishops&#39; Registers Editing Tool".html_safe, landing_page_path %>
     </div>
 
     <div style="float: right; margin-right: 6px; margin-top: 25px">
-      <%= button_to 'Logout', logout_path, :method => 'get', :data => {:confirm => 'Are you sure you want to logout?'} %>
+      <%= button_to 'Admin', '#', onclick: "popup('/admins?start=true', 'admin'); return false;" %>
+      <%= button_to 'Logout', logout_path, :method => 'get', style: 'margin-left: 6px', :data => {:confirm => 'Are you sure you want to logout?'} %>
     </div>
 
   </div>
 
-  <div id="navbar">
+  <!--<div id="navbar"></div>-->
 
-
-  </div>
-
-  <div id="main" style="margin-top: 10px">
+  <div id="main" style="margin-top: 20px">
     <%= yield %>
   </div>
 
