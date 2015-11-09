@@ -176,30 +176,30 @@ class PlacesController < ApplicationController
 
     name = ''
 
-    if place_name != nil
+    if place_name != nil and place_name != ''
       if is_join == true then place_name = place_name.join end
       name = place_name
     end
 
-    if parent_ADM4 != nil
+    if parent_ADM4 != nil and parent_ADM4 != ''
       if is_join == true then parent_ADM4 = parent_ADM4.join end
       if name != '' then name = "#{name}," end
       name = "#{name} #{parent_ADM4}"
     end
 
-    if parent_ADM3 != nil
+    if parent_ADM3 != nil and parent_ADM3 != ''
       if is_join == true then parent_ADM3 = parent_ADM3.join end
       if name != '' then name = "#{name}," end
       name = "#{name} #{parent_ADM3}"
     end
 
-    if parent_ADM2 != nil
+    if parent_ADM2 != nil and parent_ADM2 != ''
       if is_join == true then parent_ADM2 = parent_ADM2.join end
       if name != '' then name = "#{name}," end
       name = "#{name} #{parent_ADM2}"
     end
 
-    if parent_ADM1 != nil
+    if parent_ADM1 != nil and parent_ADM1 != ''
       if is_join == true then parent_ADM1 = parent_ADM1.join end
       if name != '' then name = "#{name}," end
       name = "#{name} #{parent_ADM1}"

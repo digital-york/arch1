@@ -177,36 +177,36 @@ class PeopleController < ApplicationController
 
     name = ''
 
-    if family != nil then
+    if family != nil and family != ''
       if is_join == true then family = family.join end
       name = family
     end
 
-    if pre_title != nil then
+    if pre_title != nil  and pre_title != ''
       if is_join == true then pre_title = pre_title.join end
       if name != '' then name = "#{name}," end
       name = "#{name} #{pre_title}"
     end
 
-    if given_name != nil then
+    if given_name != nil and given_name != ''
       if is_join == true then given_name = given_name.join end
       if name != '' then name = "#{name}," end
       name = "#{name} #{given_name}"
     end
 
-    if dates != nil then
+    if dates != nil and dates != ''
       if is_join == true then dates = dates.join end
       if name != '' then name = "#{name}," end
       name = "#{name} #{dates}"
     end
 
-    if post_title != nil then
+    if post_title != nil and post_title != ''
       if is_join == true then post_title = post_title.join end
       if name != '' then name = "#{name}," end
       name = "#{name} #{post_title}"
     end
 
-    if epithet != nil then
+    if epithet != nil and epithet != ''
       if is_join == true then epithet = epithet.join end
       if name != '' then name = "#{name}," end
       name = "#{name} #{epithet}"
