@@ -9,6 +9,8 @@ class RelatedPersonGroup < ActiveFedora::Base
   has_many :related_places #, :dependent => :destroy
   accepts_nested_attributes_for :related_places, :allow_destroy => true, :reject_if => :all_blank
 
+  has_and_belongs_to_many :related_person_group, predicate: ::RDF::URI.new('http://dlib.york.ac.uk/ontologies/borthwick-registers#relatedAgentFor')
+
   def add_rdf_types_p
     ['http://dlib.york.ac.uk/ontologies/borthwick-registers#RelatedPersonGroup','http://xmlns.com/foaf/0.1/Person']
   end
@@ -46,6 +48,10 @@ class RelatedPersonGroup < ActiveFedora::Base
   end
 
   property :person_related_place, predicate: ::RDF::URI.new('http://dlib.york.ac.uk/ontologies/borthwick-registers#hasRelatedPlace'), multiple: true do |index|
+    index.as :stored_searchable
+  end
+
+  property :person_related_person, predicate: ::RDF::URI.new('http://dlib.york.ac.uk/ontologies/borthwick-registers#hasRelatedPerson'), multiple: true do |index|
     index.as :stored_searchable
   end
 

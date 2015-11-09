@@ -11,7 +11,7 @@ class ApplicationController < ActionController::Base
   # Note: py changed this from :exception to null_session 17/04/2015
   protect_from_forgery with: :null_session
   
-  include Validation
+  include RemoveEmptyFields
   include RegisterFolio
   include AuthorityList
   include Solr

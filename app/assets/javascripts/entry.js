@@ -243,6 +243,8 @@ $(document).ready(function () {
             var input_class = "";
             if (jq_type == "place_as_written") {
                 input_class="class='place_as_written' ";
+            } else if (jq_type == "person_as_written") {
+                input_class="class='person_as_written' ";
             }
             var new_code_block = "<div class='field_single'>"
                 + "<input type='text'" + input_class + "name='entry[" + jq_attributes + "][" + jq_index + "][" + jq_type + "][]'>"
@@ -338,7 +340,7 @@ $(document).ready(function () {
         }
     });
 
-    $('body').on('click', '.click_related_place_field_button', function (e) {
+    $('body').on('click', '.click_person_related_field_button', function (e) {
 
         try {
             e.preventDefault(); // I think this prevents other events firing?
@@ -346,12 +348,19 @@ $(document).ready(function () {
             var jq_index = $(this).attr('jq_index');
             var jq_type = $(this).attr('jq_type');
             var options = "<option value=''>--- select ---</option>";
-            var new_code_block = "<div class='field_single'><select class='related_place' autocomplete='off' name='entry[" + jq_attributes + "][" + jq_index + "][" + jq_type + "][]'>" + options +
+            var input_class = '';
+            if (jq_type == 'person_related_place') {
+                input_class = 'related_place';
+            } else {
+                input_class = 'related_person_group';
+            }
+            var new_code_block = "<div class='field_single'><select class='" +  input_class + "' autocomplete='off' name='entry[" + jq_attributes + "][" + jq_index + "][" + jq_type + "][]'>" + options +
                 "</select>&nbsp;<img alt='Delete icon' src='/assets/delete.png' class='delete_icon_select click_remove_field_level1' jq_tag_type='select'></div>";
             $(this).parent('th').next('td').find('.field_group').append(new_code_block);
 
             // Need to do this otherwise 'Related Place' will not have any options
-            update_related_places();
+            update_related_fields('related_place');
+            update_related_fields('related_person_group');
 
         } catch (err) {
             alert(err);
@@ -445,9 +454,9 @@ $(document).ready(function () {
                 "<table class='tab3' cellspacing='0'>" +
 
                  // As Written
-                "<tr><th style='width: 110px'>*As Written:" +
+                "<tr><th style='width: 115px'>*As Written:" +
                 "&nbsp;<img jq_type='person_as_written' jq_index='" + jq_index + "' jq_attributes='related_person_groups_attributes' class='plus_icon click_multiple_field_button_level2' src='/assets/plus_sign.png'>" +
-                "</th><td><div class='field_group grey_box'></div></td></tr>" +
+                "</th><td><div class='field_group grey_box person_as_written_block'></div></td></tr>" +
 
                 // Person Name Authority (Same As)
                 "<tr><th>Person Name Authority:</th><td class='input_single'>" +
@@ -460,17 +469,17 @@ $(document).ready(function () {
                 "<tr><th>Gender:</th><td><select name='entry[related_person_groups_attributes][" + jq_index + "][person_gender]'>" + gender_options + "</select></td></tr>" +
 
                 // Role
-                "<tr><th style='width: 110px'>Person Role:" +
+                "<tr><th>Person Role:" +
                 "&nbsp;<img jq_role_list=" + jq_role_list + " jq_type='" + "person_role" + "' jq_index='" + jq_index + "' jq_attributes='related_person_groups_attributes' class='plus_icon click_select_field_button_level2' src='/assets/plus_sign.png'>" +
                 "</th><td><div class='field_group grey_box'></div></td></tr>" +
 
                 // Descriptor
-                "<tr><th style='width: 110px'>Descriptor:" +
+                "<tr><th>Descriptor:" +
                 "&nbsp;<img jq_descriptor_list=" + jq_descriptor_list + " jq_type='" + "person_descriptor" + "' jq_index='" + jq_index + "' jq_attributes='related_person_groups_attributes' class='plus_icon click_select_field_button_level2' src='/assets/plus_sign.png'>" +
                 "</th><td><div class='field_group grey_box'></div></td></tr>" +
 
                 // Descriptor As Written
-                "<tr><th style='width: 110px'>Descriptor As Written:" +
+                "<tr><th>Descriptor As Written:" +
                 "&nbsp;<img jq_type='person_descriptor_as_written' jq_index='" + jq_index + "' jq_attributes='related_person_groups_attributes' class='plus_icon click_multiple_field_button_level2' src='/assets/plus_sign.png'>" +
                 "</th><td><div class='field_group grey_box'></div></td></tr>" +
 
@@ -481,7 +490,12 @@ $(document).ready(function () {
 
                 // Related Place
                 "<tr><th>Related Place:" +
-                "&nbsp;<img jq_type='person_related_place' jq_index='" + jq_index + "' jq_attributes='related_person_groups_attributes' class='plus_icon click_related_place_field_button' src='/assets/plus_sign.png'>" +
+                "&nbsp;<img jq_type='person_related_place' jq_index='" + jq_index + "' jq_attributes='related_person_groups_attributes' class='plus_icon click_person_related_field_button' src='/assets/plus_sign.png'>" +
+                "</th><td><div class='field_group grey_box'></div></td></tr>" +
+
+                // Related Person
+                "<tr><th>Related Person:" +
+                "&nbsp;<img jq_type='person_related_person' jq_index='" + jq_index + "' jq_attributes='related_person_groups_attributes' class='plus_icon click_person_related_field_button' src='/assets/plus_sign.png'>" +
                 "</th><td><div class='field_group grey_box'></div></td></tr>" +
 
                 // Hidden field for RDFTYPE
@@ -642,8 +656,9 @@ $(document).ready(function () {
                 field_single_div.find('textarea').val('');
             }
 
-            // Update the person 'Related Place' list because an element which is removed shouldn't be shown
-            update_related_places();
+            // Update the person 'Related Place' and 'Related Person' lists because an element which is removed shouldn't be shown
+            update_related_fields('related_place');
+            update_related_fields('related_person_group');
 
         } catch (err) {
             alert(err);
@@ -677,15 +692,21 @@ $(document).ready(function () {
             // Add the hidden field with 'destroy=1' so that this element is deleted when the form is submitted
             field_single_div.append("<input type='hidden' name='entry[" + params_type + "_attributes][" + get_index(target_tag.attr('name')) + "][_destroy]' value='1'>");
 
-            // Remove the Place As Written value because otherwise it will appear in the 'Related Places' drop-down list
+            // Remove the Place As Written value because otherwise it will appear in the 'Related Place' drop-down list
             if (params_type == 'related_places') {
                 place_as_written_input = field_single_div.find('.place_as_written');
-                place_as_written_input.css('border', '1px solid green');
                 place_as_written_input.val('');
             }
 
-            // Update the person 'Related Place' list because this element has been removed and shouldn't be in the drop-down list
-            update_related_places();
+            // Remove the Person As Written value because otherwise it will appear in the 'Related Person' drop-down list
+            if (params_type == 'related_person_groups') {
+                person_as_written_input = field_single_div.find('.person_as_written');
+                person_as_written_input.val('');
+            }
+
+            // Update the person 'Related Place' and 'Related Person Group' lists because this element has been removed and shouldn't be in the drop-down list
+            update_related_fields('related_place');
+            update_related_fields('related_person_group');
 
         } catch (err) {
             alert(err);
@@ -766,7 +787,6 @@ $(document).ready(function () {
         try {
             e.preventDefault(); // I think this prevents other events firing?
             var field_group_div = $(this).parent('th').next('td').find('>:first-child');
-            //field_group_div.css("border", "1px solid red");
             var jq_type_1 = $(this).attr('jq_type_1');
             var jq_type_2 = $(this).attr('jq_type_2');
             var new_code_block = "<div class='field_single'>"
@@ -781,7 +801,12 @@ $(document).ready(function () {
 
     // Calls the function below when a place_as_written is changed (or added)
     $('body').on('change', '.place_as_written', function(e) {
-        update_related_places();
+        update_related_fields('related_place');
+    });
+
+    // Calls the function below when a person_as_written is changed (or added)
+    $('body').on('change', '.person_as_written', function(e) {
+        update_related_fields('related_person');
     });
 
     var form_modified = 0;
@@ -844,31 +869,44 @@ $(document).ready(function () {
 // http://stackoverflow.com/questions/30736354/choosing-options-after-dynamically-changing-a-select-list-with-jquery/30737208#30737208
 // Note that this code also relies on a 'place_as_written' class and 'place_as_written_block' class
 // which are put on the appropriate divs
-function update_related_places() {
+function update_related_fields(type) {
 
     try {
 
-        var place_as_written_array = new Array();
+        var block_type = ''
+        var class_type = ''
 
-        // Get all the Place As Written values into an array
-        // nOte that we only look for the first value which is not equal to '' because there can be more than one
-        $('.place_as_written_block').each(function (index) {
+        if (type == 'related_place') {
+            block_class_type = '.place_as_written_block';
+            field_class_type = '.place_as_written';
+            class_type = '.related_place';
+        } else {
+            block_class_type = '.person_as_written_block';
+            field_class_type = '.person_as_written';
+            class_type = '.related_person_group';
+        }
 
-           var place_as_written_class = $(this).find('.place_as_written')
+        var field_array = new Array();
 
-           place_as_written_class.each(function() {
+        // Get all the Place As Written / Person As Written values into an array
+        // Note that we only look for the first value which is not equal to '' because there can be more than one
+        $(block_class_type).each(function (index) {
 
-               place_as_written_value = $(this).val();
+           var field_class = $(this).find(field_class_type)
 
-               if (place_as_written_value != '') {
-                   place_as_written_array[index] = place_as_written_value;
+           field_class.each(function() {
+
+               field_value = $(this).val();
+
+               if (field_value != '') {
+                   field_array[index] = field_value;
                    return false;
                }
            });
         });
 
-        // Firstly, remove any 'Related Place' options which don't exist anymore in the place 'As Written' text fields
-        $('.related_place').each(function () {
+        // Firstly, remove any 'Related Place' / 'Related Person' options which don't exist any more in the place 'As Written' / person 'As Written' text fields
+        $(class_type).each(function () {
 
             var select_tag = $(this);
 
@@ -881,9 +919,9 @@ function update_related_places() {
                 var option_tag = $(this);
                 var related_place_text = option_tag.text(); // Use text rather than value because '--- select ---' doesn't have a value
 
-                $.each(place_as_written_array, function (index, place_as_written_value) {
+                $.each(field_array, function (index, field_value) {
 
-                    if (related_place_text == place_as_written_value) {
+                    if (related_place_text == field_value) {
                         exists = true
                     }
                 });
@@ -895,11 +933,11 @@ function update_related_places() {
         });
 
         // Secondly, append the place 'As Written' fields to the 'Related Place' drop_down lists (if they don't already exist)
-        if (place_as_written_array.length > 0) {
+        if (field_array.length > 0) {
 
-            $.each(place_as_written_array, function (index, place_as_written_value) {
+            $.each(field_array, function (index, field_value) {
 
-                $('.related_place').each(function () {
+                $(class_type).each(function () {
 
                     var exists = false
                     var select_tag = $(this)
@@ -907,14 +945,14 @@ function update_related_places() {
                     select_tag.find('option').each(function () {
                         var related_place_value = $(this).val();
 
-                        if (place_as_written_value == related_place_value) {
+                        if (field_value == related_place_value) {
                             exists = true;
                         }
                     });
 
                     // Add the option if it doesn't exist.
-                    if (exists == false && place_as_written_value != null) {
-                        select_tag.append("<option value='" + place_as_written_value + "'>" + place_as_written_value + "</option>");
+                    if (exists == false && field_value != null) {
+                        select_tag.append("<option value='" + field_value + "'>" + field_value + "</option>");
                     }
                 });
             });

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151105103041) do
+ActiveRecord::Schema.define(version: 20151106154459) do
 
   create_table "bookmarks", force: :cascade do |t|
     t.integer  "user_id",       null: false
@@ -119,6 +119,15 @@ ActiveRecord::Schema.define(version: 20151105103041) do
   end
 
   add_index "db_person_notes", ["db_related_person_group_id"], name: "index_db_person_notes_on_db_related_person_group_id"
+
+  create_table "db_person_related_people", force: :cascade do |t|
+    t.string   "name"
+    t.integer  "db_related_person_group_id"
+    t.datetime "created_at",                 null: false
+    t.datetime "updated_at",                 null: false
+  end
+
+  add_index "db_person_related_people", ["db_related_person_group_id"], name: "index_db_person_related_people_on_db_related_person_group_id"
 
   create_table "db_person_related_places", force: :cascade do |t|
     t.string  "name"

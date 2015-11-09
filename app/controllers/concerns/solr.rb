@@ -222,7 +222,7 @@ module Solr
           end
         end
 
-        SolrQuery.new.solr_query('has_model_ssim:RelatedPersonGroup AND relatedAgentFor_ssim:"' + db_entry.entry_id + '"', 'id, person_same_as_tesim, person_gender_tesim, person_as_written_tesim, person_role_tesim, person_descriptor_tesim, person_descriptor_as_written_tesim, person_note_tesim, person_related_place_tesim', 100)['response']['docs'].map do |result|
+        SolrQuery.new.solr_query('has_model_ssim:RelatedPersonGroup AND relatedAgentFor_ssim:"' + db_entry.entry_id + '"', 'id, person_same_as_tesim, person_gender_tesim, person_as_written_tesim, person_role_tesim, person_descriptor_tesim, person_descriptor_as_written_tesim, person_note_tesim, person_related_place_tesim, person_related_person_tesim', 100)['response']['docs'].map do |result|
 
           related_person_group_id = result['id'];
 
@@ -301,6 +301,16 @@ module Solr
                 db_person_related_place = DbPersonRelatedPlace.new
                 db_person_related_place.name = tt
                 db_related_person_group.db_person_related_places << db_person_related_place
+              end
+            end
+
+            person_related_person_list = result['person_related_person_tesim'];
+
+            if person_related_person_list != nil
+              person_related_person_list.each do |tt|
+                db_person_related_person = DbPersonRelatedPerson.new
+                db_person_related_person.name = tt
+                db_related_person_group.db_person_related_people << db_person_related_person
               end
             end
 
