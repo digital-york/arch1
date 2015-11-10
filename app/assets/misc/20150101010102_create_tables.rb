@@ -117,57 +117,57 @@ class CreateTables < ActiveRecord::Migration
 
     add_foreign_key :db_place_notes, :db_related_places
 
-    create_table :db_related_person_groups do |t|
+    create_table :db_related_agents do |t|
       t.string :person_same_as
       t.string :person_gender
       t.references :db_entry, index: true
     end
 
-    add_foreign_key :db_related_person_groups, :db_entries
+    add_foreign_key :db_related_agents, :db_entries
 
     create_table :db_person_as_writtens do |t|
       t.string :name
-      t.references :db_related_person_group, index: true
+      t.references :db_related_agent, index: true
     end
 
-    add_foreign_key :db_person_as_writtens, :db_related_person_groups
+    add_foreign_key :db_person_as_writtens, :db_related_agents
 
     create_table :db_person_roles do |t|
       t.string :name
-      t.references :db_related_person_group, index: true
+      t.references :db_related_agent, index: true
     end
 
-    add_foreign_key :db_person_roles, :db_related_person_groups
+    add_foreign_key :db_person_roles, :db_related_agents
 
     create_table :db_person_descriptors do |t|
       t.string :name
-      t.references :db_related_person_group, index: true
+      t.references :db_related_agent, index: true
     end
 
-    add_foreign_key :db_person_descriptors, :db_related_person_groups
+    add_foreign_key :db_person_descriptors, :db_related_agents
 
     create_table :db_person_descriptor_as_writtens do |t|
       t.string :name
-      t.references :db_related_person_group, index: false
+      t.references :db_related_agent, index: false
     end
 
-    add_foreign_key :db_person_descriptor_as_writtens, :db_related_person_groups
+    add_foreign_key :db_person_descriptor_as_writtens, :db_related_agents
 
     # Note that 'index' = false in the above table because the index created has a name which is too long (> 62 characters) - therefore, I'm creating my own index name...
-    add_index "db_person_descriptor_as_writtens", ["db_related_person_group_id"], name: "index_db_per_desc_as_writtens_on_db_related_person_group_id"
+    add_index "db_person_descriptor_as_writtens", ["db_related_agent_id"], name: "index_db_per_desc_as_writtens_on_db_related_agent_id"
 
     create_table :db_person_notes do |t|
       t.string :name
-      t.references :db_related_person_group, index: true
+      t.references :db_related_agent, index: true
     end
 
-    add_foreign_key :db_person_notes, :db_related_person_groups
+    add_foreign_key :db_person_notes, :db_related_agents
 
     create_table :db_person_related_places do |t|
       t.string :name
-      t.references :db_related_person_group, index: true
+      t.references :db_related_agent, index: true
     end
 
-    add_foreign_key :db_person_related_places, :db_related_person_groups
+    add_foreign_key :db_person_related_places, :db_related_agents
   end
 end

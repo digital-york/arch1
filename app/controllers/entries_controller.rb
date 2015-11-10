@@ -131,7 +131,7 @@ class EntriesController < ApplicationController
 
     # Add other elements to the related place list, i.e. using RelatedPlace.place_as_written
     # Note - only add the first place_as_written at index [0] for each Related Place (because there can be more than one)
-    @db_entry.db_related_person_groups.each do |related_person|
+    @db_entry.db_related_agents.each do |related_person|
       temp = []
       if related_person.db_person_as_writtens[0] != nil
         temp << related_person.db_person_as_writtens[0].name
@@ -161,10 +161,10 @@ class EntriesController < ApplicationController
     # Remove the entry_id
     entry_params.delete(:entry_id)
     # Assign and Remove the additional id fields
-    unless entry_params["related_person_groups_attributes"].nil?
-      entry_params["related_person_groups_attributes"].each do | p |
-        #entry_params["related_person_groups_attributes"][p[0]]['id'] = entry_params["related_person_groups_attributes"][p[0]]['person_id']
-        entry_params["related_person_groups_attributes"][p[0]].delete(:person_id)
+    unless entry_params["related_agents_attributes"].nil?
+      entry_params["related_agents_attributes"].each do | p |
+        #entry_params["related_agents_attributes"][p[0]]['id'] = entry_params["related_agents_attributes"][p[0]]['person_id']
+        entry_params["related_agents_attributes"][p[0]].delete(:person_id)
       end
     end
     unless entry_params["related_places_attributes"].nil?
@@ -199,7 +199,6 @@ class EntriesController < ApplicationController
     #@errors = check_for_errors(entry_params)
 
     # Populate new entry with the entry_params
-    puts entry_params
     @entry = Entry.new(entry_params)
 
     # If there are errors, go back to the 'new' page and display the errors, else go to the 'index' page
@@ -257,11 +256,11 @@ class EntriesController < ApplicationController
     # Remove the entry_id
     entry_params.delete(:entry_id)
     # Assign and Remove the additional id fields
-    puts entry_params
-    unless entry_params["related_person_groups_attributes"].nil?
-      entry_params["related_person_groups_attributes"].each do | p |
-        entry_params["related_person_groups_attributes"][p[0]]['id'] = entry_params["related_person_groups_attributes"][p[0]]['person_id']
-        entry_params["related_person_groups_attributes"][p[0]].delete(:person_id)
+
+    unless entry_params["related_agents_attributes"].nil?
+      entry_params["related_agents_attributes"].each do | p |
+        entry_params["related_agents_attributes"][p[0]]['id'] = entry_params["related_agents_attributes"][p[0]]['person_id']
+        entry_params["related_agents_attributes"][p[0]].delete(:person_id)
       end
     end
     unless entry_params["related_places_attributes"].nil?
@@ -376,7 +375,7 @@ class EntriesController < ApplicationController
     params.require(:entry).permit(:folio, :entry_no, :entry_id, :summary, :entry_type => [], :section_type => [], :marginalia => [],  :language => [], :subject => [], :note => [], :editorial_note => [], :is_referenced_by => [],
     :entry_dates_attributes => [:id, :_destroy, :date_id, :date_role, :date_note, :single_dates_attributes => [:id, :_destroy, :single_date_id, :date, :date_type, :date_certainty => []]],
     :related_places_attributes => [:id, :_destroy, :place_id, :place_same_as, :place_as_written => [], :place_role => [], :place_type => [], :place_note => []],
-    :related_person_groups_attributes => [:id, :_destroy, :person_id, :person_same_as, :person_gender, :person_as_written => [], :person_role => [], :person_descriptor => [], :person_descriptor_as_written => [], :person_note => [], :person_related_place => [], :person_related_person => []])
+    :related_agents_attributes => [:id, :_destroy, :person_id, :person_same_as, :person_gender, :person_as_written => [], :person_role => [], :person_descriptor => [], :person_descriptor_as_written => [], :person_note => [], :person_related_place => [], :person_related_person => []])
   end
 
 end

@@ -95,54 +95,54 @@ ActiveRecord::Schema.define(version: 20151106154459) do
 
   create_table "db_person_as_writtens", force: :cascade do |t|
     t.string  "name"
-    t.integer "db_related_person_group_id"
+    t.integer "db_related_agent_id"
   end
 
-  add_index "db_person_as_writtens", ["db_related_person_group_id"], name: "index_db_person_as_writtens_on_db_related_person_group_id"
+  add_index "db_person_as_writtens", ["db_related_agent_id"], name: "index_db_person_as_writtens_on_db_related_agent_id"
 
   create_table "db_person_descriptor_as_writtens", force: :cascade do |t|
     t.string  "name"
-    t.integer "db_related_person_group_id"
+    t.integer "db_related_agent_id"
   end
 
-  add_index "db_person_descriptor_as_writtens", ["db_related_person_group_id"], name: "index_db_per_desc_as_writtens_on_db_related_person_group_id"
+  add_index "db_person_descriptor_as_writtens", ["db_related_agent_id"], name: "index_db_per_desc_as_writtens_on_db_related_agent_id"
 
   create_table "db_person_descriptors", force: :cascade do |t|
     t.string  "name"
-    t.integer "db_related_person_group_id"
+    t.integer "db_related_agent_id"
   end
 
-  add_index "db_person_descriptors", ["db_related_person_group_id"], name: "index_db_person_descriptors_on_db_related_person_group_id"
+  add_index "db_person_descriptors", ["db_related_agent_id"], name: "index_db_person_descriptors_on_db_related_agent_id"
 
   create_table "db_person_notes", force: :cascade do |t|
     t.string  "name"
-    t.integer "db_related_person_group_id"
+    t.integer "db_related_agent_id"
   end
 
-  add_index "db_person_notes", ["db_related_person_group_id"], name: "index_db_person_notes_on_db_related_person_group_id"
+  add_index "db_person_notes", ["db_related_agent_id"], name: "index_db_person_notes_on_db_related_agent_id"
 
   create_table "db_person_related_people", force: :cascade do |t|
     t.string   "name"
-    t.integer  "db_related_person_group_id"
+    t.integer  "db_related_agent_id"
     t.datetime "created_at",                 null: false
     t.datetime "updated_at",                 null: false
   end
 
-  add_index "db_person_related_people", ["db_related_person_group_id"], name: "index_db_person_related_people_on_db_related_person_group_id"
+  add_index "db_person_related_people", ["db_related_agent_id"], name: "index_db_person_related_people_on_db_related_agent_id"
 
   create_table "db_person_related_places", force: :cascade do |t|
     t.string  "name"
-    t.integer "db_related_person_group_id"
+    t.integer "db_related_agent_id"
   end
 
-  add_index "db_person_related_places", ["db_related_person_group_id"], name: "index_db_person_related_places_on_db_related_person_group_id"
+  add_index "db_person_related_places", ["db_related_agent_id"], name: "index_db_person_related_places_on_db_related_agent_id"
 
   create_table "db_person_roles", force: :cascade do |t|
     t.string  "name"
-    t.integer "db_related_person_group_id"
+    t.integer "db_related_agent_id"
   end
 
-  add_index "db_person_roles", ["db_related_person_group_id"], name: "index_db_person_roles_on_db_related_person_group_id"
+  add_index "db_person_roles", ["db_related_agent_id"], name: "index_db_person_roles_on_db_related_agent_id"
 
   create_table "db_place_as_writtens", force: :cascade do |t|
     t.string  "name"
@@ -172,15 +172,15 @@ ActiveRecord::Schema.define(version: 20151106154459) do
 
   add_index "db_place_types", ["db_related_place_id"], name: "index_db_place_types_on_db_related_place_id"
 
-  create_table "db_related_person_groups" , force: :cascade do |t|
+  create_table "db_related_agents" , force: :cascade do |t|
     t.string  "person_same_as"
     t.string  "person_gender"
     t.string  "person_id"
     t.integer "db_entry_id"
   end
-  #change_column "db_related_person_groups", :id, :primary_key, limit: 8
+  #change_column "db_related_agents", :id, :primary_key, limit: 8
 
-  add_index "db_related_person_groups", ["db_entry_id"], name: "index_db_related_person_groups_on_db_entry_id"
+  add_index "db_related_agents", ["db_entry_id"], name: "index_db_related_agents_on_db_entry_id"
 
   create_table "db_related_places", force: :cascade do |t|
     t.string  "place_same_as"

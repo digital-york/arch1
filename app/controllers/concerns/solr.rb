@@ -228,29 +228,29 @@ module Solr
           end
         end
 
-        SolrQuery.new.solr_query('has_model_ssim:RelatedPersonGroup AND relatedAgentFor_ssim:"' + db_entry.entry_id + '"', 'id, person_same_as_tesim, person_gender_tesim, person_as_written_tesim, person_role_tesim, person_descriptor_tesim, person_descriptor_as_written_tesim, person_note_tesim, person_related_place_tesim, person_related_person_tesim', 100)['response']['docs'].map do |result|
+        SolrQuery.new.solr_query('has_model_ssim:RelatedAgent AND relatedAgentFor_ssim:"' + db_entry.entry_id + '"', 'id, person_same_as_tesim, person_gender_tesim, person_as_written_tesim, person_role_tesim, person_descriptor_tesim, person_descriptor_as_written_tesim, person_note_tesim, person_related_place_tesim, person_related_person_tesim', 100)['response']['docs'].map do |result|
 
-          related_person_group_id = result['id'];
+          related_agent_id = result['id'];
 
-          if related_person_group_id != nil
+          if related_agent_id != nil
 
-            db_related_person_group = DbRelatedPersonGroup.new
+            db_related_agent = DbRelatedAgent.new
 
-            db_related_person_group.person_id = related_person_group_id
+            db_related_agent.person_id = related_agent_id
 
-            #related_person_group_id.unpack('b*').each do | o | db_related_person_group.id = o.to_i(2) end
-            db_related_person_group.id = 1
+            #related_agent_id.unpack('b*').each do | o | db_related_agent.id = o.to_i(2) end
+            db_related_agent.id = 1
 
             person_same_as = result['person_same_as_tesim']
 
             if person_same_as != nil
-              db_related_person_group.person_same_as = person_same_as.join()
+              db_related_agent.person_same_as = person_same_as.join()
             end
 
             person_gender = result['person_gender_tesim']
 
             if person_gender != nil
-              db_related_person_group.person_gender = person_gender.join()
+              db_related_agent.person_gender = person_gender.join()
             end
 
             person_as_written_list = result['person_as_written_tesim'];
@@ -259,7 +259,7 @@ module Solr
               person_as_written_list.each do |tt|
                 db_person_as_written = DbPersonAsWritten.new
                 db_person_as_written.name = tt
-                db_related_person_group.db_person_as_writtens << db_person_as_written
+                db_related_agent.db_person_as_writtens << db_person_as_written
               end
             end
 
@@ -269,7 +269,7 @@ module Solr
               person_role_list.each do |tt|
                 db_person_role = DbPersonRole.new
                 db_person_role.name = tt
-                db_related_person_group.db_person_roles << db_person_role
+                db_related_agent.db_person_roles << db_person_role
               end
             end
 
@@ -279,7 +279,7 @@ module Solr
               person_descriptor_list.each do |tt|
                 db_person_descriptor = DbPersonDescriptor.new
                 db_person_descriptor.name = tt
-                db_related_person_group.db_person_descriptors << db_person_descriptor
+                db_related_agent.db_person_descriptors << db_person_descriptor
               end
             end
 
@@ -289,7 +289,7 @@ module Solr
               person_descriptor_as_written_list.each do |tt|
                 db_person_descriptor_as_written = DbPersonDescriptorAsWritten.new
                 db_person_descriptor_as_written.name = tt
-                db_related_person_group.db_person_descriptor_as_writtens << db_person_descriptor_as_written
+                db_related_agent.db_person_descriptor_as_writtens << db_person_descriptor_as_written
               end
             end
 
@@ -299,7 +299,7 @@ module Solr
               person_note_list.each do |tt|
                 db_person_note = DbPersonNote.new
                 db_person_note.name = tt
-                db_related_person_group.db_person_notes << db_person_note
+                db_related_agent.db_person_notes << db_person_note
               end
             end
 
@@ -309,7 +309,7 @@ module Solr
               person_related_place_list.each do |tt|
                 db_person_related_place = DbPersonRelatedPlace.new
                 db_person_related_place.name = tt
-                db_related_person_group.db_person_related_places << db_person_related_place
+                db_related_agent.db_person_related_places << db_person_related_place
               end
             end
 
@@ -319,11 +319,11 @@ module Solr
               person_related_person_list.each do |tt|
                 db_person_related_person = DbPersonRelatedPerson.new
                 db_person_related_person.name = tt
-                db_related_person_group.db_person_related_people << db_person_related_person
+                db_related_agent.db_person_related_people << db_person_related_person
               end
             end
 
-            db_entry.db_related_person_groups << db_related_person_group
+            db_entry.db_related_agents << db_related_agent
           end
         end
       end

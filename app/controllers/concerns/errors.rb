@@ -47,11 +47,11 @@ def check_for_errors(entry_params)
   end
 
   # Validate related people
-  related_person_groups_params = entry_params[:related_person_groups_attributes]
+  related_agents_params = entry_params[:related_agents_attributes]
 
-  if related_person_groups_params != nil
+  if related_agents_params != nil
 
-    related_person_groups_params.values.each do |related_person|
+    related_agents_params.values.each do |related_person|
 
       #if related_person[:_destroy] != nil and related_person[:_destroy] != '1'
       errors = errors + get_errors(related_person[:person_same_as], 'Person Same As', SMALL_FIELD, '')

@@ -526,14 +526,14 @@
                     <tr>
 
                         <th>Person:
-                            <img src="/assets/plus_sign.png" alt="plus icon" class="plus_icon click_person_button" jq_role_list="<%= @role_list.to_json %>" jq_descriptor_list="<%= @descriptor_list.to_json %>" jq_gender_list="<%= @gender_list %>" jq_rdftype='["http://dlib.york.ac.uk/ontologies/borthwick-registers#RelatedPersonGroup","http://xmlns.com/foaf/0.1/Person"]'/>
+                            <img src="/assets/plus_sign.png" alt="plus icon" class="plus_icon click_person_button" jq_role_list="<%= @role_list.to_json %>" jq_descriptor_list="<%= @descriptor_list.to_json %>" jq_gender_list="<%= @gender_list %>" jq_rdftype='["http://dlib.york.ac.uk/ontologies/borthwick-registers#RelatedAgent","http://xmlns.com/foaf/0.1/Person"]'/>
                         </th>
 
                         <td class="tab2">
 
                             <div class="field_group">
 
-                                <% @db_entry.db_related_person_groups.each_with_index do |related_person, index1| %>
+                                <% @db_entry.db_related_agents.each_with_index do |related_person, index1| %>
 
                                     <div class="field_single no_padding">
 
@@ -543,13 +543,13 @@
                                             <tr>
                                                 <th>
                                                     *As Written:
-                                                    <img src="/assets/plus_sign.png" alt="plus icon" class="plus_icon click_multiple_field_button_level2" jq_attributes="related_person_groups_attributes" jq_index="<%= index1 %>" jq_type="person_as_written"/>
+                                                    <img src="/assets/plus_sign.png" alt="plus icon" class="plus_icon click_multiple_field_button_level2" jq_attributes="related_agents_attributes" jq_index="<%= index1 %>" jq_type="person_as_written"/>
                                                 </th>
                                                 <td>
                                                     <div class="field_group grey_box person_as_written_block">
                                                         <% related_person.db_person_as_writtens.each_with_index do |person_as_written, index2| %>
                                                             <div class="field_single">
-                                                              <input type="text" name="entry[related_person_groups_attributes][<%= index1.to_s %>][person_as_written][]" value="<%= person_as_written.name %>" class="person_as_written">
+                                                              <input type="text" name="entry[related_agents_attributes][<%= index1.to_s %>][person_as_written][]" value="<%= person_as_written.name %>" class="person_as_written">
                                                               &nbsp;<img src='/assets/delete.png' alt='Delete icon' class='delete_icon click_remove_field_level1' jq_tag_type='input'>
                                                             </div>
                                                         <% end %>
@@ -567,7 +567,7 @@
                                                     <%= terms.get_person_same_as(related_person.person_same_as) %>
                                                   <% end %>
                                                   </span>
-                                              <%= hidden_field_tag "entry[related_person_groups_attributes][" + index1.to_s + "][person_same_as]", related_person.person_same_as, id: 'person_' + index1.to_s + '_hidden' %>
+                                              <%= hidden_field_tag "entry[related_agents_attributes][" + index1.to_s + "][person_same_as]", related_person.person_same_as, id: 'person_' + index1.to_s + '_hidden' %>
                                               <div style="float: right; margin-right: 6px">
                                                 <img src='/assets/delete.png' alt='Delete icon' class='delete_icon' onclick="remove_authority('person', '<%= index1 %>'); return false">
                                               </div>
@@ -578,20 +578,20 @@
                                             <tr>
                                                 <th>Gender:</th>
                                                 <td>
-                                                    <%= select_tag "entry[related_person_groups_attributes][" + index1.to_s + "][person_gender]", options_for_select(@gender_list.collect { |gender| [gender[0]] }.insert(0, ["--- select ---", ""]), related_person.person_gender) %>
+                                                    <%= select_tag "entry[related_agents_attributes][" + index1.to_s + "][person_gender]", options_for_select(@gender_list.collect { |gender| [gender[0]] }.insert(0, ["--- select ---", ""]), related_person.person_gender) %>
                                                 </td>
                                             </tr>
 
                                             <%# Person Role %>
                                             <tr>
                                                 <th>Person Role:
-                                                    <img src="/assets/plus_sign.png" alt="plus icon" class="plus_icon click_select_field_button_level2" jq_attributes="related_person_groups_attributes" jq_index="<%= index1 %>" jq_type="person_role" jq_role_list="<%= @role_list.to_json %>"/>
+                                                    <img src="/assets/plus_sign.png" alt="plus icon" class="plus_icon click_select_field_button_level2" jq_attributes="related_agents_attributes" jq_index="<%= index1 %>" jq_type="person_role" jq_role_list="<%= @role_list.to_json %>"/>
                                                 </th>
                                                 <td>
                                                     <div class="field_group grey_box">
                                                         <% related_person.db_person_roles.each_with_index do |person_role, index2| %>
                                                             <div class="field_single">
-                                                                <%= select_tag "entry[related_person_groups_attributes][" + index1.to_s + "][person_role][]", options_for_select(@role_list.collect { |role| [role["label"].join(''), role["id"]] }.insert(0, ["--- select ---", ""]), person_role.name) %>
+                                                                <%= select_tag "entry[related_agents_attributes][" + index1.to_s + "][person_role][]", options_for_select(@role_list.collect { |role| [role["label"].join(''), role["id"]] }.insert(0, ["--- select ---", ""]), person_role.name) %>
                                                                 <img alt="Delete icon" src="/assets/delete.png" class="delete_icon_select click_remove_field_level1" jq_tag_type="select">
                                                             </div>
                                                         <% end %>
@@ -602,13 +602,13 @@
                                             <%# Person Descriptor %>
                                             <tr>
                                                 <th>*Descriptor:
-                                                    <img src="/assets/plus_sign.png" alt="plus icon" class="plus_icon click_select_field_button_level2" jq_attributes="related_person_groups_attributes" jq_index="<%= index1 %>" jq_type="person_descriptor" jq_descriptor_list="<%= @descriptor_list.to_json %>"/>
+                                                    <img src="/assets/plus_sign.png" alt="plus icon" class="plus_icon click_select_field_button_level2" jq_attributes="related_agents_attributes" jq_index="<%= index1 %>" jq_type="person_descriptor" jq_descriptor_list="<%= @descriptor_list.to_json %>"/>
                                                 </th>
                                                 <td>
                                                     <div class="field_group grey_box">
                                                         <% related_person.db_person_descriptors.each_with_index do |person_descriptor, index2| %>
                                                             <div class="field_single">
-                                                                <%= select_tag "entry[related_person_groups_attributes][" + index1.to_s + "][person_descriptor][]", options_for_select(@descriptor_list.collect { |descriptor| [descriptor["label"].join(''), descriptor["id"]] }.insert(0, ["--- select ---", ""]), person_descriptor.name) %>
+                                                                <%= select_tag "entry[related_agents_attributes][" + index1.to_s + "][person_descriptor][]", options_for_select(@descriptor_list.collect { |descriptor| [descriptor["label"].join(''), descriptor["id"]] }.insert(0, ["--- select ---", ""]), person_descriptor.name) %>
                                                                 <img alt="Delete icon" src="/assets/delete.png" class="delete_icon_select click_remove_field_level1" jq_tag_type="select">
                                                             </div>
                                                         <% end %>
@@ -620,13 +620,13 @@
                                             <tr>
                                                 <th>
                                                     Descriptor As Written:
-                                                    <img src="/assets/plus_sign.png" alt="plus icon" class="plus_icon click_multiple_field_button_level2" jq_attributes="related_person_groups_attributes" jq_index="<%= index1 %>" jq_type="person_descriptor_as_written"/>
+                                                    <img src="/assets/plus_sign.png" alt="plus icon" class="plus_icon click_multiple_field_button_level2" jq_attributes="related_agents_attributes" jq_index="<%= index1 %>" jq_type="person_descriptor_as_written"/>
                                                 </th>
                                                 <td>
                                                     <div class="field_group grey_box">
                                                         <% related_person.db_person_descriptor_as_writtens.each_with_index do |person_descriptor_as_written, index2| %>
                                                             <div class="field_single">
-                                                                <%= text_field_tag "entry[related_person_groups_attributes][" + index1.to_s + "][person_descriptor_as_written][]", person_descriptor_as_written.name, id: '' %>
+                                                                <%= text_field_tag "entry[related_agents_attributes][" + index1.to_s + "][person_descriptor_as_written][]", person_descriptor_as_written.name, id: '' %>
                                                                 &nbsp;<img src='/assets/delete.png' alt='Delete icon' class='delete_icon click_remove_field_level1' jq_tag_type='input'>
                                                             </div>
                                                         <% end %>
@@ -639,13 +639,13 @@
                                             <tr>
                                                 <th>
                                                     Note:
-                                                    <img src="/assets/plus_sign.png" alt="plus icon" class="plus_icon click_multiple_field_button_level2" jq_attributes="related_person_groups_attributes" jq_index="<%= index1 %>" jq_type="person_note"/>
+                                                    <img src="/assets/plus_sign.png" alt="plus icon" class="plus_icon click_multiple_field_button_level2" jq_attributes="related_agents_attributes" jq_index="<%= index1 %>" jq_type="person_note"/>
                                                 </th>
                                                 <td>
                                                     <div class="field_group grey_box">
                                                         <% related_person.db_person_notes.each_with_index do |person_note, index2| %>
                                                             <div class="field_single">
-                                                                <%= text_area_tag "entry[related_person_groups_attributes][" + index1.to_s + "][person_note][]", person_note.name, id: '' %>
+                                                                <%= text_area_tag "entry[related_agents_attributes][" + index1.to_s + "][person_note][]", person_note.name, id: '' %>
                                                                 &nbsp;<img src='/assets/delete.png' alt='Delete icon' class='delete_icon click_remove_field_level1' jq_tag_type='textarea'>
                                                             </div>
                                                         <% end %>
@@ -657,13 +657,13 @@
                                             <tr>
                                                 <th>
                                                     Related Place:
-                                                    <img src="/assets/plus_sign.png" alt="plus icon" class="plus_icon click_person_related_field_button" jq_attributes="related_person_groups_attributes" jq_index="<%= index1 %>" jq_type="person_related_place"/>
+                                                    <img src="/assets/plus_sign.png" alt="plus icon" class="plus_icon click_person_related_field_button" jq_attributes="related_agents_attributes" jq_index="<%= index1 %>" jq_type="person_related_place"/>
                                                 </th>
                                                 <td>
                                                     <div class="field_group grey_box">
                                                         <% related_person.db_person_related_places.each do |person_related_place| %>
                                                             <div class="field_single">
-                                                                <%= select_tag "entry[related_person_groups_attributes][" + index1.to_s + "][person_related_place][]", options_for_select(@related_place_list, person_related_place.name), class: 'related_place', id: '' %>
+                                                                <%= select_tag "entry[related_agents_attributes][" + index1.to_s + "][person_related_place][]", options_for_select(@related_place_list, person_related_place.name), class: 'related_place', id: '' %>
                                                                 <img src='/assets/delete.png' alt='Delete icon' class='delete_icon_select click_remove_field_level1' jq_tag_type='select'>
                                                             </div>
                                                         <% end %>
@@ -671,19 +671,19 @@
                                                 </td>
                                             </tr>
 
-                                            <input type="hidden" id="hidden_field" name="entry[related_person_groups_attributes][<%= index1.to_s %>][rdftype]" value="<%= related_person.add_rdf_types_p %>">
+                                            <input type="hidden" id="hidden_field" name="entry[related_agents_attributes][<%= index1.to_s %>][rdftype]" value="<%= related_person.add_rdf_types_p %>">
 
                                           <%# Person Related Person %>
                                           <tr>
                                             <th>
                                               Related Person:
-                                              <img src="/assets/plus_sign.png" alt="plus icon" class="plus_icon click_person_related_field_button" jq_attributes="related_person_groups_attributes" jq_index="<%= index1 %>" jq_type="person_related_person"/>
+                                              <img src="/assets/plus_sign.png" alt="plus icon" class="plus_icon click_person_related_field_button" jq_attributes="related_agents_attributes" jq_index="<%= index1 %>" jq_type="person_related_person"/>
                                             </th>
                                             <td>
                                               <div class="field_group grey_box">
                                                 <% related_person.db_person_related_people.each do |person_related_person| %>
                                                     <div class="field_single">
-                                                      <%= select_tag "entry[related_person_groups_attributes][" + index1.to_s + "][person_related_person][]", options_for_select(@related_person_list, person_related_person.name), class: 'related_person_group', id: '' %>
+                                                      <%= select_tag "entry[related_agents_attributes][" + index1.to_s + "][person_related_person][]", options_for_select(@related_person_list, person_related_person.name), class: 'related_agent', id: '' %>
                                                       <img src='/assets/delete.png' alt='Delete icon' class='delete_icon_select click_remove_field_level1' jq_tag_type='select'>
                                                     </div>
                                                 <% end %>
@@ -693,9 +693,9 @@
 
                                         </table>
 
-                                        <img src='/assets/delete.png' class='delete_icon click_remove_field_level2' params_type='related_person_groups' alt='Delete icon'>
+                                        <img src='/assets/delete.png' class='delete_icon click_remove_field_level2' params_type='related_agents' alt='Delete icon'>
 
-                                        <input type="hidden" id="hidden_field" name="entry[related_person_groups_attributes][<%= index1.to_s %>][person_id]" value="<%= related_person.person_id %>">
+                                        <input type="hidden" id="hidden_field" name="entry[related_agents_attributes][<%= index1.to_s %>][person_id]" value="<%= related_person.person_id %>">
                                     </div>
 
                                 <% end %>
