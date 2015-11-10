@@ -13,7 +13,7 @@ class Image < ActiveFedora::Base
   directly_contains :files, has_member_relation: ::RDF::URI.new("http://pcdm.org/models#hasFile"), class_name: 'ContainedFile'
 
   # VALUE: http://www.shared-canvas.org/ns/painting
-  property :motivated_by, predicate: ::RDF::Vocab::OA.motivatedBy, multiple: false do |index|
+  property :motivated_by, predicate: ::RDF::OA.motivatedBy, multiple: false do |index|
     index.as :stored_searchable
   end
 
