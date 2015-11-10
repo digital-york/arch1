@@ -67,9 +67,10 @@ namespace :regfols do
     # 3	Notes
     # 4 UV
 
-    list = ['Abp_Reg_31.csv', 'Abp_Reg_32.csv']
+    list = ['Abp_Reg_32.csv','Abp_Reg_31.csv']
 
     list.each do |l|
+      puts "processing #{l}"
       @csv = CSV.read(Rails.root + 'lib/assets/new_regs_and_fols/' + l, :headers => true)
 
       # get the register
@@ -85,8 +86,14 @@ namespace :regfols do
             build_metadata(i)
 
             if @reg.nil?
-              @reg = Register.where(reg_id: '"'+ @title_hash['image'] + '"').first
-              puts "Register is #{@reg.id}"
+              regs = Register.where(reg_id_tesim:'"'+ @title_hash['image'] + '"')
+              regs.each do |t|
+                fn = l.gsub('_',' ').gsub('.csv','')
+                if t.reg_id == fn
+                  @reg = t
+                end
+              end
+              puts "Register is #{@reg.id} #{@title_hash['image']}"
             end
 
             #is it the same folio
@@ -110,21 +117,12 @@ namespace :regfols do
             image = Image.new
             image.rdftype = image.add_rdf_types
             image.file = 'assets/reg_23-e323da66b28a2b4d178be69812f1a18617e144d66d378644e24684b46783df72.png' # boilerplate to be replaced with some code
-
-            if @title_hash['notes'] && @title_hash['notes'].strip.downcase == 'colour reference image'
-              image.preflabel = "#{@title_hash['note']}"
-              image.registers += [@reg]
-              puts "Creating image colour reference image on register #{image.id}"
-              image.save
-            else
-              image.id = image.create_container_id(fol.id)
-              puts "Creating image #{image.id} for Folio #{fol.preflabel}"
-              image.preflabel = "Image#{@title_hash['uv']}"
-              image.motivated_by = 'http://www.shared-canvas.org/ns/painting'
-              image.folio = fol
-              fol.images += [image]
-            end
-
+            image.id = image.create_container_id(fol.id)
+            puts "Creating image #{image.id} for Folio #{fol.preflabel}"
+            image.preflabel = "Image#{@title_hash['uv']}"
+            image.motivated_by = 'http://www.shared-canvas.org/ns/painting'
+            image.folio = fol
+            fol.images += [image]
             fol_t = "#{@title_hash['image']}#{@title_hash['part']}#{@title_hash['folio']}#{@title_hash['rv']}#{@title_hash['notes']}"
             fol_id = fol.id
             fol.save
@@ -133,18 +131,20 @@ namespace :regfols do
             puts $!
           end
         end
-        # do this part as a one off as it was veeeery slow to do it with each folio
-        # hasPart
-        puts "Adding order"
-        @fols.each_with_index do |f, index|
-          puts "Adding order number #{index}"
-          @reg.ordered_folio_proxies.append_target f
-        end
-        # do I need this part? I think only if I want proxies that aren't in the order (which I obviously don't)
-        # and I get them anyway
-        # @reg.folios = @fols
-        @reg.save
       end
+      # do this part as a one off as it was veeeery slow to do it with each folio
+      # hasPart
+      puts "Adding order to #{@reg}"
+      @fols.each_with_index do |f, index|
+        puts "Adding order number #{index}"
+        @reg.ordered_folio_proxies.append_target f
+      end
+      @reg.save
+      @reg = nil
+      @fols = []
+      # do I need this part? I think only if I want proxies that aren't in the order (which I obviously don't)
+      # and I get them anyway
+      # @reg.folios = @fols
     end
   end
 
