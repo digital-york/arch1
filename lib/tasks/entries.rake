@@ -235,7 +235,7 @@ namespace :entries do
 
     entries.each do |e|
 
-      p = RelatedPersonGroup.new
+      p = RelatedAgent.new
 
       naw = ''
       unless line[3].nil?
@@ -270,7 +270,7 @@ namespace :entries do
       unless pid.nil?
         puts 'add to existing (person): ' + pid
         # switch to the existing person
-        p = RelatedPersonGroup.where(id: pid).first
+        p = RelatedAgent.where(id: pid).first
       end
 
       # try and guess if it's a group
@@ -418,7 +418,7 @@ namespace :entries do
       ee = Entry.where(id: e).first
       p.entry = ee
       p.save
-      ee.related_person_groups += [p]
+      ee.related_agents += [p]
       ee.save
       #puts "Adding Person #{p.id}"
     end
@@ -629,14 +629,14 @@ namespace :entries do
     pl.place_as_written = [written]
     pl.place_role = [place_role_lookup(role)]
     pl.place_type = [place_type_lookup(ptype)]
-    pl.related_person_group += [person]
+    pl.related_agent += [person]
     unless stand.nil?
       pl.place_note = [stand]
     end
     pl.save
     #why did I comment this out?
     #person.related_places += [pl]
-    pl.related_person_group += [person]
+    pl.related_agent += [person]
     if person.person_related_place.nil?
       person.person_related_place = [written]
     else

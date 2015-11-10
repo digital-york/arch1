@@ -1,4 +1,4 @@
-class DbRelatedPersonGroup < ActiveRecord::Base
+class DbRelatedAgent < ActiveRecord::Base
 
   belongs_to :db_entry
   has_many :db_person_as_writtens
@@ -10,10 +10,10 @@ class DbRelatedPersonGroup < ActiveRecord::Base
   has_many :db_person_related_people
 
   def add_rdf_types_p
-    ['http://dlib.york.ac.uk/ontologies/borthwick-registers#RelatedPersonGroup','http://xmlns.com/foaf/0.1/Person']
+    ['http://dlib.york.ac.uk/ontologies/borthwick-registers#RelatedAgent','http://xmlns.com/foaf/0.1/Person']
   end
 
   def add_rdf_types_g
-    ['http://dlib.york.ac.uk/ontologies/borthwick-registers#RelatedPersonGroup','http://xmlns.com/foaf/0.1/Group']
+    ['http://dlib.york.ac.uk/ontologies/borthwick-registers#RelatedAgent','http://xmlns.com/foaf/0.1/Group']
   end
 end

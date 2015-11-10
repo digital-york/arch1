@@ -16,7 +16,7 @@ class DropTables < ActiveRecord::Migration
     drop_table :db_place_types
     drop_table :db_place_roles
     drop_table :db_place_notes
-    drop_table :db_related_person_groups
+    drop_table :db_related_agents
     drop_table :db_person_as_writtens
     drop_table :db_person_roles
     drop_table :db_person_descriptors

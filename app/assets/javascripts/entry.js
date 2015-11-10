@@ -352,7 +352,7 @@ $(document).ready(function () {
             if (jq_type == 'person_related_place') {
                 input_class = 'related_place';
             } else {
-                input_class = 'related_person_group';
+                input_class = 'related_agent';
             }
             var new_code_block = "<div class='field_single'><select class='" +  input_class + "' autocomplete='off' name='entry[" + jq_attributes + "][" + jq_index + "][" + jq_type + "][]'>" + options +
                 "</select>&nbsp;<img alt='Delete icon' src='/assets/delete.png' class='delete_icon_select click_remove_field_level1' jq_tag_type='select'></div>";
@@ -360,7 +360,7 @@ $(document).ready(function () {
 
             // Need to do this otherwise 'Related Place' will not have any options
             update_related_fields('related_place');
-            update_related_fields('related_person_group');
+            update_related_fields('related_agent');
 
         } catch (err) {
             alert(err);
@@ -455,54 +455,54 @@ $(document).ready(function () {
 
                  // As Written
                 "<tr><th style='width: 115px'>*As Written:" +
-                "&nbsp;<img jq_type='person_as_written' jq_index='" + jq_index + "' jq_attributes='related_person_groups_attributes' class='plus_icon click_multiple_field_button_level2' src='/assets/plus_sign.png'>" +
+                "&nbsp;<img jq_type='person_as_written' jq_index='" + jq_index + "' jq_attributes='related_agents_attributes' class='plus_icon click_multiple_field_button_level2' src='/assets/plus_sign.png'>" +
                 "</th><td><div class='field_group grey_box person_as_written_block'></div></td></tr>" +
 
                 // Person Name Authority (Same As)
                 "<tr><th>Person Name Authority:</th><td class='input_single'>" +
                 "<a href='' onclick='popup(&#39;/people?start=true&amp;person_field=person_" + jq_index + "&#39;, &#39;person&#39;); return false;' tabindex='-1'><img src='/assets/magnifying_glass_small.png' class='plus_icon'></a>" +
                 "&nbsp;<span id='person_" + jq_index + "'></span>" +
-                "<input type='hidden' id='person_" + jq_index + "_hidden' value='' name='entry[related_person_groups_attributes][" + jq_index + "][person_same_as]'>" +
+                "<input type='hidden' id='person_" + jq_index + "_hidden' value='' name='entry[related_agents_attributes][" + jq_index + "][person_same_as]'>" +
                 "</td></tr>" +
 
                 // Gender
-                "<tr><th>Gender:</th><td><select name='entry[related_person_groups_attributes][" + jq_index + "][person_gender]'>" + gender_options + "</select></td></tr>" +
+                "<tr><th>Gender:</th><td><select name='entry[related_agents_attributes][" + jq_index + "][person_gender]'>" + gender_options + "</select></td></tr>" +
 
                 // Role
                 "<tr><th>Person Role:" +
-                "&nbsp;<img jq_role_list=" + jq_role_list + " jq_type='" + "person_role" + "' jq_index='" + jq_index + "' jq_attributes='related_person_groups_attributes' class='plus_icon click_select_field_button_level2' src='/assets/plus_sign.png'>" +
+                "&nbsp;<img jq_role_list=" + jq_role_list + " jq_type='" + "person_role" + "' jq_index='" + jq_index + "' jq_attributes='related_agents_attributes' class='plus_icon click_select_field_button_level2' src='/assets/plus_sign.png'>" +
                 "</th><td><div class='field_group grey_box'></div></td></tr>" +
 
                 // Descriptor
                 "<tr><th>Descriptor:" +
-                "&nbsp;<img jq_descriptor_list=" + jq_descriptor_list + " jq_type='" + "person_descriptor" + "' jq_index='" + jq_index + "' jq_attributes='related_person_groups_attributes' class='plus_icon click_select_field_button_level2' src='/assets/plus_sign.png'>" +
+                "&nbsp;<img jq_descriptor_list=" + jq_descriptor_list + " jq_type='" + "person_descriptor" + "' jq_index='" + jq_index + "' jq_attributes='related_agents_attributes' class='plus_icon click_select_field_button_level2' src='/assets/plus_sign.png'>" +
                 "</th><td><div class='field_group grey_box'></div></td></tr>" +
 
                 // Descriptor As Written
                 "<tr><th>Descriptor As Written:" +
-                "&nbsp;<img jq_type='person_descriptor_as_written' jq_index='" + jq_index + "' jq_attributes='related_person_groups_attributes' class='plus_icon click_multiple_field_button_level2' src='/assets/plus_sign.png'>" +
+                "&nbsp;<img jq_type='person_descriptor_as_written' jq_index='" + jq_index + "' jq_attributes='related_agents_attributes' class='plus_icon click_multiple_field_button_level2' src='/assets/plus_sign.png'>" +
                 "</th><td><div class='field_group grey_box'></div></td></tr>" +
 
                 // Note
                 "<tr><th>Note:" +
-                "&nbsp;<img jq_type='person_note' jq_index='" + jq_index + "' jq_attributes='related_person_groups_attributes' class='plus_icon click_multiple_text_area_button_level2' src='/assets/plus_sign.png'>" +
+                "&nbsp;<img jq_type='person_note' jq_index='" + jq_index + "' jq_attributes='related_agents_attributes' class='plus_icon click_multiple_text_area_button_level2' src='/assets/plus_sign.png'>" +
                 "</th><td><div class='field_group grey_box'></div></td></tr>" +
 
                 // Related Place
                 "<tr><th>Related Place:" +
-                "&nbsp;<img jq_type='person_related_place' jq_index='" + jq_index + "' jq_attributes='related_person_groups_attributes' class='plus_icon click_person_related_field_button' src='/assets/plus_sign.png'>" +
+                "&nbsp;<img jq_type='person_related_place' jq_index='" + jq_index + "' jq_attributes='related_agents_attributes' class='plus_icon click_person_related_field_button' src='/assets/plus_sign.png'>" +
                 "</th><td><div class='field_group grey_box'></div></td></tr>" +
 
-                // Related Person
-                "<tr><th>Related Person:" +
-                "&nbsp;<img jq_type='person_related_person' jq_index='" + jq_index + "' jq_attributes='related_person_groups_attributes' class='plus_icon click_person_related_field_button' src='/assets/plus_sign.png'>" +
+                // Related Agent
+                "<tr><th>Related Person or Group:" +
+                "&nbsp;<img jq_type='person_related_person' jq_index='" + jq_index + "' jq_attributes='related_agents_attributes' class='plus_icon click_person_related_field_button' src='/assets/plus_sign.png'>" +
                 "</th><td><div class='field_group grey_box'></div></td></tr>" +
 
                 // Hidden field for RDFTYPE
-                "<tr><input type='hidden' id='hidden_field' name='entry[related_person_groups_attributes][" + jq_index + "][rdftype]' value='" + jq_rdftype + "'></tr>" +
+                "<tr><input type='hidden' id='hidden_field' name='entry[related_agents_attributes][" + jq_index + "][rdftype]' value='" + jq_rdftype + "'></tr>" +
 
                 "</table>" +
-                "<img src='/assets/delete.png' alt='Delete icon' class='delete_icon click_remove_field_level2' params_type='related_person_groups'>" +
+                "<img src='/assets/delete.png' alt='Delete icon' class='delete_icon click_remove_field_level2' params_type='related_agents'>" +
                 "</div>";
 
             field_group_div.append(new_code_block);
@@ -658,14 +658,14 @@ $(document).ready(function () {
 
             // Update the person 'Related Place' and 'Related Person' lists because an element which is removed shouldn't be shown
             update_related_fields('related_place');
-            update_related_fields('related_person_group');
+            update_related_fields('related_agent');
 
         } catch (err) {
             alert(err);
         }
     });
 
-    // This code hides Level 2 elements, i.e. Entry Date, Related Place and Related Person Group elements
+    // This code hides Level 2 elements, i.e. Entry Date, Related Place and Related Agent elements
     // Note that a hidden field is also added with '_destroy' = '1' - this is necessary to remove associations in Fedora
     $('body').on('click', '.click_remove_field_level2', function (e) {
 
@@ -677,7 +677,7 @@ $(document).ready(function () {
             // Add a '_destroy' = '1' hidden element to make sure that the block is deleted from Fedora
             // To do this, need to find out the index of the element we are using
             // To get the correct index, the code uses the hidden 'input' field for 'Place Name Authority' for 'Related Place',
-            // the 'Person Name Authority' field for 'Related Person Group'
+            // the 'Person Name Authority' field for 'Related Agent'
             // and the 'Note' field for 'Entry Date'
             // If these fields change, this code will have to be modified
             var params_type = $(this).attr('params_type');
@@ -699,14 +699,14 @@ $(document).ready(function () {
             }
 
             // Remove the Person As Written value because otherwise it will appear in the 'Related Person' drop-down list
-            if (params_type == 'related_person_groups') {
+            if (params_type == 'related_agents') {
                 person_as_written_input = field_single_div.find('.person_as_written');
                 person_as_written_input.val('');
             }
 
-            // Update the person 'Related Place' and 'Related Person Group' lists because this element has been removed and shouldn't be in the drop-down list
+            // Update the person 'Related Place' and 'Related Agent' lists because this element has been removed and shouldn't be in the drop-down list
             update_related_fields('related_place');
-            update_related_fields('related_person_group');
+            update_related_fields('related_agent');
 
         } catch (err) {
             alert(err);
@@ -883,7 +883,7 @@ function update_related_fields(type) {
         } else {
             block_class_type = '.person_as_written_block';
             field_class_type = '.person_as_written';
-            class_type = '.related_person_group';
+            class_type = '.related_agent';
         }
 
         var field_array = new Array();

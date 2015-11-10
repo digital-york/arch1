@@ -1,4 +1,4 @@
-class RelatedPersonGroup < ActiveFedora::Base
+class RelatedAgent < ActiveFedora::Base
 
   include AssignId,RdfType
 
@@ -9,14 +9,14 @@ class RelatedPersonGroup < ActiveFedora::Base
   has_many :related_places #, :dependent => :destroy
   accepts_nested_attributes_for :related_places, :allow_destroy => true, :reject_if => :all_blank
 
-  has_and_belongs_to_many :related_person_group, predicate: ::RDF::URI.new('http://dlib.york.ac.uk/ontologies/borthwick-registers#relatedAgentFor')
+  has_and_belongs_to_many :related_agent, predicate: ::RDF::URI.new('http://dlib.york.ac.uk/ontologies/borthwick-registers#relatedAgentFor')
 
   def add_rdf_types_p
-    ['http://dlib.york.ac.uk/ontologies/borthwick-registers#RelatedPersonGroup','http://xmlns.com/foaf/0.1/Person']
+    ['http://dlib.york.ac.uk/ontologies/borthwick-registers#RelatedAgent','http://xmlns.com/foaf/0.1/Person']
   end
 
   def add_rdf_types_g
-    ['http://dlib.york.ac.uk/ontologies/borthwick-registers#RelatedPersonGroup','http://xmlns.com/foaf/0.1/Group']
+    ['http://dlib.york.ac.uk/ontologies/borthwick-registers#RelatedAgent','http://xmlns.com/foaf/0.1/Group']
   end
 
   property :person_same_as, predicate: ::RDF::URI.new('http://www.w3.org/2002/07/owl#sameAs'), multiple: false do |index|

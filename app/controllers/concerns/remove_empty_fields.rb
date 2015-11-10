@@ -54,15 +54,15 @@ module RemoveEmptyFields
     end
 
     # Remove empty multi-value fields (person)
-    if entry_params[:related_person_groups_attributes] != nil
-      entry_params[:related_person_groups_attributes].each_with_index do |related_person, index|
-        entry_params[:related_person_groups_attributes][index.to_s][:person_as_written] = remove_empty_array_fields2(entry_params[:related_person_groups_attributes][index.to_s][:person_as_written])
-        entry_params[:related_person_groups_attributes][index.to_s][:person_role] = remove_empty_array_fields2(entry_params[:related_person_groups_attributes][index.to_s][:person_role])
-        entry_params[:related_person_groups_attributes][index.to_s][:person_descriptor] = remove_empty_array_fields2(entry_params[:related_person_groups_attributes][index.to_s][:person_descriptor])
-        entry_params[:related_person_groups_attributes][index.to_s][:person_descriptor_as_written] = remove_empty_array_fields2(entry_params[:related_person_groups_attributes][index.to_s][:person_descriptor_as_written])
-        entry_params[:related_person_groups_attributes][index.to_s][:person_note] = remove_empty_array_fields2(entry_params[:related_person_groups_attributes][index.to_s][:person_note])
-        entry_params[:related_person_groups_attributes][index.to_s][:person_related_place] = remove_empty_array_fields2(entry_params[:related_person_groups_attributes][index.to_s][:person_related_place])
-        entry_params[:related_person_groups_attributes][index.to_s][:person_related_person] = remove_empty_array_fields2(entry_params[:related_person_groups_attributes][index.to_s][:person_related_person])
+    if entry_params[:related_agents_attributes] != nil
+      entry_params[:related_agents_attributes].each_with_index do |related_person, index|
+        entry_params[:related_agents_attributes][index.to_s][:person_as_written] = remove_empty_array_fields2(entry_params[:related_agents_attributes][index.to_s][:person_as_written])
+        entry_params[:related_agents_attributes][index.to_s][:person_role] = remove_empty_array_fields2(entry_params[:related_agents_attributes][index.to_s][:person_role])
+        entry_params[:related_agents_attributes][index.to_s][:person_descriptor] = remove_empty_array_fields2(entry_params[:related_agents_attributes][index.to_s][:person_descriptor])
+        entry_params[:related_agents_attributes][index.to_s][:person_descriptor_as_written] = remove_empty_array_fields2(entry_params[:related_agents_attributes][index.to_s][:person_descriptor_as_written])
+        entry_params[:related_agents_attributes][index.to_s][:person_note] = remove_empty_array_fields2(entry_params[:related_agents_attributes][index.to_s][:person_note])
+        entry_params[:related_agents_attributes][index.to_s][:person_related_place] = remove_empty_array_fields2(entry_params[:related_agents_attributes][index.to_s][:person_related_place])
+        entry_params[:related_agents_attributes][index.to_s][:person_related_person] = remove_empty_array_fields2(entry_params[:related_agents_attributes][index.to_s][:person_related_person])
       end
     end
   end
@@ -180,50 +180,50 @@ module RemoveEmptyFields
   # Remove any empty person blocks, i.e. when all the fields are empty
   def remove_empty_person_blocks(entry_params)
 
-    if entry_params[:related_person_groups_attributes] != nil
+    if entry_params[:related_agents_attributes] != nil
 
-      entry_params[:related_person_groups_attributes].each_with_index do |related_person, index|
+      entry_params[:related_agents_attributes].each_with_index do |related_person, index|
 
         # Remove person if all fields are empty (but only do this for a saved entry, i.e. an id exists)
         # person id?
-        if entry_params[:related_person_groups_attributes][index.to_s][:person_id] != nil
+        if entry_params[:related_agents_attributes][index.to_s][:person_id] != nil
 
           remove_person = true
 
-          if entry_params[:related_person_groups_attributes][index.to_s][:person_same_as] != ''
+          if entry_params[:related_agents_attributes][index.to_s][:person_same_as] != ''
             remove_person = false
           end
 
-          if entry_params[:related_person_groups_attributes][index.to_s][:person_as_written] != nil && entry_params[:related_person_groups_attributes][index.to_s][:person_as_written].size > 0
+          if entry_params[:related_agents_attributes][index.to_s][:person_as_written] != nil && entry_params[:related_agents_attributes][index.to_s][:person_as_written].size > 0
             remove_person = false
           end
 
-          if entry_params[:related_person_groups_attributes][index.to_s][:person_gender] != ''
+          if entry_params[:related_agents_attributes][index.to_s][:person_gender] != ''
             remove_person = false
           end
 
-          if entry_params[:related_person_groups_attributes][index.to_s][:person_role] != nil && entry_params[:related_person_groups_attributes][index.to_s][:person_role].size > 0
+          if entry_params[:related_agents_attributes][index.to_s][:person_role] != nil && entry_params[:related_agents_attributes][index.to_s][:person_role].size > 0
             remove_person = false
           end
 
-          if entry_params[:related_person_groups_attributes][index.to_s][:person_descriptor] != nil && entry_params[:related_person_groups_attributes][index.to_s][:person_descriptor].size > 0
+          if entry_params[:related_agents_attributes][index.to_s][:person_descriptor] != nil && entry_params[:related_agents_attributes][index.to_s][:person_descriptor].size > 0
             remove_person = false
           end
 
-          if entry_params[:related_person_groups_attributes][index.to_s][:person_descriptor_as_written] != nil && entry_params[:related_person_groups_attributes][index.to_s][:person_descriptor_as_written].size > 0
+          if entry_params[:related_agents_attributes][index.to_s][:person_descriptor_as_written] != nil && entry_params[:related_agents_attributes][index.to_s][:person_descriptor_as_written].size > 0
             remove_person = false
           end
 
-          if entry_params[:related_person_groups_attributes][index.to_s][:person_note] != nil && entry_params[:related_person_groups_attributes][index.to_s][:person_note].size > 0
+          if entry_params[:related_agents_attributes][index.to_s][:person_note] != nil && entry_params[:related_agents_attributes][index.to_s][:person_note].size > 0
             remove_person = false
           end
 
-          if entry_params[:related_person_groups_attributes][index.to_s][:person_related_place] != nil && entry_params[:related_person_groups_attributes][index.to_s][:person_related_place].size > 0
+          if entry_params[:related_agents_attributes][index.to_s][:person_related_place] != nil && entry_params[:related_agents_attributes][index.to_s][:person_related_place].size > 0
             remove_person = false
           end
 
           if remove_person == true
-            entry_params[:related_person_groups_attributes][index.to_s][:_destroy] = '1'
+            entry_params[:related_agents_attributes][index.to_s][:_destroy] = '1'
           end
 
           # Else remove person when it has been added then deleted with the 'x' button (but has not been saved)
@@ -232,16 +232,16 @@ module RemoveEmptyFields
           # to delete it. It we didn't make it equal to 'nil' below I think the blank data is saved to Fedora!
         else
 
-          if entry_params[:related_person_groups_attributes][index.to_s][:_destroy] == '1'
-            entry_params[:related_person_groups_attributes][index.to_s][:person_same_as] = ''
-            entry_params[:related_person_groups_attributes][index.to_s][:person_as_written] = ''
-            entry_params[:related_person_groups_attributes][index.to_s][:person_gender] = ''
-            entry_params[:related_person_groups_attributes][index.to_s][:person_role] = ''
-            entry_params[:related_person_groups_attributes][index.to_s][:person_descriptor] = ''
-            entry_params[:related_person_groups_attributes][index.to_s][:person_note] = ''
-            entry_params[:related_person_groups_attributes][index.to_s][:person_related_place] = ''
-            entry_params[:related_person_groups_attributes][index.to_s][:person_id] = ''
-            entry_params[:related_person_groups_attributes][index.to_s][:_destroy] = nil
+          if entry_params[:related_agents_attributes][index.to_s][:_destroy] == '1'
+            entry_params[:related_agents_attributes][index.to_s][:person_same_as] = ''
+            entry_params[:related_agents_attributes][index.to_s][:person_as_written] = ''
+            entry_params[:related_agents_attributes][index.to_s][:person_gender] = ''
+            entry_params[:related_agents_attributes][index.to_s][:person_role] = ''
+            entry_params[:related_agents_attributes][index.to_s][:person_descriptor] = ''
+            entry_params[:related_agents_attributes][index.to_s][:person_note] = ''
+            entry_params[:related_agents_attributes][index.to_s][:person_related_place] = ''
+            entry_params[:related_agents_attributes][index.to_s][:person_id] = ''
+            entry_params[:related_agents_attributes][index.to_s][:_destroy] = nil
           end
         end
       end

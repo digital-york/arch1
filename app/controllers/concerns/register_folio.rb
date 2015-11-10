@@ -304,11 +304,11 @@ module RegisterFolio
 
   # Update rdf types ... this appears to be just stripping out [] and space - why is this necessary?
   def update_rdf_types
-    unless params[:entry][:related_person_groups_attributes].nil?
-      params[:entry][:related_person_groups_attributes].each do |key, value|
+    unless params[:entry][:related_agents_attributes].nil?
+      params[:entry][:related_agents_attributes].each do |key, value|
         value.each do |k, v|
           if k == 'rdftype'
-            params[:entry][:related_person_groups_attributes][key][k] = v.gsub!("[", "").gsub!('"', '').gsub!("]", '').gsub(' ', '').split(',').collect { |s| s }
+            params[:entry][:related_agents_attributes][key][k] = v.gsub!("[", "").gsub!('"', '').gsub!("]", '').gsub(' ', '').split(',').collect { |s| s }
           end
         end
       end
@@ -342,22 +342,22 @@ module RegisterFolio
     end
   end
 
-  # This method adds adds Related Person Group ids to the relatedPlaceFor field in Related Place
+  # This method adds adds Related Agent ids to the relatedPlaceFor field in Related Place
   def update_related_places
     begin
       # Get each Related Place for the Entry...
       q = 'relatedPlaceFor_ssim:"' + @entry.id + '"'
       SolrQuery.new.solr_query(q, 'id,place_as_written_tesim', 50)['response']['docs'].each do |result|
         name = result['place_as_written_tesim'][0]
-        # Get each person_related_place string (i.e. as chosen from the drop-down list) for each Related Person Group in the Entry
+        # Get each person_related_place string (i.e. as chosen from the drop-down list) for each Related Agent in the Entry
         begin
           q = 'relatedAgentFor_ssim:"' + @entry.id + '" AND person_related_place_tesim:"' + name + '"'
           SolrQuery.new.solr_query(q, 'id,person_related_place_tesim', 50)['response']['docs'].each do |result2|
             # Add the Related Person id to the related_place_for field in the Related Place
             place = RelatedPlace.where(id: result['id']).first
-            places = place.related_person_group
-            places += [RelatedPersonGroup.where(id: result2['id']).first]
-            place.related_person_group = places
+            places = place.related_agent
+            places += [RelatedAgent.where(id: result2['id']).first]
+            place.related_agent = places
             place.save
           end
         rescue
@@ -369,22 +369,22 @@ module RegisterFolio
     end
   end
 
-  # This method adds adds Related Person Group ids to the relatedPersonFor field in Related Place
+  # This method adds adds Related Agent ids to the relatedPersonFor field in Related Place
   def update_related_people
     begin
       # Get each Related Person for the Entry...
       q = 'relatedAgentFor_ssim:"' + @entry.id + '"'
       SolrQuery.new.solr_query(q, 'id,person_as_written_tesim', 50)['response']['docs'].each do |result|
         name = result['person_as_written_tesim'][0]
-        # Get each person_related_place string (i.e. as chosen from the drop-down list) for each Related Person Group in the Entry
+        # Get each person_related_place string (i.e. as chosen from the drop-down list) for each Related Agent in the Entry
         begin
           q = 'relatedAgentFor_ssim:' + @entry.id + ' AND person_related_person_tesim:"' + name + '"'
           SolrQuery.new.solr_query(q, 'id,person_related_person_tesim', 50)['response']['docs'].each do |result2|
             # Add the Related Person id to the related_agent_for field in the Related Person
-            person = RelatedPersonGroup.where(id: result['id']).first
-            people = person.related_person_group
-            people += [RelatedPersonGroup.where(id: result2['id']).first]
-            person.related_person_group = people
+            person = RelatedAgent.where(id: result['id']).first
+            people = person.related_agent
+            people += [RelatedAgent.where(id: result2['id']).first]
+            person.related_agent = people
             person.save
           end
         rescue
@@ -420,7 +420,7 @@ module RegisterFolio
       end
 
     # Two solr searches required for these types - this is because they exist in sub-objects of the ENtry object
-    # i.e. Date, Related Place and Related Person Group
+    # i.e. Date, Related Place and Related Agent
     else
 
       search_term1 = ''
@@ -447,7 +447,7 @@ module RegisterFolio
         search_term1 = 'place_same_as_tesim'; fl_term = 'relatedPlaceFor_ssim'
       end
 
-      # First find the Date, Related Place or Related Person Group objects which contain the element
+      # First find the Date, Related Place or Related Agent objects which contain the element
       SolrQuery.new.solr_query(q=search_term1 + ':' + element_id, fl=fl_term, rows=100000, sort='id ASC')['response']['docs'].map do |result|
         search_term2 = 'id:' + result[fl_term].join
         # Then find out which entries contain them

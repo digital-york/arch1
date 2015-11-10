@@ -4,11 +4,11 @@ class Entry < ActiveFedora::Base
 
   belongs_to :folio, predicate: ::RDF::URI.new('http://dlib.york.ac.uk/ontologies/borthwick-registers#folio')
 
-  has_many :related_person_groups, :dependent => :destroy
+  has_many :related_agents, :dependent => :destroy
   has_many :related_places, :dependent => :destroy
   has_many :entry_dates, :dependent => :destroy
 
-  accepts_nested_attributes_for :related_person_groups, :allow_destroy => true, :reject_if => :all_blank
+  accepts_nested_attributes_for :related_agents, :allow_destroy => true, :reject_if => :all_blank
   accepts_nested_attributes_for :related_places, :allow_destroy => true, :reject_if => :all_blank
   accepts_nested_attributes_for :entry_dates, :allow_destroy => true, :reject_if => :all_blank
 
