@@ -19,6 +19,7 @@ class PeopleController < ApplicationController
     @search_array = []
 
     # Get Concepts for the Person ConceptScheme and filter according to search_term
+    # NB. Persons aren't currently going into a concept scheme so we look for all Person objects
     SolrQuery.new.solr_query(q='has_model_ssim:Person', fl='id, family_tesim, pre_title_tesim, given_name_tesim, dates_tesim, post_title_tesim, epithet_tesim', rows=1000, sort='id asc')['response']['docs'].map.each do |result|
 
       id = result['id']
@@ -98,9 +99,9 @@ class PeopleController < ApplicationController
       # Get preflabel, rdftype and save
       @person.preflabel = get_label(false, @person.family, @person.pre_title, @person.given_name, @person.dates, @person.post_title, @person.epithet)
       @person.rdftype << @person.add_rdf_types
-      @person.id = @person.create_id(id)
+      #@person.id = @person.create_id(id)
       #cs = ConceptScheme.find(id)
-      #@person.concept_scheme = cs
+      # @person.concept_scheme = cs
       #cs.persons << @person
       #cs.save
       @person.save

@@ -62,7 +62,6 @@ class SubjectsController < ApplicationController
       response = SolrQuery.new.solr_query(q='has_model_ssim:ConceptScheme AND preflabel_tesim:"Borthwick Institute for Archives Subject Headings"', fl='id', rows=1, sort='')
       id = response['response']['docs'][0]['id']
       @concept.concept_scheme_id = id
-
       @concept.rdftype << @concept.add_rdf_types
       @concept.save
 
