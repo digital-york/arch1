@@ -67,10 +67,10 @@ namespace :regfols do
     # 3	Notes
     # 4 UV
 
-    list = ['Abp_Reg_31.csv','Abp_Reg_32.csv']
+    list = ['Abp_Reg_31.csv', 'Abp_Reg_32.csv']
 
-    list.each do | l |
-        @csv = CSV.read(Rails.root + 'lib/assets/new_regs_and_fols/' + l, :headers => true)
+    list.each do |l|
+      @csv = CSV.read(Rails.root + 'lib/assets/new_regs_and_fols/' + l, :headers => true)
 
       # get the register
 
@@ -133,18 +133,18 @@ namespace :regfols do
             puts $!
           end
         end
+        # do this part as a one off as it was veeeery slow to do it with each folio
+        # hasPart
+        puts "Adding order"
+        @fols.each_with_index do |f, index|
+          puts "Adding order number #{index}"
+          @reg.ordered_folio_proxies.append_target f
+        end
+        # do I need this part? I think only if I want proxies that aren't in the order (which I obviously don't)
+        # and I get them anyway
+        # @reg.folios = @fols
+        @reg.save
       end
-      # do this part as a one off as it was veeeery slow to do it with each folio
-      # hasPart
-      puts "Adding order"
-      @fols.each_with_index do |f, index|
-        puts "Adding order number #{index}"
-        @reg.ordered_folio_proxies.append_target f
-      end
-      # do I need this part? I think only if I want proxies that aren't in the order (which I obviously don't)
-      # and I get them anyway
-      # @reg.folios = @fols
-      @reg.save
     end
   end
 

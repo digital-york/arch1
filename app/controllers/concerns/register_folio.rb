@@ -33,8 +33,8 @@ module RegisterFolio
     next_id = ''
     next_image = ''
 
-    if action != nil && id != nil
-      SolrQuery.new.solr_query('id:"' + session[:register_id] + '/list_source"', 'ordered_targets_ssim')['response']['docs'].map.each do |result|
+    if action != nil #&& id != nil
+      SolrQuery.new.solr_query('id:"' + session[:register_id] + '/list_source"', 'ordered_targets_ssim', 1)['response']['docs'].map.each do |result|
         order = result['ordered_targets_ssim']
         # convert the list of folios in order into a hash so we can access the position of our id
         hash = Hash[order.map.with_index.to_a]
@@ -59,11 +59,12 @@ module RegisterFolio
   # action = 'prev_tesim' or 'next_tesim'
   def set_folio_and_image_browse(action, id)
 
-    next_id = '', next_image = ''
+    next_id = ''
+    next_image = ''
 
-    # Set the browse id
-    if action != nil && id != nil
-      SolrQuery.new.solr_query('id:"' + session[:register] + '/list_source"', 'ordered_targets_ssim')['response']['docs'].map.each do |result|
+    if action != nil and id != nil
+      SolrQuery.new.solr_query('id:"' + session[:register_id] + '/list_source"', 'ordered_targets_ssim')['response']['docs'].map.each do |result|
+        result['ordered_targets_ssim']
         order = result['ordered_targets_ssim']
         # convert the list of folios in order into a hash so we can access the position of our id
         hash = Hash[order.map.with_index.to_a]
@@ -74,6 +75,7 @@ module RegisterFolio
         end
       end
     end
+
     # Set the browse image
     SolrQuery.new.solr_query('hasTarget_ssim:"' + next_id + '"', 'file_tesim', 1)['response']['docs'].map do |result|
       next_image = result['file_tesim'][0]
