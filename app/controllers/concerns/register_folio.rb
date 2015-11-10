@@ -348,16 +348,44 @@ module RegisterFolio
       # Get each Related Place for the Entry...
       q = 'relatedPlaceFor_ssim:"' + @entry.id + '"'
       SolrQuery.new.solr_query(q, 'id,place_as_written_tesim', 50)['response']['docs'].each do |result|
+        name = result['place_as_written_tesim'][0]
         # Get each person_related_place string (i.e. as chosen from the drop-down list) for each Related Person Group in the Entry
         begin
-          q = 'relatedAgentFor_ssim:"' + @entry.id + '" AND person_related_place_tesim:"' + result['place_as_written_tesim'][0] + '"'
-          SolrQuery.new.solr_query(q, 'id,person_related_place_tesim', 50)['response']['docs'].each do |res|
-            # add the Related Person id to the related_place_for field in the Related Place
+          q = 'relatedAgentFor_ssim:"' + @entry.id + '" AND person_related_place_tesim:"' + name + '"'
+          SolrQuery.new.solr_query(q, 'id,person_related_place_tesim', 50)['response']['docs'].each do |result2|
+            # Add the Related Person id to the related_place_for field in the Related Place
             place = RelatedPlace.where(id: result['id']).first
             places = place.related_person_group
-            places += [RelatedPersonGroup.where(id: res['id']).first]
+            places += [RelatedPersonGroup.where(id: result2['id']).first]
             place.related_person_group = places
             place.save
+          end
+        rescue
+          # move along
+        end
+      end
+    rescue
+      # move along
+    end
+  end
+
+  # This method adds adds Related Person Group ids to the relatedPersonFor field in Related Place
+  def update_related_people
+    begin
+      # Get each Related Person for the Entry...
+      q = 'relatedAgentFor_ssim:"' + @entry.id + '"'
+      SolrQuery.new.solr_query(q, 'id,person_as_written_tesim', 50)['response']['docs'].each do |result|
+        name = result['person_as_written_tesim'][0]
+        # Get each person_related_place string (i.e. as chosen from the drop-down list) for each Related Person Group in the Entry
+        begin
+          q = 'relatedAgentFor_ssim:' + @entry.id + ' AND person_related_person_tesim:"' + name + '"'
+          SolrQuery.new.solr_query(q, 'id,person_related_person_tesim', 50)['response']['docs'].each do |result2|
+            # Add the Related Person id to the related_agent_for field in the Related Person
+            person = RelatedPersonGroup.where(id: result['id']).first
+            people = person.related_person_group
+            people += [RelatedPersonGroup.where(id: result2['id']).first]
+            person.related_person_group = people
+            person.save
           end
         rescue
           # move along

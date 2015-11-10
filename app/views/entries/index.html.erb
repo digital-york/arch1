@@ -516,6 +516,23 @@
                                     </div>
                                   </td>
                                 </tr>
+
+                                <%# Person Related Person %>
+                                <tr>
+                                  <th>
+                                    Related Person:
+                                  </th>
+                                  <td>
+                                    <div style="padding: 4px 0px; min-height: 18px" class="field_group">
+                                      <% related_person.db_person_related_people.each do |related_person| %>
+                                          <div class="field_single" style="padding: 4px 0px">
+                                            <%= related_person.name %>
+                                          </div>
+                                      <% end %>
+                                    </div>
+                                  </td>
+                                </tr>
+
                               </table>
                             </div>
                           </div>
