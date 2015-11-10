@@ -7,13 +7,13 @@ namespace :concepts do
     puts 'Creating the Concept Scheme'
 
     begin
-      @scheme = ConceptScheme.find('cj82k759n')
+      #@scheme = ConceptScheme.find('cj82k759n')
 
-      #@scheme = ConceptScheme.new
-      #@scheme.preflabel = "Borthwick Institute for Archives Subject Headings for the Archbishops' Registers"
-      #@scheme.description = "Borthwick Institute for Archives Subject Headings for the Archbishops' Registers. Produced from data created during the Archbishop's Registers Pilot project, funded by the Mellon Foundation."
-      #@scheme.rdftype = @scheme.add_rdf_types
-      #@scheme.save
+      @scheme = ConceptScheme.new
+      @scheme.preflabel = "Borthwick Institute for Archives Subject Headings for the Archbishops' Registers"
+      @scheme.description = "Borthwick Institute for Archives Subject Headings for the Archbishops' Registers. Produced from data created during the Archbishop's Registers Pilot project, funded by the Mellon Foundation."
+      @scheme.rdftype = @scheme.add_rdf_types
+      @scheme.save
       puts "Concept scheme for subjects created at #{@scheme.id}"
     rescue
       puts $!
