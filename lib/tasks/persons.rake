@@ -17,37 +17,25 @@ namespace :persons do
     puts 'Creating the Concept Scheme'
 
     begin
-<<<<<<< HEAD
-      @scheme = ConceptScheme.new
-      @scheme.preflabel = "people"
-      @scheme.rdftype = @scheme.add_rdf_types
-      @scheme.save
-      puts "Concept scheme for person created at #{@scheme.id}"
-=======
+      # added by py
+      @scheme = ConceptScheme.find('mg74qm537')
       #@scheme = ConceptScheme.new
       #@scheme.preflabel = "people"
       #@scheme.rdftype = @scheme.add_rdf_types
       #@scheme.save
-      #puts "Concept scheme for person created at #{@scheme.id}"
->>>>>>> origin/master
+      puts "Concept scheme for person created at #{@scheme.id}"
     rescue
       puts $!
     end
 
-<<<<<<< HEAD
     puts 'Processing the person. This may take some time ... '
 
     AUTHS =
-        { 'Oxford Dictionary of Popes' => 'http://www.oxfordreference.com/view/10.1093/acref/9780199295814.001.0001/acref-9780199295814',
-          'Heads of Religious Houses, III' => 'http://www.cambridge.org/gb/academic/subjects/history/british-history-1066-1450/heads-religious-houses-england-and-wales-iii-13771540?format=PB',
-          'Fasti' => 'http://www.british-history.ac.uk/search/series/fasti-ecclesiae',
-          'ODNB' => 'http://www.oxforddnb.com/' }
-=======
-    # added by py
-    @scheme = ConceptScheme.where(preflabel_tesim: 'people').first;
-
-    puts 'Processing the person. This may take some time ... '
->>>>>>> origin/master
+        {'Oxford Dictionary of Popes' => 'http://explore.bl.uk/primo_library/libweb/action/display.do?frbrVersion=3&tabs=moreTab&ct=display&fn=search&doc=BLL01009534313&indx=1&recIds=BLL01009534313&recIdxs=0&elementId=0&renderMode=poppedOut&displayMode=full&frbrVersion=3&dscnt=1&scp.scps=scope%3A%28BLCONTENT%29&frbg=&tab=local_tab&dstmp=1447001180115&srt=rank&mode=Basic&vl%28488279563UI0%29=any&dum=true&tb=t&vl%28freeText0%29=A%20Dictionary%20of%20Popes%201986&vid=BLVU1',
+         'Heads of Religious Houses, III' => 'http://www.cambridge.org/gb/academic/subjects/history/british-history-1066-1450/heads-religious-houses-england-and-wales-iii-13771540?format=PB',
+         'Fasti' => 'http://www.british-history.ac.uk/search/series/fasti-ecclesiae',
+         'ODNB' => 'http://www.oxforddnb.com/',
+         'http://www.etoncollege.com/Provosts.aspx' => 'http://www.etoncollege.com/Provosts.aspx'}
 
     arr = CSV.read(Rails.root + 'lib/assets/lists/persons.csv')
 
@@ -55,9 +43,12 @@ namespace :persons do
       begin
 
         p = Person.new
-        p.rdftype = p.add_rdf_types
+        p.rdftype << p.add_rdf_types
+        #p.id = p.create_container_id(@scheme.id)
         p.concept_scheme = @scheme
-        p.family = c[0].strip
+        unless c[0].nil?
+          p.family = c[0].strip
+        end
         unless c[1].nil?
           p.pre_title = c[1].strip
         end
@@ -74,10 +65,10 @@ namespace :persons do
               #skip this one
             when d.start_with?('0000-')
               #replace with d
-              p.dates = d.gsub('0000-','d ')
+              p.dates = d.gsub('0000-', 'd ')
             when d.end_with?('-0000')
               #remove and add b to beginning
-              p.dates = 'b ' + d.gsub('-0000','')
+              p.dates = 'b ' + d.gsub('-0000', '')
             else
               p.dates = d
           end
@@ -99,30 +90,25 @@ namespace :persons do
           rel = c[9]
           if rel.include? ';'
             if rel.include? '; '
-              rel.gsub!('; ',';')
+              rel.gsub!('; ', ';')
             end
             a = rel.split(';')
-<<<<<<< HEAD
-            a.each do | |
-              p.related_authority += [AUTHS[a]]
+
+            a.each do | aa |
+              p.related_authority += [AUTHS[aa]]
             end
 
           else
             p.related_authority += [AUTHS[c[9]]]
-=======
-            p.related_authority += a
-          else
-            p.related_authority += [c[9]]
->>>>>>> origin/master
           end
         end
         unless c[10].nil?
           variant = c[10]
           if variant.include? ';'
             if variant.include? '; '
-              variant.gsub!('; ',';')
+              variant.gsub!('; ', ';')
             end
-            variant.gsub('; ',';')
+            variant.gsub('; ', ';')
             a = variant.split(';')
             p.altlabel += a
           else
@@ -132,8 +118,16 @@ namespace :persons do
         unless c[11].nil?
           p.note += [c[11]]
         end
-        p.preflabel = "#{p.family}, #{p.pre_title}, #{p.given_name}, #{p.dates}, #{p.post_title}, #{p.epithet}".gsub('  ',' ').gsub(', ,',',').gsub(', ,',',').gsub(', ,',',')
+        p.preflabel = "#{p.family}, #{p.pre_title}, #{p.given_name}, #{p.dates}, #{p.post_title}, #{p.epithet}".gsub('  ', ' ').gsub(', ,', ',').gsub(', ,', ',').gsub(', ,', ',')
+        if p.preflabel.start_with? ', '
+          p.preflabel = p.preflabel[2..p.preflabel.length]
+        end
+        if p.preflabel.end_with? ', '
+          p.preflabel = p.preflabel[0..p.preflabel.length-3]
+        end
         p.save
+        @scheme.persons += [p]
+        @scheme.save
         puts "Created #{p.preflabel}"
       rescue
         puts $!

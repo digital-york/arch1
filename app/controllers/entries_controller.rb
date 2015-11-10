@@ -140,6 +140,34 @@ class EntriesController < ApplicationController
 
     # Check parameters are whitelisted
     entry_params = whitelist_entry_params
+    # Remove the entry_id
+    entry_params.delete(:entry_id)
+    # Assign and Remove the additional id fields
+    unless entry_params["related_person_groups_attributes"].nil?
+      entry_params["related_person_groups_attributes"].each do | p |
+        #entry_params["related_person_groups_attributes"][p[0]]['id'] = entry_params["related_person_groups_attributes"][p[0]]['person_id']
+        entry_params["related_person_groups_attributes"][p[0]].delete(:person_id)
+      end
+    end
+    unless entry_params["related_places_attributes"].nil?
+      entry_params["related_places_attributes"].each do | p |
+        #entry_params["related_places_attributes"][p[0]]['id'] = entry_params["related_places_attributes"][p[0]]['place_id']
+        entry_params["related_places_attributes"][p[0]].delete(:place_id)
+      end
+    end
+    unless entry_params["entry_dates_attributes"].nil?
+      entry_params["entry_dates_attributes"].each do | p |
+        #entry_params["entry_dates_attributes"][p[0]]['id'] = entry_params["entry_dates_attributes"][p[0]]['date_id']
+        entry_params["entry_dates_attributes"][p[0]].delete(:date_id)
+        unless entry_params["entry_dates_attributes"][p[0]]["single_dates_attributes"].nil?
+          entry_params["entry_dates_attributes"][p[0]]["single_dates_attributes"].each do | s |
+            #entry_params["entry_dates_attributes"][p[0]]["single_dates_attributes"][s[0]]['id'] =
+                #entry_params["entry_dates_attributes"][p[0]]["single_dates_attributes"][s[0]]['single_date_id']
+            entry_params["entry_dates_attributes"][p[0]]["single_dates_attributes"][s[0]].delete(:single_date_id)
+          end
+        end
+      end
+    end
 
     # Get a new entry and replace values with the form parameters
     # Replace the folio id with the corresponding Folio object
@@ -153,6 +181,7 @@ class EntriesController < ApplicationController
     #@errors = check_for_errors(entry_params)
 
     # Populate new entry with the entry_params
+    puts entry_params
     @entry = Entry.new(entry_params)
 
     # If there are errors, go back to the 'new' page and display the errors, else go to the 'index' page
@@ -188,11 +217,9 @@ class EntriesController < ApplicationController
   # UPDATE
   def update
 
-    params[:id] = 'test:' + params[:id]
-
     # Redirects to 'show' when the user clicks the 'Back to View' button
     if params['commit'] == 'Back to View'
-      redirect_to :controller => 'entries', :action => 'show', :id => params[:id]
+      redirect_to :controller => 'entries', :action => 'show', :id => params[:entry][:entry_id]
       return
     end
 
@@ -208,12 +235,42 @@ class EntriesController < ApplicationController
 
     # Remove any empty fields and blocks (date, place, person)
     remove_empty_fields(entry_params)
+    # Remove the entry_id
+    entry_params.delete(:entry_id)
+    # Assign and Remove the additional id fields
+    puts entry_params
+    unless entry_params["related_person_groups_attributes"].nil?
+      entry_params["related_person_groups_attributes"].each do | p |
+        entry_params["related_person_groups_attributes"][p[0]]['id'] = entry_params["related_person_groups_attributes"][p[0]]['person_id']
+        entry_params["related_person_groups_attributes"][p[0]].delete(:person_id)
+      end
+    end
+    unless entry_params["related_places_attributes"].nil?
+      entry_params["related_places_attributes"].each do | p |
+        entry_params["related_places_attributes"][p[0]]['id'] = entry_params["related_places_attributes"][p[0]]['place_id']
+        entry_params["related_places_attributes"][p[0]].delete(:place_id)
+
+      end
+    end
+    unless entry_params["entry_dates_attributes"].nil?
+      entry_params["entry_dates_attributes"].each do | p |
+        entry_params["entry_dates_attributes"][p[0]]['id'] = entry_params["entry_dates_attributes"][p[0]]['date_id']
+        entry_params["entry_dates_attributes"][p[0]].delete(:date_id)
+        unless entry_params["entry_dates_attributes"][p[0]]["single_dates_attributes"].nil?
+          entry_params["entry_dates_attributes"][p[0]]["single_dates_attributes"].each do | s |
+            entry_params["entry_dates_attributes"][p[0]]["single_dates_attributes"][s[0]]['id'] =
+                entry_params["entry_dates_attributes"][p[0]]["single_dates_attributes"][s[0]]['single_date_id']
+            entry_params["entry_dates_attributes"][p[0]]["single_dates_attributes"][s[0]].delete(:single_date_id)
+          end
+        end
+      end
+    end
 
     # Check for errors
     #@errors = check_for_errors(entry_params)
 
     # Get an entry object using the id and populate it with the entry parameters
-    @entry = Entry.find(params[:id])
+    @entry = Entry.find(params[:entry][:entry_id])
 
     @entry.attributes = entry_params
 
@@ -295,10 +352,10 @@ class EntriesController < ApplicationController
 
   # Never trust parameters from the scary internet, only allow the white list through.
   def whitelist_entry_params
-    params.require(:entry).permit(:folio, :entry_no, :summary, :entry_type => [], :section_type => [], :marginalia => [],  :language => [], :subject => [], :note => [], :editorial_note => [], :is_referenced_by => [],
-    :entry_dates_attributes => [:id, :_destroy, :date_role, :date_note, :single_dates_attributes => [:id, :_destroy, :date, :date_type, :date_certainty => []]],
-    :related_places_attributes => [:id, :_destroy, :place_same_as, :place_as_written => [], :place_role => [], :place_type => [], :place_note => []],
-    :related_person_groups_attributes => [:id, :_destroy, :person_same_as, :person_gender, :person_as_written => [], :person_role => [], :person_descriptor => [], :person_descriptor_as_written => [], :person_note => [], :person_related_place => []])
+    params.require(:entry).permit(:id, :folio, :entry_no, :entry_id, :summary, :entry_type => [], :section_type => [], :marginalia => [],  :language => [], :subject => [], :note => [], :editorial_note => [], :is_referenced_by => [],
+    :entry_dates_attributes => [:id, :_destroy, :date_id, :date_role, :date_note, :single_dates_attributes => [:id, :_destroy, :single_date_id, :date, :date_type, :date_certainty => []]],
+    :related_places_attributes => [:id, :_destroy, :place_id, :place_same_as, :place_as_written => [], :place_role => [], :place_type => [], :place_note => []],
+    :related_person_groups_attributes => [:id, :_destroy, :person_id, :person_same_as, :person_gender, :person_as_written => [], :person_role => [], :person_descriptor => [], :person_descriptor_as_written => [], :person_note => [], :person_related_place => []])
   end
 
 end

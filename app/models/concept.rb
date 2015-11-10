@@ -1,13 +1,8 @@
 class Concept < ActiveFedora::Base
 
-  include RdfType,Generic,SameAs,SkosLabels,DCTerms,AssignId
+  include RdfType,Generic,SameAs,SkosLabels,DCTerms,AssignId,AssignRdfTypes
 
   belongs_to :concept_scheme, predicate: ::RDF::SKOS.inScheme
-
-  # RDFTYPES
-  def add_rdf_types
-    ['http://www.w3.org/2004/02/skos/core#Concept']
-  end
 
   property :definition, predicate: ::RDF::SKOS.definition, multiple: false do |index|
     index.as :stored_searchable

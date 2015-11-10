@@ -94,6 +94,14 @@ class ConceptsController < ApplicationController
     else
       @concept.concept_scheme_id = get_concept_scheme_id(params[:list_type])
       @concept.rdftype << @concept.add_rdf_types
+      # {{JA}}
+      # get the id
+      # @concept.id << @concept.create_container_id(@concept.concept_scheme_id)
+      # cs = ConceptScheme.find(@concept.concept_scheme_id)
+      # @concept.concept_scheme << cs
+      # cs += @concept
+      # get the concept scheme
+      # not save the concept itself
       @concept.save
       redirect_to :controller => 'concepts', :action => 'index', :search_term => params[:search_term], :list_type => params[:list_type]
     end

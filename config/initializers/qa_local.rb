@@ -2,9 +2,9 @@ include Terms
 Qa::Authorities::Local.register_subauthority('deep', 'Deep')
 Qa::Authorities::Local.register_subauthority('unlock', 'Unlock')
 Qa::Authorities::Local.register_subauthority('tgnuk', 'TgnUk')
-Qa::Authorities::Local.register_subauthority('folio_faces', 'FolioFaceTerms')
-Qa::Authorities::Local.register_subauthority('folio_types', 'FolioTerms') # not using
-#Qa::Authorities::Local.register_subauthority('currencies', 'CurrencyTerms') # not using
+#Qa::Authorities::Local.register_subauthority('folio_faces', 'FolioFaceTerms') # not using
+#Qa::Authorities::Local.register_subauthority('folio_types', 'FolioTerms') # not using
+Qa::Authorities::Local.register_subauthority('currencies', 'CurrencyTerms')
 Qa::Authorities::Local.register_subauthority('person_roles', 'PersonRoleTerms')
 Qa::Authorities::Local.register_subauthority('descriptors', 'DescriptorTerms')
 Qa::Authorities::Local.register_subauthority('place_types', 'PlaceTypeTerms')

@@ -80,7 +80,7 @@ module Validation
 
           entry_params[:entry_dates_attributes][index.to_s][:single_dates_attributes].each_with_index do |single_date, index2|
 
-            unless entry_params[:entry_dates_attributes][index.to_s][:single_dates_attributes][index2.to_s][:id].nil?
+            unless entry_params[:entry_dates_attributes][index.to_s][:single_dates_attributes][index2.to_s][:single_date_id].nil?
 
               if entry_params[:entry_dates_attributes][index.to_s][:single_dates_attributes][index2.to_s][:date] == '' \
                 && entry_params[:entry_dates_attributes][index.to_s][:single_dates_attributes][index2.to_s][:date_certainty] == [] \
@@ -94,7 +94,7 @@ module Validation
         end
 
         # Delete the whole date block if all of the fields are empty (but only do this for a saved entry, i.e. an id exists)
-        if entry_params[:entry_dates_attributes][index.to_s][:id] != nil
+        if entry_params[:entry_dates_attributes][index.to_s][:date_id] != nil
 
           if single_date_exists == false && entry_params[:entry_dates_attributes][index.to_s][:date_role] == '' && entry_params[:entry_dates_attributes][index.to_s][:date_note] == ''
             entry_params[:entry_dates_attributes][index.to_s][:_destroy] = '1'
@@ -110,6 +110,7 @@ module Validation
             entry_params[:entry_dates_attributes][index.to_s][:single_dates_attributes] = ''
             entry_params[:entry_dates_attributes][index.to_s][:date_role] = ''
             entry_params[:entry_dates_attributes][index.to_s][:date_note] = ''
+            entry_params[:entry_dates_attributes][index.to_s][:date_id] = ''
             entry_params[:entry_dates_attributes][index.to_s][:_destroy] = nil
           end
 
@@ -127,7 +128,7 @@ module Validation
       entry_params[:related_places_attributes].each_with_index do |related_place, index|
 
         # Remove place if all fields are empty (but only do this for a saved entry, i.e. an id exists)
-        if entry_params[:related_places_attributes][index.to_s][:id] != nil
+        if entry_params[:related_places_attributes][index.to_s][:place_id] != nil
 
           remove_place = true
 
@@ -167,6 +168,7 @@ module Validation
             entry_params[:related_places_attributes][index.to_s][:place_role] = ''
             entry_params[:related_places_attributes][index.to_s][:place_type] = ''
             entry_params[:related_places_attributes][index.to_s][:place_note] = ''
+            entry_params[:related_places_attributes][index.to_s][:place_id] = ''
             entry_params[:related_places_attributes][index.to_s][:_destroy] = nil
           end
         end
@@ -182,7 +184,8 @@ module Validation
       entry_params[:related_person_groups_attributes].each_with_index do |related_person, index|
 
         # Remove person if all fields are empty (but only do this for a saved entry, i.e. an id exists)
-        if entry_params[:related_person_groups_attributes][index.to_s][:id] != nil
+        # person id?
+        if entry_params[:related_person_groups_attributes][index.to_s][:person_id] != nil
 
           remove_person = true
 
@@ -236,6 +239,7 @@ module Validation
             entry_params[:related_person_groups_attributes][index.to_s][:person_descriptor] = ''
             entry_params[:related_person_groups_attributes][index.to_s][:person_note] = ''
             entry_params[:related_person_groups_attributes][index.to_s][:person_related_place] = ''
+            entry_params[:related_person_groups_attributes][index.to_s][:person_id] = ''
             entry_params[:related_person_groups_attributes][index.to_s][:_destroy] = nil
           end
         end

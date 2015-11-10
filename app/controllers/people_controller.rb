@@ -98,6 +98,11 @@ class PeopleController < ApplicationController
       # Get preflabel, rdftype and save
       @person.preflabel = get_label(false, @person.family, @person.pre_title, @person.given_name, @person.dates, @person.post_title, @person.epithet)
       @person.rdftype << @person.add_rdf_types
+      @person.id = @person.create_id(id)
+      #cs = ConceptScheme.find(id)
+      #@person.concept_scheme = cs
+      #cs.persons << @person
+      #cs.save
       @person.save
 
       # If the 'Submit and Close' button has been clicked, pass these variables back to the page

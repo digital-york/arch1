@@ -2,7 +2,7 @@ require 'active_fedora/noid'
 
 class Folio < ActiveFedora::Base
 
-  include DCTerms,RdfType,AssignId,Generic,SkosLabels
+  include DCTerms,RdfType,AssignId,Generic,SkosLabels,AssignRdfTypes
 
   belongs_to :register, predicate: ::RDF::DC.isPartOf
   has_many :entries #, :dependent => :destroy
@@ -17,13 +17,6 @@ class Folio < ActiveFedora::Base
   # also won't delete
   # or directly contains like I have done now
   # has_and_belongs_to_many :images, predicate: ::RDF::URI.new('http://pcdm.org/models#hasFile')
-
-  def add_rdf_types
-    ['http://dlib.york.ac.uk/ontologies/borthwick-registers#Folio',
-     'http://pcdm.org/models#Object',
-     'http://www.shared-canvas.org/ns/Canvas',
-     'http://purl.org/vra/Work']
-  end
 
   property :folio_type, predicate: ::RDF::URI.new('http://dlib.york.ac.uk/ontologies/borthwick-registers#folioType'), multiple: false do |index|
     index.as :stored_searchable

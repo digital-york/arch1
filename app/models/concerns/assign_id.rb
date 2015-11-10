@@ -5,16 +5,25 @@ module AssignId
     require 'active_fedora/noid'
   end
 
+  # Called automatically by the noid service
   def assign_id
     noid_service.mint
   end
 
+  # Use for direct containers (ldp:contains)
   def create_container_id(parent)
     if self.class.name == 'ContainedFile'
       "#{parent}/files/#{noid_service.mint}"
+    elsif self.class.name == 'Person'
+      "#{parent}/persons/#{noid_service.mint}"
     else
       "#{parent}/#{self.class.name.pluralize.downcase}/#{noid_service.mint}"
     end
+  end
+
+  # Use for basic containers (ldp:contains)
+  def create_id(parent)
+    "#{parent}/#{noid_service.mint}"
   end
 
   private

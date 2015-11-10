@@ -139,6 +139,7 @@
                             <%= @db_entry.entry_no %>
                             <%#= f.hidden_field :entry[entry_no], :value => @db_entry.entry_no %>
                             <input type="hidden" name="entry[entry_no]" value="<%= @db_entry.entry_no %>"/>
+                            <input type="hidden" name="entry[entry_id]" value="<%= @db_entry.entry_id %>"/>
                         </td>
                     </tr>
 
@@ -366,7 +367,7 @@
                                                                     </tr>
                                                                 </table>
                                                                 &nbsp;<img src='/assets/delete.png' alt='Delete icon' class='delete_icon click_remove_field_date' jq_index1="<%= index1 %>">
-                                                                <input type="hidden" id="hidden_field" name="entry[entry_dates_attributes][<%= index1.to_s %>][single_dates_attributes][<%= index2.to_s %>][id]" value="test:<%= single_date.id %>">
+                                                                <input type="hidden" id="hidden_field" name="entry[entry_dates_attributes][<%= index1.to_s %>][single_dates_attributes][<%= index2.to_s %>][single_date_id]" value="<%= single_date.single_date_id %>">
 
                                                                 <div style="clear: both"></div>
                                                             </div>
@@ -395,7 +396,7 @@
 
                                         <img src='/assets/delete.png' class='delete_icon click_remove_field_level2' params_type='entry_dates' alt='Delete icon'>
 
-                                        <input type="hidden" id="hidden_field" name="entry[entry_dates_attributes][<%= index1.to_s %>][id]" value="test:<%= entry_date.id %>">
+                                        <input type="hidden" id="hidden_field" name="entry[entry_dates_attributes][<%= index1.to_s %>][date_id]" value="<%= entry_date.date_id %>">
                                     </div>
                                 <% end %>
                             </div>
@@ -515,7 +516,7 @@
 
                                         <img src='/assets/delete.png' class='delete_icon click_remove_field_level2' params_type='related_places' alt='Delete icon'>
 
-                                        <input type="hidden" id="hidden_field" name="entry[related_places_attributes][<%= index1.to_s %>][id]" value="test:<%= related_place.id %>">
+                                        <input type="hidden" id="hidden_field" name="entry[related_places_attributes][<%= index1.to_s %>][place_id]" value="<%= related_place.place_id %>">
                                     </div>
                                 <% end %>
                             </div>
@@ -678,7 +679,7 @@
 
                                         <img src='/assets/delete.png' class='delete_icon click_remove_field_level2' params_type='related_person_groups' alt='Delete icon'>
 
-                                        <input type="hidden" id="hidden_field" name="entry[related_person_groups_attributes][<%= index1.to_s %>][id]" value="test:<%= related_person.id %>">
+                                        <input type="hidden" id="hidden_field" name="entry[related_person_groups_attributes][<%= index1.to_s %>][person_id]" value="<%= related_person.person_id %>">
                                     </div>
 
                                 <% end %>

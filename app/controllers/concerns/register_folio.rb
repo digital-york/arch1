@@ -34,14 +34,14 @@ module RegisterFolio
     next_image = ''
 
     if action != nil && id != nil
-      SolrQuery.new.solr_query('id:"' + session[:register] + '/list_source"', 'ordered_targets_ssim')['response']['docs'].map.each do |result|
+      SolrQuery.new.solr_query('id:"' + session[:register_id] + '/list_source"', 'ordered_targets_ssim')['response']['docs'].map.each do |result|
         order = result['ordered_targets_ssim']
         # convert the list of folios in order into a hash so we can access the position of our id
         hash = Hash[order.map.with_index.to_a]
         if action == 'next_tesim'
-          next_id = order[hash[id] + 1]
+          next_id = order[hash[id].to_i + 1]
         elsif action == 'prev_tesim'
-          next_id = order[hash[id] - 1]
+          next_id = order[hash[id].to_i - 1]
         end
       end
     end
@@ -68,9 +68,9 @@ module RegisterFolio
         # convert the list of folios in order into a hash so we can access the position of our id
         hash = Hash[order.map.with_index.to_a]
         if action == 'next_tesim'
-          next_id = order[hash[id] + 1]
+          next_id = order[hash[id].to_i + 1]
         elsif action == 'prev_tesim'
-          next_id = order[hash[id] - 1]
+          next_id = order[hash[id].to_i - 1]
         end
       end
     end
@@ -93,17 +93,13 @@ module RegisterFolio
     # Get the list of folios in order
     SolrQuery.new.solr_query('id:"' + register + '/list_source"', 'ordered_targets_ssim')['response']['docs'].map.each do |result|
       order = result['ordered_targets_ssim']
-      q = ''
-      order.each do |o|
-        q += 'id:"' + o + '" OR '
-      end
-      # there is probably a neater way of doing this
-      if q.end_with? ' OR '
-        q = q[0..q.length - 4]
-      end
-      SolrQuery.new.solr_query(q, 'id,preflabel_tesim')['response']['docs'].map.each do |res|
-        folio_hash[res['id']] = res['preflabel_tesim'].join()
-        @folio_list += [res['id'],folio_hash[res['id']]]
+      order.each do | o |
+        SolrQuery.new.solr_query('id:"' + o + '"', 'id,preflabel_tesim')['response']['docs'].map.each do |res|
+          folio_id = res['id']
+          preflabel_tesim = res['preflabel_tesim'].join()
+          folio_hash[folio_id] = preflabel_tesim
+          @folio_list += [[folio_id, folio_hash[folio_id]]]
+        end
       end
     end
   end
@@ -114,11 +110,11 @@ module RegisterFolio
     next_folio_id = ''
 
     # First get the next_folio_id...
-    SolrQuery.new.solr_query('id:"' + session[:register] + '/list_source"', 'ordered_targets_ssim')['response']['docs'].map.each do |result|
+    SolrQuery.new.solr_query('id:"' + session[:register_id] + '/list_source"', 'ordered_targets_ssim')['response']['docs'].map.each do |result|
       order = result['ordered_targets_ssim']
       # convert the list of folios in order into a hash so we can access the position of our id
       hash = Hash[order.map.with_index.to_a]
-      next_folio_id = hash[session[:folio_id] + 1]
+      next_folio_id = hash[session[:folio_id].to_i + 1]
     end
 
     @is_entry_on_next_folio = false
@@ -184,11 +180,11 @@ module RegisterFolio
 
     next_folio_id = ''
 
-    SolrQuery.new.solr_query('id:"' + session[:register] + '/list_source"', 'ordered_targets_ssim')['response']['docs'].map.each do |result|
+    SolrQuery.new.solr_query('id:"' + session[:register_id] + '/list_source"', 'ordered_targets_ssim')['response']['docs'].map.each do |result|
       order = result['ordered_targets_ssim']
       # convert the list of folios in order into a hash so we can access the position of our id
       hash = Hash[order.map.with_index.to_a]
-      next_folio_id = hash[session[:folio_id] + 1]
+      next_folio_id = hash[session[:folio_id].to_i + 1]
     end
 
     # Only create a new entry if one doesn't already exist on the next folio
@@ -251,17 +247,10 @@ module RegisterFolio
     # Get the ordered list of registers
     SolrQuery.new.solr_query('id:"' + collection + '/list_source"', 'ordered_targets_ssim')['response']['docs'].map.each do |result|
       order = result['ordered_targets_ssim']
-      q = ''
       order.each do |o|
-        q += 'id:"' + o + '" OR '
-      end
-      # there is probably a neater way of doing this
-      if q.end_with? ' OR '
-        q = q[0..q.length - 4]
-      end
-      # run a single query for all registers
-      SolrQuery.new.solr_query(q, 'id,preflabel_tesim,reg_id_tesim')['response']['docs'].map.each do |res|
+        SolrQuery.new.solr_query('id:"' + o + '"', 'id,preflabel_tesim,reg_id_tesim')['response']['docs'].map.each do |res|
           registers[res['id']] = [res['reg_id_tesim'][0], res['preflabel_tesim'][0]]
+        end
       end
     end
     registers

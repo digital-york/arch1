@@ -6,7 +6,7 @@ module Solr
 
       if result['entry_no_tesim'] != nil
 
-        db_entry.id = db_entry.entry_id.gsub(/test:/, '').to_i
+        db_entry.id =  1 #db_entry.entry_id.gsub(/test:/, '').to_i
 
         db_entry.entry_no = result['entry_no_tesim'].join()
 
@@ -108,7 +108,9 @@ module Solr
 
             db_entry_date = DbEntryDate.new
 
-            db_entry_date.id = date_id.gsub(/test:/, '').to_i
+            db_entry_date.date_id = date_id
+
+            db_entry_date.id = 1 #date_id.gsub(/test:/, '').to_i
 
             SolrQuery.new.solr_query('has_model_ssim:SingleDate AND dateFor_ssim:' + date_id, 'id, date_tesim, date_type_tesim, date_certainty_tesim', 100)['response']['docs'].map do |result2|
 
@@ -118,7 +120,9 @@ module Solr
 
                 db_single_date = DbSingleDate.new
 
-                db_single_date.id = single_date_id.gsub(/test:/, '').to_i
+                db_single_date.single_date_id = single_date_id
+
+                db_single_date.id = 1 #single_date_id.gsub(/test:/, '').to_i
 
                 date_certainty_list = result2['date_certainty_tesim'];
 
@@ -170,7 +174,9 @@ module Solr
 
             db_related_place = DbRelatedPlace.new
 
-            db_related_place.id = related_place_id.gsub(/test:/, '').to_i
+            db_related_place.place_id = related_place_id
+
+            db_related_place.id = 1 #related_place_id.gsub(/test:/, '').to_i
 
             place_same_as = result['place_same_as_tesim']
 
@@ -230,7 +236,10 @@ module Solr
 
             db_related_person_group = DbRelatedPersonGroup.new
 
-            db_related_person_group.id = related_person_group_id.gsub(/test:/, '').to_i
+            db_related_person_group.person_id = related_person_group_id
+
+            #related_person_group_id.unpack('b*').each do | o | db_related_person_group.id = o.to_i(2) end
+            db_related_person_group.id = 1
 
             person_same_as = result['person_same_as_tesim']
 

@@ -1,12 +1,8 @@
 class Place < ActiveFedora::Base
 
-  include RdfType, AssignId, SameAs, SkosLabels, MadsRelauth, DCTerms, RdfsSeealso,Generic
+  include RdfType, AssignId, SameAs, SkosLabels, MadsRelauth, DCTerms, RdfsSeealso,Generic,AssignRdfTypes
 
   belongs_to :concept_scheme, predicate: ::RDF::SKOS.inScheme
-
-  def add_rdf_types
-    ['http://schema.org/Place']
-  end
 
   # eg. NCARules name.
   property :place_name, predicate: ::RDF::URI.new('http://www.geonames.org/ontology#name'), multiple: false do |index|

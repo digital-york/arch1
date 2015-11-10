@@ -1,12 +1,8 @@
 class SingleDate < ActiveFedora::Base
 
-  include AssignId,RdfType
+  include AssignId,RdfType,AssignRdfTypes
 
   belongs_to :entry_date, predicate: ::RDF::URI.new('http://dlib.york.ac.uk/ontologies/borthwick-registers#dateFor')
-
-  def add_rdf_types
-    ['http://dlib.york.ac.uk/ontologies/borthwick-registers#SingleDate']
-  end
 
   property :date, predicate: ::RDF::URI.new('http://schema.org/date'), multiple: false do |index|
     index.as :stored_searchable

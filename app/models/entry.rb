@@ -1,6 +1,6 @@
 class Entry < ActiveFedora::Base
 
-  include AssignId,Generic,RdfType
+  include AssignId,Generic,RdfType,AssignRdfTypes
 
   belongs_to :folio, predicate: ::RDF::URI.new('http://dlib.york.ac.uk/ontologies/borthwick-registers#folio')
 
@@ -11,10 +11,6 @@ class Entry < ActiveFedora::Base
   accepts_nested_attributes_for :related_person_groups, :allow_destroy => true, :reject_if => :all_blank
   accepts_nested_attributes_for :related_places, :allow_destroy => true, :reject_if => :all_blank
   accepts_nested_attributes_for :entry_dates, :allow_destroy => true, :reject_if => :all_blank
-
-  def add_rdf_types
-    ['http://dlib.york.ac.uk/ontologies/borthwick-registers#Entry','http://www.shared-canvas.org/ns/Zone','http://pcdm.org/models#Object']
-  end
 
   property :entry_no, predicate: ::RDF::URI.new('http://dlib.york.ac.uk/ontologies/borthwick-registers#entryNo'), multiple: false do |index|
     index.as :stored_searchable, :sortable

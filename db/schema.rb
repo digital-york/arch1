@@ -9,7 +9,7 @@
 # from scratch. The latter is a flawed and unsustainable approach (the more migrations
 # you'll amass, the slower it'll run and the greater likelihood for issues).
 #
-# It's strongly recommended that you check this file into your version control system
+# It's strongly recommended that you check this file into your version control system.
 
 ActiveRecord::Schema.define(version: 20151105103041) do
 
@@ -50,6 +50,7 @@ ActiveRecord::Schema.define(version: 20151105103041) do
   create_table "db_entry_dates", force: :cascade do |t|
     t.string  "date_role"
     t.string  "date_note"
+    t.string  "date_id"
     t.integer "db_entry_id"
   end
 
@@ -162,16 +163,19 @@ ActiveRecord::Schema.define(version: 20151105103041) do
 
   add_index "db_place_types", ["db_related_place_id"], name: "index_db_place_types_on_db_related_place_id"
 
-  create_table "db_related_person_groups", force: :cascade do |t|
+  create_table "db_related_person_groups" , force: :cascade do |t|
     t.string  "person_same_as"
     t.string  "person_gender"
+    t.string  "person_id"
     t.integer "db_entry_id"
   end
+  #change_column "db_related_person_groups", :id, :primary_key, limit: 8
 
   add_index "db_related_person_groups", ["db_entry_id"], name: "index_db_related_person_groups_on_db_entry_id"
 
   create_table "db_related_places", force: :cascade do |t|
     t.string  "place_same_as"
+    t.string  "place_id"
     t.integer "db_entry_id"
   end
 
@@ -187,6 +191,7 @@ ActiveRecord::Schema.define(version: 20151105103041) do
   create_table "db_single_dates", force: :cascade do |t|
     t.string  "date"
     t.string  "date_type"
+    t.string  "single_date_id"
     t.integer "db_entry_date_id"
   end
 

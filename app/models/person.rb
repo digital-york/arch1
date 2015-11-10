@@ -1,12 +1,8 @@
 class Person < ActiveFedora::Base
 
-  include RdfType, AssignId, SameAs, SkosLabels, MadsRelauth, RdfsSeealso, DCTerms,Generic
+  include RdfType, AssignId, SameAs, SkosLabels, MadsRelauth, RdfsSeealso, DCTerms,Generic,AssignRdfTypes
 
   belongs_to :concept_scheme, predicate: ::RDF::SKOS.inScheme
-
-  def add_rdf_types
-    ['http://schema.org/Person','http://vocab.getty.edu/ontology#PersonConcept']
-  end
 
   # eg. NCA Rules 2.4
   property :family, predicate: ::RDF::FOAF.familyName, multiple: false do |index|

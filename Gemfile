@@ -9,8 +9,6 @@ gem 'qa', :git => 'https://github.com/projecthydra-labs/questioning_authority.gi
 
 # gem 'hydra', '9.0.0'
 
-gem 'jquery-ui-rails'
-
 # Install hydra gems individually
 gem 'active-fedora'
 gem 'hydra-head'
@@ -22,11 +20,10 @@ gem 'active-triples'
 gem 'nom-xml'
 gem 'activefedora-aggregation', '~> 0.5.0'
 
-#gem 'active_fedora-noid'
-gem 'active_fedora-noid', '1.0.0'
+gem 'active_fedora-noid'
+#gem 'active_fedora-noid', '1.0.0'
 
 gem 'nokogiri'
-# gem 'thin'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '4.2.0'
@@ -72,6 +69,7 @@ group :development, :test do
   gem 'spring'
   gem 'rspec-rails'
   gem 'jettywrapper'
+  gem 'thin'
 end
 
 gem 'devise'
