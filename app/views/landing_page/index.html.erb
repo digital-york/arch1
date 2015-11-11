@@ -3,28 +3,35 @@
     <table style="width: 100%">
 
         <tr>
+
             <%
                @reg_list.each_with_index do |pair, index|
 
-                 register_id = pair[0]
-                 register_name_1 = pair[1][0]
-                 register_name_2 = pair[1][1]
-
-                 # Add a new row to the table if there are more than 5 registers
-                 if index.modulo(5).zero?
+                register_id = pair[0]
+                register_name_1 = pair[1][0]
+                register_name_2 = pair[1][1]
             %>
-                    </tr>
-                    <tr>
-                <% end %>
-                <td>
-                    <div>
-                        <a href="/go_entries?register_id=<%= register_id %>&amp;register_name=<%= register_name_1 %> - <%= register_name_2 %>"><%= image_tag "#{register_name_1.gsub(/Abp Reg /, 'reg_') + '.png'}" %></a>
-                    </div>
-                    <div class="landing_page_text">
-                        <strong><%= register_name_1 %></strong><br/><%= register_name_2 %>
-                    </div>
-                </td>
+
+              <%# Add a new row to the table if there are more than 5 registers %>
+              <% if index.modulo(5).zero? %>
+                 </tr>
+                 <tr>
+              <% end %>
+
+              <td style="vertical-align: top">
+                  <div>
+                    <a href="/go_entries?register_id=<%= register_id %>&amp;register_name=<%= register_name_1 %>"><%= image_tag "#{register_name_1.gsub(/Abp Reg /, 'reg_') + '.png'}" %></a>
+                  </div>
+                  <div class="landing_page_text">
+                    <strong><%= register_name_1 %></strong><br/><%= register_name_2 %>
+                  </div>
+              </td>
+
             <% end %>
+
+            <%# Temporary code until more than two registers are added %>
+            <td></td><td></td>
+
         </tr>
     </table>
 </div>

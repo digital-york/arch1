@@ -20,22 +20,16 @@ class PeopleController < ApplicationController
 
     # Get Concepts for the Person ConceptScheme and filter according to search_term
     # NB. Persons aren't currently going into a concept scheme so we look for all Person objects
-    SolrQuery.new.solr_query(q='has_model_ssim:Person', fl='id, family_tesim, pre_title_tesim, given_name_tesim, dates_tesim, post_title_tesim, epithet_tesim', rows=1000, sort='id asc')['response']['docs'].map.each do |result|
+    SolrQuery.new.solr_query(q='has_model_ssim:Person', fl='id, preflabel_tesim', rows=1000, sort='id asc')['response']['docs'].map.each do |result|
 
       id = result['id']
-      family = result['family_tesim']
-      pre_title = result['pre_title_tesim']
-      given_name = result['given_name_tesim']
-      dates = result['dates_tesim']
-      post_title = result['post_title_tesim']
-      epithet = result['epithet_tesim']
+      preflabel = result['preflabel_tesim'].join
 
       tt = []
-      name = get_label(true, family, pre_title, given_name, dates, post_title, epithet)
 
-      if name.match(/#{@search_term}/i)
+      if preflabel.match(/#{@search_term}/i)
         tt << id
-        tt << name
+        tt << preflabel
         @search_array << tt
       end
     end
@@ -97,7 +91,7 @@ class PeopleController < ApplicationController
       @person.concept_scheme_id = id
 
       # Get preflabel, rdftype and save
-      @person.preflabel = get_label(false, @person.family, @person.pre_title, @person.given_name, @person.dates, @person.post_title, @person.epithet)
+      @person.preflabel = get_preflabel(@person.family, @person.pre_title, @person.given_name, @person.dates, @person.post_title, @person.epithet)
       @person.rdftype << @person.add_rdf_types
       #@person.id = @person.create_id(id)
       #cs = ConceptScheme.find(id)
@@ -147,7 +141,7 @@ class PeopleController < ApplicationController
       @person_field = params[:person_field]
       render 'edit'
     else
-      @person.preflabel = get_label(false, @person.family, @person.pre_title, @person.given_name, @person.dates, @person.post_title, @person.epithet)
+      @person.preflabel = get_preflabel(@person.family, @person.pre_title, @person.given_name, @person.dates, @person.post_title, @person.epithet)
       @person.save
       redirect_to :controller => 'people', :action => 'index', :search_term => params[:search_term], :person_field => params[:person_field]
     end
@@ -179,43 +173,37 @@ class PeopleController < ApplicationController
 
   # This method is used to get the preflabel and to get the label which is displayed on the view page
   # is_join is required if the data comes from solr, i.e. when getting the data to display on the view page
-  def get_label(is_join, family, pre_title, given_name, dates, post_title, epithet)
+  def get_preflabel(family, pre_title, given_name, dates, post_title, epithet)
 
     name = ''
 
     if family != nil and family != ''
-      if is_join == true then family = family.join end
       name = family
     end
 
     if pre_title != nil  and pre_title != ''
-      if is_join == true then pre_title = pre_title.join end
-      if name != '' then name = "#{name}," end
-      name = "#{name} #{pre_title}"
+      if name != '' then name = "#{name}, " end
+      name = "#{name}#{pre_title}"
     end
 
     if given_name != nil and given_name != ''
-      if is_join == true then given_name = given_name.join end
-      if name != '' then name = "#{name}," end
-      name = "#{name} #{given_name}"
+      if name != '' then name = "#{name}, " end
+      name = "#{name}#{given_name}"
     end
 
     if dates != nil and dates != ''
-      if is_join == true then dates = dates.join end
-      if name != '' then name = "#{name}," end
-      name = "#{name} #{dates}"
+      if name != '' then name = "#{name}, " end
+      name = "#{name}#{dates}"
     end
 
     if post_title != nil and post_title != ''
-      if is_join == true then post_title = post_title.join end
-      if name != '' then name = "#{name}," end
-      name = "#{name} #{post_title}"
+      if name != '' then name = "#{name}, " end
+      name = "#{name}#{post_title}"
     end
 
     if epithet != nil and epithet != ''
-      if is_join == true then epithet = epithet.join end
-      if name != '' then name = "#{name}," end
-      name = "#{name} #{epithet}"
+      if name != '' then name = "#{name}, " end
+      name = "#{name}#{epithet}"
     end
 
     return name
