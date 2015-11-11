@@ -3,9 +3,9 @@ source 'https://rubygems.org'
 gem 'dotenv-rails', :groups => [:development, :test, :production]
 
 # gem 'cocoon' # remove?
-# gem 'qa'
-# use latest qa code
-gem 'qa', :git => 'https://github.com/projecthydra-labs/questioning_authority.git', :branch => 'master'
+gem 'qa'
+# use latest qa code - seemes to be a problem using this in production with phusion-passenger
+# gem 'qa', :git => 'https://github.com/projecthydra-labs/questioning_authority.git', :branch => 'master'
 
 # gem 'hydra', '9.0.0'
 
