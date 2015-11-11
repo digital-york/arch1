@@ -18,11 +18,11 @@ namespace :persons do
 
     begin
       # added by py
-      @scheme = ConceptScheme.find('mg74qm537')
-      #@scheme = ConceptScheme.new
-      #@scheme.preflabel = "people"
-      #@scheme.rdftype = @scheme.add_rdf_types
-      #@scheme.save
+      #@scheme = ConceptScheme.find('mg74qm537')
+      @scheme = ConceptScheme.new
+      @scheme.preflabel = "people"
+      @scheme.rdftype = @scheme.add_rdf_types
+      @scheme.save
       puts "Concept scheme for person created at #{@scheme.id}"
     rescue
       puts $!
