@@ -184,6 +184,22 @@ module RemoveEmptyFields
 
       entry_params[:related_agents_attributes].each_with_index do |related_person, index|
 
+        # This code is used to add rdftype according to 'person' or 'group'
+        #person_group = entry_params[:related_agents_attributes][index.to_s][:person_group]
+        #if person_group != nil
+         # related_agent = RelatedAgent.new
+          #if person_group == 'person'
+           # puts entry_params[:related_agents_attributes][index.to_s]
+           # entry_params[:related_agents_attributes][index.to_s][:rdftype] = ['http://xmlns.com/foaf/0.1/Person']
+           # puts entry_params[:related_agents_attributes][index.to_s]
+
+            #entry_params[:related_agents_attributes][index.to_s][:rdftype] >> ['http://dlib.york.ac.uk/ontologies/borthwick-registers#RelatedAgent','http://xmlns.com/foaf/0.1/Group']
+         # else
+            #entry_params[:related_agents_attributes][index.to_s][:rdftype] << related_agent.add_rdf_types_g
+            #entry_params[:related_agents_attributes][index.to_s][:rdftype] << related_agent.add_rdf_types_p
+        #  end
+       # end
+
         # Remove person if all fields are empty (but only do this for a saved entry, i.e. an id exists)
         # person id?
         if entry_params[:related_agents_attributes][index.to_s][:person_id] != nil
@@ -195,6 +211,10 @@ module RemoveEmptyFields
           end
 
           if entry_params[:related_agents_attributes][index.to_s][:person_as_written] != nil && entry_params[:related_agents_attributes][index.to_s][:person_as_written].size > 0
+            remove_person = false
+          end
+
+          if entry_params[:related_agents_attributes][index.to_s][:person_group] != ''
             remove_person = false
           end
 

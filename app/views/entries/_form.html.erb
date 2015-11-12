@@ -526,7 +526,7 @@
                     <tr>
 
                         <th>Person:
-                            <img src="/assets/plus_sign.png" alt="plus icon" class="plus_icon click_person_button" jq_role_list="<%= @role_list.to_json %>" jq_descriptor_list="<%= @descriptor_list.to_json %>" jq_gender_list="<%= @gender_list %>" jq_rdftype='["http://dlib.york.ac.uk/ontologies/borthwick-registers#RelatedAgent","http://xmlns.com/foaf/0.1/Person"]'/>
+                            <img src="/assets/plus_sign.png" alt="plus icon" class="plus_icon click_person_button" jq_role_list="<%= @role_list.to_json %>" jq_descriptor_list="<%= @descriptor_list.to_json %>" jq_gender_list="<%= @gender_list %>" jq_person_group_list="<%= @person_group_list %>" jq_rdftype='["http://dlib.york.ac.uk/ontologies/borthwick-registers#RelatedAgent","http://xmlns.com/foaf/0.1/Person"]'/>
                         </th>
 
                         <td class="tab2">
@@ -571,6 +571,14 @@
                                               <div style="float: right; margin-right: 6px">
                                                 <img src='/assets/delete.png' alt='Delete icon' class='delete_icon' onclick="remove_authority('person', '<%= index1 %>'); return false">
                                               </div>
+                                            </td>
+                                          </tr>
+
+                                          <%# Person Group %>
+                                          <tr>
+                                            <th>Person / Group:</th>
+                                            <td>
+                                              <%= select_tag "entry[related_agents_attributes][" + index1.to_s + "][person_group]", options_for_select(@person_group_list.collect { |gender| [gender[0]] }, related_person.person_group) %>
                                             </td>
                                           </tr>
 

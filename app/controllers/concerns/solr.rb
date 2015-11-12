@@ -228,7 +228,7 @@ module Solr
           end
         end
 
-        SolrQuery.new.solr_query('has_model_ssim:RelatedAgent AND relatedAgentFor_ssim:"' + db_entry.entry_id + '"', 'id, person_same_as_tesim, person_gender_tesim, person_as_written_tesim, person_role_tesim, person_descriptor_tesim, person_descriptor_as_written_tesim, person_note_tesim, person_related_place_tesim, person_related_person_tesim', 100)['response']['docs'].map do |result|
+        SolrQuery.new.solr_query('has_model_ssim:RelatedAgent AND relatedAgentFor_ssim:"' + db_entry.entry_id + '"', 'id, person_same_as_tesim, person_group_tesim, person_gender_tesim, person_as_written_tesim, person_role_tesim, person_descriptor_tesim, person_descriptor_as_written_tesim, person_note_tesim, person_related_place_tesim, person_related_person_tesim', 100)['response']['docs'].map do |result|
 
           related_agent_id = result['id'];
 
@@ -245,6 +245,12 @@ module Solr
 
             if person_same_as != nil
               db_related_agent.person_same_as = person_same_as.join()
+            end
+
+            person_group = result['person_group_tesim']
+
+            if person_group != nil
+              db_related_agent.person_group = person_group.join()
             end
 
             person_gender = result['person_gender_tesim']

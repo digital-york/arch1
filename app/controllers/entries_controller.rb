@@ -253,10 +253,11 @@ class EntriesController < ApplicationController
 
     # Remove any empty fields and blocks (date, place, person)
     remove_empty_fields(entry_params)
+
     # Remove the entry_id
     entry_params.delete(:entry_id)
-    # Assign and Remove the additional id fields
 
+    # Assign and Remove the additional id fields
     unless entry_params["related_agents_attributes"].nil?
       entry_params["related_agents_attributes"].each do | p |
         entry_params["related_agents_attributes"][p[0]]['id'] = entry_params["related_agents_attributes"][p[0]]['person_id']
@@ -374,8 +375,8 @@ class EntriesController < ApplicationController
   def whitelist_entry_params
     params.require(:entry).permit(:folio, :entry_no, :entry_id, :summary, :entry_type => [], :section_type => [], :marginalia => [],  :language => [], :subject => [], :note => [], :editorial_note => [], :is_referenced_by => [],
     :entry_dates_attributes => [:id, :_destroy, :date_id, :date_role, :date_note, :single_dates_attributes => [:id, :_destroy, :single_date_id, :date, :date_type, :date_certainty => []]],
-    :related_places_attributes => [:id, :_destroy, :place_id, :place_same_as, :place_as_written => [], :place_role => [], :place_type => [], :place_note => []],
-    :related_agents_attributes => [:id, :_destroy, :person_id, :person_same_as, :person_gender, :person_as_written => [], :person_role => [], :person_descriptor => [], :person_descriptor_as_written => [], :person_note => [], :person_related_place => [], :person_related_person => []])
+    :related_places_attributes => [:id, :_destroy, :place_id, :place_same_as, :rdftype => [], :place_as_written => [], :place_role => [], :place_type => [], :place_note => []],
+    :related_agents_attributes => [:id, :_destroy, :person_id, :person_same_as, :person_group, :person_gender, :rdftype => [],:person_as_written => [], :person_role => [], :person_descriptor => [], :person_descriptor_as_written => [], :person_note => [], :person_related_place => [], :person_related_person => []])
   end
 
 end

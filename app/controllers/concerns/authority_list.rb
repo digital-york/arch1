@@ -7,6 +7,7 @@ module AuthorityList
 
     # Hard-coded lists
     @gender_list = [['female'], ['male'], ['unknown']]
+    @person_group_list = [['person'], ['group']]
     @date_certainty_list = [["certain"], ["uncertain"], ["inferred"], ["approximate"]]
     @single_date_list = [["start"], ["end"], ["single"]]
 

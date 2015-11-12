@@ -27,6 +27,10 @@ class RelatedAgent < ActiveFedora::Base
     index.as :stored_searchable
   end
 
+  property :person_group, predicate: ::RDF::URI.new('http://schema.org/person_group'), multiple: false do |index|
+    index.as :stored_searchable
+  end
+
   property :person_gender, predicate: ::RDF::URI.new('http://schema.org/gender'), multiple: false do |index|
     index.as :stored_searchable
   end

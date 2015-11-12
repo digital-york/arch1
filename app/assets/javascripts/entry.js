@@ -435,6 +435,7 @@ $(document).ready(function () {
             var jq_role_list = $(this).attr('jq_role_list').replace(/ /g, "&#32;"); //  // Appears to be a problem when list is added as a nested list, i.e. Level 2, therefore replace them here
             var jq_descriptor_list = $(this).attr('jq_descriptor_list').replace(/ /g, "&#32;"); // See above
             var jq_gender_list = $.parseJSON($(this).attr('jq_gender_list')); // Don't need to remove spaces because not nested like the above lists (I think)
+            var jq_person_group_list = $.parseJSON($(this).attr('jq_person_group_list')); // Don't need to remove spaces because not nested like the above lists (I think)
             var jq_rdftype = $(this).attr('jq_rdftype')
 
             var descriptor_options = "<option value=''>--- select ---</option>";
@@ -447,6 +448,12 @@ $(document).ready(function () {
 
             for (i = 0; i < jq_gender_list.length; i++) {
                 gender_options = gender_options + "<option value='" + jq_gender_list[i] + "'>" + jq_gender_list[i] + "</option/>";
+            }
+
+            var person_group_options = "";
+
+            for (i = 0; i < jq_person_group_list.length; i++) {
+                person_group_options = person_group_options + "<option value='" + jq_person_group_list[i] + "'>" + jq_person_group_list[i] + "</option/>";
             }
 
             var new_code_block = "<div class='field_single'>" +
@@ -464,6 +471,9 @@ $(document).ready(function () {
                 "&nbsp;<span id='person_" + jq_index + "'></span>" +
                 "<input type='hidden' id='person_" + jq_index + "_hidden' value='' name='entry[related_agents_attributes][" + jq_index + "][person_same_as]'>" +
                 "</td></tr>" +
+
+                // Gender
+                "<tr><th>Person Group:</th><td><select name='entry[related_agents_attributes][" + jq_index + "][person_group]'>" + person_group_options + "</select></td></tr>" +
 
                 // Gender
                 "<tr><th>Gender:</th><td><select name='entry[related_agents_attributes][" + jq_index + "][person_gender]'>" + gender_options + "</select></td></tr>" +

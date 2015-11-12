@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151106154459) do
+ActiveRecord::Schema.define(version: 20151112111639) do
 
   create_table "bookmarks", force: :cascade do |t|
     t.integer  "user_id",       null: false
@@ -124,8 +124,8 @@ ActiveRecord::Schema.define(version: 20151106154459) do
   create_table "db_person_related_people", force: :cascade do |t|
     t.string   "name"
     t.integer  "db_related_agent_id"
-    t.datetime "created_at",                 null: false
-    t.datetime "updated_at",                 null: false
+    t.datetime "created_at",          null: false
+    t.datetime "updated_at",          null: false
   end
 
   add_index "db_person_related_people", ["db_related_agent_id"], name: "index_db_person_related_people_on_db_related_agent_id"
@@ -172,13 +172,13 @@ ActiveRecord::Schema.define(version: 20151106154459) do
 
   add_index "db_place_types", ["db_related_place_id"], name: "index_db_place_types_on_db_related_place_id"
 
-  create_table "db_related_agents" , force: :cascade do |t|
+  create_table "db_related_agents", force: :cascade do |t|
     t.string  "person_same_as"
     t.string  "person_gender"
     t.string  "person_id"
     t.integer "db_entry_id"
+    t.string  "person_group"
   end
-  #change_column "db_related_agents", :id, :primary_key, limit: 8
 
   add_index "db_related_agents", ["db_entry_id"], name: "index_db_related_agents_on_db_entry_id"
 
@@ -243,4 +243,3 @@ ActiveRecord::Schema.define(version: 20151106154459) do
   add_index "users", ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
 
 end
-
