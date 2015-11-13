@@ -25,6 +25,7 @@ Rails.application.routes.draw do
   get 'admins' => 'admins#index'
 
   get "/404" => "errors#not_found"
+  get "/422" => "errors#unprocessable_entity"
   get "/500" => "errors#internal_server_error"
 
   #root :to => "catalog#login"
