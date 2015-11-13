@@ -116,7 +116,7 @@ module RegisterFolio
       order = result['ordered_targets_ssim']
       # convert the list of folios in order into a hash so we can access the position of our id
       hash = Hash[order.map.with_index.to_a]
-      next_folio_id = hash[session[:folio_id].to_i + 1]
+      next_folio_id = order[hash[session[:folio_id]].to_i + 1]
     end
 
     @is_entry_on_next_folio = false
@@ -177,16 +177,15 @@ module RegisterFolio
   # If the entry is continued onto the next folio, creates the entry and
   # sets the new session variables
   # Also sets the entry 'continues_on' attribute
-  # HERE
   def create_next_entry(create_entry_status)
 
     next_folio_id = ''
 
     SolrQuery.new.solr_query('id:"' + session[:register_id] + '/list_source"', 'ordered_targets_ssim')['response']['docs'].map.each do |result|
       order = result['ordered_targets_ssim']
-      # convert the list of folios in order into a hash so we can access the position of our id
+      # Convert the list of folios in order into a hash so we can access the position of our id
       hash = Hash[order.map.with_index.to_a]
-      next_folio_id = hash[session[:folio_id].to_i + 1]
+      next_folio_id = order[hash[session[:folio_id]].to_i + 1]
     end
 
     # Only create a new entry if one doesn't already exist on the next folio

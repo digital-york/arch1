@@ -158,8 +158,10 @@ class EntriesController < ApplicationController
 
     # Check parameters are whitelisted
     entry_params = whitelist_entry_params
+
     # Remove the entry_id
     entry_params.delete(:entry_id)
+
     # Assign and Remove the additional id fields
     unless entry_params["related_agents_attributes"].nil?
       entry_params["related_agents_attributes"].each do | p |
