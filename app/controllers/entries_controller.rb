@@ -374,9 +374,10 @@ class EntriesController < ApplicationController
   end
 
   # Never trust parameters from the scary internet, only allow the white list through.
+  # Note - I think arrays have to go after the single fields otherwise it doesn't work
   def whitelist_entry_params
     params.require(:entry).permit(:folio, :entry_no, :entry_id, :summary, :entry_type => [], :section_type => [], :marginalia => [],  :language => [], :subject => [], :note => [], :editorial_note => [], :is_referenced_by => [],
-    :entry_dates_attributes => [:id, :_destroy, :date_id, :date_role, :date_note, :single_dates_attributes => [:id, :_destroy, :single_date_id, :date, :date_type, :date_certainty => []]],
+    :entry_dates_attributes => [:id, :_destroy, :date_id, :date_role, :date_note, :rdftype => [], :single_dates_attributes => [:id, :_destroy, :single_date_id, :date, :date_type, :date_certainty => []]],
     :related_places_attributes => [:id, :_destroy, :place_id, :place_same_as, :rdftype => [], :place_as_written => [], :place_role => [], :place_type => [], :place_note => []],
     :related_agents_attributes => [:id, :_destroy, :person_id, :person_same_as, :person_group, :person_gender, :rdftype => [],:person_as_written => [], :person_role => [], :person_descriptor => [], :person_descriptor_as_written => [], :person_note => [], :person_related_place => [], :person_related_person => []])
   end
