@@ -153,52 +153,52 @@ class EntriesController < ApplicationController
       return
     end
 
-    # Update the rdf_types for all objects
-    update_rdf_types
-
     # Check parameters are whitelisted
     entry_params = whitelist_entry_params
-
-    # Remove the entry_id
-    entry_params.delete(:entry_id)
-
-    # Assign and Remove the additional id fields
-    unless entry_params["related_agents_attributes"].nil?
-      entry_params["related_agents_attributes"].each do | p |
-        #entry_params["related_agents_attributes"][p[0]]['id'] = entry_params["related_agents_attributes"][p[0]]['person_id']
-        entry_params["related_agents_attributes"][p[0]].delete(:person_id)
-      end
-    end
-    unless entry_params["related_places_attributes"].nil?
-      entry_params["related_places_attributes"].each do | p |
-        #entry_params["related_places_attributes"][p[0]]['id'] = entry_params["related_places_attributes"][p[0]]['place_id']
-        entry_params["related_places_attributes"][p[0]].delete(:place_id)
-      end
-    end
-    unless entry_params["entry_dates_attributes"].nil?
-      entry_params["entry_dates_attributes"].each do | p |
-        #entry_params["entry_dates_attributes"][p[0]]['id'] = entry_params["entry_dates_attributes"][p[0]]['date_id']
-        entry_params["entry_dates_attributes"][p[0]].delete(:date_id)
-        unless entry_params["entry_dates_attributes"][p[0]]["single_dates_attributes"].nil?
-          entry_params["entry_dates_attributes"][p[0]]["single_dates_attributes"].each do | s |
-            #entry_params["entry_dates_attributes"][p[0]]["single_dates_attributes"][s[0]]['id'] =
-                #entry_params["entry_dates_attributes"][p[0]]["single_dates_attributes"][s[0]]['single_date_id']
-            entry_params["entry_dates_attributes"][p[0]]["single_dates_attributes"][s[0]].delete(:single_date_id)
-          end
-        end
-      end
-    end
 
     # Get a new entry and replace values with the form parameters
     # Replace the folio id with the corresponding Folio object
     folio = Folio.where(id: entry_params['folio']).first
     entry_params['folio'] = folio
 
+    # Remove the entry_id
+    entry_params.delete(:entry_id)
+
+    # Remove the additional id fields
+    unless entry_params["related_agents_attributes"].nil?
+      entry_params["related_agents_attributes"].each do | p |
+        entry_params["related_agents_attributes"][p[0]].delete(:person_id)
+      end
+    end
+    unless entry_params["related_places_attributes"].nil?
+      entry_params["related_places_attributes"].each do | p |
+        entry_params["related_places_attributes"][p[0]].delete(:place_id)
+      end
+    end
+    unless entry_params["entry_dates_attributes"].nil?
+      entry_params["entry_dates_attributes"].each do | p |
+        entry_params["entry_dates_attributes"][p[0]].delete(:date_id)
+        if entry_params["entry_dates_attributes"][p[0]]["single_dates_attributes"] == ''
+          entry_params["entry_dates_attributes"][p[0]].delete(:single_dates_attributes)
+        end
+        unless entry_params["entry_dates_attributes"][p[0]]["single_dates_attributes"].nil? or entry_params["entry_dates_attributes"][p[0]]["single_dates_attributes"] == ''
+          entry_params["entry_dates_attributes"][p[0]]["single_dates_attributes"].each do | s |
+            entry_params["entry_dates_attributes"][p[0]]["single_dates_attributes"][s[0]].delete(:single_date_id)
+          end
+        end
+      end
+    end
+
+    # Update the rdf_types for all objects
+    entry_params = update_rdf_types(entry_params)
+
     # Remove any empty fields and blocks (date, place, person)
     remove_empty_fields(entry_params)
 
     # Check for errors
     #@errors = check_for_errors(entry_params)
+
+    puts entry_params
 
     # Populate new entry with the entry_params
     @entry = Entry.new(entry_params)
@@ -243,9 +243,6 @@ class EntriesController < ApplicationController
       return
     end
 
-    # Update the rdf_types for all objects
-    update_rdf_types
-
     # Check parameters are whitelisted
     entry_params = whitelist_entry_params
 
@@ -270,14 +267,13 @@ class EntriesController < ApplicationController
       entry_params["related_places_attributes"].each do | p |
         entry_params["related_places_attributes"][p[0]]['id'] = entry_params["related_places_attributes"][p[0]]['place_id']
         entry_params["related_places_attributes"][p[0]].delete(:place_id)
-
       end
     end
     unless entry_params["entry_dates_attributes"].nil?
       entry_params["entry_dates_attributes"].each do | p |
         entry_params["entry_dates_attributes"][p[0]]['id'] = entry_params["entry_dates_attributes"][p[0]]['date_id']
         entry_params["entry_dates_attributes"][p[0]].delete(:date_id)
-        unless entry_params["entry_dates_attributes"][p[0]]["single_dates_attributes"].nil?
+        unless entry_params["entry_dates_attributes"][p[0]]["single_dates_attributes"].nil? or entry_params["entry_dates_attributes"][p[0]]["single_dates_attributes"] == ''
           entry_params["entry_dates_attributes"][p[0]]["single_dates_attributes"].each do | s |
             entry_params["entry_dates_attributes"][p[0]]["single_dates_attributes"][s[0]]['id'] =
                 entry_params["entry_dates_attributes"][p[0]]["single_dates_attributes"][s[0]]['single_date_id']
@@ -286,6 +282,9 @@ class EntriesController < ApplicationController
         end
       end
     end
+
+    # Update the rdf_types for all objects
+    entry_params = update_rdf_types(entry_params)
 
     # Check for errors
     #@errors = check_for_errors(entry_params)
@@ -376,8 +375,8 @@ class EntriesController < ApplicationController
   # Never trust parameters from the scary internet, only allow the white list through.
   # Note - I think arrays have to go after the single fields otherwise it doesn't work
   def whitelist_entry_params
-    params.require(:entry).permit(:folio, :entry_no, :entry_id, :summary, :entry_type => [], :section_type => [], :marginalia => [],  :language => [], :subject => [], :note => [], :editorial_note => [], :is_referenced_by => [],
-    :entry_dates_attributes => [:id, :_destroy, :date_id, :date_role, :date_note, :rdftype => [], :single_dates_attributes => [:id, :_destroy, :single_date_id, :date, :date_type, :date_certainty => []]],
+    params.require(:entry).permit(:folio, :entry_no, :entry_id, :summary, :rdftype => [], :entry_type => [], :section_type => [], :marginalia => [],  :language => [], :subject => [], :note => [], :editorial_note => [], :is_referenced_by => [],
+    :entry_dates_attributes => [:id, :_destroy, :date_id, :date_role, :date_note, :rdftype => [], :single_dates_attributes => [:id, :_destroy, :single_date_id, :date, :date_type, :rdftype => [], :date_certainty => []]],
     :related_places_attributes => [:id, :_destroy, :place_id, :place_same_as, :rdftype => [], :place_as_written => [], :place_role => [], :place_type => [], :place_note => []],
     :related_agents_attributes => [:id, :_destroy, :person_id, :person_same_as, :person_group, :person_gender, :rdftype => [],:person_as_written => [], :person_role => [], :person_descriptor => [], :person_descriptor_as_written => [], :person_note => [], :person_related_place => [], :person_related_person => []])
   end

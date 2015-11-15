@@ -303,44 +303,37 @@ module RegisterFolio
     end
   end
 
-  # Update rdf types ... this appears to be just stripping out [] and space - why is this necessary?
-  def update_rdf_types
-    unless params[:entry][:related_agents_attributes].nil?
-      params[:entry][:related_agents_attributes].each do |key, value|
-        value.each do |k, v|
-          if k == 'rdftype'
-            params[:entry][:related_agents_attributes][key][k] = v.gsub!("[", "").gsub!('"', '').gsub!("]", '').gsub(' ', '').split(',').collect { |s| s }
-          end
+  # Update rdf types
+  def update_rdf_types(entry_params)
+    unless entry_params["related_agents_attributes"].nil?
+      entry_params["related_agents_attributes"].each do |key, value|
+        if entry_params["related_agents_attributes"][key]['person_group'] == 'person'
+          entry_params["related_agents_attributes"][key]["rdftype"] = ['http://dlib.york.ac.uk/ontologies/borthwick-registers#RelatedAgent','http://xmlns.com/foaf/0.1/Person']
+        else
+          entry_params["related_agents_attributes"][key]["rdftype"] = ['http://dlib.york.ac.uk/ontologies/borthwick-registers#RelatedAgent','http://xmlns.com/foaf/0.1/Group']
         end
       end
     end
-    unless params[:entry][:related_places_attributes].nil?
-      params[:entry][:related_places_attributes].each do |key, value|
-        value.each do |k, v|
-          if k == 'rdftype'
-            params[:entry][:related_places_attributes][key][k] = v.gsub!("[", "").gsub!('"', '').gsub!("]", '').gsub(' ', '').split(',').collect { |s| s }
-          end
-        end
+    unless entry_params["related_places_attributes"].nil?
+      entry_params["related_places_attributes"].each do |key, value|
+        entry_params["related_places_attributes"][key]["rdftype"] = ['http://dlib.york.ac.uk/ontologies/borthwick-registers#RelatedPlace', 'http://schema.org/Place']
       end
     end
-    unless params[:entry][:entry_dates_attributes].nil?
-      params[:entry][:entry_dates_attributes].each do |key, value|
+    unless entry_params["entry_dates_attributes"].nil?
+      entry_params["entry_dates_attributes"].each do |key, value|
+        entry_params["entry_dates_attributes"][key]["rdftype"] = ['http://dlib.york.ac.uk/ontologies/borthwick-registers#EntryDate']
         value.each do |k, v|
-          if k == 'rdftype'
-            params[:entry][:entry_dates_attributes][key][k] = [v.gsub!("[", "").gsub!('"', '').gsub!("]", '').gsub(' ', '')]
-          end
           if k == 'single_dates_attributes'
-            v.each do |ke, va|
-              va.each do |keya, val|
-                if keya == 'rdftype'
-                  params[:entry][:entry_dates_attributes][key][k][ke][keya] = [val.gsub!("[", "").gsub!('"', '').gsub!("]", '').gsub(' ', '')]
-                end
+            unless v.class == String
+              v.each do |ke, va|
+                entry_params["entry_dates_attributes"][key][k][ke]["rdftype"] = ['http://dlib.york.ac.uk/ontologies/borthwick-registers#SingleDate']
               end
             end
           end
         end
       end
     end
+    entry_params
   end
 
   # This method adds adds Related Agent ids to the relatedPlaceFor field in Related Place

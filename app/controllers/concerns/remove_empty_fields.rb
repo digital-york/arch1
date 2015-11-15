@@ -112,6 +112,7 @@ module RemoveEmptyFields
             entry_params[:entry_dates_attributes][index.to_s][:date_role] = ''
             entry_params[:entry_dates_attributes][index.to_s][:date_note] = ''
             entry_params[:entry_dates_attributes][index.to_s][:date_id] = ''
+            entry_params[:entry_dates_attributes][index.to_s].delete(:rdftype)
             entry_params[:entry_dates_attributes][index.to_s][:_destroy] = nil
           end
 
@@ -136,23 +137,18 @@ module RemoveEmptyFields
           if entry_params[:related_places_attributes][index.to_s][:place_same_as] != ''
             remove_place = false
           end
-
           if entry_params[:related_places_attributes][index.to_s][:place_as_written] != nil && entry_params[:related_places_attributes][index.to_s][:place_as_written].size > 0
             remove_place = false
           end
-
           if entry_params[:related_places_attributes][index.to_s][:place_role] != nil && entry_params[:related_places_attributes][index.to_s][:place_role].size > 0
             remove_place = false
           end
-
           if entry_params[:related_places_attributes][index.to_s][:place_type] != nil && entry_params[:related_places_attributes][index.to_s][:place_type].size > 0
             remove_place = false
           end
-
           if entry_params[:related_places_attributes][index.to_s][:place_note] != nil && entry_params[:related_places_attributes][index.to_s][:place_note].size > 0
             remove_place = false
           end
-
           if remove_place == true
             entry_params[:related_places_attributes][index.to_s][:_destroy] = '1'
           end
@@ -169,7 +165,7 @@ module RemoveEmptyFields
             entry_params[:related_places_attributes][index.to_s][:place_role] = ''
             entry_params[:related_places_attributes][index.to_s][:place_type] = ''
             entry_params[:related_places_attributes][index.to_s][:place_note] = ''
-            entry_params[:related_places_attributes][index.to_s][:place_id] = ''
+            entry_params[:related_places_attributes][index.to_s].delete(:rdftype)
             entry_params[:related_places_attributes][index.to_s][:_destroy] = nil
           end
         end
@@ -260,7 +256,8 @@ module RemoveEmptyFields
             entry_params[:related_agents_attributes][index.to_s][:person_descriptor] = ''
             entry_params[:related_agents_attributes][index.to_s][:person_note] = ''
             entry_params[:related_agents_attributes][index.to_s][:person_related_place] = ''
-            entry_params[:related_agents_attributes][index.to_s][:person_id] = ''
+            entry_params[:related_agents_attributes][index.to_s][:person_group] = ''
+            entry_params[:related_agents_attributes][index.to_s].delete(:rdftype)
             entry_params[:related_agents_attributes][index.to_s][:_destroy] = nil
           end
         end

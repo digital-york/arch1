@@ -376,7 +376,6 @@ $(document).ready(function () {
             var jq_index = field_group_div.children().length;
             var jq_place_type_list = $(this).attr('jq_place_type_list').replace(/ /g, "&#32;"); // Appears to be a problem when list is added as a nested list, i.e. Level 2, therefore replace them here
             var jq_place_role_list = $(this).attr('jq_place_role_list').replace(/ /g, "&#32;"); // See above
-            var jq_rdftype = $(this).attr('jq_rdftype')
 
             var new_code_block = "<div class='field_single'>" +
 
@@ -410,10 +409,6 @@ $(document).ready(function () {
                 "&nbsp;<img jq_type='place_note' jq_index='" + jq_index + "' jq_attributes='related_places_attributes' class='plus_icon click_multiple_text_area_button_level2' src='/assets/plus_sign.png'>" +
                 "</th><td><div class='field_group grey_box'></div></td></tr>" +
 
-                // Hidden field for RDFTYPE
-                "<tr><input type='hidden' id='hidden_field' name='entry[related_places_attributes][" + jq_index + "][rdftype]' value='" + jq_rdftype + "'></tr>" +
-
-
                 "</table>" +
                 "<img src='/assets/delete.png' alt='Delete icon' class='delete_icon click_remove_field_level2' params_type='related_places'>" +
                 "</div>";
@@ -436,7 +431,6 @@ $(document).ready(function () {
             var jq_descriptor_list = $(this).attr('jq_descriptor_list').replace(/ /g, "&#32;"); // See above
             var jq_gender_list = $.parseJSON($(this).attr('jq_gender_list')); // Don't need to remove spaces because not nested like the above lists (I think)
             var jq_person_group_list = $.parseJSON($(this).attr('jq_person_group_list')); // Don't need to remove spaces because not nested like the above lists (I think)
-            var jq_rdftype = $(this).attr('jq_rdftype')
 
             var descriptor_options = "<option value=''>--- select ---</option>";
 
@@ -508,9 +502,6 @@ $(document).ready(function () {
                 "&nbsp;<img jq_type='person_related_person' jq_index='" + jq_index + "' jq_attributes='related_agents_attributes' class='plus_icon click_person_related_field_button' src='/assets/plus_sign.png'>" +
                 "</th><td><div class='field_group grey_box'></div></td></tr>" +
 
-                // Hidden field for RDFTYPE
-                "<tr><input type='hidden' id='hidden_field' name='entry[related_agents_attributes][" + jq_index + "][rdftype]' value='" + jq_rdftype + "'></tr>" +
-
                 "</table>" +
                 "<img src='/assets/delete.png' alt='Delete icon' class='delete_icon click_remove_field_level2' params_type='related_agents'>" +
                 "</div>";
@@ -532,7 +523,6 @@ $(document).ready(function () {
             var jq_date_role_list = $.parseJSON($(this).attr('jq_date_role_list')) // See note on line above
             var jq_date_certainty_list = $(this).attr('jq_date_certainty_list').replace(/ /g, "&#32;");  // Appears to be a problem when list is added as a nested list, i.e. Level 2, therefore replace them here
             var jq_single_date_list = $(this).attr('jq_single_date_list').replace(/ /g, "&#32;"); // See note on line above
-            var jq_rdftype = $(this).attr('jq_rdftype')
 
             var date_role_options = "<option value=''>--- select ---</option>";
 
@@ -545,16 +535,13 @@ $(document).ready(function () {
                 "<table class='tab3' cellspacing='0'>" +
 
                     // Date
-                "<tr><th>Date:&nbsp;<img jq_rdftype='[\"http://dlib.york.ac.uk/ontologies/borthwick-registers#SingleDate\"]' jq_date_certainty_list='" + jq_date_certainty_list + "' jq_single_date_list='" + jq_single_date_list + "' jq_index='" + jq_index + "' class='plus_icon click_single_date_button' src='/assets/plus_sign.png'></th><td><div class='field_group grey_box single_date'></div></td></tr>" +
+                "<tr><th>Date:&nbsp;<img jq_date_certainty_list='" + jq_date_certainty_list + "' jq_single_date_list='" + jq_single_date_list + "' jq_index='" + jq_index + "' class='plus_icon click_single_date_button' src='/assets/plus_sign.png'></th><td><div class='field_group grey_box single_date'></div></td></tr>" +
 
                     // Date Role
                 "<tr><th>Date Role:</th><td><select name='entry[entry_dates_attributes][" + jq_index + "][date_role]'>" + date_role_options + "</select></td></tr>" +
 
                     // Note
                 "<tr><th>Note:</th><td class='input_single'><textarea value='' id='' name='entry[entry_dates_attributes][" + jq_index + "][date_note]'/></td></tr>" +
-
-                // Hidden field for RDFTYPE
-                "<tr><input type='hidden' id='hidden_field' name='entry[entry_dates_attributes][" + jq_index + "][rdftype]' value='" + jq_rdftype + "'></tr>" +
 
                 "</table>" +
                 "<img src='/assets/delete.png' alt='Delete icon' class='delete_icon click_remove_field_level2' params_type='entry_dates'>" +
@@ -577,7 +564,6 @@ $(document).ready(function () {
             var jq_index2 = field_group_div.children().length;
             var jq_date_certainty_list = $(this).attr('jq_date_certainty_list'); //.replace(/ /g, "&#32;"); // Doesn't like spaces but quotes are OK?!
             var jq_single_date_list = $.parseJSON($(this).attr('jq_single_date_list')); //.replace(/ /g, "&#32;"); // Doesn't like spaces but quotes are OK?!
-            var jq_rdftype = $(this).attr('jq_rdftype')
 
             var single_date_options = "<option value=''>--- select ---</option>";
 
@@ -602,9 +588,6 @@ $(document).ready(function () {
                     // Type
                 "<tr><th>Type:</th>" +
                 "<td><select name='entry[entry_dates_attributes][" + jq_index + "][single_dates_attributes][" + jq_index2 + "][date_type]'>" + single_date_options + "</select></td>" +
-
-                    // Hidden field for RDFTYPE
-                "<tr><input type='hidden' id='hidden_field' name='entry[entry_dates_attributes][" + jq_index + "][single_dates_attributes][" + jq_index2 + "][rdftype]' value='" + jq_rdftype + "'></tr>" +
 
                 "</table>" +
                 "<img alt='Delete icon' src='/assets/delete.png' class='delete_icon click_remove_field_date' jq_index1='" + jq_index2 + "'>" +
