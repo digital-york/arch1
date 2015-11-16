@@ -198,8 +198,6 @@ class EntriesController < ApplicationController
     # Check for errors
     #@errors = check_for_errors(entry_params)
 
-    puts entry_params
-
     # Populate new entry with the entry_params
     @entry = Entry.new(entry_params)
 
