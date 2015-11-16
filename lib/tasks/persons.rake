@@ -18,11 +18,11 @@ namespace :persons do
 
     begin
       # added by py
-      #@scheme = ConceptScheme.find('mg74qm537')
-      @scheme = ConceptScheme.new
-      @scheme.preflabel = "people"
-      @scheme.rdftype = @scheme.add_rdf_types
-      @scheme.save
+      @scheme = ConceptScheme.find('mg74qm537')
+      #@scheme = ConceptScheme.new
+      #@scheme.preflabel = "people"
+      #@scheme.rdftype = @scheme.add_rdf_types
+      #@scheme.save
       puts "Concept scheme for person created at #{@scheme.id}"
     rescue
       puts $!
@@ -35,9 +35,11 @@ namespace :persons do
          'Heads of Religious Houses, III' => 'http://www.cambridge.org/gb/academic/subjects/history/british-history-1066-1450/heads-religious-houses-england-and-wales-iii-13771540?format=PB',
          'Fasti' => 'http://www.british-history.ac.uk/search/series/fasti-ecclesiae',
          'ODNB' => 'http://www.oxforddnb.com/',
-         'http://www.etoncollege.com/Provosts.aspx' => 'http://www.etoncollege.com/Provosts.aspx'}
+         'http://www.etoncollege.com/Provosts.aspx' => 'http://www.etoncollege.com/Provosts.aspx',
+         'Handbook of British Chronology' => 'http://www.cambridge.org/gb/academic/subjects/history/british-history-general-interest/handbook-british-chronology-3rd-edition'
+        }
 
-    arr = CSV.read(Rails.root + 'lib/assets/lists/persons.csv')
+    arr = CSV.read(Rails.root + 'lib/assets/lists/persons_add1.csv')
 
     arr.each do |c|
       begin

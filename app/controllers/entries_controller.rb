@@ -281,8 +281,12 @@ class EntriesController < ApplicationController
       end
     end
 
+    puts entry_params
+
     # Update the rdf_types for all objects
     entry_params = update_rdf_types(entry_params)
+
+    puts entry_params
 
     # Check for errors
     #@errors = check_for_errors(entry_params)

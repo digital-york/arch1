@@ -202,5 +202,12 @@ namespace :regfols do
       puts $!
     end
   end
+  
+  # from dlib solr PID,dc.title ismemberof
+  # preflabel_tesim:""
+  # hasTarget_ssim:""
+  # if there are two targets ...
+  # if it ends with ' (UV)', trim it and expect to find a second image
+  # check if image label has UV in it, if not add it in
 
 end
