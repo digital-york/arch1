@@ -11,6 +11,8 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
+# Includes all database tables for the form
+
 ActiveRecord::Schema.define(version: 20151112111639) do
 
   create_table "bookmarks", force: :cascade do |t|
