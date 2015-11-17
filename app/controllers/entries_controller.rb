@@ -1,5 +1,7 @@
 class EntriesController < ApplicationController
 
+  include PlacesHelper
+
   before_filter :session_timed_out
 
   # INDEX
@@ -265,6 +267,11 @@ class EntriesController < ApplicationController
       entry_params["related_places_attributes"].each do | p |
         entry_params["related_places_attributes"][p[0]]['id'] = entry_params["related_places_attributes"][p[0]]['place_id']
         entry_params["related_places_attributes"][p[0]].delete(:place_id)
+        # Check if the place is from DEEP, if yes, store locally
+        puts entry_params["related_places_attributes"][p[0]]
+        if entry_params["related_places_attributes"][p[0]]['place_same_as'].start_with? 'deep_'
+          entry_params["related_places_attributes"][p[0]]['place_same_as'] = check_id(entry_params["related_places_attributes"][p[0]]['place_same_as']  )
+        end
       end
     end
     unless entry_params["entry_dates_attributes"].nil?
@@ -281,12 +288,8 @@ class EntriesController < ApplicationController
       end
     end
 
-    puts entry_params
-
     # Update the rdf_types for all objects
     entry_params = update_rdf_types(entry_params)
-
-    puts entry_params
 
     # Check for errors
     #@errors = check_for_errors(entry_params)

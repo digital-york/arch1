@@ -19,7 +19,9 @@ class Deep < Qa::Authorities::Base
 
     def build_query_url q
       query = URI.escape(untaint(q))
-      "http://unlock.edina.ac.uk/ws/search?name=#{query},UK&gazetteer=deep&format=json"
+      # to limit to UK, USE; "http://unlock.edina.ac.uk/ws/search?name=#{query},UK&gazetteer=deep&format=json"
+      # MAX RESULTS = 200, INCLUDE VARIANT NAMES
+      "http://unlock.edina.ac.uk/ws/search?name=#{query}&searchVariants=true&maxRows=200&gazetteer=deep&format=json"
     end
 
     def untaint(q)
@@ -31,7 +33,7 @@ class Deep < Qa::Authorities::Base
     end
 
     def find_url id
-      "http://vocab.getty.edu/tgn/#{id}.json"
+      "http://unlock.edina.ac.uk/ws/search?name=#{id}&gazetteer=deep&format=json"
     end
 
     def request_options
@@ -51,6 +53,7 @@ class Deep < Qa::Authorities::Base
           'adminlevel2' => result['properties']['adminlevel2'],
           'adminlevel3' => result['properties']['adminlevel3'],
           'adminlevel4' => result['properties']['adminlevel4'],
+          'name' => result['properties']['name'],
           'featuretype' => result['properties']['featuretype'],
           'gazetteer' => result['properties']['gazetteer']}
       end
