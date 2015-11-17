@@ -64,6 +64,7 @@ class PlacesController < ApplicationController
           tt << name
           @search_array << tt
         end
+        params[:deep].delete(:checked)
       else
         @error = "Please enter a search term"
       end

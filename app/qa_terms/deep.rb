@@ -4,11 +4,16 @@ class Deep < Qa::Authorities::Base
     include TermsHelper
 
     attr_reader :subauthority
+
+    @q = ''
+    @variants = 'true'
+
     def initialize(subauthority)
       @subauthority = subauthority
     end
 
     def search q
+      @q = q
       parse_authority_response(json(build_query_url(q)))
     end
 
@@ -20,8 +25,7 @@ class Deep < Qa::Authorities::Base
     def build_query_url q
       query = URI.escape(untaint(q))
       # to limit to UK, USE; "http://unlock.edina.ac.uk/ws/search?name=#{query},UK&gazetteer=deep&format=json"
-      # MAX RESULTS = 200, INCLUDE VARIANT NAMES
-      "http://unlock.edina.ac.uk/ws/search?name=#{query}&searchVariants=true&maxRows=200&gazetteer=deep&format=json"
+      "http://unlock.edina.ac.uk/ws/search?name=#{query}&searchVariants=#{@variants}{&maxRows=200&gazetteer=deep&format=json"
     end
 
     def untaint(q)
@@ -44,6 +48,12 @@ class Deep < Qa::Authorities::Base
 
     # Reformats the data received from the service
     def parse_authority_response(response)
+      # There is a max results setting of 200; if we get 200 results, re-run the search without variants
+      if response['features'].length == '200'
+        @variants = 'false'
+        search(@q)
+      end
+
       response['features'].map do |result|
         geo = TermsHelper::Geo.new
         al = geo.adminlevel(result['properties']['adminlevel1'].to_s,result['properties']['adminlevel2'].to_s)
