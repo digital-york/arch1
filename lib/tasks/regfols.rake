@@ -202,12 +202,45 @@ namespace :regfols do
       puts $!
     end
   end
+
+  desc "Retrospectively add URLs for deep zoom images"
+  require 'csv'
+  require 'nokogiri'
+  task add_images_retro: :environment do
+
+    # from dlib solr search for ismemberof, return PID,dc.title
+
+    path = Rails.root + 'lib/assets/'
+
+    list = ['Abp_Reg_32_images.csv','Abp_Reg_31_images.csv']
+
+    list.each do |l|
+      puts "processing #{l}"
+      @csv = CSV.read(Rails.root + 'lib/assets/new_regs_and_fols/' + l, :headers => true)
+
+      l.each.do | r |
+        f = File.open(path + "new_regs_and_folios/xml/#{r[0].sub('york:', '')}.xml")
+        @doc = Nokogiri::XML(f)
+        f.close
+        #find the folio and it's image
+        # preflabel_tesim:""
+        # hasTarget_ssim:""
+        # if there are two targets ...
+        # check if image label has UV in it, if not add it in
+
+        # if it ends with ' (UV)', trim it and expect to find a second image
+        # include rsolr
+        if r[1].end_with? ' (UV)'
+          #we have two images for the folio
+          #make sure we don't change the same one
+          #also update the preflabel
+        end
+
+        image.file = @doc.css('datastreamProfile dsLocation').text.sub('http://dlib.york.ac.uk/', '/usr/digilib-webdocs/')
+        image.save
+      end
+  end
   
-  # from dlib solr PID,dc.title ismemberof
-  # preflabel_tesim:""
-  # hasTarget_ssim:""
-  # if there are two targets ...
-  # if it ends with ' (UV)', trim it and expect to find a second image
-  # check if image label has UV in it, if not add it in
+
 
 end
