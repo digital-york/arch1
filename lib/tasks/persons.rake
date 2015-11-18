@@ -17,21 +17,23 @@ namespace :persons do
     puts 'Creating the Concept Scheme'
 
     begin
-      # added by py
-      #@scheme = ConceptScheme.find('mg74qm537')
+      #@scheme = ConceptScheme.find('pz50gw21p')
       @scheme = ConceptScheme.new
       @scheme.preflabel = "people"
       @scheme.rdftype = @scheme.add_rdf_types
       @scheme.save
       puts "Concept scheme for person created at #{@scheme.id}"
     rescue
+      puts "ERROR in ConceptScheme!"
       puts $!
+      exit
     end
 
     puts 'Processing the person. This may take some time ... '
 
     AUTHS =
-        {'Oxford Dictionary of Popes' => 'http://explore.bl.uk/primo_library/libweb/action/display.do?frbrVersion=3&tabs=moreTab&ct=display&fn=search&doc=BLL01009534313&indx=1&recIds=BLL01009534313&recIdxs=0&elementId=0&renderMode=poppedOut&displayMode=full&frbrVersion=3&dscnt=1&scp.scps=scope%3A%28BLCONTENT%29&frbg=&tab=local_tab&dstmp=1447001180115&srt=rank&mode=Basic&vl%28488279563UI0%29=any&dum=true&tb=t&vl%28freeText0%29=A%20Dictionary%20of%20Popes%201986&vid=BLVU1',
+        {
+         'Oxford Dictionary of Popes' => 'http://explore.bl.uk/primo_library/libweb/action/display.do?frbrVersion=3&tabs=moreTab&ct=display&fn=search&doc=BLL01009534313&indx=1&recIds=BLL01009534313&recIdxs=0&elementId=0&renderMode=poppedOut&displayMode=full&frbrVersion=3&dscnt=1&scp.scps=scope%3A%28BLCONTENT%29&frbg=&tab=local_tab&dstmp=1447001180115&srt=rank&mode=Basic&vl%28488279563UI0%29=any&dum=true&tb=t&vl%28freeText0%29=A%20Dictionary%20of%20Popes%201986&vid=BLVU1',
          'Heads of Religious Houses, III' => 'http://www.cambridge.org/gb/academic/subjects/history/british-history-1066-1450/heads-religious-houses-england-and-wales-iii-13771540?format=PB',
          'Fasti' => 'http://www.british-history.ac.uk/search/series/fasti-ecclesiae',
          'ODNB' => 'http://www.oxforddnb.com/',
@@ -127,7 +129,14 @@ namespace :persons do
         if p.preflabel.end_with? ', '
           p.preflabel = p.preflabel[0..p.preflabel.length-3]
         end
-        p.save
+
+        begin
+          p.save
+        rescue
+          puts "Error! #{p.preflabel}"
+          puts ">> #{$!}"
+        end
+
         @scheme.persons += [p]
         @scheme.save
         puts "Created #{p.preflabel}"
