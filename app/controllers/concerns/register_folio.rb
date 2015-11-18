@@ -20,8 +20,8 @@ module RegisterFolio
     if folio_id == ''
       session[:folio_image] = ''
     else
-      SolrQuery.new.solr_query('hasTarget_ssim:"' + session[:folio_id] + '"', 'file_url_tesim', 1)['response']['docs'].map do |result|
-        session[:folio_image] = result['file_url_tesim'][0]
+      SolrQuery.new.solr_query('hasTarget_ssim:"' + session[:folio_id] + '"', 'file_path_tesim', 1)['response']['docs'].map do |result|
+        session[:folio_image] = result['file_path_tesim'][0]
       end
     end
   end
@@ -47,8 +47,8 @@ module RegisterFolio
     end
 
     # Set the folio image session variable
-    SolrQuery.new.solr_query('hasTarget_ssim:"' + next_id + '"', 'file_url_tesim', 1)['response']['docs'].map do |result|
-      next_image = result['file_url_tesim'][0]
+    SolrQuery.new.solr_query('hasTarget_ssim:"' + next_id + '"', 'file_path_tesim', 1)['response']['docs'].map do |result|
+      next_image = result['file_path_tesim'][0]
     end
 
     session[:folio_id] = next_id
@@ -77,8 +77,8 @@ module RegisterFolio
     end
 
     # Set the browse image
-    SolrQuery.new.solr_query('hasTarget_ssim:"' + next_id + '"', 'file_url_tesim', 1)['response']['docs'].map do |result|
-      next_image = result['file_url_tesim'][0]
+    SolrQuery.new.solr_query('hasTarget_ssim:"' + next_id + '"', 'file_path_tesim', 1)['response']['docs'].map do |result|
+      next_image = result['file_path_tesim'][0]
     end
 
     session[:browse_id] = next_id

@@ -257,7 +257,7 @@ namespace :regfols do
               @doc = Nokogiri::XML(f)
               f.close
               i.preflabel = 'Image (UV)'
-              i.file_url = @doc.css('datastreamProfile dsLocation').text.sub('http://dlib.york.ac.uk/', '/usr/digilib-webdocs/')
+              i.file_path = @doc.css('datastreamProfile dsLocation').text.sub('http://dlib.york.ac.uk/', '/usr/digilib-webdocs/')
               i.folio = @fol
               @fol.images << i
               @fol.save
@@ -267,7 +267,7 @@ namespace :regfols do
               f = File.open(path + "new_regs_and_fols/xml/#{r[0].sub('york:', '')}.xml")
               @doc = Nokogiri::XML(f)
               f.close
-              img.file_url = @doc.css('datastreamProfile dsLocation').text.sub('http://dlib.york.ac.uk/', '/usr/digilib-webdocs/')
+              img.file_pathl = @doc.css('datastreamProfile dsLocation').text.sub('http://dlib.york.ac.uk/', '/usr/digilib-webdocs/')
               img.folio = @fol
               @fol.images << img
               @fol.save
@@ -278,7 +278,7 @@ namespace :regfols do
             f = File.open(path + "new_regs_and_fols/xml/#{r[0].sub('york:', '')}.xml")
             @doc = Nokogiri::XML(f)
             f.close
-            image.file_url = @doc.css('datastreamProfile dsLocation').text.sub('http://dlib.york.ac.uk/', '/usr/digilib-webdocs/')
+            image.file_path = @doc.css('datastreamProfile dsLocation').text.sub('http://dlib.york.ac.uk/', '/usr/digilib-webdocs/')
             image.folio = @fol
             # += [image] didn't work here!
             @fol.images << image
