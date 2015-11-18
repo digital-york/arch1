@@ -267,7 +267,7 @@ namespace :regfols do
               f = File.open(path + "new_regs_and_fols/xml/#{r[0].sub('york:', '')}.xml")
               @doc = Nokogiri::XML(f)
               f.close
-              img.file_pathl = @doc.css('datastreamProfile dsLocation').text.sub('http://dlib.york.ac.uk/', '/usr/digilib-webdocs/')
+              img.file_path = @doc.css('datastreamProfile dsLocation').text.sub('http://dlib.york.ac.uk/', '/usr/digilib-webdocs/')
               img.folio = @fol
               @fol.images << img
               @fol.save
