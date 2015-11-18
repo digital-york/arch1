@@ -17,11 +17,11 @@ namespace :persons do
     puts 'Creating the Concept Scheme'
 
     begin
-      @scheme = ConceptScheme.find('wp988j816')
-      #@scheme = ConceptScheme.new
-      #@scheme.preflabel = "people"
-      #@scheme.rdftype = @scheme.add_rdf_types
-      #@scheme.save
+      #@scheme = ConceptScheme.find('pz50gw21p')
+      @scheme = ConceptScheme.new
+      @scheme.preflabel = "people"
+      @scheme.rdftype = @scheme.add_rdf_types
+      @scheme.save
       puts "Concept scheme for person created at #{@scheme.id}"
     rescue
       puts "ERROR in ConceptScheme!"
@@ -41,8 +41,7 @@ namespace :persons do
          'Handbook of British Chronology' => 'http://www.cambridge.org/gb/academic/subjects/history/british-history-general-interest/handbook-british-chronology-3rd-edition'
          }
 
-    #arr = CSV.read(Rails.root + 'lib/assets/lists/persons.csv')
-    arr = CSV.read(Rails.root + 'lib/assets/lists/Persons_16_11_15.csv')
+    arr = CSV.read(Rails.root + 'lib/assets/lists/persons.csv')
 
     arr.each do |c|
       begin
@@ -130,12 +129,18 @@ namespace :persons do
         if p.preflabel.end_with? ', '
           p.preflabel = p.preflabel[0..p.preflabel.length-3]
         end
-        p.save
+
+        begin
+          p.save
+        rescue
+          puts "Error! #{p.preflabel}"
+          puts ">> #{$!}"
+        end
+
         @scheme.persons += [p]
         @scheme.save
         puts "Created #{p.preflabel}"
       rescue
-        puts "Error! #{p.preflabel}"
         puts $!
       end
     end
