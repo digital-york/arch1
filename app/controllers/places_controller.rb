@@ -170,13 +170,11 @@ class PlacesController < ApplicationController
       @error = "Please enter a 'Place Name'"
     end
 
-    # Omitting for now
-
     # Check that same_as is a URL
-    #@error = check_url(place_params[:same_as], @error, "Same As")
+    @error = check_url(place_params[:same_as], @error, "Same As")
 
     # Check that related_authority is a URL
-    #@error = check_url(place_params[:related_authority], @error, "Related Authority")
+    @error = check_url(place_params[:related_authority], @error, "Related Authority")
 
     # Get a place object using the id and populate it with the place parameters
     @place = Place.find(params[:id])

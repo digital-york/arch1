@@ -17,7 +17,7 @@ class Image < ActiveFedora::Base
     index.as :stored_searchable
   end
 
-  property :file, predicate: ::RDF::URI.new('http://pcdm.org/models#hasFile'), multiple: false do |index|
+  property :file_url, predicate: ::RDF::URI.new('http://pcdm.org/models#hasFile'), multiple: false do |index|
     index.as :stored_searchable
   end
 end

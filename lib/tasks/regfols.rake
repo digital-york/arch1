@@ -207,8 +207,12 @@ namespace :regfols do
   require 'csv'
   require 'nokogiri'
   task add_images_retro: :environment do
+    require 'rsolr'
 
     # from dlib solr search for ismemberof, return PID,dc.title
+
+    solr = RSolr.connect :url => 'http://localhost:8983/solr/development'
+
 
     path = Rails.root + 'lib/assets/'
 
@@ -218,29 +222,74 @@ namespace :regfols do
       puts "processing #{l}"
       @csv = CSV.read(Rails.root + 'lib/assets/new_regs_and_fols/' + l, :headers => true)
 
-      l.each.do | r |
-        f = File.open(path + "new_regs_and_folios/xml/#{r[0].sub('york:', '')}.xml")
-        @doc = Nokogiri::XML(f)
-        f.close
-        #find the folio and it's image
-        # preflabel_tesim:""
-        # hasTarget_ssim:""
-        # if there are two targets ...
-        # check if image label has UV in it, if not add it in
+      @csv.each do | r |
 
-        # if it ends with ' (UV)', trim it and expect to find a second image
-        # include rsolr
-        if r[1].end_with? ' (UV)'
-          #we have two images for the folio
-          #make sure we don't change the same one
-          #also update the preflabel
+        title = r[1]
+
+        if r[1].class != String
+          puts r[1]
         end
 
-        image.file = @doc.css('datastreamProfile dsLocation').text.sub('http://dlib.york.ac.uk/', '/usr/digilib-webdocs/')
-        image.save
-      end
-  end
-  
+        if r[1].end_with? ' (UV)'
+          title = title.gsub(' (UV)','')
+        end
+        response = solr.get 'select', :params => {
+                                        :q => 'preflabel_tesim:"' + title + '"',
+                                        :fl => 'id',
+                                        :rows=>1
+                                    }
 
+
+        response["response"]["docs"].each do | doc |
+
+          @fol = Folio.find(doc['id'])
+
+          resp = solr.get 'select', :params => {
+                                          :q => 'hasTarget_ssim:"' + doc['id'] + '"',
+                                          :fl => 'id',
+                                          :rows=>2,
+                                          :sort=>'id ASC'
+                                      }
+          if resp["response"]["numFound"] == 2
+            if r[1].end_with? ' (UV)'
+              i = Image.find(resp["response"]["docs"][1]["id"])
+              f = File.open(path + "new_regs_and_fols/xml/#{r[0].sub('york:', '')}.xml")
+              @doc = Nokogiri::XML(f)
+              f.close
+              i.preflabel = 'Image (UV)'
+              i.file_url = @doc.css('datastreamProfile dsLocation').text.sub('http://dlib.york.ac.uk/', '/usr/digilib-webdocs/')
+              i.folio = @fol
+              @fol.images << i
+              @fol.save
+              puts "Adding url to #{i.id}: #{i.preflabel}"
+            else
+              img = Image.find(resp["response"]["docs"][0]["id"])
+              f = File.open(path + "new_regs_and_fols/xml/#{r[0].sub('york:', '')}.xml")
+              @doc = Nokogiri::XML(f)
+              f.close
+              img.file_url = @doc.css('datastreamProfile dsLocation').text.sub('http://dlib.york.ac.uk/', '/usr/digilib-webdocs/')
+              img.folio = @fol
+              @fol.images << img
+              @fol.save
+              puts "Adding url to #{img.id}: #{img.preflabel}"
+            end
+          else
+            image = Image.find(resp["response"]["docs"][0]["id"])
+            f = File.open(path + "new_regs_and_fols/xml/#{r[0].sub('york:', '')}.xml")
+            @doc = Nokogiri::XML(f)
+            f.close
+            image.file_url = @doc.css('datastreamProfile dsLocation').text.sub('http://dlib.york.ac.uk/', '/usr/digilib-webdocs/')
+            image.folio = @fol
+            # += [image] didn't work here!
+            @fol.images << image
+            # we can't save the image, we have to do it via the folio
+            @fol.save
+            puts "Adding url to #{image.id}: #{image.preflabel}"
+          end
+
+        end
+      end
+    end
+  end
 
 end
