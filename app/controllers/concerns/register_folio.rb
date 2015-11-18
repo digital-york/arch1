@@ -271,16 +271,18 @@ module RegisterFolio
     end
   end
 
-  # Used in person / place popus to check that variable is a valid URL
-  # Check that same_as is a URL
+  # Used in person / place popus to check that variable begings with 'http://' or 'https://'
+  # and that url size is less than 200 characters
   def check_url(var_array, error, title)
     if var_array != nil
+      max_length = 200
       var_array.each do |var|
-        if var !~ /^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$/
-          if error != ''
-            error = error + "<br/>"
-          end
-          error = error + "Please enter a valid  URL for '" + title + "'"
+        if var !~ /^https:\/\// && var !~ /^http:\/\//
+          if error != '' then error = error + '<br/>' end
+          error = error + "Please enter a valid URL for '" + title + "' (must start with http:// or https://)"
+        elsif var.length > max_length
+          if error != '' then error = error + '<br/>' end
+          error = error + "Please enter a string less than #{max_length.to_s} characters"
         end
       end
     end
