@@ -1,4 +1,4 @@
-class Deep < Qa::Authorities::Base
+class OrdnanceSurvey < Qa::Authorities::Base
 
     include Qa::Authorities::WebServiceBase
     include TermsHelper
@@ -25,7 +25,7 @@ class Deep < Qa::Authorities::Base
     def build_query_url q
       query = URI.escape(untaint(q))
       # to limit to UK, USE; "http://unlock.edina.ac.uk/ws/search?name=#{query},UK&gazetteer=deep&format=json"
-      "http://unlock.edina.ac.uk/ws/search?name=#{query}&searchVariants=#{@variants}&maxRows=200&gazetteer=deep&format=json"
+      "http://unlock.edina.ac.uk/ws/search?name=#{query}&searchVariants=#{@variants}&maxRows=200&gazetteer=os&format=json"
     end
 
     def untaint(q)
@@ -36,12 +36,12 @@ class Deep < Qa::Authorities::Base
       json(find_url(id))
     end
 
-    def find_url id
-      "http://unlock.edina.ac.uk/ws/search?name=#{id}&gazetteer=deep&format=json"
-    end
-
     def search_by_id q
       parse_authority_response(find(q))
+    end
+
+    def find_url id
+      "http://unlock.edina.ac.uk/ws/search?name=#{id}&format=json"
     end
 
     def request_options
