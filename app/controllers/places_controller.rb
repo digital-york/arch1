@@ -101,11 +101,11 @@ class PlacesController < ApplicationController
       response = SolrQuery.new.solr_query(q='same_as_tesim:"' + "http://unlock.edina.ac.uk/ws/search?name=#{params[:id].gsub('deep_', '')}&format=json" + '"', fl='id', rows=1)['response']
       if response['numFound'] == 0
         check_id(params[:id], params[:is_deep_checked])
-        redirect_to :controller => 'places', :action => 'edit', :id => @place.id, :search_term => params[:search_term], :place_field => params[:place_field]
+        redirect_to :controller => 'places', :action => 'index', :id => @place.id, :search_term => params[:search_term], :place_field => params[:place_field]
       else
         response['docs'].map.each do |r|
           @place = Place.find(r['id'])
-          redirect_to :controller => 'places', :action => 'edit', :id => @place.id, :search_term => params[:search_term], :place_field => params[:place_field]
+          redirect_to :controller => 'places', :action => 'index', :id => @place.id, :search_term => params[:search_term], :place_field => params[:place_field]
         end
       end
     end
@@ -211,9 +211,9 @@ class PlacesController < ApplicationController
         render 'place_exists_list', :locals => {:@place_name => @place.place_name, :id => @place.id, :@existing_location_list => existing_location_list, :@go_back_id => params[:go_back_id], :@search_term => params[:search_term], :@place_field => params[:place_field]}
       else
         @place.destroy
+        redirect_to :controller => 'places', :action => 'index', :search_term => params[:search_term], :place_field => params[:place_field]
       end
     end
-    redirect_to :controller => 'places', :action => 'index', :search_term => params[:search_term], :place_field => params[:place_field]
   end
 
   private
