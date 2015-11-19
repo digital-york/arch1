@@ -39,7 +39,7 @@ namespace :persons do
          'ODNB' => 'http://www.oxforddnb.com/',
          'http://www.etoncollege.com/Provosts.aspx' => 'http://www.etoncollege.com/Provosts.aspx',
          'Handbook of British Chronology' => 'http://www.cambridge.org/gb/academic/subjects/history/british-history-general-interest/handbook-british-chronology-3rd-edition'
-         }
+        }
 
     arr = CSV.read(Rails.root + 'lib/assets/lists/persons.csv')
 

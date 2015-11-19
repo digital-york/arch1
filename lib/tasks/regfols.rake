@@ -116,7 +116,7 @@ namespace :regfols do
 
             image = Image.new
             image.rdftype = image.add_rdf_types
-            image.file = 'assets/reg_23-e323da66b28a2b4d178be69812f1a18617e144d66d378644e24684b46783df72.png' # boilerplate to be replaced with some code
+            image.file_path = 'assets/reg_23-e323da66b28a2b4d178be69812f1a18617e144d66d378644e24684b46783df72.png' # boilerplate to be replaced with some code
             image.id = image.create_container_id(fol.id)
             puts "Creating image #{image.id} for Folio #{fol.preflabel}"
             image.preflabel = "Image#{@title_hash['uv']}"
@@ -211,7 +211,8 @@ namespace :regfols do
 
     # from dlib solr search for ismemberof, return PID,dc.title
 
-    solr = RSolr.connect :url => 'http://localhost:8983/solr/production'
+    solr = RSolr.connect :url => 'http://localhost:8983/solr/development'
+
 
     path = Rails.root + 'lib/assets/'
 
@@ -244,11 +245,11 @@ namespace :regfols do
           @fol = Folio.find(doc['id'])
 
           resp = solr.get 'select', :params => {
-                                      :q => 'hasTarget_ssim:"' + doc['id'] + '"',
-                                      :fl => 'id',
-                                      :rows=>10,
-                                      :sort=>'id ASC'
-                                  }
+                                          :q => 'hasTarget_ssim:"' + doc['id'] + '"',
+                                          :fl => 'id',
+                                          :rows=>10,
+                                          :sort=>'id ASC'
+                                      }
           if resp["response"]["numFound"] == 2
             if r[1].end_with? ' (UV)'
               i = Image.find(resp["response"]["docs"][1]["id"])

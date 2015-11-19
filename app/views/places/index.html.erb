@@ -30,6 +30,13 @@
               <input type="button" value="Clear" onclick="reset_box(); return false"/>
             </td>
           </tr>
+            <tr>
+                <td></td>
+                <td>Search DEEP:
+                  <%= radio_button("unlock", "auth", "deep") %>
+                <br />Search Ordnance Survey:
+                  <%= radio_button("unlock", "auth", "os") %></td>
+            </tr>
         </table>
       </div>
       <div style="clear: both"></div>
@@ -43,7 +50,7 @@
     %>
 
         <div style="font-size: 1.1em">
-          Results: <strong><%= @search_array.size %></strong>
+          Results: <strong><%= @search_array.size %></strong> <% unless @deep_checked == false %> from <%=  @deep_checked.upcase %> <% end %>
         </div>
 
         <div style="clear: both"></div>
@@ -68,7 +75,7 @@
                     <tr>
                       <td><%= name %></td>
                       <td style="width: 100px; text-align: center">
-                        <%= button_to 'Edit', edit_place_path(id), :method => :get, params: {:search_term => @search_term, :place_field => @place_field}, title: 'Edit element' %>
+                        <%= button_to 'Edit', edit_place_path(id), :method => :get, params: {:search_term => @search_term, :place_field => @place_field, :is_deep_checked => @deep_checked}, title: 'Edit element' %>
                       </td>
                       <td style="width: 60px; text-align: center">
                         <%= button_to 'Delete', place_path(id), :method => :delete, params: {:search_term => @search_term, :place_field => @place_field}, title: 'Delete element', :data => {:confirm => "Are you sure you want to delete '#{name}'?"} %>

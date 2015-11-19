@@ -1,5 +1,7 @@
 class EntriesController < ApplicationController
 
+  include PlacesHelper
+
   before_filter :session_timed_out
 
   # INDEX
@@ -173,6 +175,10 @@ class EntriesController < ApplicationController
     unless entry_params["related_places_attributes"].nil?
       entry_params["related_places_attributes"].each do | p |
         entry_params["related_places_attributes"][p[0]].delete(:place_id)
+        # Check if the place is from DEEP, if yes, store locally
+        if entry_params["related_places_attributes"][p[0]]['place_same_as'].start_with? 'deep_'
+          entry_params["related_places_attributes"][p[0]]['place_same_as'] = check_id(entry_params["related_places_attributes"][p[0]]['place_same_as'])
+        end
       end
     end
     unless entry_params["entry_dates_attributes"].nil?
@@ -265,6 +271,10 @@ class EntriesController < ApplicationController
       entry_params["related_places_attributes"].each do | p |
         entry_params["related_places_attributes"][p[0]]['id'] = entry_params["related_places_attributes"][p[0]]['place_id']
         entry_params["related_places_attributes"][p[0]].delete(:place_id)
+        # Check if the place is from DEEP, if yes, store locally
+        if entry_params["related_places_attributes"][p[0]]['place_same_as'].start_with? 'deep_'
+          entry_params["related_places_attributes"][p[0]]['place_same_as'] = check_id(entry_params["related_places_attributes"][p[0]]['place_same_as'])
+        end
       end
     end
     unless entry_params["entry_dates_attributes"].nil?

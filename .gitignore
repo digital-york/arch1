@@ -29,6 +29,7 @@
 
 #ignore large directory of xml files
 /lib/assets/folios/xml
+/lib/assets/new_regs_and_fols/xml
 
 config/settings.local.yml
 config/settings/*.local.yml
