@@ -116,7 +116,7 @@ namespace :regfols do
 
             image = Image.new
             image.rdftype = image.add_rdf_types
-            image.file = 'assets/reg_23-e323da66b28a2b4d178be69812f1a18617e144d66d378644e24684b46783df72.png' # boilerplate to be replaced with some code
+            image.file_path = 'assets/reg_23-e323da66b28a2b4d178be69812f1a18617e144d66d378644e24684b46783df72.png' # boilerplate to be replaced with some code
             image.id = image.create_container_id(fol.id)
             puts "Creating image #{image.id} for Folio #{fol.preflabel}"
             image.preflabel = "Image#{@title_hash['uv']}"
