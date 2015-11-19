@@ -14,13 +14,13 @@ class PlacesController < ApplicationController
     @search_term = ''
     if params[:search_term_index] != nil
       @search_term = params[:search_term_index]
-    else
+    elsif  params[:search_term] != nil
       @search_term = params[:search_term]
     end
 
     @search_array = []
 
-    if params[:deep].nil? or params[:deep][:checked] == "0"
+    if (params[:deep].nil? or params[:deep][:checked] == "0") and (params[:os].nil? or params[:os][:checked] == "0")
       @deep_checked = false
 
       # Get Concepts for the Place ConceptScheme and filter according to search_term
@@ -44,31 +44,39 @@ class PlacesController < ApplicationController
         end
       end
     elsif params[:deep][:checked] == "1"
-      @deep_checked = true
-
-      # Search DEEP
-      if @search_term.length > 1
-        deep = Deep.new('subauthority')
-        deep.search(@search_term).each do |result|
-          id = result['id']
-          place_name = result['name']
-          parent_ADM4 = result['adminlevel4']
-          parent_ADM3 = result['adminlevel3']
-          parent_ADM2 = result['adminlevel2']
-          parent_ADM1 = result['adminlevel1']
-          feature_type = result['featuretype']
-
-          tt = []
-          name = get_label(false, place_name, parent_ADM4, parent_ADM3, parent_ADM2, parent_ADM1, feature_type)
-          tt << 'deep_' + id
-          tt << name
-          @search_array << tt
-        end
-        params[:deep].delete(:checked)
-      else
-        @error = "Please enter a search term"
-      end
+      @deep_checked = 'deep'
+    elsif params[:os][:checked] == "1"
+      @deep_checked = 'os'
     end
+
+    # Search DEEP or OS
+    if @search_term.length > 1
+      if params[:deep][:checked] == "1"
+        deep = Deep.new('subauthority')
+      elsif params[:os][:checked] == "1"
+        deep = OrdnanceSurvey.new('subauthority')
+      end
+      deep.search(@search_term).each do |result|
+        id = result['id']
+        place_name = result['name']
+        parent_ADM4 = result['adminlevel4']
+        parent_ADM3 = result['adminlevel3']
+        parent_ADM2 = result['adminlevel2']
+        parent_ADM1 = result['adminlevel1']
+        feature_type = result['featuretype']
+
+        tt = []
+        name = get_label(false, place_name, parent_ADM4, parent_ADM3, parent_ADM2, parent_ADM1, feature_type)
+        tt << 'deep_' + id
+        tt << name
+        @search_array << tt
+      end
+      params[:deep].delete(:checked)
+      params[:os].delete(:checked)
+    else
+      @error = "Please enter a search term"
+    end
+
     # Sort the array by place_name
     @search_array = @search_array.sort_by { |k| k[1] }
   end
@@ -92,13 +100,13 @@ class PlacesController < ApplicationController
       @place = Place.find(params[:id])
       @search_term = params[:search_term]
       @place_field = params[:place_field]
-    elsif params[:is_deep_checked] == "true"
-      response =  SolrQuery.new.solr_query(q='same_as_tesim:"' + "http://unlock.edina.ac.uk/ws/search?name=#{params[:id].gsub('deep_','')}&format=json" + '"', fl='id', rows=1)['response']
+    else
+      response = SolrQuery.new.solr_query(q='same_as_tesim:"' + "http://unlock.edina.ac.uk/ws/search?name=#{params[:id].gsub('deep_', '')}&format=json" + '"', fl='id', rows=1)['response']
       if response['numFound'] == 0
-        check_id(params[:id])
+        check_id(params[:id], params[:is_deep_checked])
         redirect_to :controller => 'places', :action => 'edit', :id => @place.id
       else
-        response['docs'].map.each do | r |
+        response['docs'].map.each do |r|
           @place = Place.find(r['id'])
         end
       end
@@ -187,7 +195,7 @@ class PlacesController < ApplicationController
     else
       @place.preflabel = get_label(false, @place.place_name, @place.parent_ADM4, @place.parent_ADM3, @place.parent_ADM2, @place.parent_ADM1)
       @place.save
-      redirect_to :controller => 'places', :action => 'index', :search_term => params[:search_term], :place_field => params[:place_field]
+      redirect_to :controller => 'places', :action => 'index', :place_field => 'none', :search_term => params[:search_term]
     end
   end
 

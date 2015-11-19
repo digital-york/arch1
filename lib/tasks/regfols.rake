@@ -236,7 +236,7 @@ namespace :regfols do
         response = solr.get 'select', :params => {
                                         :q => 'preflabel_tesim:"' + title + '"',
                                         :fl => 'id',
-                                        :rows=>1
+                                        :rows=>10
                                     }
 
 
@@ -247,7 +247,7 @@ namespace :regfols do
           resp = solr.get 'select', :params => {
                                           :q => 'hasTarget_ssim:"' + doc['id'] + '"',
                                           :fl => 'id',
-                                          :rows=>2,
+                                          :rows=>10,
                                           :sort=>'id ASC'
                                       }
           if resp["response"]["numFound"] == 2
@@ -261,7 +261,7 @@ namespace :regfols do
               i.folio = @fol
               @fol.images << i
               @fol.save
-              puts "Adding url to #{i.id}: #{i.preflabel}"
+              puts "Adding url to #{i.id}: #{i.preflabel} (#{r[1]})"
             else
               img = Image.find(resp["response"]["docs"][0]["id"])
               f = File.open(path + "new_regs_and_fols/xml/#{r[0].sub('york:', '')}.xml")
@@ -271,7 +271,7 @@ namespace :regfols do
               img.folio = @fol
               @fol.images << img
               @fol.save
-              puts "Adding url to #{img.id}: #{img.preflabel}"
+              puts "Adding url to #{img.id}: #{img.preflabel} (#{r[1]})"
             end
           else
             image = Image.find(resp["response"]["docs"][0]["id"])
@@ -284,7 +284,7 @@ namespace :regfols do
             @fol.images << image
             # we can't save the image, we have to do it via the folio
             @fol.save
-            puts "Adding url to #{image.id}: #{image.preflabel}"
+            puts "Adding url to #{image.id}: #{image.preflabel} (#{r[1]})"
           end
 
         end

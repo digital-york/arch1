@@ -29,9 +29,14 @@
               <%= submit_tag 'Search' %>
               <input type="button" value="Clear" onclick="reset_box(); return false"/>
             </td>
-              <td>Search DEEP:</td>
-              <td><%= check_box(:deep, "checked") %></td>
           </tr>
+            <tr>
+                <td></td>
+                <td>Search DEEP:
+                    <%= check_box(:deep, "checked") %>
+                <br />Search Ordnance Survey:
+                    <%= check_box(:os, "checked") %></td>
+            </tr>
         </table>
       </div>
       <div style="clear: both"></div>

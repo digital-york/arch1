@@ -1,9 +1,8 @@
 module PlacesHelper
 
-  def check_id id
+  def check_id id, gaz='deep'
     if id.start_with? 'deep_'
-      create_new_deep_place(id)
-      @place.id
+      create_new_place(id,gaz)
     else
       id
     end
@@ -73,11 +72,26 @@ module PlacesHelper
 
   private
 
-  def create_new_deep_place id
+  def create_new_place id,gaz
     @place = Place.new
-    Deep.new('subauthority').search(id.gsub('deep_','')).each do |result|
+    if gaz == 'deep'
+      auth = Deep.new('subauthority')
+      build_place(auth,id)
+      if @place.id.nil?
+        auth = OrdnanceSurvey.new('subauthority')
+        build_place(auth,id)
+      end
+    elsif gaz == 'os'
+      auth = OrdnanceSurvey.new('subauthority')
+      build_place(auth,id)
+    end
+    @place.id
+  end
+
+  def build_place auth,id
+    auth.search_by_id(id.gsub('deep_','')).each do |result|
       @place.rdftype = @place.add_rdf_types
-      @place.same_as = ["http://unlock.edina.ac.uk/ws/search?name=#{id.gsub('deep_','')}&gazetteer=deep&format=json"]
+      @place.same_as = ["http://unlock.edina.ac.uk/ws/search?name=#{id.gsub('deep_','')}&format=json"]
       @place.place_name = result['name']
       @place.parent_ADM4 = result['adminlevel4']
       @place.parent_ADM3 = result['adminlevel3']

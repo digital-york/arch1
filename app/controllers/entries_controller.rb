@@ -270,7 +270,7 @@ class EntriesController < ApplicationController
         # Check if the place is from DEEP, if yes, store locally
         puts entry_params["related_places_attributes"][p[0]]
         if entry_params["related_places_attributes"][p[0]]['place_same_as'].start_with? 'deep_'
-          entry_params["related_places_attributes"][p[0]]['place_same_as'] = check_id(entry_params["related_places_attributes"][p[0]]['place_same_as']  )
+          entry_params["related_places_attributes"][p[0]]['place_same_as'] = check_id(entry_params["related_places_attributes"][p[0]]['place_same_as'])
         end
       end
     end

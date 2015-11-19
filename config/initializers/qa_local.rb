@@ -1,5 +1,6 @@
 include Terms
 Qa::Authorities::Local.register_subauthority('deep', 'Deep')
+Qa::Authorities::Local.register_subauthority('deep', 'OrdnanceSurvey')
 Qa::Authorities::Local.register_subauthority('unlock', 'Unlock')
 Qa::Authorities::Local.register_subauthority('tgnuk', 'TgnUk')
 #Qa::Authorities::Local.register_subauthority('folio_faces', 'FolioFaceTerms') # not using
