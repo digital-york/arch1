@@ -33,9 +33,9 @@
             <tr>
                 <td></td>
                 <td>Search DEEP:
-                    <%= check_box(:deep, "checked") %>
+                  <%= radio_button("unlock", "auth", "deep") %>
                 <br />Search Ordnance Survey:
-                    <%= check_box(:os, "checked") %></td>
+                  <%= radio_button("unlock", "auth", "os") %></td>
             </tr>
         </table>
       </div>
@@ -50,7 +50,7 @@
     %>
 
         <div style="font-size: 1.1em">
-          Results: <strong><%= @search_array.size %></strong>
+          Results: <strong><%= @search_array.size %></strong> <% unless @deep_checked == false %> from <%=  @deep_checked.upcase %> <% end %>
         </div>
 
         <div style="clear: both"></div>

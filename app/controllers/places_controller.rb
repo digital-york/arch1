@@ -20,7 +20,7 @@ class PlacesController < ApplicationController
 
     @search_array = []
 
-    if (params[:deep].nil? or params[:deep][:checked] == "0") and (params[:os].nil? or params[:os][:checked] == "0")
+    if params[:unlock].nil? #or params[:unlock][:auth] != 'deep' or params[:unlock][:auth] != 'os'
       @deep_checked = false
 
       # Get Concepts for the Place ConceptScheme and filter according to search_term
@@ -43,40 +43,37 @@ class PlacesController < ApplicationController
           @search_array << tt
         end
       end
-    elsif params[:deep][:checked] == "1"
-      @deep_checked = 'deep'
-    elsif params[:os][:checked] == "1"
-      @deep_checked = 'os'
-    end
+    elsif params[:unlock][:auth] == 'deep' or params[:unlock][:auth] == 'os'
 
     # Search DEEP or OS
-    if @search_term.length > 1
-      if params[:deep][:checked] == "1"
-        deep = Deep.new('subauthority')
-      elsif params[:os][:checked] == "1"
-        deep = OrdnanceSurvey.new('subauthority')
-      end
-      deep.search(@search_term).each do |result|
-        id = result['id']
-        place_name = result['name']
-        parent_ADM4 = result['adminlevel4']
-        parent_ADM3 = result['adminlevel3']
-        parent_ADM2 = result['adminlevel2']
-        parent_ADM1 = result['adminlevel1']
-        feature_type = result['featuretype']
+      if @search_term.length > 1
+        if params[:unlock][:auth] == 'deep'
+          @deep_checked = 'deep'
+          deep = Deep.new('subauthority')
+        elsif params[:unlock][:auth] == 'os'
+          @deep_checked = 'os'
+          deep = OrdnanceSurvey.new('subauthority')
+        end
+        deep.search(@search_term).each do |result|
+          id = result['id']
+          place_name = result['name']
+          parent_ADM4 = result['adminlevel4']
+          parent_ADM3 = result['adminlevel3']
+          parent_ADM2 = result['adminlevel2']
+          parent_ADM1 = result['adminlevel1']
+          feature_type = result['featuretype']
 
-        tt = []
-        name = get_label(false, place_name, parent_ADM4, parent_ADM3, parent_ADM2, parent_ADM1, feature_type)
-        tt << 'deep_' + id
-        tt << name
-        @search_array << tt
+          tt = []
+          name = get_label(false, place_name, parent_ADM4, parent_ADM3, parent_ADM2, parent_ADM1, feature_type)
+          tt << 'deep_' + id
+          tt << name
+          @search_array << tt
+        end
+        params.delete(:auth)
+      else
+        @error = "Please enter a search term"
       end
-      params[:deep].delete(:checked)
-      params[:os].delete(:checked)
-    else
-      @error = "Please enter a search term"
     end
-
     # Sort the array by place_name
     @search_array = @search_array.sort_by { |k| k[1] }
   end
@@ -104,10 +101,11 @@ class PlacesController < ApplicationController
       response = SolrQuery.new.solr_query(q='same_as_tesim:"' + "http://unlock.edina.ac.uk/ws/search?name=#{params[:id].gsub('deep_', '')}&format=json" + '"', fl='id', rows=1)['response']
       if response['numFound'] == 0
         check_id(params[:id], params[:is_deep_checked])
-        redirect_to :controller => 'places', :action => 'edit', :id => @place.id
+        redirect_to :controller => 'places', :action => 'edit', :id => @place.id, :search_term => params[:search_term], :place_field => params[:place_field]
       else
         response['docs'].map.each do |r|
           @place = Place.find(r['id'])
+          redirect_to :controller => 'places', :action => 'edit', :id => @place.id, :search_term => params[:search_term], :place_field => params[:place_field]
         end
       end
     end
@@ -218,12 +216,11 @@ class PlacesController < ApplicationController
     redirect_to :controller => 'places', :action => 'index', :search_term => params[:search_term], :place_field => params[:place_field]
   end
 
-
   private
 
   # Never trust parameters from the scary internet, only allow the white list through.
   def whitelist_place_params
-    params.require(:place).permit(:place_name, :deep, :is_deep_checked, :parent_ADM4, :parent_ADM3, :parent_ADM2, :parent_ADM1, :parent_country, :feature_code => [], :same_as => [], :related_authority => [], :altlabel => []) # Note - arrays need to go at the end or an error occurs!
+    params.require(:place).permit(:place_name, :unlock, :auth, :is_deep_checked, :parent_ADM4, :parent_ADM3, :parent_ADM2, :parent_ADM1, :parent_country, :feature_code => [], :same_as => [], :related_authority => [], :altlabel => []) # Note - arrays need to go at the end or an error occurs!
   end
 
 end
