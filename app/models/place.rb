@@ -38,4 +38,8 @@ class Place < ActiveFedora::Base
     index.as :stored_searchable
   end
 
+  property :note, predicate: ::RDF::URI.new('http://dlib.york.ac.uk/ontologies/borthwick-registers#note'), multiple: true do |index|
+    index.as :stored_searchable
+  end
+
 end

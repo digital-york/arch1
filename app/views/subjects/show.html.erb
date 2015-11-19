@@ -21,7 +21,7 @@
 
           <tr>
             <td style="font-size: 1.4em">
-              <%= top_level_term['label'].join %>
+              <%= top_level_term['label'] %>
             </td>
             <td style="width: 200px; padding: 2px">
               <%= button_to 'Add Sub-Heading', new_subject_path, params: {:go_back_id => top_level_term['id'], :broader => top_level_term['id']}, :method => :get, title: 'Add subject to this element', class: 'small_button' %>
@@ -35,7 +35,7 @@
           %>
               <tr>
                 <td class="subjects_level2">
-                  <span style="margin-left: 30px"><%= second_level_term['label'].join %></span></td>
+                  <span style="margin-left: 30px"><%= second_level_term['label'] %></span></td>
                 <td style="padding: 2px">
                   <%= button_to 'Add Sub-Heading', new_subject_path, params: {:go_back_id => top_level_term['id'], :broader => second_level_term['id']}, :method => :get, title: 'Add subject to this element', class: 'small_button' %>
                   <%= button_to 'Edit', edit_subject_path(second_level_term['id']), params: {:go_back_id => top_level_term['id']}, :method => :get, title: 'Edit subject', style: 'margin-left: 5px', class: 'small_button' %>
@@ -47,7 +47,7 @@
               %>
                   <tr>
                     <td class="subjects_level3">
-                      <span style="margin-left: 50px;"><%= third_level_term['label'].join %></span></td>
+                      <span style="margin-left: 50px;"><%= third_level_term['label'] %></span></td>
                     <td style="padding: 2px">
                       <%= button_to 'Add Sub-Heading', new_subject_path, params: {:go_back_id => top_level_term['id']}, :method => :get, title: 'N/A', class: 'small_button', disabled: 'true' %>
                       <%= button_to 'Edit', edit_subject_path(third_level_term['id']), params: {:go_back_id => top_level_term['id']}, :method => :get, title: 'Edit subject', style: 'margin-left: 5px', class: 'small_button' %>

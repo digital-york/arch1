@@ -147,6 +147,22 @@
               </div>
             </td>
           </tr>
+            <%# Note %>
+            <tr>
+                <th>Note:
+                    <img src="/assets/plus_sign.png" alt="plus icon" class="plus_icon click_popup_multiple_field_button" jq_type_1='place' jq_type_2="note"/>
+                </th>
+                <td>
+                    <div class="note">
+                        <% @place.note.each do |note| %>
+                            <div class="field_single">
+                                <%= text_field_tag 'place[note][]', note %>
+                                <img alt="Delete icon" src="/assets/delete.png" class="delete_icon click_remove_field_level1" jq_tag_type="input">
+                            </div>
+                        <% end %>
+                    </div>
+                </td>
+            </tr>
         </table>
 
         <%= hidden_field_tag 'search_term', @search_term %>
