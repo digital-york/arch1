@@ -91,8 +91,8 @@ class PlacesController < ApplicationController
 
   # EDIT
   def edit
-    # Check if this was a DEEP search and if we already have the place (using same_as)
-    # If not, create a new local place with the DEEP data
+    # If this is DEEP/OS item, check if the place is in the local places list (using sameas)
+    # If not, create a new local place with the DEEP/OS data
     if params[:is_deep_checked].nil? or params[:is_deep_checked] == "false"
       @place = Place.find(params[:id])
       @search_term = params[:search_term]
@@ -200,7 +200,7 @@ class PlacesController < ApplicationController
   # DESTROY
   def destroy
 
-    # If this is a DEEP place, redirect back to places list
+    # If this is an external place, skip to the redirect
     unless params[:id].start_with? 'deep_'
       @place = Place.find(params[:id])
       # Check if the place is present in any of the entries

@@ -1,5 +1,6 @@
 module PlacesHelper
 
+  # Check the DEEP or OS id, if it's not a local id, create a new place
   def check_id id, gaz='deep'
     if id.start_with? 'deep_'
       create_new_place(id,gaz)
@@ -88,6 +89,7 @@ module PlacesHelper
     @place.id
   end
 
+  # Create a new place with data from DEEP / OS
   def build_place auth,id
     auth.search_by_id(id.gsub('deep_','')).each do |result|
       @place.rdftype = @place.add_rdf_types
