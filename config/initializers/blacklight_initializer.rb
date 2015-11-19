@@ -3,4 +3,5 @@
 # will use the application's secret key base instead.
 #
 
-Blacklight.secret_key = 'ef6c1d078fdc8546ef0f525d699d87f22cdabde3669927fbdbccaede66420cfe91c6ec464ca1b4adfb9328759e842366ba659030fe8fdbe8d5eb3ace3114ca46'
+# Commented out because it says above that Rails 4 uses the SECRET_KEY_BASE instead
+#Blacklight.secret_key =  ENV["SECRET_KEY_BLACKLIGHT"]
