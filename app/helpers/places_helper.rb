@@ -109,7 +109,9 @@ module PlacesHelper
       @place.parent_ADM2 = result['adminlevel2']
       @place.parent_ADM1 = result['adminlevel1']
       @place.feature_code = [result['featuretype']]
-      @place.related_authority << [result['uricdda']]
+      unless result['uricdda'].nil?
+        @place.related_authority << [result['uricdda']]
+      end
       @place.preflabel = get_label(false, @place.place_name, @place.parent_ADM4, @place.parent_ADM3, @place.parent_ADM2, @place.parent_ADM1)
       # Use a solr query to obtain the concept scheme id for 'places'
       response = SolrQuery.new.solr_query(q='has_model_ssim:ConceptScheme AND preflabel_tesim:"places"', fl='id', rows=1, sort='')
