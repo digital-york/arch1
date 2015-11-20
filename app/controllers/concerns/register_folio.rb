@@ -415,8 +415,8 @@ module RegisterFolio
         existing_location_list << element
       end
 
-    # Two solr searches required for these types - this is because they exist in sub-objects of the ENtry object
-    # i.e. Date, Related Place and Related Agent
+      # Two solr searches required for these types - this is because they exist in sub-objects of the ENtry object
+      # i.e. Date, Related Place and Related Agent
     else
 
       search_term1 = ''

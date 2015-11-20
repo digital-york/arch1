@@ -152,7 +152,7 @@
                         <div class="field_group">
                           <% @db_entry.db_entry_types.each do |entry_type| %>
                               <div class="field_single">
-                                <%= select_tag 'entry[entry_type][]', options_for_select(@entry_type_list.collect { |entry_type| [entry_type["label"].join(''), entry_type["id"]] }.insert(0, ["--- select ---", ""]), entry_type.name) %>
+                                <%= select_tag 'entry[entry_type][]', options_for_select(@entry_type_list.collect { |entry_type| [entry_type["label"], entry_type["id"]] }.insert(0, ["--- select ---", ""]), entry_type.name) %>
                                 <img alt="Delete icon" src="/assets/delete.png" class="delete_icon_select click_remove_field_level1" jq_tag_type="select">
                               </div>
                           <% end %>
@@ -169,7 +169,7 @@
                             <div class="field_group">
                                 <% @db_entry.db_section_types.each do |section_type| %>
                                     <div class="field_single">
-                                        <%= select_tag 'entry[section_type][]', options_for_select(@section_type_list.collect { |section_type| [section_type["label"].join(''), section_type["id"]] }.insert(0, ["--- select ---", ""]), section_type.name) %>
+                                        <%= select_tag 'entry[section_type][]', options_for_select(@section_type_list.collect { |section_type| [section_type["label"], section_type["id"]] }.insert(0, ["--- select ---", ""]), section_type.name) %>
                                         <img alt="Delete icon" src="/assets/delete.png" class="delete_icon_select click_remove_field_level1" jq_tag_type="select">
                                     </div>
                                 <% end %>
@@ -224,7 +224,7 @@
                             <div class="field_group">
                                 <% @db_entry.db_languages.each do |language| %>
                                     <div class="field_single">
-                                        <%= select_tag 'entry[language][]', options_for_select(@language_list.collect { |language| [language["label"].join(''), language["id"]] }.insert(0, ["--- select ---", ""]), language.name) %>
+                                        <%= select_tag 'entry[language][]', options_for_select(@language_list.collect { |language| [language["label"], language["id"]] }.insert(0, ["--- select ---", ""]), language.name) %>
                                         <img alt="Delete icon" src="/assets/delete.png" class="delete_icon_select click_remove_field_level1" jq_tag_type="select">
                                     </div>
                                 <% end %>
@@ -376,7 +376,7 @@
                                             <tr>
                                                 <th>Date Role:</th>
                                                 <td>
-                                                    <%= select_tag "entry[entry_dates_attributes][" + index1.to_s + "][date_role]", options_for_select(@date_role_list.collect { |date_role| [date_role["label"].join(''), date_role["id"]] }.insert(0, ["--- select ---", ""]), entry_date.date_role) %>
+                                                    <%= select_tag "entry[entry_dates_attributes][" + index1.to_s + "][date_role]", options_for_select(@date_role_list.collect { |date_role| [date_role["label"], date_role["id"]] }.insert(0, ["--- select ---", ""]), entry_date.date_role) %>
                                                 </td>
                                             </tr>
 
@@ -459,7 +459,7 @@
                                                     <div class="field_group grey_box">
                                                         <% related_place.db_place_roles.each_with_index do |place_role, index2| %>
                                                             <div class="field_single">
-                                                                <%= select_tag "entry[related_places_attributes][" + index1.to_s + "][place_role][]", options_for_select(@place_role_list.collect { |place_role| [place_role["label"].join(''), place_role["id"]] }.insert(0, ["--- select ---", ""]), place_role.name) %>
+                                                                <%= select_tag "entry[related_places_attributes][" + index1.to_s + "][place_role][]", options_for_select(@place_role_list.collect { |place_role| [place_role["label"], place_role["id"]] }.insert(0, ["--- select ---", ""]), place_role.name) %>
                                                                 <img src='/assets/delete.png' alt='Delete icon' class='delete_icon_select click_remove_field_level1' jq_tag_type='select'>
                                                             </div>
                                                         <% end %>
@@ -477,7 +477,7 @@
                                                     <div class="field_group grey_box">
                                                         <% related_place.db_place_types.each_with_index do |place_type, index2| %>
                                                             <div class="field_single">
-                                                                <%= select_tag "entry[related_places_attributes][" + index1.to_s + "][place_type][]", options_for_select(@place_type_list.collect { |place_type| [place_type["label"].join(''), place_type["id"]] }.insert(0, ["--- select ---", ""]), place_type.name) %>
+                                                                <%= select_tag "entry[related_places_attributes][" + index1.to_s + "][place_type][]", options_for_select(@place_type_list.collect { |place_type| [place_type["label"], place_type["id"]] }.insert(0, ["--- select ---", ""]), place_type.name) %>
                                                                 <img src='/assets/delete.png' alt='Delete icon' class='delete_icon_select click_remove_field_level1' jq_tag_type='select'>
                                                             </div>
                                                         <% end %>
@@ -590,7 +590,7 @@
                                                     <div class="field_group grey_box">
                                                         <% related_person.db_person_roles.each_with_index do |person_role, index2| %>
                                                             <div class="field_single">
-                                                                <%= select_tag "entry[related_agents_attributes][" + index1.to_s + "][person_role][]", options_for_select(@role_list.collect { |role| [role["label"].join(''), role["id"]] }.insert(0, ["--- select ---", ""]), person_role.name) %>
+                                                                <%= select_tag "entry[related_agents_attributes][" + index1.to_s + "][person_role][]", options_for_select(@role_list.collect { |role| [role["label"], role["id"]] }.insert(0, ["--- select ---", ""]), person_role.name) %>
                                                                 <img alt="Delete icon" src="/assets/delete.png" class="delete_icon_select click_remove_field_level1" jq_tag_type="select">
                                                             </div>
                                                         <% end %>
@@ -607,7 +607,7 @@
                                                     <div class="field_group grey_box">
                                                         <% related_person.db_person_descriptors.each_with_index do |person_descriptor, index2| %>
                                                             <div class="field_single">
-                                                                <%= select_tag "entry[related_agents_attributes][" + index1.to_s + "][person_descriptor][]", options_for_select(@descriptor_list.collect { |descriptor| [descriptor["label"].join(''), descriptor["id"]] }.insert(0, ["--- select ---", ""]), person_descriptor.name) %>
+                                                                <%= select_tag "entry[related_agents_attributes][" + index1.to_s + "][person_descriptor][]", options_for_select(@descriptor_list.collect { |descriptor| [descriptor["label"], descriptor["id"]] }.insert(0, ["--- select ---", ""]), person_descriptor.name) %>
                                                                 <img alt="Delete icon" src="/assets/delete.png" class="delete_icon_select click_remove_field_level1" jq_tag_type="select">
                                                             </div>
                                                         <% end %>
