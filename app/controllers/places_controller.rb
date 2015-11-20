@@ -46,7 +46,7 @@ class PlacesController < ApplicationController
     elsif params[:unlock][:auth] == 'deep' or params[:unlock][:auth] == 'os'
 
     # Search DEEP or OS
-      if @search_term.length > 1
+      if @search_term != ''
         if params[:unlock][:auth] == 'deep'
           @deep_checked = 'deep'
           deep = Deep.new('subauthority')
@@ -71,7 +71,7 @@ class PlacesController < ApplicationController
         end
         params.delete(:auth)
       else
-        @error = "Please enter a search term"
+        @error = "Please enter a search term for DEEP or Ordnance Survey"
       end
     end
     # Sort the array by place_name
@@ -93,21 +93,12 @@ class PlacesController < ApplicationController
   def edit
     # If this is DEEP/OS item, check if the place is in the local places list (using sameas)
     # If not, create a new local place with the DEEP/OS data
-    if params[:is_deep_checked].nil? or params[:is_deep_checked] == "false"
+    if params[:is_deep_checked] != 'false'
+      redirect_to :controller => 'places', :action => 'index', :id => check_id(params[:id], params[:is_deep_checked]), :search_term => params[:search_term], :place_field => params[:place_field]
+    else
       @place = Place.find(params[:id])
       @search_term = params[:search_term]
       @place_field = params[:place_field]
-    else
-      response = SolrQuery.new.solr_query(q='same_as_tesim:"' + "http://unlock.edina.ac.uk/ws/search?name=#{params[:id].gsub('deep_', '')}&format=json" + '"', fl='id', rows=1)['response']
-      if response['numFound'] == 0
-        check_id(params[:id], params[:is_deep_checked])
-        redirect_to :controller => 'places', :action => 'edit', :id => @place.id, :search_term => params[:search_term], :place_field => params[:place_field]
-      else
-        response['docs'].map.each do |r|
-          @place = Place.find(r['id'])
-          redirect_to :controller => 'places', :action => 'edit', :id => @place.id, :search_term => params[:search_term], :place_field => params[:place_field]
-        end
-      end
     end
   end
 
@@ -211,9 +202,9 @@ class PlacesController < ApplicationController
         render 'place_exists_list', :locals => {:@place_name => @place.place_name, :id => @place.id, :@existing_location_list => existing_location_list, :@go_back_id => params[:go_back_id], :@search_term => params[:search_term], :@place_field => params[:place_field]}
       else
         @place.destroy
+        redirect_to :controller => 'places', :action => 'index', :search_term => params[:search_term], :place_field => params[:place_field]
       end
     end
-    redirect_to :controller => 'places', :action => 'index', :search_term => params[:search_term], :place_field => params[:place_field]
   end
 
   private

@@ -69,7 +69,8 @@ class Deep < Qa::Authorities::Base
           'adminlevel4' => result['properties']['adminlevel4'],
           'name' => result['properties']['name'],
           'featuretype' => result['properties']['featuretype'],
-          'gazetteer' => result['properties']['gazetteer']}
+          'gazetteer' => result['properties']['gazetteer'],
+          'uricdda' => result['properties']['uricdda']}
       end
     end
 
