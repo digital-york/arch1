@@ -1,3 +1,5 @@
+
+
 <div class="popup">
 
   <div class="popup_title">
@@ -7,6 +9,10 @@
         Choose Place Name Authority
     <% end %>
   </div>
+
+    <% if @error != nil && @error != '' %>
+        <div class="popup_error"><%= @error.html_safe %></div>
+    <% end %>
 
   <div>
     <% if @place_field == 'none' %>
@@ -50,7 +56,7 @@
     %>
 
         <div style="font-size: 1.1em">
-          Results: <strong><%= @search_array.size %></strong> <% unless @deep_checked == false %> from <%=  @deep_checked.upcase %> <% end %>
+          Results: <strong><%= @search_array.size %></strong> <% if @deep_checked %> from <%=  @deep_checked.upcase %> <% end %>
         </div>
 
         <div style="clear: both"></div>
@@ -63,23 +69,36 @@
 
                 <tr>
                   <th>Place Name</th>
-                  <th style="width: 60px">Edit</th>
-                  <th style="width: 60px">Delete</th>
-                </tr>
-
                 <%
+                   unless @deep_checked
+                     button = 'Edit'
+                %>
+                      <th style="width: 60px">Edit</th>
+                      <th style="width: 60px">Delete</th>
+                  <%
+                   else
+                     button = 'Choose'
+                  %>
+                      <th style="width: 120px">Add to Places</th>
+                  <%
+                   end
+
                    @search_array.each do |array_element|
                      id = array_element[0]
                      name = array_element[1]
                 %>
+
+                    </tr>
                     <tr>
                       <td><%= name %></td>
                       <td style="width: 100px; text-align: center">
-                        <%= button_to 'Edit', edit_place_path(id), :method => :get, params: {:search_term => @search_term, :place_field => @place_field, :is_deep_checked => @deep_checked}, title: 'Edit element' %>
+                        <%= button_to button, edit_place_path(id), :method => :get, params: {:search_term => @search_term, :place_field => @place_field, :is_deep_checked => @deep_checked}, title: 'Edit element' %>
                       </td>
-                      <td style="width: 60px; text-align: center">
-                        <%= button_to 'Delete', place_path(id), :method => :delete, params: {:search_term => @search_term, :place_field => @place_field}, title: 'Delete element', :data => {:confirm => "Are you sure you want to delete '#{name}'?"} %>
-                      </td>
+                      <% unless @deep_checked %>
+                        <td style="width: 60px; text-align: center">
+                          <%= button_to 'Delete', place_path(id), :method => :delete, params: {:search_term => @search_term, :place_field => @place_field}, title: 'Delete element', :data => {:confirm => "Are you sure you want to delete '#{name}'?"} %>
+                        </td>
+                      <% end %>
                     </tr>
                 <% end %>
 

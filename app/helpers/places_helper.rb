@@ -74,32 +74,42 @@ module PlacesHelper
   private
 
   def create_new_place id,gaz
-    @place = Place.new
-    if gaz == 'deep'
-      auth = Deep.new('subauthority')
-      build_place(auth,id)
-      if @place.id.nil?
-        auth = OrdnanceSurvey.new('subauthority')
+    response = SolrQuery.new.solr_query(q='same_as_tesim:"' + "http://unlock.edina.ac.uk/ws/search?name=#{id.gsub('deep_', '')}&format=json" + '"', fl='id', rows=1)['response']
+    if response['numFound'] == 0
+      @place = Place.new
+      if gaz == 'deep'
+        auth = Deep.new('subauthority')
         build_place(auth,id)
+        if @place.id.nil?
+          auth = OrdnanceSurvey.new('subauthority')
+          build_place(auth,id,'os')
+        end
+      elsif gaz == 'os'
+        auth = OrdnanceSurvey.new('subauthority')
+        build_place(auth,id,'os')
       end
-    elsif gaz == 'os'
-      auth = OrdnanceSurvey.new('subauthority')
-      build_place(auth,id)
+    else
+      @place = Place.find(response['docs'][0]['id'])
     end
     @place.id
   end
 
   # Create a new place with data from DEEP / OS
-  def build_place auth,id
+  def build_place auth,id,gaz='deep'
     auth.search_by_id(id.gsub('deep_','')).each do |result|
       @place.rdftype = @place.add_rdf_types
-      @place.same_as = ["http://unlock.edina.ac.uk/ws/search?name=#{id.gsub('deep_','')}&format=json"]
+      if gaz == 'deep'
+        @place.same_as = ["http://unlock.edina.ac.uk/ws/search?name=#{id.gsub('deep_','')}&gazetteer=deep&format=json"]
+      else
+        @place.same_as = ["http://unlock.edina.ac.uk/ws/search?name=#{id.gsub('deep_','')}&format=json"]
+      end
       @place.place_name = result['name']
       @place.parent_ADM4 = result['adminlevel4']
       @place.parent_ADM3 = result['adminlevel3']
       @place.parent_ADM2 = result['adminlevel2']
       @place.parent_ADM1 = result['adminlevel1']
       @place.feature_code = [result['featuretype']]
+      @place.related_authority << [result['uricdda']]
       @place.preflabel = get_label(false, @place.place_name, @place.parent_ADM4, @place.parent_ADM3, @place.parent_ADM2, @place.parent_ADM1)
       # Use a solr query to obtain the concept scheme id for 'places'
       response = SolrQuery.new.solr_query(q='has_model_ssim:ConceptScheme AND preflabel_tesim:"places"', fl='id', rows=1, sort='')
