@@ -88,7 +88,7 @@ module Terms
 
   class SubjectTerms < TermsBase
     def terms_list
-      'subject'
+      "Borthwick Institute for Archives Subject Headings for the Archbishops' Registers"
     end
   end
 

@@ -10,7 +10,7 @@ class PersonTerms
 
   # Gets the ConceptScheme, etc
   def terms_id
-    parse_terms_id_response(SolrQuery.new.solr_query(q='rdftype_tesim:"http://www.w3.org/2004/02/skos/core#ConceptScheme" AND preflabel_tesim:"persons"'))
+    parse_terms_id_response(SolrQuery.new.solr_query(q='rdftype_tesim:"http://www.w3.org/2004/02/skos/core#ConceptScheme" AND preflabel_tesim:"people"'))
   end
 
   def all
@@ -37,14 +37,14 @@ class PersonTerms
     response['response']['docs'].map do |result|
 
       { 'id' => result['id'],
-        'label' => result['preflabel_tesim'],
-        'family' => result['family_tesim'],
-        'pre_title' => result['pre_title'],
-        'given' => result['given_tesim'],
-        'dates' => result['dates_tesim'],
-        'epithet' => result['epithet_tesim'],
-        'post_title' => result['post_preflabel_tesim']
-      }
+        'label' => result['preflabel_tesim'].join,
+        'family' => if result['family_tesim'] then result['family_tesim'].join end,
+        'pre_title' => if result['pre_title'] then result['pre_title'].join end,
+        'given' => if result['given_tesim'] then result['given_tesim'].join end,
+        'dates' => if result['dates_tesim'] then result['dates_tesim'].join end,
+        'epithet' => if result['epithet_tesim'] then result['epithet_tesim'].join end,
+        'post_title' => if result['post_preflabel_tesim'] then result['post_preflabel_tesim'].join end
+                          }
     end
   end
 

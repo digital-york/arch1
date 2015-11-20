@@ -29,7 +29,7 @@
   <%
      @top_level_list.each_with_index do |top_level_term, index|
        top_level_id = top_level_term['id']
-       top_level_label = top_level_term['label'].join
+       top_level_label = top_level_term['label']
   %>
 
       <tr>
@@ -45,7 +45,7 @@
     <%
       top_level_term[:elements].each do |second_level_term|
         second_level_id = second_level_term['id']
-        second_level_label = second_level_term['label'].join
+        second_level_label = second_level_term['label']
     %>
         <tr>
           <td style="padding: 0px 0px 4px 0px; color: #000000; font-size: 1.2em">
@@ -62,7 +62,7 @@
       <%
         second_level_term[:elements].each do |third_level_term|
           third_level_id = third_level_term['id']
-          third_level_label = third_level_term['label'].join
+          third_level_label = third_level_term['label']
       %>
           <tr>
             <td style="padding: 0px 0px 3px 0px; color: #262626; font-style: italic; font-size: 1.1em">
