@@ -34,11 +34,11 @@ class Person < ActiveFedora::Base
     index.as :stored_searchable
   end
 
-  property :dates_of_office, predicate: ::RDF::URI.new('hhttp://dlib.york.ac.uk/ontologies/generic#datesOfOffice'), multiple: false do |index|
+  property :dates_of_office, predicate: ::RDF::URI.new('http://dlib.york.ac.uk/ontologies/generic#datesOfOffice'), multiple: false do |index|
     index.as :stored_searchable
   end
 
-  property :note, predicate: ::RDF::URI.new('hhttp://dlib.york.ac.uk/ontologies/borthwick-registers#note'), multiple: true do |index|
+  property :note, predicate: ::RDF::URI.new('http://dlib.york.ac.uk/ontologies/borthwick-registers#note'), multiple: true do |index|
     index.as :stored_searchable
   end
 

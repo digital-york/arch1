@@ -17,11 +17,11 @@ class TermsBase
     if terms_list == 'languages'
       sort_order = 'id asc'
     end
-    parse_authority_response(SolrQuery.new.solr_query(q='inScheme_ssim:"' + terms_id + '"',fl='id,preflabel_tesim',rows=1000,sort=sort_order))
+    parse_authority_response(SolrQuery.new.solr_query(q='inScheme_ssim:"' + terms_id + '"',fl='id,preflabel_tesim,definition_tesim,broader_tesim',rows=1000,sort=sort_order))
   end
 
   def find id
-    parse_authority_response(SolrQuery.new.solr_query(q='inScheme_ssim:"' + terms_id + '" AND id:"' + id + '"',fl='id,preflabel_tesim'))
+    parse_authority_response(SolrQuery.new.solr_query(q='inScheme_ssim:"' + terms_id + '" AND id:"' + id + '"',fl='id,preflabel_tesim,definition_tesim,broader_tesim'))
   end
 
   def find_id val
@@ -33,7 +33,7 @@ class TermsBase
   end
 
   def search q
-    parse_authority_response(SolrQuery.new.solr_query(q='inScheme_ssim:"' + terms_id + '" AND preflabel_tesim:"' + q + '"',fl='id,preflabel_tesim'))
+    parse_authority_response(SolrQuery.new.solr_query(q='inScheme_ssim:"' + terms_id + '" AND preflabel_tesim:"' + q + '"',fl='id,preflabel_tesim,definition_tesim,broader_tesim'))
   end
 
   # Dereference id into a string for display purposes - e.g. test:101 -> 'abbey'
@@ -173,7 +173,19 @@ class TermsBase
   # Reformats the data received from the service
   def parse_authority_response(response)
     response['response']['docs'].map do |result|
-      {'id' => result['id'], 'label' => result['preflabel_tesim']}
+      hash = {'id' => result['id'],
+       'label' => if result['preflabel_tesim'] then result['preflabel_tesim'].join end,
+       'definition' => if result['definition_tesim'] then result['definition_tesim'].join end
+      }
+      # Only add broader where it exists (ie. subjects)
+      if result['broader_tesim']
+        broader = result['broader_tesim'].join.split('/')
+        hash['broader_id'] = broader[broader.length-1]
+        hash['broader_label'] = find_value_string(broader[broader.length-1]).join
+      end
+
+
+      hash
     end
   end
 

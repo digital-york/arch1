@@ -31,26 +31,23 @@ class PlaceTerms
     parse_authority_response(SolrQuery.new.solr_query(q='inScheme_ssim:"' + terms_id + '" AND preflabel_tesim:"' + q + '"', fl=''))
   end
 
-  # Dereference ids into strings in order to display them, e.g. on the form and the folio drop-down list (py)
-  #def get_str_from_id(id, type)
-  #  parse_terms_response(SolrQuery.new.solr_query(q='id:' + id, fl=type,rows='1'), type);
-  #end
-
   private
 
   # Reformats the data received from the service
   def parse_authority_response(response)
     response['response']['docs'].map do |result|
       geo = TermsHelper::Geo.new
-      al = geo.adminlevel(result['parentADM1_tesim'].first,result['parentADM2_tesim'].first)
+      #al = geo.adminlevel(result['parentADM1_tesim'].first,result['parentADM2_tesim'].first)
       { 'id' => result['id'],
-        'label' => "#{result['preflabel_tesim'].first} (#{al})",
-        'countrycode' => result['parentCountry_tesim'],
-        'parentADM1' => result['parentADM1_tesim'],
-        'parentADM2' => result['parentADM2_tesim'],
-        'parentADM3' => result['parentADM3_tesim'],
-        'parentADM4' => result['parentADM4_tesim'],
-        'featuretype' => result['feature_code_tesim']
+        #'label' => "#{result['preflabel_tesim'].first} (#{al})",
+        'label' => result['preflabel_tesim'].join,
+        'countrycode' => if result['parent_country_tesim'] then result['parent_country_tesim'].join end,
+        'parentADM1' => if result['parent_ADM1_tesim'] then result['parent_ADM1_tesim'].join end,
+        'parentADM2' => if result['parent_ADM2_tesim'] then result['parent_ADM2_tesim'].join end,
+        'parentADM3' => if result['parent_ADM3_tesim'] then result['parent_ADM3_tesim'].join end,
+        'parentADM4' => if result['parent_ADM4_tesim'] then result['parent_ADM4_tesim'].join end,
+        'place name' => if result['place_name_tesim'] then result['place_name_tesim'].join end,
+        'featuretype' => if result['feature_code_tesim'] then result['feature_code_tesim'].join end
       }
     end
   end

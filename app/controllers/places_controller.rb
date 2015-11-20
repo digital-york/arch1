@@ -211,7 +211,7 @@ class PlacesController < ApplicationController
 
   # Never trust parameters from the scary internet, only allow the white list through.
   def whitelist_place_params
-    params.require(:place).permit(:place_name, :unlock, :auth, :is_deep_checked, :parent_ADM4, :parent_ADM3, :parent_ADM2, :parent_ADM1, :parent_country, :feature_code => [], :same_as => [], :related_authority => [], :altlabel => []) # Note - arrays need to go at the end or an error occurs!
+    params.require(:place).permit(:place_name, :unlock, :auth, :is_deep_checked, :parent_ADM4, :parent_ADM3, :parent_ADM2, :parent_ADM1, :parent_country, :feature_code => [], :same_as => [], :related_authority => [], :altlabel => [], :note => []) # Note - arrays need to go at the end or an error occurs!
   end
 
 end
