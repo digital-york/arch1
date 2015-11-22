@@ -148,17 +148,17 @@ namespace :persons do
 
   end
 
-  task add_places: :environment do
+  task add_groups: :environment do
 
     puts 'Creating the place Concept Scheme'
 
     begin
 
       @scheme = ConceptScheme.new
-      @scheme.preflabel = "places"
+      @scheme.preflabel = "groups"
       @scheme.rdftype = @scheme.add_rdf_types
       @scheme.save
-      puts "Concept scheme for place created at #{@scheme.id}"
+      puts "Concept scheme for groups created at #{@scheme.id}"
     rescue
       puts $!
     end

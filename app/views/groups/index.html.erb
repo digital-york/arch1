@@ -1,0 +1,97 @@
+<div class="popup">
+
+  <div class="popup_title">
+    <% if @group_field == 'none' %>
+        Organisation or Group List
+    <% else %>
+        Choose Organisation/Group Name Authority
+    <% end %>
+  </div>
+
+  <div>
+    <% if @group_field == 'none' %>
+        <%= button_to "Add Group", new_group_path, method: :get, params: { :search_term => @search_term, :group_field => @group_field }, style: 'margin-top: -5px', title: 'Add element' %>
+        <%= link_to 'Go back to admin page', admins_path, style: 'margin-left: 6px' %>
+    <% else %>
+        <%= link_to 'Click here to edit groups in the Admin interface', '#', onclick: "popup('/admins?start=true', 'admin'); return false;" %>
+    <% end %>
+  </div>
+
+  <div style="clear: both"></div>
+
+  <%= form_tag groups_path, :method => :get, style: 'margin-top: 8px' do |f| %>
+      <div class="search_box">
+        <table>
+          <tr>
+            <td>Search Term:</td>
+            <td><%= text_field_tag 'search_term', @search_term, class: 'text_field_search', id: 'search_box' %></td>
+            <td>
+              <%= submit_tag 'Search' %>
+              <input type="button" value="Clear" onclick="reset_box(); return false"/>
+            </td>
+          </tr>
+        </table>
+      </div>
+      <div style="clear: both"></div>
+      <%= hidden_field_tag "group_field", @group_field %>
+  <% end %>
+
+  <div style="margin: 30px 0px 20px 2px">
+
+    <%
+       if @search_array != nil && @search_array != ''
+    %>
+
+        <div style="font-size: 1.1em">
+          Results: <strong><%= @search_array.size %></strong>
+        </div>
+
+        <div class="popup_search">
+
+          <% if @group_field == 'none' %>
+
+              <table border='1' style="width: 100%; font-size: 1.1em; margin-top: 10px">
+
+                <tr>
+                  <th>Group or Organisation Name</th>
+                  <th style="width: 60px">Edit</th>
+                  <th style="width: 60px">Delete</th>
+                </tr>
+
+                <%
+                   @search_array.each do |array_element|
+                     id = array_element[0]
+                     name = array_element[1]
+                %>
+                    <tr>
+                      <td><%= name %></td>
+                      <td style="width: 100px; text-align: center">
+                        <%= button_to 'Edit', edit_group_path(id), :method => :get, params: { :search_term => @search_term, :group_field => @group_field }, title: 'Edit element' %>
+                      </td>
+                      <td style="width: 60px; text-align: center">
+                        <%= button_to 'Delete', group_path(id), :method => :delete, params: { :search_term => @search_term, :group_field => @group_field }, title: 'Delete element', :data => { :confirm => "Are you sure you want to delete '#{name}'?" } %>
+                      </td>
+                    </tr>
+                <% end %>
+
+              </table>
+          <% else %>
+              <%
+                 @search_array.each do |array_element|
+                   id = array_element[0]
+                   name = array_element[1]
+              %>
+                  <div style="margin-top: 5px; font-style: italic"><%= link_to name, '#', onClick: "post_value('#{name}', '#{id}', '#{params[:group_field]}')", style: 'color: #7e2c2c' %></div>
+              <% end %>
+          <% end %>
+        </div>
+      <% end %>
+
+      <script>
+            window.onload = function () {
+                document.getElementById("search_box").focus();
+            };
+        </script>
+        </div>
+
+        </div>

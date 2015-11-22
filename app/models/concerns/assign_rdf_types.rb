@@ -33,6 +33,8 @@ module AssignRdfTypes
         ['http://schema.org/Person', 'http://vocab.getty.edu/ontology#PersonConcept', 'http://pcdm.org/models#Object']
       when 'Place'
         ['http://schema.org/Place', 'http://pcdm.org/models#Object']
+      when 'Group'
+        ['https://schema.org/Organization', 'http://vocab.getty.edu/ontology#GroupConcept', 'http://pcdm.org/models#Object']
       else
         ['http://pcdm.org/models#Object']
     end

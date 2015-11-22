@@ -1,6 +1,20 @@
 namespace :places do
 
-  #include PlacesHelper
+  task add_places: :environment do
+
+    puts 'Creating the place Concept Scheme'
+
+    begin
+
+      @scheme = ConceptScheme.new
+      @scheme.preflabel = "places"
+      @scheme.rdftype = @scheme.add_rdf_types
+      @scheme.save
+      puts "Concept scheme for place created at #{@scheme.id}"
+    rescue
+      puts $!
+    end
+  end
 
   desc "TODO"
   task load_places: :environment do

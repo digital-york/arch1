@@ -1,0 +1,597 @@
+Dunnington
+Elvington
+Escrick
+South Otterington
+Stillingfleet
+Thormanby
+Upper Helmsley
+Wheldrake
+Kirklevington
+Marske by the Sea
+Welbury
+Gilling East
+Kirby Moorside
+Nunnington
+Processing Nottingham.csv
+East Bridgeford
+[DEPRECATION] the FOAF vocabulary will be moved to the rdf-vocab gem
+for the RDF.rb 2.0 release. Use as RDF::Vocab::FOAF, or include RDF::Vocab in the RDF module.
+Called from /home/geekscruff/Dropbox/code/rails/arch1/app/models/person.rb:8
+Orston
+Screeveton
+Tythby
+West Bridgeford
+Farndon cum Balderton
+Newark on Trent
+Attenborough
+Broxtowe
+Nottingham St Mary
+Nottingham St Nicholas
+Nottingham St Peter
+Grove
+Osberton
+Rossington
+Walkerington
+West Markham
+Processing Diocese.csv
+Acaster Malbis
+Addingham
+Adel
+Adlingfleet
+Adwick le Street
+Adwick upon Dearne
+Aldborough
+Aldingham
+Allerton Mauleverer
+Almondbury
+Ampleforth
+Argam
+Arksey
+Armthorpe
+Arncliffe
+Askham Bryan
+Askham Richard
+Aston
+Attenborough
+Badsworth
+Barmby Moor
+Barmby on the Marsh
+Barnburgh
+Barnby Dun
+Barwick in Elmet
+Batley
+Beckermet
+Beetham
+Beverley Minster Chancellor
+Beverley Minster Common Fund
+Beverley Minster Precentor
+Beverley Minster Sacrist
+Beverley St Andrew
+Beverley St James
+Beverley St Katherine
+Beverley St Martin
+Beverley St Mary
+Beverley St Michael
+Beverley St Nicholas
+Beverley St Peter
+Beverley St Stephen
+Bilbrough
+Bilton
+Bingley
+Birkby
+Birkin
+Birstall
+Bishop Burton
+Bishop Monkton
+Bishop Wilton
+Bole
+Bolton Percy
+Bolton upon Dearne
+Bolton by Bowland
+Bootle
+Botevant Prebend
+Bowness on Windermere
+Bracewell
+Bradford
+Braithwell
+Bramham
+Brandesburton
+Brantingham
+Brayton
+Brigham
+Brodsworth
+Brotherton
+Broughton
+Broxtowe
+Bubwith
+Bugthorpe
+Burghwallis
+Burnsall
+Burstall
+Burton Fleming
+Burton Leonard
+Burton Pidsea
+Burton in Kendal
+Calverley
+Campsall
+Cantley
+Carleton
+Cartmel
+Castleford
+Cherry Burton
+Chipping
+Church Fenton
+Claughton
+Cleator
+Cockerham
+Conisbrough
+Copgrove
+Copmanthorpe
+Corney
+Cowden Parva
+Cowesby
+Cowthorpe
+Crayke
+Crofton
+Croft on Tees
+Dalton in Furness
+Darfield
+Darrington
+Darton
+Dean
+Dewsbury
+Dinnington
+Distington
+Doncaster
+Drax
+Dunnington
+Dunnington
+East Bridgeford
+East Cowton
+East Drayton
+East Marton
+Eastrington
+Ecclesfield
+Egremont
+Ellerburn
+Elvington
+Emley
+Escrick
+Farndon cum Balderton
+Farnham
+Featherstone
+Felkirk
+Fewston
+Fishlake
+Foston on the Wolds
+Fridaythorpe
+Garforth
+Gargrave
+Garstang
+Giggleswick
+Gilling East
+Gisburn
+Givendale
+Goldsborough
+Gosforth
+Grasmere
+Great Driffield
+Great Langton
+Great Mitton
+Great Ouseburn
+Grindale
+Grove
+Guiseley
+Habblesthorpe
+Hackness
+Haile
+Halifax
+Halsham
+Halton
+Hampsthwaite
+Harewood
+Harrington
+Harthill
+Hatfield
+Healaugh
+Hemingbrough
+Hemsworth
+Heversham
+Heysham
+Hickleton
+High Ackworth
+High Hoyland
+High Melton
+Holm
+Holme
+Holme on Spalding Moor
+Holtby
+Hooton Pagnell
+Hooton Roberts
+Hornby
+Howden
+Howden Church Common Fund
+Huddersfield
+Husthwaite
+Hutton Wandesley
+Ilkley
+Irton
+Keighley
+Kellington
+Kendal
+Kildwick
+Kippax
+Kirby Moorside
+Kirby Sigston
+Kirk Bramwith
+Kirk Deighton
+Kirk Sandall
+Kirk Smeaton
+Kirkburton
+Kirkby Lonsdale
+Kirkby Malham
+Kirkby Overblow
+Kirkby in Furness
+Kirkham
+Kirkheaton
+Kirklevington
+Knaresborough
+Lamplugh
+Lancaster
+Laneham
+Langtoft
+Laughton en le Morthen
+Leake
+Leathley
+Leconfield
+Ledsham
+Leeds
+Leven
+Linton
+Lissington and Unidentified (Dolr’)
+Little Givendale
+Littlethorpe
+Long Preston
+Low Bentham
+Lytham
+Maltby
+Market Weighton
+Marske by the Sea
+Masham
+Melling
+Methley
+Middleton on the Wolds
+Millom
+Mirfield
+Monk Fryston
+Moor Monkton
+Moresby
+Mortham Tower
+Muncaster
+Newark on Trent
+Newthorpe
+Newton Kyme
+Normanton
+North Newbald
+North Otterington
+Northallerton
+Unidentified (Birethorpe)
+Unidentified (Dalton)
+Nottingham St Mary
+Nottingham St Nicholas
+Nottingham St Peter
+Nunnington
+Nunwick
+Nuthill
+Old Edlington
+Orston
+Osbaldwick
+Osberton
+Osmotherley
+Owston
+Owthorne
+Pannal
+Patrington
+Paull with Thorngumbald
+Penistone
+Pennington
+Pickering
+Ponsonby
+Pontefract
+Pontefract Castle
+Poulton le Fylde
+Preston
+Rawmarsh
+Ribchester
+Riccall
+Richmond
+Righton
+Ripley
+Rise
+Rossington
+Rotherham
+Rothwell
+Royston
+Rufforth
+Ryther
+Saltmarshe
+Salton
+Sandal Magna
+Saxton
+Scalby
+Scarborough
+Scorborough
+Screeveton
+Seamer
+Seamer
+Sedbergh
+Selby
+Sharow
+Sheffield
+Sigglesthorne
+Silkstone
+Skeckling
+Skelton
+Skipton
+Skipwith
+Slaidburn
+Snaith
+South Cave
+South Dalton
+South Kirkby
+South Newbald
+South Otterington
+South Stainley
+Spofforth
+Sprotbrough
+St Bees
+St Michael’s on Wyre
+Stanwick St John
+Staveley
+Stillingfleet
+Stillington
+Strensall
+Studley Magna
+Swillington
+Tadcaster
+Tankersley
+Tatham
+Thockrington
+Thormanby
+Thorner
+Thornhill
+Thornton in Craven
+Thornton in Lonsdale
+Thornton le Street
+Thorpe Hall
+Thrybergh
+Thurnscoe
+Tickhill
+Todwick
+Topcliffe and Weston
+Treeton
+Tunstall
+Tythby
+Ulleskelf
+Ulverston
+Upper Helmsley
+Urswick
+Wakefield
+Walkerington
+Walkington
+Warmfield
+Warmsworth
+Warthill
+Warton
+Wath
+Wath upon Dearne
+Weaverthorpe
+Welbury
+Well
+Welton
+Welwick
+West Bridgeford
+West Markham
+West Rounton
+Wetwang
+Weverthorpe
+Wharram in le Street
+Wheldrake
+Whicham
+Whiston
+Whitbeck
+Whitkirk
+Whittington
+Whixley
+Wickersley
+Wighill
+Wistow
+Withernsea
+Womersley
+Woodkirk
+Workington
+Wressle
+York All Saints North Street
+York All Saints Pavement
+York Holy Trinity Kings Court
+York Holy Trinity Mickelgate
+York St Crux Pavement
+York St Denys Walmgate
+York St George Fishergate
+York St Laurence
+York St Mary & the Holy Angels
+York St Martin Mickelgate
+York St Mich Spurriergate
+York St Nick Lawrence Strett
+York St Olave Marygate
+York St Saviour
+Processing East Riding.csv
+Weverthorpe
+Wharram in le Street
+Argam
+Burton Fleming
+Foston on the Wolds
+Hackness
+Righton
+Scalby
+Scarborough
+Seamer
+Seamer
+Holme
+Holme on Spalding Moor
+Wressle
+Burstall
+Cowden Parva
+Nuthill
+Owthorne
+Paull with Thorngumbald
+Skeckling
+Withernsea
+Processing Richmond.csv
+Chipping
+Cockerham
+Garstang
+Kirkham
+Lancaster
+Lytham
+Poulton le Fylde
+Preston
+Ribchester
+St Michael’s on Wyre
+Allerton Mauleverer
+Copgrove
+Farnham
+Goldsborough
+Great Ouseburn
+Hampsthwaite
+Ripley
+South Stainley
+Staveley
+Whixley
+Wath
+Well
+Aldingham
+Beckermet
+Bootle
+Brigham
+Cartmel
+Cleator
+Corney
+Dalton in Furness
+Dean
+Distington
+Egremont
+Gosforth
+Haile
+Harrington
+Irton
+Lamplugh
+Millom
+Moresby
+Muncaster
+Pennington
+Ponsonby
+St Bees
+Ulverston
+Urswick
+Whicham
+Whitbeck
+Workington
+Beetham
+Bowness on Windermere
+Burton in Kendal
+Claughton
+Grasmere
+Halton
+Heversham
+Heysham
+Kendal
+Kirkby Lonsdale
+Low Bentham
+Melling
+Sedbergh
+Tatham
+Thornton in Lonsdale
+Tunstall
+Warton
+Whittington
+Croft on Tees
+East Cowton
+Great Langton
+Mortham Tower
+Richmond
+Bishop Monkton
+Givendale
+Littlethorpe
+Nunwick
+Sharow
+Stanwick St John
+Studley Magna
+Processing West Riding.csv
+Benefice
+Hutton Wandesley
+East Marton
+Barnby Dun
+Old Edlington
+Owston
+High Ackworth
+Pontefract Castle
+Woodkirk
+York All Saints North St
+York All Saints Pavement
+York Holy Trin Kings Ct
+York Holy Trin Mickelgate
+York St Crux Pavement
+York St Denys Walmgate
+York St George Fishergate
+York St Martin Mickelgate
+York St Mich Spurriergate
+York St Nick Lawrence St
+York St Olave Marygate
+York St Saviour
+Bishop Burton
+Ampleforth
+Barmby Moor
+Bishop Wilton
+Bole
+Botevant Prebend
+Bubwith
+Bugthorpe
+Burton Pidsea
+Copmanthorpe
+Dunnington
+East Drayton
+Ellerburn
+Fridaythorpe
+Great Driffield
+Grindale
+Habblesthorpe
+Holm
+Hornby
+Husthwaite
+Kirkby in Furness
+Laneham
+Langtoft
+Lissington and Notid (Dolr’)
+Little Givendale
+Market Weighton
+Masham
+Newthorpe
+North Newbald
+Not id (Birethorpe)
+Not id (Dalton)
+Osbaldwick
+Pickering
+Riccall
+Salton
+South Cave
+South Newbald
+Stillington
+Strensall
+Thockrington
+Topcliffe and Weston
+Warthill
+Weaverthorpe
+Wetwang
+York St Laurence
+York St Mar & Holy A
