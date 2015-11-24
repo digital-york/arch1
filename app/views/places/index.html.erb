@@ -109,7 +109,7 @@
                    id = array_element[0]
                    name = array_element[1]
               %>
-                  <div style="margin-top: 5px"><%= link_to name, '#', onClick: "post_value('#{name}', '#{id}', '#{params[:place_field]}')", style: 'color: #7e2c2c; font-style: italic' %></div>
+                  <div style="margin-top: 5px"><%= link_to name, '#', onClick: "post_value(\"#{name}\", '#{id}', '#{params[:place_field]}')", style: 'color: #7e2c2c; font-style: italic' %></div>
               <% end %>
           <% end %>
         </div>

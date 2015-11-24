@@ -81,7 +81,7 @@
                    id = array_element[0]
                    name = array_element[1]
               %>
-                  <div style="margin-top: 5px; font-style: italic"><%= link_to name, '#', onClick: "post_value('#{name}', '#{id}', '#{params[:group_field]}')", style: 'color: #7e2c2c' %></div>
+                  <div style="margin-top: 5px; font-style: italic"><%= link_to name, '#', onClick: "post_value(\"#{name}\", '#{id}', '#{params[:group_field]}')", style: 'color: #7e2c2c' %></div>
               <% end %>
           <% end %>
         </div>
