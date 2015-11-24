@@ -419,21 +419,21 @@
                                   </td>
                                 </tr>
 
-                                <%# Person Name Authority (Same As) %>
-                                <tr>
-                                  <th style="width: 110px">Person Name Authority:</th>
-                                  <td>
-                                    <% if related_person.person_same_as != nil %>
-                                        <%= terms.get_person_same_as(related_person.person_same_as) %>
-                                    <% end %>
-                                  </td>
-                                </tr>
-
                                 <%# Person Group %>
                                 <tr>
                                   <th>Person / Group:</th>
                                   <td>
                                     <%= related_person.person_group %>
+                                  </td>
+                                </tr>
+
+                                <%# Person / Group Name Authority (Same As) %>
+                                <tr>
+                                  <th style="width: 110px">Name Authority:</th>
+                                  <td>
+                                    <% if related_person.person_same_as != nil %>
+                                        <%= terms.get_person_same_as(related_person.person_same_as) %>
+                                    <% end %>
                                   </td>
                                 </tr>
 

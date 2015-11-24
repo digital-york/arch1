@@ -125,7 +125,8 @@ class GroupsController < ApplicationController
     @error = check_url(group_params[:same_as], @error, "Same As")
 
     # Check that related_authority is a URL
-    @error = check_url(group_params[:related_authority], @error, "Related Authority")
+    # Don't enforce this
+    # @error = check_url(place_params[:related_authority], @error, "Related Authority")
 
     # Get a group object using the id and populate it with the group parameters
     @group = Group.find(params[:id])
@@ -149,7 +150,7 @@ class GroupsController < ApplicationController
 
     # Check if the group is present in any of the entries
     # If so, direct the user to a page with the entry locations so that they can remove them
-    existing_location_list = get_existing_location_list('group_same_as', @group.id)
+    existing_location_list = get_existing_location_list('person_same_as', @group.id)
 
     if existing_location_list.size > 0
       render 'group_exists_list', :locals => { :@group_name => @group.name, :id => @group.id, :@existing_location_list => existing_location_list, :@go_back_id =>  params[:go_back_id], :@search_term => params[:search_term], :@group_field => params[:group_field] }

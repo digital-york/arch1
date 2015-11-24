@@ -174,7 +174,8 @@ class PlacesController < ApplicationController
     @error = check_url(place_params[:same_as], @error, "Same As")
 
     # Check that related_authority is a URL
-    @error = check_url(place_params[:related_authority], @error, "Related Authority")
+    # Don't enforce this
+    # @error = check_url(place_params[:related_authority], @error, "Related Authority")
 
     # Get a place object using the id and populate it with the place parameters
     @place = Place.find(params[:id])

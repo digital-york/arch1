@@ -1,15 +1,15 @@
 <div class="popup popup_subject">
 
-  <div class="popup_title">Person Exists in Entry</div>
+  <div class="popup_title">Group Exists in Entry</div>
 
-  <div><%= link_to 'Go back to search page', people_path(@go_back_id, :search_term => @search_term, :person_field => @person_field) %></div>
+  <div><%= link_to 'Go back to search page', groups_path(@go_back_id, :search_term => @search_term, :group_field => @group_field) %></div>
 
   <div style="margin-top: 10px">
-    The person <strong><%= @person_name %></strong> exists in one or more entries. Please remove it from the records displayed below (using the main interface) and then click on this button:
+    The group <strong><%= @group_name %></strong> exists in one or more entries. Please remove it from the records displayed below (using the main interface) and then click on this button:
   </div>
 
   <div style="margin-top: 5px">
-    <%= button_to 'Refresh', person_path(id), :method => :delete, params: { :search_term => @search_term, :person_field => @person_field }, title: "Delete '#{@person_name}'" %>
+    <%= button_to 'Refresh', group_path(id), :method => :delete, params: { :search_term => @search_term, :group_field => @group_field }, title: "Delete '#{@group_name}'" %>
   </div>
 
   <div style="clear: both"></div>

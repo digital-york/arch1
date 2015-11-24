@@ -626,7 +626,7 @@ $(document).ready(function () {
     });
 
     // Change 'Same As' link on choosing person or group
-    $('body').on('click', '.select_person_group', function (e) {
+    $('body').on('change', '.select_person_group', function (e) {
 
         var jq_index = $(this).attr('jq_index');
         var person_group = $(this).val();
