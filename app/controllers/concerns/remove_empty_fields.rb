@@ -296,6 +296,15 @@ module RemoveEmptyFields
     person_params[:note] = remove_empty_array_fields2(person_params[:note])
   end
 
+  # Remove group multi-value fields (i.e. arrays) such as 'Same As'
+  # This is required because empty array fields are submitted as [''] and an empty field will be added to Fedora
+  def remove_group_popup_empty_fields(group_params)
+    group_params[:same_as] = remove_empty_array_fields2(group_params[:same_as])
+    group_params[:related_authority] = remove_empty_array_fields2(group_params[:related_authority])
+    group_params[:altlabel] = remove_empty_array_fields2(group_params[:altlabel])
+    group_params[:note] = remove_empty_array_fields2(group_params[:note])
+  end
+
   def remove_concept_popup_empty_fields(concept_params)
     concept_params[:altlabel] = remove_empty_array_fields2(concept_params[:altlabel])
   end

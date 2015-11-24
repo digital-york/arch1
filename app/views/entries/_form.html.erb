@@ -548,11 +548,35 @@
                                                 </td>
                                             </tr>
 
+                                            <%
+                                               if related_person.person_group.nil?
+                                                 disable = false
+                                               else
+                                                 disable = true
+                                               end
+                                               if related_person.person_group == 'group'
+                                                 pg_field = 'group'
+                                                 pg_search = 'groups'
+                                               else
+                                                 pg_field = 'person'
+                                                 pg_search = 'people'
+                                               end
+                                            %>
+
+                                            <%# Person or Group? %>
+                                            <tr>
+                                                <th>Person or Group:</th>
+                                                <td>
+                                                    <%= select_tag "entry[related_agents_attributes][" + index1.to_s + "][person_group]", options_for_select(@person_group_list.collect { |group| [group[0]] }, related_person.person_group), { :class => 'select_person_group', :jq_index => index1 , :disabled => disable} %>
+                                                 </td>
+                                            </tr>
+
+
                                           <%# Person Related Authority (Same As) %>
                                           <tr>
-                                            <th style="width: 110px">Person Name Authority:</th>
-                                            <td class="input_single">
-                                              <a href='#' onclick="popup('/people?start=true&amp;person_field=person_<%= index1 %>', 'person'); return false;" tabindex="-1"><%= image_tag "magnifying_glass_small.png", class: "plus_icon" %></a>
+                                            <th style="width: 110px"><%= pg_search.capitalize %> Name Authority:</th>
+                                            <td class="input_single person_authority">
+                                              <a href='#' onclick="popup('/<%= pg_search %>?start=true&amp;<%= pg_field %>_field=person_<%= index1 %>', 'person'); return false;" tabindex="-1"><%= image_tag "magnifying_glass_small.png", class: "plus_icon" %></a>
                                                   <span id="person_<%= index1 %>">
                                                   <% if related_person.person_same_as != nil %>
                                                     <%= terms.get_person_same_as(related_person.person_same_as) %>
@@ -562,14 +586,6 @@
                                               <div style="float: right; margin-right: 6px">
                                                 <img src='/assets/delete.png' alt='Delete icon' class='delete_icon' onclick="remove_authority('person', '<%= index1 %>'); return false">
                                               </div>
-                                            </td>
-                                          </tr>
-
-                                          <%# Person Group %>
-                                          <tr>
-                                            <th>Person / Group:</th>
-                                            <td>
-                                              <%= select_tag "entry[related_agents_attributes][" + index1.to_s + "][person_group]", options_for_select(@person_group_list.collect { |gender| [gender[0]] }, related_person.person_group) %>
                                             </td>
                                           </tr>
 

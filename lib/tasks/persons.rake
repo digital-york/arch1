@@ -148,20 +148,69 @@ namespace :persons do
 
   end
 
-  task add_places: :environment do
+  task add_groups: :environment do
 
     puts 'Creating the place Concept Scheme'
 
     begin
 
-      @scheme = ConceptScheme.new
-      @scheme.preflabel = "places"
-      @scheme.rdftype = @scheme.add_rdf_types
-      @scheme.save
-      puts "Concept scheme for place created at #{@scheme.id}"
+      @scheme = ConceptScheme.find('hq37vn837')
+      #@scheme = ConceptScheme.new
+      #@scheme.preflabel = "groups"
+      #@scheme.rdftype = @scheme.add_rdf_types
+      #@scheme.save
+      puts "Concept scheme for groups created at #{@scheme.id}"
     rescue
       puts $!
     end
+
+    puts 'Processing the religious houses. This may take some time ... '
+
+    arr = CSV.read(Rails.root + 'lib/assets/lists/houses.csv')
+
+    arr.each do |c|
+      begin
+
+        p = Group.new
+        p.rdftype << p.add_rdf_types
+        p.concept_scheme = @scheme
+        p.name = c[0].strip
+        unless c[2].nil?
+          p.name += ' ' + c[2].strip
+        end
+        p.name += ' ' + c[3].strip
+        p.group_type = [c[3].strip]
+
+        unless c[6].nil?
+          p.qualifier = c[6].strip
+        end
+        p.related_authority = []
+
+        unless c[7].nil?
+          p.related_authority += [c[7]]
+        end
+        unless c[1].nil?
+          p.altlabel += [c[1]]
+        end
+        notes = 'County: ' + c[5]
+        if c[4] == 'F'
+          notes += '; Gender: Female'
+        elsif c[4] == 'M'
+          notes += '; Gender: Male'
+        end
+        p.note = [notes]
+        p.preflabel = "#{p.name}, #{p.qualifier}"
+        p.save
+
+        @scheme.groups += [p]
+        @scheme.save
+        puts "Created #{p.preflabel}"
+      rescue
+        puts $!
+      end
+    end
+    puts 'Finished!'
+
   end
 
 end

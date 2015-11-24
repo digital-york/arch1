@@ -9,6 +9,7 @@ Rails.application.routes.draw do
   resources :concepts
   resources :places
   resources :people
+  resources :groups
   resources :subjects
   resources :errors
 

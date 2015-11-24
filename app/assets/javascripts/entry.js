@@ -459,15 +459,15 @@ $(document).ready(function () {
                 "&nbsp;<img jq_type='person_as_written' jq_index='" + jq_index + "' jq_attributes='related_agents_attributes' class='plus_icon click_multiple_field_button_level2' src='/assets/plus_sign.png'>" +
                 "</th><td><div class='field_group grey_box person_as_written_block'></div></td></tr>" +
 
-                // Person Name Authority (Same As)
+                    // Person or Group
+                "<tr><th>Person or Group:</th><td><select name='entry[related_agents_attributes][" + jq_index + "][person_group]' jq_index='" + jq_index + "' class='select_person_group'>" + person_group_options + "</select></td></tr>" +
+
+                    // Person Name Authority (Same As)
                 "<tr><th>Person Name Authority:</th><td class='input_single'>" +
                 "<a href='' onclick='popup(&#39;/people?start=true&amp;person_field=person_" + jq_index + "&#39;, &#39;person&#39;); return false;' tabindex='-1'><img src='/assets/magnifying_glass_small.png' class='plus_icon'></a>" +
                 "&nbsp;<span id='person_" + jq_index + "'></span>" +
                 "<input type='hidden' id='person_" + jq_index + "_hidden' value='' name='entry[related_agents_attributes][" + jq_index + "][person_same_as]'>" +
                 "</td></tr>" +
-
-                // Gender
-                "<tr><th>Person Group:</th><td><select name='entry[related_agents_attributes][" + jq_index + "][person_group]'>" + person_group_options + "</select></td></tr>" +
 
                 // Gender
                 "<tr><th>Gender:</th><td><select name='entry[related_agents_attributes][" + jq_index + "][person_gender]'>" + gender_options + "</select></td></tr>" +
@@ -623,6 +623,32 @@ $(document).ready(function () {
         } catch (err) {
             alert(err);
         }
+    });
+
+    // Change 'Same As' link on choosing person or group
+    $('body').on('change', '.select_person_group', function (e) {
+
+        var jq_index = $(this).attr('jq_index');
+        var person_group = $(this).val();
+
+        if (person_group === 'person') {
+            // Person Name Authority (Same As)
+            var new_code_block =  "<tr><th>Person Name Authority:</th><td class='input_single'>" +
+                "<a href='' onclick='popup(&#39;/people?start=true&amp;person_field=person_" + jq_index + "&#39;, &#39;person&#39;); return false;' tabindex='-1'><img src='/assets/magnifying_glass_small.png' class='plus_icon'></a>" +
+                "&nbsp;<span id='person_" + jq_index + "'></span>" +
+                "<input type='hidden' id='person_" + jq_index + "_hidden' value='' name='entry[related_agents_attributes][" + jq_index + "][person_same_as]'>" +
+                "</td></tr>";
+        } else if (person_group === 'group') {
+            // Group Name Authority (Same As)
+            var new_code_block =  "<tr><th>Group Name Authority:</th><td class='input_single'>" +
+                "<a href='' onclick='popup(&#39;/groups?start=true&amp;group_field=person_" + jq_index + "&#39;, &#39;person&#39;); return false;' tabindex='-1'><img src='/assets/magnifying_glass_small.png' class='plus_icon'></a>" +
+                "&nbsp;<span id='person_" + jq_index + "'></span>" +
+                "<input type='hidden' id='person_" + jq_index + "_hidden' value='' name='entry[related_agents_attributes][" + jq_index + "][person_same_as]'>" +
+                "</td></tr>";
+        }
+
+        $(this).parent('td').parent('tr').next('tr').remove();
+        $(this).parent('td').parent('tr').after(new_code_block);
     });
 
 
