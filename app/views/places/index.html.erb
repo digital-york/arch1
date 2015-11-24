@@ -85,7 +85,7 @@
 
                    @search_array.each do |array_element|
                      id = array_element[0]
-                     name = array_element[1]
+                     name = array_element[1].html_safe
                 %>
 
                     </tr>

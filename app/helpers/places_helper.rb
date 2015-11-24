@@ -11,7 +11,7 @@ module PlacesHelper
 
   # This method is used to get the preflabel and to get the label which is displayed on the view page
   # is_join is required if the data comes from solr, i.e. when getting the data to display on the view page
-  def get_label(is_join, place_name, parent_ADM4, parent_ADM3, parent_ADM2, parent_ADM1, feature_code=nil)
+  def get_label(is_join, place_name, parent_ADM4, parent_ADM3, parent_ADM2, parent_ADM1, feature_code=nil, url=nil)
 
     name = ''
 
@@ -64,7 +64,13 @@ module PlacesHelper
 
     if feature_code != nil and feature_code != ''
       if name != '' then
-        name = "#{name} (Feature Type: #{feature_code})"
+        name = "#{name} (Type: #{feature_code})"
+      end
+    end
+
+    if url != nil and url != ''
+      if name != '' then
+        name = "#{name} (<a href=\"#{url}\" target=\"_blank\">Gazetteer</a>)"
       end
     end
 

@@ -35,7 +35,7 @@ namespace :places do
         end
         if t[1] == 'Cleveland'
           auth.search(q).each do |a|
-            if a['featuretype'] == 'Parish' and (a['adminlevel2'].include? t[1] or a['adminlevel2'].include? 'North Riding')
+            if a['featuretype'] == 'Sub-Parish' and (a['adminlevel2'].include? t[1] or a['adminlevel2'].include? 'North Riding')
               #call places helper with 'deep_' + a['id'] and deep
               check_id('deep_' + a['id'])
               # then add a note
@@ -50,7 +50,18 @@ namespace :places do
               #check we don't have it
               response = SolrQuery.new.solr_query(q='preflabel_tesim:"' + @place.preflabel + '"', fl='id', rows=1)['response']
               if response['numFound'] == 0
-                @place.save
+                begin
+                  @place.save
+                rescue
+                  conn = Faraday.new(:url => 'http://localhost:8080') do |faraday|
+                    faraday.request  :url_encoded             # form-encode POST params
+                    faraday.response :logger                  # log requests to STDOUT
+                    faraday.adapter  Faraday.default_adapter  # make requests with Net::HTTP
+                  end
+                  conn.delete @place.uri.to_s.gsub('http://127.0.0.1:8080/', '') + '/fcr:tombstone'
+                  puts @place.uri
+                  @place.save
+                end
               end
               #puts 'FOUND ' + a['label']
               found = true
@@ -59,7 +70,7 @@ namespace :places do
 
         elsif t[1] == 'Richmond'
           auth.search(q).each do |a|
-            if a['featuretype'] == 'Parish' and (a['adminlevel2'].include? t[1] or a['adminlevel2'].include? 'North Riding')
+            if a['featuretype'] == 'Sub-Parish' and (a['adminlevel2'].include? t[1] or a['adminlevel2'].include? 'North Riding')
               #call places helper with 'deep_' + a['id'] and deep
               check_id('deep_' + a['id'])
               # then add a note
@@ -74,7 +85,18 @@ namespace :places do
               #check we don't have it
               response = SolrQuery.new.solr_query(q='preflabel_tesim:"' + @place.preflabel + '"', fl='id', rows=1)['response']
               if response['numFound'] == 0
-                @place.save
+                begin
+                  @place.save
+                rescue
+                  conn = Faraday.new(:url => 'http://localhost:8080') do |faraday|
+                    faraday.request  :url_encoded             # form-encode POST params
+                    faraday.response :logger                  # log requests to STDOUT
+                    faraday.adapter  Faraday.default_adapter  # make requests with Net::HTTP
+                  end
+                  conn.delete @place.uri.to_s.gsub('http://127.0.0.1:8080/', '') + '/fcr:tombstone'
+                  puts @place.uri
+                  @place.save
+                end
               end
               #puts 'FOUND ' + a['label']
               found = true
@@ -83,7 +105,7 @@ namespace :places do
 
         elsif t[1] == 'York and West Riding'
           auth.search(q).each do |a|
-            if a['featuretype'] == 'Parish' and (a['adminlevel2'].include? 'West Riding')
+            if a['featuretype'] == 'Sub-Parish' and (a['adminlevel2'].include? 'West Riding')
               #call places helper with 'deep_' + a['id'] and deep
               check_id('deep_' + a['id'])
               # then add a note
@@ -98,7 +120,18 @@ namespace :places do
               #check we don't have it
               response = SolrQuery.new.solr_query(q='preflabel_tesim:"' + @place.preflabel + '"', fl='id', rows=1)['response']
               if response['numFound'] == 0
-                @place.save
+                begin
+                  @place.save
+                rescue
+                  conn = Faraday.new(:url => 'http://localhost:8080') do |faraday|
+                    faraday.request  :url_encoded             # form-encode POST params
+                    faraday.response :logger                  # log requests to STDOUT
+                    faraday.adapter  Faraday.default_adapter  # make requests with Net::HTTP
+                  end
+                  conn.delete @place.uri.to_s.gsub('http://127.0.0.1:8080/', '') + '/fcr:tombstone'
+                  puts @place.uri
+                  @place.save
+                end
               end
               #puts 'FOUND ' + a['label']
               found = true
@@ -108,7 +141,7 @@ namespace :places do
           #skip me
         else
           auth.search(q).each do |a|
-            if a['featuretype'] == 'Parish' and (a['adminlevel2'].include? t[1])
+            if a['featuretype'] == 'Sub-Parish' and (a['adminlevel2'].include? t[1])
               # call places helper with 'deep_' + a['id'] and deep
               check_id('deep_' + a['id'])
               # then add a note
@@ -123,7 +156,18 @@ namespace :places do
               #check we don't have it
               response = SolrQuery.new.solr_query(q='preflabel_tesim:"' + @place.preflabel + '"', fl='id', rows=1)['response']
               if response['numFound'] == 0
-                @place.save
+                begin
+                  @place.save
+                rescue
+                  conn = Faraday.new(:url => 'http://localhost:8080') do |faraday|
+                    faraday.request  :url_encoded             # form-encode POST params
+                    faraday.response :logger                  # log requests to STDOUT
+                    faraday.adapter  Faraday.default_adapter  # make requests with Net::HTTP
+                  end
+                  conn.delete @place.uri.to_s.gsub('http://127.0.0.1:8080/', '') + '/fcr:tombstone'
+                  puts @place.uri
+                  @place.save
+                end
               end
               #puts 'FOUND ' + a['label']
               found = true
@@ -135,6 +179,180 @@ namespace :places do
         end
       end
     end
+  end
+
+  task load_places_cp: :environment do
+    require 'faraday'
+
+    arr = CSV.read(Rails.root + 'lib/assets/lists/places/places.csv')
+
+    arr.each_with_index do |cp, index|
+      found = false
+      case cp[2]
+        when '1'
+          county = 'Bedfordshire'
+        when '2'
+          county = 'Berkshire'
+        when '3'
+          county = 'Buckinghamshire'
+        when '4'
+          county = 'Cambridgeshire'
+        when '5'
+          county = 'Cheshire'
+        when '6'
+          county = 'Cornwall'
+        when '7'
+          county = 'Cumberland'
+        when '8'
+          county = 'Derbyshire'
+        when '9'
+          county = 'Devon'
+        when '10'
+          county = 'Dorset'
+        when '11'
+          county = 'Durham'
+        when '12'
+          county = 'Essex'
+        when '13'
+          county = 'Gloucestershire'
+        when '14'
+          county = 'Hampshire'
+        when '15'
+          county = 'Herefordshire'
+        when '16'
+          county = 'Hertfordshire'
+        when '17'
+          county = 'Huntingdonshire'
+        when '18'
+          county = 'Isle Of Wight'
+        when '19'
+          county = 'Kent'
+        when '20'
+          county = 'Lancashire'
+        when '21'
+          county = 'Leicestershire'
+        when '22'
+          county = 'Lincolnshire'
+        when '23'
+          county = 'London'
+        when '24'
+          county = 'Middlesex'
+        when '25'
+          county = 'Norfolk'
+        when '26'
+          county = 'Northamptonshire'
+        when '27'
+          county = 'Northumberland'
+        when '28'
+          county = 'Nottinghamshire'
+        when '29'
+          county = 'Oxfordshire'
+        when '30'
+          county = 'Rutland'
+        when '31'
+          county = 'Shropshire'
+        when '32'
+          county = 'Somerset'
+        when '33'
+          county = 'Staffordshire'
+        when '34'
+          county = 'Suffolk'
+        when '35'
+          county = 'Surrey'
+        when '36'
+          county = 'Sussex'
+        when '37'
+          county = 'Warwickshire'
+        when '38'
+          county = 'Westmorland'
+        when '39'
+          county = 'Wiltshire'
+        when '40'
+          county = 'Worcestershire'
+        when '41'
+          county = 'East Riding of Yorkshire'
+        when '42'
+          county = 'North Riding of Yorkshire'
+        when '43'
+          county = 'West Riding of Yorkshire'
+        when '44'
+          county = 'Yorkshire'
+        when '45'
+          county = 'Isle Of Man'
+        else
+      end
+
+      auth = Deep.new('subauthority')
+
+      auth.search(cp[0]).each do |a|
+        if a['featuretype'] == 'Sub-Parish' and (a['adminlevel2'].include? county)
+          # call places helper with 'deep_' + a['id'] and deep
+          check_id('deep_' + a['id'])
+          response = SolrQuery.new.solr_query(q='preflabel_tesim:"' + @place.preflabel + '"', fl='id', rows=1)['response']
+          if response['numFound'] == 0
+            @place.feature_code += [cp[1]]
+            @place.related_authority += ['http://www.hrionline.ac.uk/causepapers/xsd/parish-groups.xsd']
+            begin
+              @place.save
+            rescue
+              conn = Faraday.new(:url => 'http://localhost:8080') do |faraday|
+                faraday.request  :url_encoded             # form-encode POST params
+                faraday.response :logger                  # log requests to STDOUT
+                faraday.adapter  Faraday.default_adapter  # make requests with Net::HTTP
+              end
+              conn.delete @place.uri.to_s.gsub('http://127.0.0.1:8080/', '') + '/fcr:tombstone'
+              puts @place.uri
+              @place.save
+            end
+            puts "#{index.to_s}: #{@place.preflabel} (#{@place.id}) new from deep"
+          else
+            #need an else here
+            @place = Place.find(response['docs'][0]['id'])
+            @place.feature_code += [cp[1]]
+            @place.related_authority += ['http://www.hrionline.ac.uk/causepapers/xsd/parish-groups.xsd']
+            begin
+              @place.save
+            rescue
+              conn = Faraday.new(:url => 'http://localhost:8080') do |faraday|
+                faraday.request  :url_encoded             # form-encode POST params
+                faraday.response :logger                  # log requests to STDOUT
+                faraday.adapter  Faraday.default_adapter  # make requests with Net::HTTP
+              end
+              conn.delete @place.uri.to_s.gsub('http://127.0.0.1:8080/', '') + '/fcr:tombstone'
+              puts @place.uri
+              @place.save
+            end
+            puts "#{index.to_s}: #{@place.preflabel} (#{@place.id}) updated"
+          end
+          #puts 'FOUND ' + a['label']
+          found = true
+        end
+      end
+
+      if not found
+        @place = Place.new
+        @place.place_name = cp[0].titleize
+        @place.parent_ADM2 = county
+        @place.parent_ADM1 = 'England'
+        @place.feature_code = [cp[1]]
+        @place.preflabel = get_label(false, @place.place_name, '', '', @place.parent_ADM2, @place.parent_ADM1)
+        @place.related_authority += ['http://www.hrionline.ac.uk/causepapers/xsd/parish-groups.xsd']
+        begin
+          @place.save
+        rescue
+          conn = Faraday.new(:url => 'http://localhost:8080') do |faraday|
+            faraday.request  :url_encoded             # form-encode POST params
+            faraday.response :logger                  # log requests to STDOUT
+            faraday.adapter  Faraday.default_adapter  # make requests with Net::HTTP
+          end
+          conn.delete @place.uri.to_s.gsub('http://127.0.0.1:8080/', '') + '/fcr:tombstone'
+          puts @place.uri
+          @place.save
+        end
+        puts "#{index.to_s}: #{@place.preflabel} (#{@place.id}) new"
+      end
+    end
+
   end
 
   # Check the DEEP or OS id, if it's not a local id, create a new place

@@ -25,7 +25,7 @@ class PlacesController < ApplicationController
 
       # Get Concepts for the Place ConceptScheme and filter according to search_term
       # NB. Place aren't currently going into a concept scheme so we look for all Place objects
-      SolrQuery.new.solr_query(q='has_model_ssim:Place', fl='id, place_name_tesim, parent_ADM4_tesim, parent_ADM3_tesim, parent_ADM2_tesim, parent_ADM1_tesim', rows=1000, sort='id asc')['response']['docs'].map.each do |result|
+      SolrQuery.new.solr_query(q='has_model_ssim:Place', fl='id, place_name_tesim, parent_ADM4_tesim, parent_ADM3_tesim, parent_ADM2_tesim, parent_ADM1_tesim', rows=5000, sort='id asc')['response']['docs'].map.each do |result|
 
         id = result['id']
         place_name = result['place_name_tesim']
@@ -62,9 +62,12 @@ class PlacesController < ApplicationController
           parent_ADM2 = result['adminlevel2']
           parent_ADM1 = result['adminlevel1']
           feature_type = result['featuretype']
-
+          url = nil
+          unless result['uricdda'].nil?
+            url = result['uricdda']
+          end
           tt = []
-          name = get_label(false, place_name, parent_ADM4, parent_ADM3, parent_ADM2, parent_ADM1, feature_type)
+          name = get_label(false, place_name, parent_ADM4, parent_ADM3, parent_ADM2, parent_ADM1, feature_type,url)
           tt << 'deep_' + id
           tt << name
           @search_array << tt
