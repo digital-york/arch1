@@ -74,8 +74,9 @@ class PeopleController < ApplicationController
     # Check that same_as is a URL
     @error = check_url(person_params[:same_as], @error, "Same As")
 
+    # Disable this check
     # Check that related_authority is a URL
-    @error = check_url(person_params[:related_authority], @error, "Related Authority")
+    # @error = check_url(person_params[:related_authority], @error, "Related Authority")
 
     @person = Person.new(person_params)
 
@@ -124,8 +125,9 @@ class PeopleController < ApplicationController
     # Check that same_as is a URL
     @error = check_url(person_params[:same_as], @error, "Same As")
 
+    # Disable this check
     # Check that related_authority is a URL
-    @error = check_url(person_params[:related_authority], @error, "Related Authority")
+    # @error = check_url(person_params[:related_authority], @error, "Related Authority")
 
     # Get a person object using the id and populate it with the person parameters
     @person = Person.find(params[:id])

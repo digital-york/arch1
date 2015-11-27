@@ -67,15 +67,16 @@ class GroupsController < ApplicationController
 
     @error = ''
 
-    if group_params[:family] == '' and group_params[:given_name] == ''
-      @error = "Please enter a 'Family Name or Given Name'"
+    if group_params[:name] == ''
+      @error = "Please enter a Name"
     end
 
     # Check that same_as is a URL
     @error = check_url(group_params[:same_as], @error, "Same As")
 
+    # Disable this check
     # Check that related_authority is a URL
-    @error = check_url(group_params[:related_authority], @error, "Related Authority")
+    # @error = check_url(group_params[:related_authority], @error, "Related Authority")
 
     @group = Group.new(group_params)
 
@@ -124,8 +125,8 @@ class GroupsController < ApplicationController
     # Check that same_as is a URL
     @error = check_url(group_params[:same_as], @error, "Same As")
 
+    # Disable this check
     # Check that related_authority is a URL
-    # Don't enforce this
     # @error = check_url(place_params[:related_authority], @error, "Related Authority")
 
     # Get a group object using the id and populate it with the group parameters
@@ -178,7 +179,7 @@ class GroupsController < ApplicationController
     end
 
     if qualifier != nil and qualifier != ''
-      preflabel = "#{preflabel}, #{qualifier}"
+      preflabel += ", #{qualifier}"
     end
     return preflabel
   end

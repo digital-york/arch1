@@ -5,7 +5,7 @@ class Group < ActiveFedora::Base
   belongs_to :concept_scheme, predicate: ::RDF::SKOS.inScheme
 
   # eg. NCA Rules 4
-  property :name, predicate: ::RDF::FOAF.name, multiple: false do |index|
+  property :name, predicate: ::RDF::Vocab::FOAF.name, multiple: false do |index|
     index.as :stored_searchable
   end
 

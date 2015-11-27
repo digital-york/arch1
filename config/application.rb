@@ -36,7 +36,7 @@ module Arch1
     config.autoload_paths += Dir[Rails.root.join('models', '{**/}')]
 
     # Allows you to use your own error routes (py)
-    config.exceptions_app = self.routes
+    # config.exceptions_app = self.routes
 
   end
 end
