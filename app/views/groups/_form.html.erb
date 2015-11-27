@@ -54,13 +54,22 @@
             </td>
           </tr>
 
-            <%# Type %>
-            <tr>
-                <th>Group Type:</th>
-                <td>
-                    <%= text_field_tag "group[group_type]", @group.group_type %>
-                </td>
-            </tr>
+          <%# Type %>
+          <tr>
+            <th>Group Type:
+              <img src="/assets/plus_sign.png" alt="plus icon" class="plus_icon click_popup_multiple_field_button" jq_type_1='group' jq_type_2="group_type"/>
+            </th>
+            <td>
+              <div class="field_group">
+                <% @group.group_type.each do |group_type| %>
+                    <div class="field_single">
+                      <%= text_field_tag 'group[group_type][]', group_type %>
+                      <img alt="Delete icon" src="/assets/delete.png" class="delete_icon click_remove_field_level1" jq_tag_type="input">
+                    </div>
+                <% end %>
+              </div>
+            </td>
+          </tr>
 
           <%# Same As %>
           <tr>
