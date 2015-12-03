@@ -5,7 +5,7 @@ class Person < ActiveFedora::Base
   belongs_to :concept_scheme, predicate: ::RDF::SKOS.inScheme
 
   # eg. NCA Rules 2.4
-  property :family, predicate: ::RDF::FOAF.familyName, multiple: false do |index|
+  property :family, predicate: ::RDF::Vocab::FOAF.familyName, multiple: false do |index|
     index.as :stored_searchable
   end
 

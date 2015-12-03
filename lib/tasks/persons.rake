@@ -17,12 +17,20 @@ namespace :persons do
     puts 'Creating the Concept Scheme'
 
     begin
-      #@scheme = ConceptScheme.find('pz50gw21p')
-      @scheme = ConceptScheme.new
-      @scheme.preflabel = "people"
-      @scheme.rdftype = @scheme.add_rdf_types
-      @scheme.save
-      puts "Concept scheme for person created at #{@scheme.id}"
+
+      response = SolrQuery.new.solr_query(q='preflabel_tesim:"places" AND has_model_ssim:"ConceptScheme"', fl='id', rows=1)['response']
+
+      if response['numFound'] == 0
+        @scheme = ConceptScheme.new
+        @scheme.preflabel = "people"
+        @scheme.rdftype = @scheme.add_rdf_types
+        @scheme.save
+        puts "Concept scheme for person created at #{@scheme.id}"
+      else
+        @scheme = ConceptScheme.find(response['docs'][0]['id'])
+        puts "Using existing Concept scheme #{@scheme.id}"
+      end
+
     rescue
       puts "ERROR in ConceptScheme!"
       puts $!
@@ -31,17 +39,7 @@ namespace :persons do
 
     puts 'Processing the person. This may take some time ... '
 
-    AUTHS =
-        {
-         'Oxford Dictionary of Popes' => 'http://explore.bl.uk/primo_library/libweb/action/display.do?frbrVersion=3&tabs=moreTab&ct=display&fn=search&doc=BLL01009534313&indx=1&recIds=BLL01009534313&recIdxs=0&elementId=0&renderMode=poppedOut&displayMode=full&frbrVersion=3&dscnt=1&scp.scps=scope%3A%28BLCONTENT%29&frbg=&tab=local_tab&dstmp=1447001180115&srt=rank&mode=Basic&vl%28488279563UI0%29=any&dum=true&tb=t&vl%28freeText0%29=A%20Dictionary%20of%20Popes%201986&vid=BLVU1',
-         'Heads of Religious Houses, III' => 'http://www.cambridge.org/gb/academic/subjects/history/british-history-1066-1450/heads-religious-houses-england-and-wales-iii-13771540?format=PB',
-         'Fasti' => 'http://www.british-history.ac.uk/search/series/fasti-ecclesiae',
-         'ODNB' => 'http://www.oxforddnb.com/',
-         'http://www.etoncollege.com/Provosts.aspx' => 'http://www.etoncollege.com/Provosts.aspx',
-         'Handbook of British Chronology' => 'http://www.cambridge.org/gb/academic/subjects/history/british-history-general-interest/handbook-british-chronology-3rd-edition'
-        }
-
-    arr = CSV.read(Rails.root + 'lib/assets/lists/persons.csv')
+    arr = CSV.read(Rails.root + 'lib/assets/lists/persons03-12-15.csv')
 
     arr.each do |c|
       begin
@@ -91,6 +89,7 @@ namespace :persons do
           end
         end
         unless c[9].nil?
+          p.related_authority = []
           rel = c[9]
           if rel.include? ';'
             if rel.include? '; '
@@ -99,11 +98,11 @@ namespace :persons do
             a = rel.split(';')
 
             a.each do | aa |
-              p.related_authority += [AUTHS[aa]]
+              p.related_authority << aa
             end
 
           else
-            p.related_authority += [AUTHS[c[9]]]
+            p.related_authority << c[9]
           end
         end
         unless c[10].nil?
