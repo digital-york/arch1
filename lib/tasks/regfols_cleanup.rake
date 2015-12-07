@@ -16,9 +16,9 @@ namespace :regfols_cleanup do
     end
     f.save
 
-    r = Register.find("6w924b86j")
-    fol = delete_create_folio(220,"Abp Reg 32 p.94A Paper",r)
-    create_image("856338",fol)
+    #r = Register.find("6w924b86j")
+    #fol = delete_create_folio(220,"Abp Reg 32 p.94A Paper",r)
+    #create_image("856338",fol)
 
   end
 
