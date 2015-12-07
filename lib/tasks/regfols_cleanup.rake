@@ -63,7 +63,9 @@ namespace :regfols_cleanup do
 
   task c: :environment do
     reg = Register.find("6w924b86j")
-    reg.ordered_folio_proxies.delete_at(18)
+    reg.ordered_folio_proxies.delete_at(17)
+    reg.save
+    reg.ordered_folio_proxies.insert_target_at(17,Folio.find('ht24wj452'))
     reg.save
   end
 
