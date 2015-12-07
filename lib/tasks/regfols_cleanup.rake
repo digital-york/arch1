@@ -3,8 +3,9 @@ namespace :regfols_cleanup do
   task a: :environment do
     path = Rails.root + 'lib/assets/'
 
-    f = Folio.find("jd472w527")
-    f.images.each_with_index do |i, index|
+    fol = Folio.find("jd472w527")
+    puts f.id
+    fol.images.each_with_index do |i, index|
       if index == 0
         f = File.open(path + "new_regs_and_fols/xmltmp/856337.xml")
         @doc = Nokogiri::XML(f)
@@ -14,11 +15,11 @@ namespace :regfols_cleanup do
         i.destroy.eradicate
       end
     end
-    f.save
+    fol.save
 
-    #r = Register.find("6w924b86j")
-    #fol = delete_create_folio(220,"Abp Reg 32 p.94A Paper",r)
-    #create_image("856338",fol)
+    r = Register.find("6w924b86j")
+    fol = delete_create_folio(220,"Abp Reg 32 p.94A Paper",r)
+    create_image("856338",fol)
 
   end
 
