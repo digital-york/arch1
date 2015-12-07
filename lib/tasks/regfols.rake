@@ -98,7 +98,7 @@ namespace :regfols do
               puts "Register is #{@reg.id} #{@title_hash['image']}"
             end
 
-            # is it the same folio and UV
+            # if it's a UV image don't create a new folio
             # we are assuming that the UV image is always second
             if ("#{@title_hash['image']}#{@title_hash['part']}#{@title_hash['folio']}#{@title_hash['rv']}#{@title_hash['notes']}" == fol_t) and
                 (@title_hash['uv'] == ' (UV)')
@@ -121,10 +121,6 @@ namespace :regfols do
 
             image = Image.new
             image.rdftype = image.add_rdf_types
-
-            # use the pid column to make a faraday call for the xml
-            # extract the url for the xml (see code later on)
-
             image.file_path = get_file_path(@title_hash['pid'])
             image.id = image.create_container_id(fol.id)
             puts "Creating image #{image.id} for Folio #{fol.preflabel}"
@@ -142,6 +138,9 @@ namespace :regfols do
         end
       end
       # do this part as a one off as it was veeeery slow to do it with each folio
+      # firstly get rid of any duplicates
+      @fols = @fols.uniq!
+
       # hasPart
       puts "Adding order to #{@reg}"
       @fols.each_with_index do |f, index|
@@ -151,9 +150,6 @@ namespace :regfols do
       @reg.save
       @reg = nil
       @fols = []
-      # do I need this part? I think only if I want proxies that aren't in the order (which I obviously don't)
-      # and I get them anyway
-      # @reg.folios = @fols
     end
   end
 
@@ -217,9 +213,19 @@ namespace :regfols do
   end
 
   def get_file_path(pid)
-    f = File.open(path + "new_regs_and_fols/xml/#{r[0].sub('york:', '')}.xml")
-    @doc = Nokogiri::XML(f)
-    f.close
+
+    require 'faraday'
+
+    conn = Faraday.new(:url => 'http://dlib.york.ac.uk') do |c|
+      c.use Faraday::Request::UrlEncoded # encode request params as "www-form-urlencoded"
+      c.use Faraday::Response::Logger # log request & response to STDOUT
+      c.use Faraday::Adapter::NetHttp # perform requests with Net::HTTP
+    end
+    conn.basic_auth(ENV['YODL_ADMIN_USER'], ENV['YODL_ADMIN_PASS'])
+    response = conn.get "/fedora/objects/#{pid}/datastreams/JP2&format=xml"
+    #f = File.open(path + "new_regs_and_fols/xml/#{r[0].sub('york:', '')}.xml")
+    @doc = Nokogiri::XML(response.body)
+    #f.close
     @doc.css('datastreamProfile dsLocation').text.sub('http://dlib.york.ac.uk/', '/usr/digilib-webdocs/')
   end
 
