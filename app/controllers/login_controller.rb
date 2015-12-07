@@ -9,7 +9,7 @@ class LoginController < ApplicationController
     username = params[:username]
     password = params[:password]
 
-    if (username == ENV["USER_1"] or username == ENV["USER_2"] or username == ENV["USER_3"]) && password == ENV["PASSWORD"]
+    if (username == ENV["USER_1"] or username == ENV["USER_2"] or username == ENV["USER_3"] or username == ENV["USER_4"] or username == ENV["USER_5"]) && password == ENV["PASSWORD"]
 
         # Reset all the session variables at this point
         reset_session_variables
