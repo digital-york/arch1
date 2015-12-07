@@ -98,8 +98,10 @@ namespace :regfols_cleanup do
   end
 
   def delete_folio(num,reg)
+    puts reg.id
     reg.ordered_folio_proxies.delete_at(num)
     reg.save
+    puts reg.id
   end
 
 end
