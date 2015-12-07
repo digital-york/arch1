@@ -61,7 +61,7 @@ namespace :regfols_cleanup do
 
   end
 
-  task b: :environment do
+  task c: :environment do
     fol = Folio.find("1544bp32g")
     create_image("856338",fol)
   end
