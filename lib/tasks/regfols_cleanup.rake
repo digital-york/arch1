@@ -98,9 +98,7 @@ namespace :regfols_cleanup do
   end
 
   def delete_folio(num,reg)
-    puts reg.ordered_folio_proxies.length
     reg.ordered_folio_proxies.delete_at(num)
-    puts reg.ordered_folio_proxies.length
     reg.save
   end
 
