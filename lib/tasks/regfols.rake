@@ -1,6 +1,7 @@
 namespace :regfols do
   desc "TODO"
   require 'csv'
+  require 'nokogiri'
   task reg_order: :environment do
 
     arr = CSV.read(Rails.root + 'lib/assets/new_regs_and_fols/collections.csv')
@@ -66,6 +67,7 @@ namespace :regfols do
     # 2 recto/verso
     # 3	Notes
     # 4 UV
+    # 5 pid
 
     list = ['Abp_Reg_32.csv','Abp_Reg_31.csv']
 
@@ -96,14 +98,17 @@ namespace :regfols do
               puts "Register is #{@reg.id} #{@title_hash['image']}"
             end
 
-            #is it the same folio
-            if "#{@title_hash['image']}#{@title_hash['part']}#{@title_hash['folio']}#{@title_hash['rv']}#{@title_hash['notes']}" == fol_t
+            # is it the same folio and UV
+            # we are assuming that the UV image is always second
+            if ("#{@title_hash['image']}#{@title_hash['part']}#{@title_hash['folio']}#{@title_hash['rv']}#{@title_hash['notes']}" == fol_t) and
+                (@title_hash['uv'] == ' (UV)')
               begin
                 fol = Folio.find(fol_id)
               rescue
                 puts $!
               end
             end
+
             if fol.nil?
               fol = Folio.new
               fol.preflabel = @title
@@ -116,7 +121,11 @@ namespace :regfols do
 
             image = Image.new
             image.rdftype = image.add_rdf_types
-            image.file_path = 'assets/reg_23-e323da66b28a2b4d178be69812f1a18617e144d66d378644e24684b46783df72.png' # boilerplate to be replaced with some code
+
+            # use the pid column to make a faraday call for the xml
+            # extract the url for the xml (see code later on)
+
+            image.file_path = get_file_path(@title_hash['pid'])
             image.id = image.create_container_id(fol.id)
             puts "Creating image #{image.id} for Folio #{fol.preflabel}"
             image.preflabel = "Image#{@title_hash['uv']}"
@@ -197,10 +206,21 @@ namespace :regfols do
           unless pair[1].nil?
             @title_hash['uv'] = ' (UV)'
           end
+        when 'pid'
+          unless pair[1].nil?
+            @title_hash['uv'] = ' (UV)'
+          end
       end
     rescue
       puts $!
     end
+  end
+
+  def get_file_path(pid)
+    f = File.open(path + "new_regs_and_fols/xml/#{r[0].sub('york:', '')}.xml")
+    @doc = Nokogiri::XML(f)
+    f.close
+    @doc.css('datastreamProfile dsLocation').text.sub('http://dlib.york.ac.uk/', '/usr/digilib-webdocs/')
   end
 
   desc "Retrospectively add URLs for deep zoom images"
