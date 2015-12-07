@@ -3,11 +3,11 @@ namespace :regfols_cleanup do
   task a: :environment do
     path = Rails.root + 'lib/assets/'
 
-    #fol = Folio.find("jd472w527")
-    fol = Folio.find("1544bp32g")
+    fol = Folio.find("jd472w527")
+    puts fol.id
     fol.images.each_with_index do |i, index|
       if index == 0
-        f = File.open(path + "new_regs_and_fols/xmltmp/856338.xml")
+        f = File.open(path + "new_regs_and_fols/xmltmp/856337.xml")
         @doc = Nokogiri::XML(f)
         f.close
         i.file_path = @doc.css('datastreamProfile dsLocation').text.sub('http://dlib.york.ac.uk/', '/usr/digilib-webdocs/')
@@ -17,9 +17,9 @@ namespace :regfols_cleanup do
     end
     fol.save
 
-    #r = Register.find("6w924b86j")
-    #fol = delete_create_folio(220,"Abp Reg 32 p.94A Paper",r)
-    #create_image("856338",fol)
+    r = Register.find("6w924b86j")
+    fol = delete_create_folio(220,"Abp Reg 32 p.94A Paper",r)
+    create_image("856338",fol)
 
   end
 
@@ -60,6 +60,12 @@ namespace :regfols_cleanup do
     create_image("856345",fol)
 
   end
+
+  task b: :environment do
+    fol = Folio.find("1544bp32g")
+    create_image("856338",fol)
+  end
+
 
   def create_image(pid,fol)
     path = Rails.root + 'lib/assets/'
