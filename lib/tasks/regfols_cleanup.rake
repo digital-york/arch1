@@ -4,7 +4,7 @@ namespace :regfols_cleanup do
     path = Rails.root + 'lib/assets/'
 
     fol = Folio.find("jd472w527")
-    puts f.id
+    puts fol.id
     fol.images.each_with_index do |i, index|
       if index == 0
         f = File.open(path + "new_regs_and_fols/xmltmp/856337.xml")
