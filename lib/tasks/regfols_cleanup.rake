@@ -62,8 +62,8 @@ namespace :regfols_cleanup do
   end
 
   task c: :environment do
-    fol = Folio.find("1544bp32g")
-    create_image("856338",fol)
+    r = Register.find("6w924b86j")
+    delete_folio(18,r)
   end
 
 
@@ -95,6 +95,13 @@ namespace :regfols_cleanup do
     reg.save
     puts "#{fol.id} folio created"
     fol
+  end
+
+  def delete_folio(num,reg)
+    puts reg.ordered_folio_proxies.length
+    reg.ordered_folio_proxies.delete_at(num)
+    puts reg.ordered_folio_proxies.length
+    reg.save
   end
 
 end
