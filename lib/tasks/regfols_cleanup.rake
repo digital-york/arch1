@@ -17,8 +17,8 @@ namespace :regfols_cleanup do
     f.save
 
     r = Register.find("6w924b86j")
-    delete_create_folio(220,"Abp Reg 32 p.94A Paper",r)
-    create_image("856338",f)
+    fol = delete_create_folio(220,"Abp Reg 32 p.94A Paper",r)
+    create_image("856338",fol)
 
   end
 
@@ -76,6 +76,7 @@ namespace :regfols_cleanup do
   end
 
   def delete_create_folio(num,title,reg)
+    puts reg.id
     reg.ordered_folio_proxies.delete_at(num)
     fol = Folio.new
     reg.ordered_folio_proxies.insert_target_at(num,fol)
@@ -84,5 +85,7 @@ namespace :regfols_cleanup do
     fol.preflabel = title
     reg.save
     puts "#{fol.id} folio created"
+    fol
   end
+
 end
