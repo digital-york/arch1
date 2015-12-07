@@ -62,17 +62,8 @@ namespace :regfols_cleanup do
   end
 
   task c: :environment do
-    reg = Register.find("6w924b86j")
-    reg.ordered_folio_proxies.insert_target_at(18, Folio.find('c534fp03s'))
-    reg.save
-    reg.ordered_folio_proxies.insert_target_at(19, Folio.find('zc77sq17w'))
-    reg.save
-    reg.ordered_folio_proxies.delete_at(258)
-    reg.save
-    reg.ordered_folio_proxies.delete_at(263)
-    reg.save
-
-    reg = Register.find("34f625513")
+    
+    reg = Register.find("3f4625513")
     reg.ordered_folio_proxies.delete_at(17)
     reg.save
     reg.ordered_folio_proxies.delete_at(23)
