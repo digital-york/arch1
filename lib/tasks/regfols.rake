@@ -292,4 +292,98 @@ namespace :regfols do
     end
   end
 
+  task reg_order1: :environment do
+
+    path = Rails.root + 'lib/assets/'
+    r = Register.find("2n49t181k")
+    r.ordered_folio_proxies.delete_at(227)
+    fol = Folio.new
+    r.ordered_folio_proxies.insert_target_at(227,fol)
+    r.save
+    fol.rdftype = fol.add_rdf_types
+    fol.preflabel = "Abp Reg 32 p.94B"
+    r.save
+    puts "#{fol.id} folio created"
+    image = Image.new
+    image.rdftype = image.add_rdf_types
+    f = File.open(path + "new_regs_and_fols/xml/856345.xml")
+    @doc = Nokogiri::XML(f)
+    f.close
+    image.file_path = @doc.css('datastreamProfile dsLocation').text.sub('http://dlib.york.ac.uk/', '/usr/digilib-webdocs/')
+    image.id = image.create_container_id(fol.id)
+    puts "Creating image #{image.id} for Folio #{fol.preflabel}"
+    image.preflabel = "Image"
+    image.motivated_by = 'http://www.shared-canvas.org/ns/painting'
+    image.folio = fol
+    fol.images += [image]
+    fol.save
+
+  end
+
+  task reg_order2: :environment do
+
+    f = Folio.find("6m311p45j")
+    f.images.each_with_index do |i, index|
+      unless index == 0
+        i.destroy.eradicate
+      end
+    end
+    puts f.images
+  end
+
+  task reg_order3: :environment do
+
+    path = Rails.root + 'lib/assets/'
+
+    fol = Folio.find("6m311p45j")
+    image = Image.new
+    image.rdftype = image.add_rdf_types
+    f = File.open(path + "new_regs_and_fols/xml/856339.xml")
+    @doc = Nokogiri::XML(f)
+    f.close
+    image.file_path = @doc.css('datastreamProfile dsLocation').text.sub('http://dlib.york.ac.uk/', '/usr/digilib-webdocs/')
+    image.id = image.create_container_id(fol.id)
+    puts "Creating image #{image.id} for Folio #{fol.preflabel}"
+    image.preflabel = "Image"
+    image.motivated_by = 'http://www.shared-canvas.org/ns/painting'
+    image.folio = fol
+    fol.images += [image]
+    fol.save
+
+  end
+
+  task reg_order4: :environment do
+
+    path = Rails.root + 'lib/assets/'
+
+    fol = Folio.find("ks65hc388")
+    image = Image.new
+    image.rdftype = image.add_rdf_types
+    f = File.open(path + "new_regs_and_fols/xml/856337.xml")
+    @doc = Nokogiri::XML(f)
+    f.close
+    image.file_path = @doc.css('datastreamProfile dsLocation').text.sub('http://dlib.york.ac.uk/', '/usr/digilib-webdocs/')
+    image.id = image.create_container_id(fol.id)
+    puts "Creating image #{image.id} for Folio #{fol.preflabel}"
+    image.preflabel = "Image"
+    image.motivated_by = 'http://www.shared-canvas.org/ns/painting'
+    image.folio = fol
+    fol.images += [image]
+    fol.save
+
+  end
+
+  task reg_order5: :environment do
+
+
+    fol = Folio.find("ks65hc388")
+    fol.images.each do |e|
+      if e.file_path == 'assets/reg_23-e323da66b28a2b4d178be69812f1a18617e144d66d378644e24684b46783df72.png'
+        e.destroy.eradicate
+      end
+    end
+    fol.save
+  end
+
+
 end
