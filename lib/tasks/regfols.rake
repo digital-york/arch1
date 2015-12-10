@@ -56,8 +56,32 @@ namespace :regfols do
     end
   end
 
+  task reg_single: :environment do
+
+
+        # 0 dc:identifier
+        # 1 dc:title
+        # 2 dc:dates
+        # 3 dc:description
+
+        o = OrderedCollection.all.first
+
+            register = Register.create
+            register.rdftype = register.add_rdf_types
+            register.reg_id = 'Abp Reg 5A'
+            register.preflabel = 'Abp Reg 5A: Sede Vacante Registers'
+            # isPartOf
+            register.ordered_collection = o
+            # hasPart
+            o.ordered_register_proxies.insert_target_at(0, register)
+
+          puts "Register #{register.id}"
+          o.save
+
+  end
+
   desc "TODO"
-  task fol_order: :environment do
+  task :fol_order, [:file, :register] => :environment  do | t,args |
 
     # get the register by searching solr for the reg_id
     # loop through directory processing each spreadsheet
@@ -69,15 +93,12 @@ namespace :regfols do
     # 4 UV
     # 5 pid
 
-    list = ['Abp_Reg_32.csv','Abp_Reg_31.csv']
-
-    list.each do |l|
-      puts "processing #{l}"
-      @csv = CSV.read(Rails.root + 'lib/assets/new_regs_and_fols/' + l, :headers => true)
+      puts "processing #{args[:file]}"
+      @csv = CSV.read(Rails.root + 'lib/assets/new_regs_and_fols/' + args[:file], :headers => true)
 
       # get the register
 
-      @reg = nil
+      @reg = Register.find(args[:register])
       @fols = []
       fol_t = nil
       fol_id = nil
@@ -86,17 +107,6 @@ namespace :regfols do
           begin
             puts "Processing number #{index}"
             build_metadata(i)
-
-            if @reg.nil?
-              regs = Register.where(reg_id_tesim:'"'+ @title_hash['image'] + '"')
-              regs.each do |t|
-                fn = l.gsub('_',' ').gsub('.csv','')
-                if t.reg_id == fn
-                  @reg = t
-                end
-              end
-              puts "Register is #{@reg.id} #{@title_hash['image']}"
-            end
 
             # if it's a UV image don't create a new folio
             # we are assuming that the UV image is always second
@@ -131,7 +141,7 @@ namespace :regfols do
             fol_t = "#{@title_hash['image']}#{@title_hash['part']}#{@title_hash['folio']}#{@title_hash['rv']}#{@title_hash['notes']}"
             fol_id = fol.id
             fol.save
-            @fols += [fol]
+            @fols << fol
           rescue
             puts $!
           end
@@ -139,18 +149,17 @@ namespace :regfols do
       end
       # do this part as a one off as it was veeeery slow to do it with each folio
       # firstly get rid of any duplicates
-      @fols = @fols.uniq!
-
       # hasPart
       puts "Adding order to #{@reg}"
-      @fols.each_with_index do |f, index|
+      puts @fols
+      @fols.uniq.each_with_index do |f, index|
         puts "Adding order number #{index}"
         @reg.ordered_folio_proxies.append_target f
       end
       @reg.save
       @reg = nil
       @fols = []
-    end
+
   end
 
   def build_metadata(row)
@@ -204,7 +213,7 @@ namespace :regfols do
           end
         when 'pid'
           unless pair[1].nil?
-            @title_hash['uv'] = ' (UV)'
+            @title_hash['pid'] = pair[1].to_s
           end
       end
     rescue
@@ -240,23 +249,26 @@ namespace :regfols do
   end
 
 
-
-
   def get_file_path(pid)
 
     require 'faraday'
 
-    conn = Faraday.new(:url => 'http://dlib.york.ac.uk') do |c|
-      c.use Faraday::Request::UrlEncoded # encode request params as "www-form-urlencoded"
-      c.use Faraday::Response::Logger # log request & response to STDOUT
-      c.use Faraday::Adapter::NetHttp # perform requests with Net::HTTP
+    begin
+      conn = Faraday.new(:url => 'https://dlib.york.ac.uk') do |c|
+        c.use Faraday::Request::UrlEncoded # encode request params as "www-form-urlencoded"
+        c.use Faraday::Response::Logger # log request & response to STDOUT
+        c.use Faraday::Adapter::NetHttp # perform requests with Net::HTTP
+      end
+      conn.basic_auth(ENV['YODL_ADMIN_USER'], ENV['YODL_ADMIN_PASS'])
+      response = conn.get "/fedora/objects/#{pid}/datastreams/JP2?format=xml"
+      #f = File.open(path + "new_regs_and_fols/xml/#{r[0].sub('york:', '')}.xml")
+      @doc = Nokogiri::XML(response.body)
+      #f.close
+      return @doc.css('datastreamProfile dsLocation').text.sub('http://dlib.york.ac.uk/', '/usr/digilib-webdocs/')
+    rescue
+      puts $!
+      puts "Problem with #{pid}"
     end
-    conn.basic_auth(ENV['YODL_ADMIN_USER'], ENV['YODL_ADMIN_PASS'])
-    response = conn.get "/fedora/objects/#{pid}/datastreams/JP2&format=xml"
-    #f = File.open(path + "new_regs_and_fols/xml/#{r[0].sub('york:', '')}.xml")
-    @doc = Nokogiri::XML(response.body)
-    #f.close
-    @doc.css('datastreamProfile dsLocation').text.sub('http://dlib.york.ac.uk/', '/usr/digilib-webdocs/')
   end
 
 end
