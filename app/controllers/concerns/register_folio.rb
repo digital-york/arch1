@@ -16,12 +16,22 @@ module RegisterFolio
     folio_id = params[:folio_id].strip
 
     session[:folio_id] = folio_id
+    session[:alt_image] = []
 
     if folio_id == ''
       session[:folio_image] = ''
     else
-      SolrQuery.new.solr_query('hasTarget_ssim:"' + session[:folio_id] + '"', 'file_path_tesim', 1)['response']['docs'].map do |result|
-        session[:folio_image] = result['file_path_tesim'][0]
+      response = SolrQuery.new.solr_query('hasTarget_ssim:"' + session[:folio_id] + '"', fl='file_path_tesim',2,'preflabel_si asc')['response']
+      if response['numFound'] > 1
+        count = 0
+        SolrQuery.new.solr_query('hasTarget_ssim:"' + session[:folio_id] + '"', fl='file_path_tesim',2,'preflabel_si asc')['response']['docs'].map do |result|
+          if count == 0
+            session[:folio_image] = result['file_path_tesim'][0]
+          else
+            session[:alt_image] << result['file_path_tesim'][0]
+          end
+          count += 1
+        end
       end
     end
   end
@@ -88,19 +98,17 @@ module RegisterFolio
   # Set @folio_list - this is used to display the folio drop-down list
   def set_folio_list
 
-    register = session[:register_id]
+
     @folio_list = []
     folio_hash = {}
+    q = SolrQuery.new
 
     # Get the list of folios in order
-    SolrQuery.new.solr_query('id:"' + register + '/list_source"', 'ordered_targets_ssim')['response']['docs'].map.each do |result|
-      order = result['ordered_targets_ssim']
-      order.each do | o |
-        SolrQuery.new.solr_query('id:"' + o + '"', 'id,preflabel_tesim')['response']['docs'].map.each do |res|
-          folio_id = res['id']
-          preflabel_tesim = res['preflabel_tesim'].join()
-          folio_hash[folio_id] = preflabel_tesim
-          @folio_list += [[folio_id, folio_hash[folio_id]]]
+    q.solr_query('id:"' + session[:register_id] + '/list_source"', 'ordered_targets_ssim',rows=1)['response']['docs'].map.each do |result|
+      result['ordered_targets_ssim'].each do | o |
+        q.solr_query('id:"' + o + '"', 'id,preflabel_tesim',rows=1)['response']['docs'].map.each do |res|
+          folio_hash[res['id']] = res['preflabel_tesim'].join()
+          @folio_list += [[res['id'], folio_hash[res['id']]]]
         end
       end
     end
@@ -237,20 +245,18 @@ module RegisterFolio
   end
 
   # Return list of registers (fedora id, register id and title), in order
-  # TODO there will be two collections, get both and combine
   def get_registers_in_order
-    # Get the collection so that we can get a list of registers in order
-    collection = ''
-    SolrQuery.new.solr_query('has_model_ssim:OrderedCollection AND coll_id_tesim:"Abp Reg"', 'id')['response']['docs'].map.each do |result|
-      collection = result['id']
-    end
+    # Get the collections so that we can get a list of registers in order
     registers = Hash.new
     # Get the ordered list of registers
-    SolrQuery.new.solr_query('id:"' + collection + '/list_source"', 'ordered_targets_ssim')['response']['docs'].map.each do |result|
-      order = result['ordered_targets_ssim']
-      order.each do |o|
-        SolrQuery.new.solr_query('id:"' + o + '"', 'id,preflabel_tesim,reg_id_tesim')['response']['docs'].map.each do |res|
-          registers[res['id']] = [res['reg_id_tesim'][0], res['preflabel_tesim'][0]]
+    SolrQuery.new.solr_query('has_model_ssim:OrderedCollection', 'id')['response']['docs'].map.each do |result|
+      collection = result['id']
+      SolrQuery.new.solr_query('id:"' + collection + '/list_source"', 'ordered_targets_ssim')['response']['docs'].map.each do |res|
+        order = res['ordered_targets_ssim']
+        order.each do |o|
+          SolrQuery.new.solr_query('id:"' + o + '"', 'id,preflabel_tesim,reg_id_tesim')['response']['docs'].map.each do |r|
+            registers[r['id']] = [r['reg_id_tesim'][0], r['preflabel_tesim'][0]]
+          end
         end
       end
     end
@@ -310,25 +316,25 @@ module RegisterFolio
     unless entry_params["related_agents_attributes"].nil?
       entry_params["related_agents_attributes"].each do |key, value|
         if entry_params["related_agents_attributes"][key]['person_group'] == 'person'
-          entry_params["related_agents_attributes"][key]["rdftype"] = ['http://dlib.york.ac.uk/ontologies/borthwick-registers#RelatedAgent','http://xmlns.com/foaf/0.1/Person']
+          entry_params["related_agents_attributes"][key]["rdftype"] = ['http://dlib.york.ac.uk/ontologies/borthwick-registers#RelatedAgent','http://xmlns.com/foaf/0.1/Person','http://dlib.york.ac.uk/ontologies/borthwick-registers#All']
         else
-          entry_params["related_agents_attributes"][key]["rdftype"] = ['http://dlib.york.ac.uk/ontologies/borthwick-registers#RelatedAgent','http://xmlns.com/foaf/0.1/Group']
+          entry_params["related_agents_attributes"][key]["rdftype"] = ['http://dlib.york.ac.uk/ontologies/borthwick-registers#RelatedAgent','http://xmlns.com/foaf/0.1/Group','http://dlib.york.ac.uk/ontologies/borthwick-registers#All']
         end
       end
     end
     unless entry_params["related_places_attributes"].nil?
       entry_params["related_places_attributes"].each do |key, value|
-        entry_params["related_places_attributes"][key]["rdftype"] = ['http://dlib.york.ac.uk/ontologies/borthwick-registers#RelatedPlace', 'http://schema.org/Place']
+        entry_params["related_places_attributes"][key]["rdftype"] = ['http://dlib.york.ac.uk/ontologies/borthwick-registers#RelatedPlace', 'http://schema.org/Place','http://dlib.york.ac.uk/ontologies/borthwick-registers#All']
       end
     end
     unless entry_params["entry_dates_attributes"].nil?
       entry_params["entry_dates_attributes"].each do |key, value|
-        entry_params["entry_dates_attributes"][key]["rdftype"] = ['http://dlib.york.ac.uk/ontologies/borthwick-registers#EntryDate']
+        entry_params["entry_dates_attributes"][key]["rdftype"] = ['http://dlib.york.ac.uk/ontologies/borthwick-registers#EntryDate','http://dlib.york.ac.uk/ontologies/borthwick-registers#All']
         value.each do |k, v|
           if k == 'single_dates_attributes'
             unless v.class == String
               v.each do |ke, va|
-                entry_params["entry_dates_attributes"][key][k][ke]["rdftype"] = ['http://dlib.york.ac.uk/ontologies/borthwick-registers#SingleDate']
+                entry_params["entry_dates_attributes"][key][k][ke]["rdftype"] = ['http://dlib.york.ac.uk/ontologies/borthwick-registers#SingleDate','http://dlib.york.ac.uk/ontologies/borthwick-registers#All']
               end
             end
           end
@@ -350,9 +356,9 @@ module RegisterFolio
           q = 'relatedAgentFor_ssim:"' + @entry.id + '" AND person_related_place_tesim:"' + name + '"'
           SolrQuery.new.solr_query(q, 'id,person_related_place_tesim', 50)['response']['docs'].each do |result2|
             # Add the Related Person id to the related_place_for field in the Related Place
-            place = RelatedPlace.where(id: result['id']).first
+            place = RelatedPlace.find(result['id'])
             places = place.related_agent
-            places += [RelatedAgent.where(id: result2['id']).first]
+            places += [RelatedAgent.find(result2['id'])]
             place.related_agent = places
             place.save
           end
@@ -377,9 +383,9 @@ module RegisterFolio
           q = 'relatedAgentFor_ssim:' + @entry.id + ' AND person_related_person_tesim:"' + name + '"'
           SolrQuery.new.solr_query(q, 'id,person_related_person_tesim', 50)['response']['docs'].each do |result2|
             # Add the Related Person id to the related_agent_for field in the Related Person
-            person = RelatedAgent.where(id: result['id']).first
+            person = RelatedAgent.find(result['id'])
             people = person.related_agent
-            people += [RelatedAgent.where(id: result2['id']).first]
+            people += [RelatedAgent.find(result2['id'])]
             person.related_agent = people
             person.save
           end

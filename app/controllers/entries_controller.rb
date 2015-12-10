@@ -160,7 +160,7 @@ class EntriesController < ApplicationController
 
     # Get a new entry and replace values with the form parameters
     # Replace the folio id with the corresponding Folio object
-    folio = Folio.where(id: entry_params['folio']).first
+    folio = Folio.find(entry_params['folio'])
     entry_params['folio'] = folio
 
     # Remove the entry_id
@@ -251,7 +251,7 @@ class EntriesController < ApplicationController
     entry_params = whitelist_entry_params
 
     # Replace the folio id with the corresponding Folio object
-    folio_id = Folio.where(id: entry_params['folio']).first
+    folio_id = Folio.find(entry_params['folio'])
     entry_params['folio'] = folio_id
 
     # Remove any empty fields and blocks (date, place, person)

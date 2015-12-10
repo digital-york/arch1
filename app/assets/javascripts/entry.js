@@ -156,9 +156,10 @@ $(document).ready(function () {
 
     // Called when the user chooses a folio from the menu drop-down list
     $('body').on('change', '.choose_folio', function(e) {
-        var id = $(this).val();
-        var input = $("<input>").attr("type", "hidden").attr("name", "folio_id").val(id);
-        $("#choose_folio").append($(input));
+        // trying to work out why two folio_id params are being created
+        //var id = $(this).val();
+        //var input = $("<input>").attr("type", "hidden").attr("name", "folio_id").val(id);
+        //$("#choose_folio").append($(input));
         $("#choose_folio").submit();
     });
 

@@ -19,4 +19,8 @@ class ImageZoomLargeController < ApplicationController
     @dzi_xml = @dzi_xml.html_safe
   end
 
+  def alt
+
+  end
+
 end
