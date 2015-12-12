@@ -125,6 +125,7 @@ namespace :regfols do
             if fol.nil?
               fol = Folio.new
               fol.preflabel = @title
+              fol.rdftype = fol.add_rdf_types
             end
             # isPartOf
            # fol.register = @reg
@@ -147,6 +148,7 @@ namespace :regfols do
             unless fol_no == 'yes'
               @fols << fol
             end
+            fol_no = nil
           rescue
             puts $!
           end
