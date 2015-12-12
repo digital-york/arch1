@@ -54,23 +54,30 @@ class PlacesController < ApplicationController
           @deep_checked = 'os'
           deep = OrdnanceSurvey.new('subauthority')
         end
-        deep.search(@search_term).each do |result|
-          id = result['id']
-          place_name = result['name']
-          parent_ADM4 = result['adminlevel4']
-          parent_ADM3 = result['adminlevel3']
-          parent_ADM2 = result['adminlevel2']
-          parent_ADM1 = result['adminlevel1']
-          feature_type = result['featuretype']
-          url = nil
-          unless result['uricdda'].nil?
-            url = result['uricdda']
+
+        search = deep.search(@search_term)
+
+        if search  == nil
+          @error = "The DEEP Service returned an invalid response. We are unable to get results for this search term from DEEP."
+        else
+          search.each do |result|
+            id = result['id']
+            place_name = result['name']
+            parent_ADM4 = result['adminlevel4']
+            parent_ADM3 = result['adminlevel3']
+            parent_ADM2 = result['adminlevel2']
+            parent_ADM1 = result['adminlevel1']
+            feature_type = result['featuretype']
+            url = nil
+            unless result['uricdda'].nil?
+              url = result['uricdda']
+            end
+            tt = []
+            name = get_label(false, place_name, parent_ADM4, parent_ADM3, parent_ADM2, parent_ADM1, feature_type,url)
+            tt << 'deep_' + id
+            tt << name
+            @search_array << tt
           end
-          tt = []
-          name = get_label(false, place_name, parent_ADM4, parent_ADM3, parent_ADM2, parent_ADM1, feature_type,url)
-          tt << 'deep_' + id
-          tt << name
-          @search_array << tt
         end
         params.delete(:auth)
       else

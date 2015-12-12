@@ -94,6 +94,7 @@ namespace :regfols do
     # 5 pid
 
       puts "processing #{args[:file]}"
+      puts t
       @csv = CSV.read(Rails.root + 'lib/assets/new_regs_and_fols/' + args[:file], :headers => true)
 
       # get the register
@@ -102,6 +103,7 @@ namespace :regfols do
       @fols = []
       fol_t = nil
       fol_id = nil
+      fol_no = nil
       @csv.group_by { |row| row[''] }.values.each do |group|
         group.each_with_index do |i, index|
           begin
@@ -114,6 +116,7 @@ namespace :regfols do
                 (@title_hash['uv'] == ' (UV)')
               begin
                 fol = Folio.find(fol_id)
+                fol_no = 'yes'
               rescue
                 puts $!
               end
@@ -124,7 +127,7 @@ namespace :regfols do
               fol.preflabel = @title
             end
             # isPartOf
-            fol.register = @reg
+           # fol.register = @reg
             fol.save
 
             puts "Creating folio #{fol.id} - #{fol.preflabel}"
@@ -133,7 +136,7 @@ namespace :regfols do
             image.rdftype = image.add_rdf_types
             image.file_path = get_file_path(@title_hash['pid'])
             image.id = image.create_container_id(fol.id)
-            puts "Creating image #{image.id} for Folio #{fol.preflabel}"
+            puts "Creating image #{image.id} for Folio #{fol.preflabel}; path #{image.file_path}"
             image.preflabel = "Image#{@title_hash['uv']}"
             image.motivated_by = 'http://www.shared-canvas.org/ns/painting'
             image.folio = fol
@@ -141,7 +144,9 @@ namespace :regfols do
             fol_t = "#{@title_hash['image']}#{@title_hash['part']}#{@title_hash['folio']}#{@title_hash['rv']}#{@title_hash['notes']}"
             fol_id = fol.id
             fol.save
-            @fols << fol
+            unless fol_no == 'yes'
+              @fols << fol
+            end
           rescue
             puts $!
           end
@@ -151,11 +156,11 @@ namespace :regfols do
       # firstly get rid of any duplicates
       # hasPart
       puts "Adding order to #{@reg}"
-      puts @fols
       @fols.uniq.each_with_index do |f, index|
         puts "Adding order number #{index}"
         @reg.ordered_folio_proxies.append_target f
       end
+      puts "Saving ... "
       @reg.save
       @reg = nil
       @fols = []

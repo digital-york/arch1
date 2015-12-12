@@ -5,11 +5,11 @@ module AssignRdfTypes
     # omitting related person/group as this is different
     case self.class.name
       when 'Concept'
-        ['http://www.w3.org/2004/02/skos/core#Concept', 'http://pcdm.org/models#Object','http://dlib.york.ac.uk/ontologies/borthwick-registers#All']
+        ['http://www.w3.org/2004/02/skos/core#Concept', 'http://pcdm.org/models#Object']
       when 'ConceptScheme'
-        ['http://www.w3.org/2004/02/skos/core#ConceptScheme', 'http://pcdm.org/models#Object','http://dlib.york.ac.uk/ontologies/borthwick-registers#All']
+        ['http://www.w3.org/2004/02/skos/core#ConceptScheme', 'http://pcdm.org/models#Object']
       when 'OrderedCollection'
-        ['http://pcdm.org/models#OrderedCollection', 'http://www.openarchives.org/ore/terms/Aggregation', 'http://pcdm.org/models#Collection','http://dlib.york.ac.uk/ontologies/borthwick-registers#All']
+        ['http://dlib.york.ac.uk/ontologies/generic#OrderedCollection', 'http://www.openarchives.org/ore/terms/Aggregation', 'http://pcdm.org/models#Collection','http://dlib.york.ac.uk/ontologies/borthwick-registers#All']
       when 'ContainedFile'
         ['http://pcdm.org/models#hasFile','http://dlib.york.ac.uk/ontologies/borthwick-registers#All']
       when 'Image'
@@ -30,11 +30,11 @@ module AssignRdfTypes
       when 'RelatedPlace'
         ['http://dlib.york.ac.uk/ontologies/borthwick-registers#RelatedPlace', 'http://schema.org/Place','http://dlib.york.ac.uk/ontologies/borthwick-registers#All']
       when 'Person'
-        ['http://schema.org/Person', 'http://vocab.getty.edu/ontology#PersonConcept', 'http://pcdm.org/models#Object','http://dlib.york.ac.uk/ontologies/borthwick-registers#All']
+        ['http://schema.org/Person', 'http://vocab.getty.edu/ontology#PersonConcept', 'http://pcdm.org/models#Object']
       when 'Place'
-        ['http://schema.org/Place', 'http://pcdm.org/models#Object','http://dlib.york.ac.uk/ontologies/borthwick-registers#All']
+        ['http://schema.org/Place', 'http://pcdm.org/models#Object']
       when 'Group'
-        ['https://schema.org/Organization', 'http://vocab.getty.edu/ontology#GroupConcept', 'http://pcdm.org/models#Object','http://dlib.york.ac.uk/ontologies/borthwick-registers#All']
+        ['https://schema.org/Organization', 'http://vocab.getty.edu/ontology#GroupConcept', 'http://pcdm.org/models#Object']
       else
         ['http://pcdm.org/models#Object','http://dlib.york.ac.uk/ontologies/borthwick-registers#All']
     end

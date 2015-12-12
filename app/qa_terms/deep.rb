@@ -19,7 +19,11 @@ class Deep < Qa::Authorities::Base
 
     # get_json is not ideomatic, so we'll make an alias
     def json(*args)
-      get_json(*args)
+      begin
+        get_json(*args)
+      rescue
+        nil
+      end
     end
 
     def build_query_url q
@@ -53,24 +57,27 @@ class Deep < Qa::Authorities::Base
     # Reformats the data received from the service
     def parse_authority_response(response)
       # There is a max results setting of 200; if we get 200 results, re-run the search without variants
-      if response['features'].length == '200'
-        @variants = 'false'
-        search(@q)
-      end
+      if response != nil
 
-      response['features'].map do |result|
-        geo = TermsHelper::Geo.new
-        al = geo.adminlevel(result['properties']['adminlevel1'].to_s,result['properties']['adminlevel2'].to_s)
-        { 'id' => result['id'], 'label' => "#{result['properties']['name']} (#{al})",
-          'countrycode' => result['properties']['countrycode'],
-          'adminlevel1' => result['properties']['adminlevel1'],
-          'adminlevel2' => result['properties']['adminlevel2'],
-          'adminlevel3' => result['properties']['adminlevel3'],
-          'adminlevel4' => result['properties']['adminlevel4'],
-          'name' => result['properties']['name'],
-          'featuretype' => result['properties']['featuretype'],
-          'gazetteer' => result['properties']['gazetteer'],
-          'uricdda' => result['properties']['uricdda']}
+        if response['features'].length == '200'
+          @variants = 'false'
+          search(@q)
+        end
+
+        response['features'].map do |result|
+          geo = TermsHelper::Geo.new
+          al = geo.adminlevel(result['properties']['adminlevel1'].to_s,result['properties']['adminlevel2'].to_s)
+          { 'id' => result['id'], 'label' => "#{result['properties']['name']} (#{al})",
+            'countrycode' => result['properties']['countrycode'],
+            'adminlevel1' => result['properties']['adminlevel1'],
+            'adminlevel2' => result['properties']['adminlevel2'],
+            'adminlevel3' => result['properties']['adminlevel3'],
+            'adminlevel4' => result['properties']['adminlevel4'],
+            'name' => result['properties']['name'],
+            'featuretype' => result['properties']['featuretype'],
+            'gazetteer' => result['properties']['gazetteer'],
+            'uricdda' => result['properties']['uricdda']}
+        end
       end
     end
 

@@ -195,11 +195,13 @@ class EntriesController < ApplicationController
       end
     end
 
-    # Update the rdf_types for all objects
-    entry_params = update_rdf_types(entry_params)
-
     # Remove any empty fields and blocks (date, place, person)
     remove_empty_fields(entry_params)
+
+    puts entry_params
+
+    # Update the rdf_types for all objects
+    entry_params = update_rdf_types(entry_params)
 
     # Check for errors
     #@errors = check_for_errors(entry_params)
@@ -254,9 +256,6 @@ class EntriesController < ApplicationController
     folio_id = Folio.find(entry_params['folio'])
     entry_params['folio'] = folio_id
 
-    # Remove any empty fields and blocks (date, place, person)
-    remove_empty_fields(entry_params)
-
     # Remove the entry_id
     entry_params.delete(:entry_id)
 
@@ -290,6 +289,11 @@ class EntriesController < ApplicationController
         end
       end
     end
+
+    # Remove any empty fields and blocks (date, place, person)
+    remove_empty_fields(entry_params)
+
+    puts entry_params
 
     # Update the rdf_types for all objects
     entry_params = update_rdf_types(entry_params)

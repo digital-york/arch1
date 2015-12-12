@@ -21,16 +21,22 @@ module RegisterFolio
     if folio_id == ''
       session[:folio_image] = ''
     else
-      response = SolrQuery.new.solr_query('hasTarget_ssim:"' + session[:folio_id] + '"', fl='file_path_tesim',2,'preflabel_si asc')['response']
+      q = SolrQuery.new
+      response = q.solr_query('hasTarget_ssim:"' + session[:folio_id] + '"', fl='file_path_tesim',2,'preflabel_si asc')['response']
+
       if response['numFound'] > 1
         count = 0
-        SolrQuery.new.solr_query('hasTarget_ssim:"' + session[:folio_id] + '"', fl='file_path_tesim',2,'preflabel_si asc')['response']['docs'].map do |result|
+        q.solr_query('hasTarget_ssim:"' + session[:folio_id] + '"', fl='file_path_tesim',2,'preflabel_si asc')['response']['docs'].map do |result|
           if count == 0
             session[:folio_image] = result['file_path_tesim'][0]
           else
             session[:alt_image] << result['file_path_tesim'][0]
           end
           count += 1
+        end
+      else
+        q.solr_query('hasTarget_ssim:"' + session[:folio_id] + '"', fl='file_path_tesim',2,'preflabel_si asc')['response']['docs'].map do |result|
+          session[:folio_image] = result['file_path_tesim'][0]
         end
       end
     end
@@ -170,9 +176,11 @@ module RegisterFolio
 
     @folio_continues_id = ''
 
-    SolrQuery.new.solr_query('folio_ssim:"' + session[:folio_id] + '"', 'id', 100)['response']['docs'].each do |result|
+    q = SolrQuery.new
+
+    q.solr_query('folio_ssim:"' + session[:folio_id] + '"', 'id', 100)['response']['docs'].each do |result|
       entry_id = result['id']
-      SolrQuery.new.solr_query('id:"' + entry_id + '"', 'continues_on_tesim,entry_no_tesim', 1)['response']['docs'].each do |result|
+      q.solr_query('id:"' + entry_id + '"', 'continues_on_tesim,entry_no_tesim', 1)['response']['docs'].each do |result|
         if result['continues_on_tesim'] != nil
           @folio_continues_id = result['entry_no_tesim'].join()
         end
@@ -248,13 +256,14 @@ module RegisterFolio
   def get_registers_in_order
     # Get the collections so that we can get a list of registers in order
     registers = Hash.new
+    q = SolrQuery.new
     # Get the ordered list of registers
-    SolrQuery.new.solr_query('has_model_ssim:OrderedCollection', 'id')['response']['docs'].map.each do |result|
+    q.solr_query('has_model_ssim:OrderedCollection', 'id')['response']['docs'].map.each do |result|
       collection = result['id']
-      SolrQuery.new.solr_query('id:"' + collection + '/list_source"', 'ordered_targets_ssim')['response']['docs'].map.each do |res|
+      q.solr_query('id:"' + collection + '/list_source"', 'ordered_targets_ssim')['response']['docs'].map.each do |res|
         order = res['ordered_targets_ssim']
         order.each do |o|
-          SolrQuery.new.solr_query('id:"' + o + '"', 'id,preflabel_tesim,reg_id_tesim')['response']['docs'].map.each do |r|
+          q.solr_query('id:"' + o + '"', 'id,preflabel_tesim,reg_id_tesim')['response']['docs'].map.each do |r|
             registers[r['id']] = [r['reg_id_tesim'][0], r['preflabel_tesim'][0]]
           end
         end
@@ -348,13 +357,14 @@ module RegisterFolio
   def update_related_places
     begin
       # Get each Related Place for the Entry...
-      q = 'relatedPlaceFor_ssim:"' + @entry.id + '"'
-      SolrQuery.new.solr_query(q, 'id,place_as_written_tesim', 50)['response']['docs'].each do |result|
+      q = SolrQuery.new
+      query = 'relatedPlaceFor_ssim:"' + @entry.id + '"'
+      q.solr_query(query, 'id,place_as_written_tesim', 50)['response']['docs'].each do |result|
         name = result['place_as_written_tesim'][0]
         # Get each person_related_place string (i.e. as chosen from the drop-down list) for each Related Agent in the Entry
         begin
-          q = 'relatedAgentFor_ssim:"' + @entry.id + '" AND person_related_place_tesim:"' + name + '"'
-          SolrQuery.new.solr_query(q, 'id,person_related_place_tesim', 50)['response']['docs'].each do |result2|
+          query = 'relatedAgentFor_ssim:"' + @entry.id + '" AND person_related_place_tesim:"' + name + '"'
+          q.solr_query(query, 'id,person_related_place_tesim', 50)['response']['docs'].each do |result2|
             # Add the Related Person id to the related_place_for field in the Related Place
             place = RelatedPlace.find(result['id'])
             places = place.related_agent
@@ -375,13 +385,15 @@ module RegisterFolio
   def update_related_people
     begin
       # Get each Related Person for the Entry...
-      q = 'relatedAgentFor_ssim:"' + @entry.id + '"'
-      SolrQuery.new.solr_query(q, 'id,person_as_written_tesim', 50)['response']['docs'].each do |result|
+
+      q = SolrQuery.new
+      query = 'relatedAgentFor_ssim:"' + @entry.id + '"'
+      q.solr_query(query, 'id,person_as_written_tesim', 50)['response']['docs'].each do |result|
         name = result['person_as_written_tesim'][0]
         # Get each person_related_place string (i.e. as chosen from the drop-down list) for each Related Agent in the Entry
         begin
-          q = 'relatedAgentFor_ssim:' + @entry.id + ' AND person_related_person_tesim:"' + name + '"'
-          SolrQuery.new.solr_query(q, 'id,person_related_person_tesim', 50)['response']['docs'].each do |result2|
+          query = 'relatedAgentFor_ssim:' + @entry.id + ' AND person_related_person_tesim:"' + name + '"'
+          q.solr_query(query, 'id,person_related_person_tesim', 50)['response']['docs'].each do |result2|
             # Add the Related Person id to the related_agent_for field in the Related Person
             person = RelatedAgent.find(result['id'])
             people = person.related_agent
@@ -403,18 +415,18 @@ module RegisterFolio
 
     existing_location_list = []
 
-
     # One solr search required for these types - this is because they exist in the Entry object
     if type == 'entry_type' or type == 'language' or type == 'section_type' or type == 'subject'
 
+      q = SolrQuery.new
       search_term2 = type + '_tesim:' + element_id
 
-      SolrQuery.new.solr_query(q=search_term2, fl='id, folio_ssim, entry_no_tesim', rows=100000, sort='id ASC')['response']['docs'].map do |result|
+      q.solr_query(q=search_term2, fl='id, folio_ssim, entry_no_tesim', rows=100000, sort='id ASC')['response']['docs'].map do |result|
         element = []
         id = result['id']
         folio_id = result['folio_ssim'].join
         entry_no = result['entry_no_tesim'].join
-        folio = SolrQuery.new.solr_query(q='id:' + folio_id, fl='preflabel_tesim', rows=100000, sort='id ASC')['response']['docs'].map.first['preflabel_tesim'].join
+        folio = q.solr_query(q='id:' + folio_id, fl='preflabel_tesim', rows=100000, sort='id ASC')['response']['docs'].map.first['preflabel_tesim'].join
         element[0] = id
         element[1] = folio_id
         element[2] = folio + ' (Entry No = ' + entry_no + ')'
@@ -450,15 +462,15 @@ module RegisterFolio
       end
 
       # First find the Date, Related Place or Related Agent objects which contain the element
-      SolrQuery.new.solr_query(q=search_term1 + ':' + element_id, fl=fl_term, rows=100000, sort='id ASC')['response']['docs'].map do |result|
+      q.solr_query(q=search_term1 + ':' + element_id, fl=fl_term, rows=100000, sort='id ASC')['response']['docs'].map do |result|
         search_term2 = 'id:' + result[fl_term].join
         # Then find out which entries contain them
-        SolrQuery.new.solr_query(q=search_term2, fl='id, folio_ssim, entry_no_tesim', rows=100000, sort='id ASC')['response']['docs'].map do |result|
+        q.solr_query(q=search_term2, fl='id, folio_ssim, entry_no_tesim', rows=100000, sort='id ASC')['response']['docs'].map do |result|
           element = []
           id = result['id']
           folio_id = result['folio_ssim'].join
           entry_no = result['entry_no_tesim'].join
-          folio = SolrQuery.new.solr_query(q='id:' + folio_id, fl='preflabel_tesim', rows=100000, sort='id ASC')['response']['docs'].map.first['preflabel_tesim'].join
+          folio = q.solr_query('id:' + folio_id, fl='preflabel_tesim', rows=100000, sort='id ASC')['response']['docs'].map.first['preflabel_tesim'].join
           element[0] = id
           element[1] = folio_id
           element[2] = folio + ' (Entry No = ' + entry_no + ')'
@@ -484,12 +496,13 @@ module RegisterFolio
 
     parent_child_list = {}
     parent_child_list[@concept.id] = @concept.preflabel
+    q = SolrQuery.new
 
-    SolrQuery.new.solr_query(q='broader_tesim:' + @concept.id, fl='id, preflabel_tesim', rows=1000, sort='id ASC')['response']['docs'].map do |result|
+    q.solr_query('broader_tesim:' + @concept.id, fl='id, preflabel_tesim', rows=1000, sort='id ASC')['response']['docs'].map do |result|
       id = result['id']
       preflabel = result['preflabel_tesim'].join
       parent_child_list[id] = preflabel
-      SolrQuery.new.solr_query(q='broader_tesim:' + id, fl='id, preflabel_tesim', rows=1000, sort='id ASC')['response']['docs'].map do |result|
+      q.solr_query('broader_tesim:' + id, fl='id, preflabel_tesim', rows=1000, sort='id ASC')['response']['docs'].map do |result|
         id2 = result['id']
         preflabel2 = result['preflabel_tesim'].join
         parent_child_list[id2] = preflabel2
