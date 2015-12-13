@@ -30,7 +30,7 @@ module RegisterFolio
 
       if response['numFound'] > 1
         count = 0
-        q.solr_query('hasTarget_ssim:"' + session[:folio_id] + '"', fl='file_path_tesim', 2, 'preflabel_si asc')['response']['docs'].map do |result|
+        response['docs'].map do |result|
           if count == 0
             session[:folio_image] = result['file_path_tesim'][0]
           else
@@ -66,6 +66,27 @@ module RegisterFolio
     # Set the folio image session variable
     SolrQuery.new.solr_query('hasTarget_ssim:"' + next_id + '"', 'file_path_tesim', 1, sort='preflabel_si asc')['response']['docs'].map do |result|
       next_image = result['file_path_tesim'][0]
+    end
+
+    session[:alt_image] = []
+
+    q = SolrQuery.new
+    response = q.solr_query('hasTarget_ssim:"' + next_id + '"', fl='file_path_tesim', 2, 'preflabel_si asc')['response']
+
+    if response['numFound'] > 1
+      count = 0
+      response['docs'].map do |result|
+        if count == 0
+          next_image = result['file_path_tesim'][0]
+        else
+          session[:alt_image] << result['file_path_tesim'][0]
+        end
+        count += 1
+      end
+    else
+      q.solr_query('hasTarget_ssim:"' + next_id + '"', fl='file_path_tesim', 2, 'preflabel_si asc')['response']['docs'].map do |result|
+        next_image = result['file_path_tesim'][0]
+      end
     end
 
     session[:folio_id] = next_id
