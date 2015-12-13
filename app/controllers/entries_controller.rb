@@ -6,7 +6,6 @@ class EntriesController < ApplicationController
 
   # INDEX
   def index
-
     # Set the folio and image session variables when a folio is chosen from the drop-down list
     if params[:set_folio] == 'true'
       set_folio_and_image_drop_down
@@ -195,13 +194,11 @@ class EntriesController < ApplicationController
       end
     end
 
-    # Remove any empty fields and blocks (date, place, person)
-    remove_empty_fields(entry_params)
-
-    puts entry_params
-
     # Update the rdf_types for all objects
     entry_params = update_rdf_types(entry_params)
+
+    # Remove any empty fields and blocks (date, place, person)
+    remove_empty_fields(entry_params)
 
     # Check for errors
     #@errors = check_for_errors(entry_params)
@@ -290,13 +287,11 @@ class EntriesController < ApplicationController
       end
     end
 
-    # Remove any empty fields and blocks (date, place, person)
-    remove_empty_fields(entry_params)
-
-    puts entry_params
-
     # Update the rdf_types for all objects
     entry_params = update_rdf_types(entry_params)
+
+    # Remove any empty fields and blocks (date, place, person)
+    remove_empty_fields(entry_params)
 
     # Check for errors
     #@errors = check_for_errors(entry_params)
