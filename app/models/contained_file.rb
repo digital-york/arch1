@@ -5,6 +5,8 @@ class ContainedFile < ActiveFedora::File
 
   metadata do
     include DCTerms, RdfType, SkosLabels
+
+
   end
 
 end

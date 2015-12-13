@@ -3,7 +3,6 @@ class LandingPageController < ApplicationController
   before_filter :session_timed_out
 
   def index
-
     set_authority_lists
 
     # Get register list (in order)

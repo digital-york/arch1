@@ -6,7 +6,6 @@ class EntriesController < ApplicationController
 
   # INDEX
   def index
-
     # Set the folio and image session variables when a folio is chosen from the drop-down list
     if params[:set_folio] == 'true'
       set_folio_and_image_drop_down
@@ -160,7 +159,7 @@ class EntriesController < ApplicationController
 
     # Get a new entry and replace values with the form parameters
     # Replace the folio id with the corresponding Folio object
-    folio = Folio.where(id: entry_params['folio']).first
+    folio = Folio.find(entry_params['folio'])
     entry_params['folio'] = folio
 
     # Remove the entry_id
@@ -251,11 +250,8 @@ class EntriesController < ApplicationController
     entry_params = whitelist_entry_params
 
     # Replace the folio id with the corresponding Folio object
-    folio_id = Folio.where(id: entry_params['folio']).first
+    folio_id = Folio.find(entry_params['folio'])
     entry_params['folio'] = folio_id
-
-    # Remove any empty fields and blocks (date, place, person)
-    remove_empty_fields(entry_params)
 
     # Remove the entry_id
     entry_params.delete(:entry_id)
@@ -293,6 +289,9 @@ class EntriesController < ApplicationController
 
     # Update the rdf_types for all objects
     entry_params = update_rdf_types(entry_params)
+
+    # Remove any empty fields and blocks (date, place, person)
+    remove_empty_fields(entry_params)
 
     # Check for errors
     #@errors = check_for_errors(entry_params)

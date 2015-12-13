@@ -6,31 +6,21 @@
 
             <%
                @reg_list.each_with_index do |pair, index|
-
-                register_id = pair[0]
-                register_name_1 = pair[1][0]
-                register_name_2 = pair[1][1]
+                # Add a new row to the table if there are more than 5 registers
+                if index.modulo(5).zero? %>
+                    </tr>
+                    <tr>
+                <% end %>
+                <td style="vertical-align: top">
+                    <div>
+                        <a href="/go_entries?register_id=<%= pair[0] %>&amp;register_name=<%=pair[1][0] %>"><%= image_tag "#{pair[1][0].gsub(/Abp Reg /, 'reg_') + '.png'}" %></a>
+                    </div>
+                    <div class="landing_page_text">
+                        <strong><%= pair[1][0] %></strong><br/><%= pair[1][1] %>
+                    </div>
+                </td>
+            <% end
             %>
-
-              <%# Add a new row to the table if there are more than 5 registers %>
-              <% if index.modulo(5).zero? %>
-                 </tr>
-                 <tr>
-              <% end %>
-
-              <td style="vertical-align: top">
-                  <div>
-                    <a href="/go_entries?register_id=<%= register_id %>&amp;register_name=<%= register_name_1 %>"><%= image_tag "#{register_name_1.gsub(/Abp Reg /, 'reg_') + '.png'}" %></a>
-                  </div>
-                  <div class="landing_page_text">
-                    <strong><%= register_name_1 %></strong><br/><%= register_name_2 %>
-                  </div>
-              </td>
-
-            <% end %>
-
-            <%# Temporary code until more than two registers are added %>
-            <td></td><td></td>
 
         </tr>
     </table>

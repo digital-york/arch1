@@ -1,6 +1,7 @@
 namespace :regfols do
   desc "TODO"
   require 'csv'
+  require 'nokogiri'
   task reg_order: :environment do
 
     arr = CSV.read(Rails.root + 'lib/assets/new_regs_and_fols/collections.csv')
@@ -55,8 +56,32 @@ namespace :regfols do
     end
   end
 
+  task reg_single: :environment do
+
+
+        # 0 dc:identifier
+        # 1 dc:title
+        # 2 dc:dates
+        # 3 dc:description
+
+        o = OrderedCollection.all.first
+
+            register = Register.create
+            register.rdftype = register.add_rdf_types
+            register.reg_id = 'Abp Reg 5A'
+            register.preflabel = 'Abp Reg 5A: Sede Vacante Registers'
+            # isPartOf
+            register.ordered_collection = o
+            # hasPart
+            o.ordered_register_proxies.insert_target_at(0, register)
+
+          puts "Register #{register.id}"
+          o.save
+
+  end
+
   desc "TODO"
-  task fol_order: :environment do
+  task :fol_order, [:file, :register] => :environment  do | t,args |
 
     # get the register by searching solr for the reg_id
     # loop through directory processing each spreadsheet
@@ -66,59 +91,53 @@ namespace :regfols do
     # 2 recto/verso
     # 3	Notes
     # 4 UV
+    # 5 pid
 
-    list = ['Abp_Reg_32.csv','Abp_Reg_31.csv']
-
-    list.each do |l|
-      puts "processing #{l}"
-      @csv = CSV.read(Rails.root + 'lib/assets/new_regs_and_fols/' + l, :headers => true)
+      puts "processing #{args[:file]}"
+      puts t
+      @csv = CSV.read(Rails.root + 'lib/assets/new_regs_and_fols/' + args[:file], :headers => true)
 
       # get the register
 
-      @reg = nil
+      @reg = Register.find(args[:register])
       @fols = []
       fol_t = nil
       fol_id = nil
+      fol_no = nil
       @csv.group_by { |row| row[''] }.values.each do |group|
         group.each_with_index do |i, index|
           begin
             puts "Processing number #{index}"
             build_metadata(i)
 
-            if @reg.nil?
-              regs = Register.where(reg_id_tesim:'"'+ @title_hash['image'] + '"')
-              regs.each do |t|
-                fn = l.gsub('_',' ').gsub('.csv','')
-                if t.reg_id == fn
-                  @reg = t
-                end
-              end
-              puts "Register is #{@reg.id} #{@title_hash['image']}"
-            end
-
-            #is it the same folio
-            if "#{@title_hash['image']}#{@title_hash['part']}#{@title_hash['folio']}#{@title_hash['rv']}#{@title_hash['notes']}" == fol_t
+            # if it's a UV image don't create a new folio
+            # we are assuming that the UV image is always second
+            if ("#{@title_hash['image']}#{@title_hash['part']}#{@title_hash['folio']}#{@title_hash['rv']}#{@title_hash['notes']}" == fol_t) and
+                (@title_hash['uv'] == ' (UV)')
               begin
                 fol = Folio.find(fol_id)
+                fol_no = 'yes'
               rescue
                 puts $!
               end
             end
+
             if fol.nil?
               fol = Folio.new
               fol.preflabel = @title
+              fol.rdftype = fol.add_rdf_types
             end
             # isPartOf
-            fol.register = @reg
+           # fol.register = @reg
             fol.save
 
             puts "Creating folio #{fol.id} - #{fol.preflabel}"
 
             image = Image.new
             image.rdftype = image.add_rdf_types
-            image.file_path = 'assets/reg_23-e323da66b28a2b4d178be69812f1a18617e144d66d378644e24684b46783df72.png' # boilerplate to be replaced with some code
+            image.file_path = get_file_path(@title_hash['pid'])
             image.id = image.create_container_id(fol.id)
-            puts "Creating image #{image.id} for Folio #{fol.preflabel}"
+            puts "Creating image #{image.id} for Folio #{fol.preflabel}; path #{image.file_path}"
             image.preflabel = "Image#{@title_hash['uv']}"
             image.motivated_by = 'http://www.shared-canvas.org/ns/painting'
             image.folio = fol
@@ -126,26 +145,28 @@ namespace :regfols do
             fol_t = "#{@title_hash['image']}#{@title_hash['part']}#{@title_hash['folio']}#{@title_hash['rv']}#{@title_hash['notes']}"
             fol_id = fol.id
             fol.save
-            @fols += [fol]
+            unless fol_no == 'yes'
+              @fols << fol
+            end
+            fol_no = nil
           rescue
             puts $!
           end
         end
       end
       # do this part as a one off as it was veeeery slow to do it with each folio
+      # firstly get rid of any duplicates
       # hasPart
       puts "Adding order to #{@reg}"
-      @fols.each_with_index do |f, index|
+      @fols.uniq.each_with_index do |f, index|
         puts "Adding order number #{index}"
         @reg.ordered_folio_proxies.append_target f
       end
+      puts "Saving ... "
       @reg.save
       @reg = nil
       @fols = []
-      # do I need this part? I think only if I want proxies that aren't in the order (which I obviously don't)
-      # and I get them anyway
-      # @reg.folios = @fols
-    end
+
   end
 
   def build_metadata(row)
@@ -197,98 +218,63 @@ namespace :regfols do
           unless pair[1].nil?
             @title_hash['uv'] = ' (UV)'
           end
+        when 'pid'
+          unless pair[1].nil?
+            @title_hash['pid'] = pair[1].to_s
+          end
       end
     rescue
       puts $!
     end
   end
 
-  desc "Retrospectively add URLs for deep zoom images"
-  require 'csv'
-  require 'nokogiri'
-  task add_images_retro: :environment do
-    require 'rsolr'
+  task reg_thumbs: :environment do
 
-    # from dlib solr search for ismemberof, return PID,dc.title
+    # read a list
+    r = Register.new
 
-    solr = RSolr.connect :url => 'http://localhost:8983/solr/development'
+    # Create the contained file
+    f = ContainedFile.new
+    # create the id (otherwise we'll get a fedora uuid)
+    f.id = f.create_id(r.id)
 
+    # add to the Image
+    r.associated_files += [f]
 
-    path = Rails.root + 'lib/assets/'
+    # add content and metadata
+    f.content = File.open("/home/geekscruff/Downloads/11891207_10100458809286534_6920419511510170264_n.jpg")
+    f.mime_type = 'image/jpeg'
+    f.original_name = '11891207_10100458809286534_6920419511510170264_n.jpg'
+    f.preflabel = 'Matilda!'
+    f.rdftype = f.add_rdf_types
 
-    list = ['Abp_Reg_32_images.csv','Abp_Reg_31_images.csv']
+    # Save the register
+    # DO NOT SAVE THE ContainedFile - will cause errors
 
-    list.each do |l|
-      puts "processing #{l}"
-      @csv = CSV.read(Rails.root + 'lib/assets/new_regs_and_fols/' + l, :headers => true)
+    r.save
 
-      @csv.each do | r |
-
-        title = r[1]
-
-        if r[1].class != String
-          puts r[1]
-        end
-
-        if r[1].end_with? ' (UV)'
-          title = title.gsub(' (UV)','')
-        end
-        response = solr.get 'select', :params => {
-                                        :q => 'preflabel_tesim:"' + title + '"',
-                                        :fl => 'id',
-                                        :rows=>10
-                                    }
+  end
 
 
-        response["response"]["docs"].each do | doc |
+  def get_file_path(pid)
 
-          @fol = Folio.find(doc['id'])
+    require 'faraday'
 
-          resp = solr.get 'select', :params => {
-                                          :q => 'hasTarget_ssim:"' + doc['id'] + '"',
-                                          :fl => 'id',
-                                          :rows=>10,
-                                          :sort=>'id ASC'
-                                      }
-          if resp["response"]["numFound"] == 2
-            if r[1].end_with? ' (UV)'
-              i = Image.find(resp["response"]["docs"][1]["id"])
-              f = File.open(path + "new_regs_and_fols/xml/#{r[0].sub('york:', '')}.xml")
-              @doc = Nokogiri::XML(f)
-              f.close
-              i.preflabel = 'Image (UV)'
-              i.file_path = @doc.css('datastreamProfile dsLocation').text.sub('http://dlib.york.ac.uk/', '/usr/digilib-webdocs/')
-              i.folio = @fol
-              @fol.images << i
-              @fol.save
-              puts "Adding url to #{i.id}: #{i.preflabel} (#{r[1]})"
-            else
-              img = Image.find(resp["response"]["docs"][0]["id"])
-              f = File.open(path + "new_regs_and_fols/xml/#{r[0].sub('york:', '')}.xml")
-              @doc = Nokogiri::XML(f)
-              f.close
-              img.file_path = @doc.css('datastreamProfile dsLocation').text.sub('http://dlib.york.ac.uk/', '/usr/digilib-webdocs/')
-              img.folio = @fol
-              @fol.images << img
-              @fol.save
-              puts "Adding url to #{img.id}: #{img.preflabel} (#{r[1]})"
-            end
-          else
-            image = Image.find(resp["response"]["docs"][0]["id"])
-            f = File.open(path + "new_regs_and_fols/xml/#{r[0].sub('york:', '')}.xml")
-            @doc = Nokogiri::XML(f)
-            f.close
-            image.file_path = @doc.css('datastreamProfile dsLocation').text.sub('http://dlib.york.ac.uk/', '/usr/digilib-webdocs/')
-            image.folio = @fol
-            # += [image] didn't work here!
-            @fol.images << image
-            # we can't save the image, we have to do it via the folio
-            @fol.save
-            puts "Adding url to #{image.id}: #{image.preflabel} (#{r[1]})"
-          end
-
-        end
+    begin
+      conn = Faraday.new(:url => 'https://dlib.york.ac.uk') do |c|
+        c.use Faraday::Request::UrlEncoded # encode request params as "www-form-urlencoded"
+        c.use Faraday::Response::Logger # log request & response to STDOUT
+        c.use Faraday::Adapter::NetHttp # perform requests with Net::HTTP
       end
+      conn.basic_auth(ENV['YODL_ADMIN_USER'], ENV['YODL_ADMIN_PASS'])
+      response = conn.get "/fedora/objects/#{pid}/datastreams/JP2?format=xml"
+      #f = File.open(path + "new_regs_and_fols/xml/#{r[0].sub('york:', '')}.xml")
+      @doc = Nokogiri::XML(response.body)
+      #f.close
+      return @doc.css('datastreamProfile dsLocation').text.sub('http://dlib.york.ac.uk/', '/usr/digilib-webdocs/')
+    rescue
+      puts $!
+      puts "Problem with #{pid}"
     end
   end
 

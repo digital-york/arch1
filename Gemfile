@@ -8,8 +8,7 @@ gem 'qa'
 # gem 'qa', :git => 'https://github.com/projecthydra-labs/questioning_authority.git', :branch => 'master'
 
 # gem 'hydra', '9.0.0'
-
-# Install hydra gems individually
+# Install hydra gems individually to get latest versions
 gem 'active-fedora'
 gem 'hydra-head'
 gem 'om'
@@ -22,6 +21,9 @@ gem 'activefedora-aggregation'
 
 gem 'active_fedora-noid'
 #gem 'active_fedora-noid', '1.0.0'
+
+gem 'osullivan'
+gem 'openseadragon'
 
 gem 'nokogiri'
 
@@ -70,6 +72,7 @@ group :development, :test do
   gem 'rspec-rails'
   gem 'jettywrapper'
   gem 'thin'
+
 end
 
 gem 'devise'

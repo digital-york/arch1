@@ -156,9 +156,10 @@ $(document).ready(function () {
 
     // Called when the user chooses a folio from the menu drop-down list
     $('body').on('change', '.choose_folio', function(e) {
-        var id = $(this).val();
-        var input = $("<input>").attr("type", "hidden").attr("name", "folio_id").val(id);
-        $("#choose_folio").append($(input));
+        // trying to work out why two folio_id params are being created
+        //var id = $(this).val();
+        //var input = $("<input>").attr("type", "hidden").attr("name", "folio_id").val(id);
+        //$("#choose_folio").append($(input));
         $("#choose_folio").submit();
     });
 
@@ -590,7 +591,7 @@ $(document).ready(function () {
                 "<td><select name='entry[entry_dates_attributes][" + jq_index + "][single_dates_attributes][" + jq_index2 + "][date_type]'>" + single_date_options + "</select></td>" +
 
                 "</table>" +
-                "<img alt='Delete icon' src='/assets/delete.png' class='delete_icon click_remove_field_date' jq_index1='" + jq_index2 + "'>" +
+                "<img alt='Delete icon' src='/assets/delete.png' class='delete_icon click_remove_field_date' jq_index='" + jq_index + "' jq_index1='" + jq_index2 + "'>" +
                 "<div style='clear: both'></div></div>";
 
             $(this).parent('th').next('td').find('.field_group').append(new_code_block);
@@ -740,19 +741,20 @@ $(document).ready(function () {
             var field_single_div = $(this).parent('div');
             //var field_group_div = field_single_div.parent('div');
             var jq_index1 = $(this).attr('jq_index1');
+            var jq_index = $(this).attr('jq_index');
             field_single_div.css({'display': 'none'});
             // If there is a hidden input element with an 'id', add a '_destroy' = '1' hidden element to make sure
             // that it is deleted from Fedora but don't do it for elements without an 'id' otherwise the element is added to Fedora!
-            // Note that the uses the Place 'Same As' input field to get the index - maybe there is a better way to do this?
-            var input_tag_hidden = field_single_div.find('#hidden_field');
-            if (input_tag_hidden.length > 0) { // i.e. if there is a hidden field, it must be an 'id'
-                var params_type = $(this).attr('params_type');
-                var input_tag = field_single_div.find('input');
-                var name = input_tag.attr('name');
-                name = name.substring(name.indexOf('single_dates_attributes')); // This removes the first index from the 'name' as we want the seond number
-                var jq_index2 = get_index(name);
-                field_single_div.append("<input type='hidden' name='entry[entry_dates_attributes][" + jq_index1 + "][single_dates_attributes][" + jq_index2 + "][_destroy]' value='1'>");
-            }
+            // this is now handles in remove_empty_fields.rb so we DO need destroy = 1
+            //var input_tag_hidden = field_single_div.find('#hidden_field');
+            //if (input_tag_hidden.length > 0) { // i.e. if there is a hidden field, it must be an 'id'
+            //    var params_type = $(this).attr('params_type');
+            //    var input_tag = field_single_div.find('input');
+            //    var name = input_tag.attr('name');
+            //    name = name.substring(name.indexOf('single_dates_attributes')); // This removes the first index from the 'name' as we want the second number
+            //    var jq_index2 = get_index(name);
+            field_single_div.append("<input type='hidden' name='entry[entry_dates_attributes][" + jq_index + "][single_dates_attributes][" + jq_index1 + "][_destroy]' value='1'>");
+            //}
         } catch (err) {
             alert(err);
         }
