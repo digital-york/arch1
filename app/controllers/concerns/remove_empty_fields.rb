@@ -67,17 +67,18 @@ module RemoveEmptyFields
     end
   end
 
-  # Remove any empty date blocks, i.e. when all the fields are empty
+  # Remove empty date blocks, i.e. when all the fields are empty
+  # Also remove block when user adds it and then clicks the 'x' button (without saving first)
   def remove_empty_date_blocks(entry_params)
 
     unless entry_params[:entry_dates_attributes].nil?
 
-      entry_params[:entry_dates_attributes].each_with_index do |entry_date, index|
+      entry_params[:entry_dates_attributes].each_with_index do |related_agent, index|
 
         single_date_exists = false
 
-        # Check if a single date exists so that we can check if the whole date block should be deleted (see code later on)
-        if entry_params[:entry_dates_attributes][index.to_s][:single_dates_attributes] != nil
+        # First remove single dates
+        unless entry_params[:entry_dates_attributes][index.to_s][:single_dates_attributes].nil?
 
           entry_params[:entry_dates_attributes][index.to_s][:single_dates_attributes].each_with_index do |single_date, index2|
 
@@ -89,19 +90,32 @@ module RemoveEmptyFields
               unless param[0] == 'id' or param[0] == 'rdftype'
                 unless param[1].nil? or param[1] == '' or param[1] == []
                   remove_single_date = false
-                  single_date_exists = true
                 end
               end
             end
-            if entry_params[:entry_dates_attributes][index.to_s][:single_dates_attributes][index2.to_s][:id] != nil
-              if remove_single_date == true
-                entry_params[:entry_dates_attributes][index.to_s][:single_dates_attributes][index2.to_s][:_destroy] = '1'
+
+            # Delete if field is marked to destroy (by clicking the 'x') OR there is no data
+            if entry_params[:entry_dates_attributes][index.to_s][:single_dates_attributes][index2.to_s][:_destroy] == '1' or remove_single_date == true
+              entry_params[:entry_dates_attributes][index.to_s][:single_dates_attributes][index2.to_s].each do |param|
+                unless param[0] == 'id'
+                  entry_params[:entry_dates_attributes][index.to_s][:single_dates_attributes][index2.to_s][param[0]] = ''
+                end
               end
-            else
-              if entry_params[:entry_dates_attributes][index.to_s][:single_dates_attributes][index2.to_s][:_destroy] == '1' or remove_single_date == true
-                entry_params[:entry_dates_attributes][index.to_s][:single_dates_attributes][index2.to_s].delete(:rdftype)
+              entry_params[:entry_dates_attributes][index.to_s][:single_dates_attributes][index2.to_s].delete(:rdftype)
+              # Remove agent if all fields are empty (but only do this for a saved entry, i.e. an id exists)
+              entry_params[:entry_dates_attributes][index.to_s][:single_dates_attributes][index2.to_s][:_destroy] = 1
+
+              if entry_params[:entry_dates_attributes][index.to_s][:single_dates_attributes][index2.to_s][:id].nil?
+                # Remove agent when it has been added then deleted with the 'x' button (but has not been saved)
+                # Note that '_destroy' = '1' was used to determine that the user had clicked on the 'x' button but we don't
+                # want to send it with the form because it should only be used when an entry already exists in Fedora and we want
+                # to delete it. It we didn't make it equal to 'nil' below I think the blank data is saved to Fedora!
                 entry_params[:entry_dates_attributes][index.to_s][:single_dates_attributes][index2.to_s][:_destroy] = nil
               end
+            else
+              # Set this flag if there is data in the single date AND it hasn't been set to destroy = 1 to prevent the
+              # entry date from being removed
+              single_date_exists = true
             end
           end
         end
@@ -110,7 +124,6 @@ module RemoveEmptyFields
 
         # Check all fields are empty
         # Ignore rdftype and id as we want to delete if ONLY these are present
-        # Ignore single_dates_attributes as these are dealt with above
         entry_params[:entry_dates_attributes][index.to_s].each do |param|
           unless param[0] == 'id' or param[0] == 'rdftype' or param[0] == 'single_dates_attributes'
             unless param[1].nil? or param[1] == '' or param[1] == []
@@ -119,30 +132,24 @@ module RemoveEmptyFields
           end
         end
 
-        # Delete the whole date block if all of the fields are empty (but only do this for a saved entry, i.e. an id exists)
-        if entry_params[:entry_dates_attributes][index.to_s][:id] != nil
+        # Delete if field is marked to destroy (by clicking the 'x') OR there is no data
+        if (entry_params[:entry_dates_attributes][index.to_s][:_destroy] == '1' or remove_date == true) and
+            single_date_exists == false
 
-          # Don't delete the date if there are associated single dates
-          if remove_date == true and single_date_exists == false
             entry_params[:entry_dates_attributes][index.to_s].each do |param|
-              unless param[0] == 'id' or param[0] == 'single_dates_attributes'
-                entry_params[:entry_dates_attributes][index.to_s][param[0]] = ''
-              end
-            end
-            entry_params[:entry_dates_attributes][index.to_s].delete(:rdftype)
-            entry_params[:entry_dates_attributes][index.to_s][:_destroy] = '1'
-          end
-
-          # Else remove date when it has been added then deleted with the 'x' button (but has not been saved)
-          # Note that '_destroy' = '1' was used to determine that the user had clicked on the 'x' button but we don't
-          # want to send it with the form because it should only be used when an entry already exists in Fedora and we want
-          # to delete it. It we didn't make it equal to 'nil' below I think the blank data is saved to Fedora!
-        else
-          if entry_params[:entry_dates_attributes][index.to_s][:_destroy] == '1' or (remove_date == true and remove_single_date == true)
-            entry_params[:entry_dates_attributes][index.to_s].each do |param|
+            unless param[0] == 'id' or param[0] == 'single_dates_attributes'
               entry_params[:entry_dates_attributes][index.to_s][param[0]] = ''
             end
-            entry_params[:entry_dates_attributes][index.to_s].delete(:rdftype)
+          end
+          entry_params[:entry_dates_attributes][index.to_s].delete(:rdftype)
+          # Remove date if all fields are empty (but only do this for a saved entry, i.e. an id exists)
+          entry_params[:entry_dates_attributes][index.to_s][:_destroy] = 1
+
+          if entry_params[:entry_dates_attributes][index.to_s][:id].nil?
+            # Remove date when it has been added then deleted with the 'x' button (but has not been saved)
+            # Note that '_destroy' = '1' was used to determine that the user had clicked on the 'x' button but we don't
+            # want to send it with the form because it should only be used when an entry already exists in Fedora and we want
+            # to delete it. It we didn't make it equal to 'nil' below I think the blank data is saved to Fedora!
             entry_params[:entry_dates_attributes][index.to_s][:_destroy] = nil
           end
         end
@@ -159,6 +166,8 @@ module RemoveEmptyFields
 
       entry_params[:related_places_attributes].each_with_index do |related_place, index|
 
+        puts entry_params[:related_places_attributes][index.to_s]
+
         remove_place = true
 
         # Check all fields are empty
@@ -171,68 +180,72 @@ module RemoveEmptyFields
           end
         end
 
-        # Remove place if all fields are empty (but only do this for a saved entry, i.e. an id exists)
-        if entry_params[:related_places_attributes][index.to_s][:id] != nil and remove_place == true
-
-          entry_params[:related_places_attributes][index.to_s][:_destroy] = '1'
-
-          # Else remove place when it has been added then deleted with the 'x' button (but has not been saved)
-          # Note that '_destroy' = '1' was used to determine that the user had clicked on the 'x' button but we don't
-          # want to send it with the form because it should only be used when an entry already exists in Fedora and we want
-          # to delete it. It we didn't make it equal to 'nil' below I think the blank data is saved to Fedora!
-        else
-          if entry_params[:related_places_attributes][index.to_s][:_destroy] == '1' or remove_place == true
-            entry_params[:related_places_attributes][index.to_s].each do |param|
-              unless param[0] == 'id'
-                entry_params[:related_places_attributes][index.to_s][param[0]] = ''
-              end
+        # Delete if field is marked to destroy (by clicking the 'x') OR there is no data
+        if entry_params[:related_places_attributes][index.to_s][:_destroy] == '1' or remove_place == true
+          entry_params[:related_places_attributes][index.to_s].each do |param|
+            unless param[0] == 'id'
+              entry_params[:related_places_attributes][index.to_s][param[0]] = ''
             end
-            entry_params[:related_places_attributes][index.to_s].delete(:rdftype)
+          end
+          entry_params[:related_places_attributes][index.to_s].delete(:rdftype)
+          # Remove place if all fields are empty (but only do this for a saved entry, i.e. an id exists)
+          entry_params[:related_places_attributes][index.to_s][:_destroy] = 1
+
+          if entry_params[:related_places_attributes][index.to_s][:id].nil?
+            # Remove place when it has been added then deleted with the 'x' button (but has not been saved)
+            # Note that '_destroy' = '1' was used to determine that the user had clicked on the 'x' button but we don't
+            # want to send it with the form because it should only be used when an entry already exists in Fedora and we want
+            # to delete it. It we didn't make it equal to 'nil' below I think the blank data is saved to Fedora!
             entry_params[:related_places_attributes][index.to_s][:_destroy] = nil
           end
         end
+        puts entry_params[:related_places_attributes][index.to_s]
       end
     end
   end
 
-  # Remove any empty person blocks, i.e. when all the fields are empty
+  # Remove empty agent blocks, i.e. when all the fields are empty
+  # Also remove block when user adds it and then clicks the 'x' button (without saving first)
   def remove_empty_person_blocks(entry_params)
 
     unless entry_params[:related_agents_attributes].nil?
 
       entry_params[:related_agents_attributes].each_with_index do |related_agent, index|
 
-        remove_person = true
+        puts entry_params[:related_agents_attributes][index.to_s]
+
+        remove_agent = true
 
         # Check all fields are empty
-        # Ignore rdftype, person/group and id as we want to delete if ONLY these are present
+        # Ignore rdftype and id as we want to delete if ONLY these are present
         entry_params[:related_agents_attributes][index.to_s].each do |param|
           unless param[0] == 'id' or param[0] == 'rdftype' or param[0] == 'person_group'
             unless param[1].nil? or param[1] == '' or param[1] == []
-              remove_person = false
+              remove_agent = false
             end
           end
         end
 
-        # Remove place if all fields are empty (but only do this for a saved entry, i.e. an id exists)
-        if entry_params[:related_agents_attributes][index.to_s][:id] != nil and remove_person == true
-          entry_params[:related_agents_attributes][index.to_s][:_destroy] = '1'
-
-          # Else remove person when it has been added then deleted with the 'x' button (but has not been saved)
-          # Note that '_destroy' = '1' was used to determine that the user had clicked on the 'x' button but we don't
-          # want to send it with the form because it should only be used when an entry already exists in Fedora and we want
-          # to delete it. It we didn't make it equal to 'nil' below I think the blank data is saved to Fedora!
-        else
-          if entry_params[:related_agents_attributes][index.to_s][:_destroy] == '1' or remove_person == true
-            entry_params[:related_agents_attributes][index.to_s].each do |param|
-              unless param[0] == 'id'
-                entry_params[:related_agents_attributes][index.to_s][param[0]] = ''
-              end
+        # Delete if field is marked to destroy (by clicking the 'x') OR there is no data
+        if entry_params[:related_agents_attributes][index.to_s][:_destroy] == '1' or remove_agent == true
+          entry_params[:related_agents_attributes][index.to_s].each do |param|
+            unless param[0] == 'id'
+              entry_params[:related_agents_attributes][index.to_s][param[0]] = ''
             end
-            entry_params[:related_agents_attributes][index.to_s].delete(:rdftype)
+          end
+          entry_params[:related_agents_attributes][index.to_s].delete(:rdftype)
+          # Remove agent if all fields are empty (but only do this for a saved entry, i.e. an id exists)
+          entry_params[:related_agents_attributes][index.to_s][:_destroy] = 1
+
+          if entry_params[:related_agents_attributes][index.to_s][:id].nil?
+            # Remove agent when it has been added then deleted with the 'x' button (but has not been saved)
+            # Note that '_destroy' = '1' was used to determine that the user had clicked on the 'x' button but we don't
+            # want to send it with the form because it should only be used when an entry already exists in Fedora and we want
+            # to delete it. It we didn't make it equal to 'nil' below I think the blank data is saved to Fedora!
             entry_params[:related_agents_attributes][index.to_s][:_destroy] = nil
           end
         end
+        puts entry_params[:related_agents_attributes][index.to_s]
       end
     end
   end
