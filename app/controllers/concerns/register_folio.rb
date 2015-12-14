@@ -276,7 +276,6 @@ module RegisterFolio
 
       q.solr_query('id:"' + collection + '/list_source"', 'ordered_targets_ssim')['response']['docs'].map.each do |res|
         order = res['ordered_targets_ssim']
-        puts "START get_registers_in_order each order: #{Time.now}"
         order.each do |o|
           q.solr_query('id:"' + o + '"', 'id,preflabel_tesim,reg_id_tesim')['response']['docs'].map.each do |r|
             registers[r['id']] = [r['reg_id_tesim'][0], r['preflabel_tesim'][0]]
@@ -434,10 +433,11 @@ module RegisterFolio
 
     existing_location_list = []
 
+    q = SolrQuery.new
+
     # One solr search required for these types - this is because they exist in the Entry object
     if type == 'entry_type' or type == 'language' or type == 'section_type' or type == 'subject'
 
-      q = SolrQuery.new
       search_term2 = type + '_tesim:' + element_id
 
       q.solr_query(q=search_term2, fl='id, folio_ssim, entry_no_tesim', rows=100000, sort='id ASC')['response']['docs'].map do |result|
