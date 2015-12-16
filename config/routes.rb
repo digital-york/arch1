@@ -15,7 +15,6 @@ Rails.application.routes.draw do
 
   # Create single routes
   get 'image_zoom_large' => 'image_zoom_large#index'
-  get 'image_zoom_large/alt' => 'image_zoom_large#alt'
   get 'logout' => 'login#logout'
   get 'login' => 'login#index'
   get 'login_submit' => 'login#login_submit'

@@ -7,7 +7,7 @@
        form_method = ':post'
      else
        start_text = 'Edit'
-       form_url = 'groups_path(@group)'
+       form_url = 'group_path(@group)'
        form_method = ':patch'
      end
   %>
@@ -23,7 +23,6 @@
   <div>
     <%= link_to 'Go back to search page', groups_path(:search_term => @search_term, :group_field => @group_field) %>
   </div>
-
   <%= form_for @group, url: eval(form_url), method: eval(form_method), html: {style: 'margin-top: 15px; margin-bottom: 0px'} do |f| %>
 
       <div class='tab1'>

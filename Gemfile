@@ -22,9 +22,6 @@ gem 'activefedora-aggregation'
 gem 'active_fedora-noid'
 #gem 'active_fedora-noid', '1.0.0'
 
-gem 'osullivan'
-gem 'openseadragon'
-
 gem 'nokogiri'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
