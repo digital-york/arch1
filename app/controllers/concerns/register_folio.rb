@@ -1,10 +1,16 @@
 module RegisterFolio
 
+  # Get the list of folios for a register
+  # This is called repeated times; it would be nice to call once per register
+  def set_order
+    @order = SolrQuery.new.solr_query('id:"' + session[:register_id] + '/list_source"', 'ordered_targets_ssim', 1)['response']['docs'][0]['ordered_targets_ssim']
+  end
+
   # Set the first and last folio session variables - this is used to grey out
   # the '<' and '>' icons if the limits are reached
   def set_first_and_last_folio
 
-    @order = SolrQuery.new.solr_query('id:"' + session[:register_id] + '/list_source"', 'ordered_targets_ssim', 1)['response']['docs'][0]['ordered_targets_ssim']
+    set_order
     session[:first_folio_id] = @order[0]
     session[:last_folio_id] = @order[@order.length-1]
     # Timings indicate that this step for 5A (the longest register) took 26s; the new code took 4s
@@ -55,6 +61,7 @@ module RegisterFolio
 
     if action != nil #&& id != nil
       # convert the list of folios in order into a hash so we can access the position of our id
+      set_order
       hash = Hash[@order.map.with_index.to_a]
       if action == 'next_tesim'
         next_id = @order[hash[id].to_i + 1]
@@ -102,6 +109,7 @@ module RegisterFolio
 
     if action != nil and id != nil
       # convert the list of folios in order into a hash so we can access the position of our id
+      set_order
       hash = Hash[@order.map.with_index.to_a]
       if action == 'next_tesim'
         next_id = @order[hash[id].to_i + 1]
@@ -125,7 +133,7 @@ module RegisterFolio
     @folio_list = []
     folio_hash = {}
     q = SolrQuery.new
-    @order = q.solr_query('id:"' + session[:register_id] + '/list_source"', 'ordered_targets_ssim', 1)['response']['docs'][0]['ordered_targets_ssim']
+    set_order
     # Get the list of folios in order
     @order.each do |o|
       q.solr_query('id:"' + o + '"', 'id,preflabel_tesim', rows=1)['response']['docs'].map.each do |res|
@@ -142,6 +150,7 @@ module RegisterFolio
 
     # First get the next_folio_id...
     # convert the list of folios in order into a hash so we can access the position of our id
+    set_order
     hash = Hash[@order.map.with_index.to_a]
     next_folio_id = @order[hash[session[:folio_id]].to_i + 1]
 
@@ -212,8 +221,9 @@ module RegisterFolio
 
 
     # Convert the list of folios in order into a hash so we can access the position of our id
+    set_order
     hash = Hash[@order.map.with_index.to_a]
-    next_folio_id = order[hash[session[:folio_id]].to_i + 1]
+    next_folio_id = @order[hash[session[:folio_id]].to_i + 1]
 
     # Only create a new entry if one doesn't already exist on the next folio
     if @is_entry_on_next_folio == false
