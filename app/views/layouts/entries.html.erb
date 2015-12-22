@@ -33,22 +33,23 @@
 
     <div style="float: left">&nbsp;&nbsp;<strong>Current Register</strong>: <span style="font-size: 0.95em; color: #FFFFFF"><%= session[:register_name] %></span></div>
 
-    <form style="float: left" name="myForm" id="choose_folio">
+    <div style="float: left">
+      <form name="myForm" id="choose_folio">
 
-      <strong style="margin-left: 20px">Current Folio</strong>:
+        <strong style="margin-left: 20px">Current Folio</strong>:
 
-      <select name="folio_id" style="width: 260px" class="choose_folio"
+        <select name="folio_id" class="choose_folio"
+         <% if controller.action_name.to_s != 'index' then %>disabled<% end %>>
+          <option value="">--- select folio ---</option>
+          <% @folio_list.each do |folio| %>
+              <option value="<%= folio[0] %> "<% if session[:folio_id] == folio[0] then %>selected<% end %>><%= folio[1] %></option>
+          <% end %>
+        </select>
 
-        <% if controller.action_name.to_s != 'index' then %>disabled<% end %>>
-             <option value="">--- select folio ---</option>
-        <%   @folio_list.each do |folio| %>
-               <option value="<%= folio[0] %>"<% if session[:folio_id] == folio[0] then %>selected<% end %>><%= folio[1] %></option>
-        <%   end %>
-      </select>
+        <input type="hidden" name="set_folio" value="true"/>
 
-      <input type="hidden" name="set_folio" value="true"/>
-
-    </form>
+      </form>
+    </div>
   </div>
 
   <div id="main">

@@ -4,24 +4,40 @@ class LandingPageController < ApplicationController
   before_filter :session_timed_out
 
   def index
-    set_authority_lists
 
-    # Get register list (in order)
-    @reg_list = get_registers_in_order
+    begin
 
- end
+      set_authority_lists
+
+      # Get register list (in order)
+      @reg_list = get_registers_in_order
+
+    rescue => error
+      log_error(__method__, __FILE__, error)
+      raise
+    end
+
+  end
 
   def go_entries
 
-    reset_session_variables
+    begin
 
-    session[:register_id] = params[:register_id]
-    session[:register_name] = params[:register_name]
+      reset_session_variables
 
-    # This is required for the image '<' and '>' buttons
-    set_first_and_last_folio
+      session[:register_id] = params[:register_id]
+      session[:register_name] = params[:register_name]
 
-    redirect_to :controller => 'entries', :action => 'index',  :login_submit => 'true'
+      # This is required for the image '<' and '>' buttons
+      set_first_and_last_folio
+
+      redirect_to :controller => 'entries', :action => 'index', :login_submit => 'true'
+
+    rescue => error
+      log_error(__method__, __FILE__, error)
+      raise
+    end
+
   end
 
   def reset_session_variables
@@ -32,13 +48,5 @@ class LandingPageController < ApplicationController
     session[:browse_id] = ''
     session[:browse_image] = ''
   end
-
-  # Check if webapp has timed out
-  # Note that the session timeout value is set in config/initializers/session_store.rb
-  #def session_timed_out
-  #  if session[:login] != 'true'
-  #    redirect_to :controller => 'login', :action => 'timed_out'
-  #  end
-  #end
 
 end
