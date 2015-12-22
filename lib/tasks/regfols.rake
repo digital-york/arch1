@@ -4,14 +4,14 @@ namespace :regfols do
   require 'nokogiri'
 =begin
     use this to add all of the ordered collections and registers
-    the csvs must be called collections.csv and registers_existing.csv, must have no header row and must contain the following columns in order:
+    the csvs must be called collections.csv and registers.csv, must have no header row and must contain the following columns in order:
     0 dc:identifier
     1 dc:title
     2 dc:dates
     3 dc:description
     4 thumbnail url
 
-    nb. there can be no data in the description, dates and thumbnail columns
+    nb. it is fine if there is no no data in the description, dates and thumbnail columns
 =end
   task reg_order: :environment do
 
@@ -83,7 +83,8 @@ namespace :regfols do
 
 =begin
   use this to add to existing ordered collections, and to insert into the order at a specified position
-  the csv must be called registers_existing.csv, must have no header row and must contain the following columns in order:
+  the csv must be called registers_existing.csv or you can provide another filename at runtime with regfols:reg_oder['filename']
+  the file must have no header row and must contain the following columns in order:
     0 dc:identifier
     1 dc:title
     2 dc:dates
@@ -94,8 +95,12 @@ namespace :regfols do
 
     nb. there can be no data in the description, dates, thumbnail and position columns
 =end
-  task reg_order_existing: :environment do
-    regs = CSV.read(Rails.root + 'lib/assets/new_regs_and_fols/registers_existing.csv')
+  task :reg_order_existing, [:file] => :environment do |t,args|
+    filename = 'registers_existing.csv'
+    unless args[:file].nil?
+      filename = argh[:file]
+    end
+    regs = CSV.read(Rails.root + 'lib/assets/new_regs_and_fols/' + filename)
     begin
       regs.each do |r|
         o = OrderedCollection.find(r[6])
