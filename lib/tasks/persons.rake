@@ -18,7 +18,7 @@ namespace :persons do
 
     begin
 
-      response = SolrQuery.new.solr_query(q='preflabel_tesim:"places" AND has_model_ssim:"ConceptScheme"', fl='id', rows=1)['response']
+      response = SolrQuery.new.solr_query(q='preflabel_tesim:"people" AND has_model_ssim:"ConceptScheme"', fl='id', rows=1)['response']
 
       if response['numFound'] == 0
         @scheme = ConceptScheme.new
@@ -202,6 +202,108 @@ namespace :persons do
         p.save
 
         @scheme.groups += [p]
+        @scheme.save
+        puts "Created #{p.preflabel}"
+      rescue
+        puts $!
+      end
+    end
+    puts 'Finished!'
+
+  end
+
+  # this updates people IN OPAL from a spreadsheet; ids in the spreadsheet are from opal
+  # this has not yet been tested
+  task update_persons: :environment do
+
+    # 0: id
+    # 1: Family Name
+    # 2: Given Name
+    # 3: Dates
+    # 4: Pre-Title
+    # 5: epthet
+    # 6: Dates of Office
+    # 7: Epithet
+    # 8: Related Authority
+    # 9: Variant Names
+    # 10: Notes
+
+    # ??: Title
+
+    begin
+
+      response = SolrQuery.new.solr_query(q='preflabel_tesim:"people" AND has_model_ssim:"ConceptScheme"', fl='id', rows=1)['response']
+      @scheme = ConceptScheme.find(response['docs'][0]['id'])
+      puts "Using existing Concept scheme #{@scheme.id}"
+
+
+    rescue
+      puts "ERROR in ConceptScheme!"
+      puts $!
+      exit
+    end
+
+    puts 'Processing the person. This may take some time ... '
+
+    arr = CSV.read(Rails.root + 'lib/assets/lists/persons_full.csv')
+
+    arr.each do |c|
+      begin
+
+        p = Person.find(c[0])
+        p.rdftype << p.add_rdf_types
+        #p.id = p.create_container_id(@scheme.id)
+        p.concept_scheme = @scheme
+        unless c[1].nil?
+          p.family = c[1].strip
+        end
+        unless c[4].nil?
+          p.pre_title = c[4].strip
+        end
+        unless c[2].nil?
+          p.given_name = c[2].strip
+        end
+        unless c[5].nil?
+          p.epithet = c[5].strip
+        end
+        unless c[3].nil?
+          p.dates = c[3].strip
+        end
+        unless c[6].nil?
+          p.dates_of_office = c[6].strip
+        end
+        unless c[7].nil?
+          p.epithet = c[7].strip
+        end
+        unless c[8].nil?
+          p.related_authority = [c[8]]
+        end
+        unless c[9].nil?
+          if c[9].include? ','
+            c[9].split(',').each do | v |
+              p.altlabel << v.strip
+            end
+          else
+          p.altlabel = [c[9].strip]
+          end
+
+        end
+        p.preflabel = "#{p.family}, #{p.pre_title}, #{p.given_name}, #{p.dates}, #{p.post_title}, #{p.epithet}".gsub('  ', ' ').gsub(', ,', ',').gsub(', ,', ',').gsub(', ,', ',')
+        if p.preflabel.start_with? ', '
+          p.preflabel = p.preflabel[2..p.preflabel.length]
+        end
+        if p.preflabel.end_with? ', '
+          p.preflabel = p.preflabel[0..p.preflabel.length-3]
+        end
+
+        begin
+          p.save
+        rescue
+          puts "Error! #{p.preflabel}"
+          puts ">> #{$!}"
+        end
+
+        @scheme.persons += [p]
         @scheme.save
         puts "Created #{p.preflabel}"
       rescue

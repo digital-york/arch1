@@ -87,7 +87,7 @@ class GroupsController < ApplicationController
     else
 
       # Use a solr query to obtain the concept scheme id for 'groups'
-      response = SolrQuery.new.solr_query(q='has_model_ssim:ConceptScheme AND preflabel_tesim:"groups"', fl='id', rows=1, sort='')
+      response = SolrQuery.new.solr_query(q='has_model_ssim:ConceptScheme AND preflabel_tesim:"groups"', fl='id', rows=1)
       id = response['response']['docs'][0]['id']
       @group.concept_scheme_id = id
 

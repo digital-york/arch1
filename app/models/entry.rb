@@ -51,5 +51,8 @@ class Entry < ActiveFedora::Base
   property :is_referenced_by, predicate: ::RDF::URI.new('http://purl.org/dc/terms/is_referenced_by'), multiple: true do |index|
     index.as :stored_searchable
   end
-
+  
+  property :continues_on, predicate: ::RDF::URI.new('http://dlib.york.ac.uk/ontologies/borthwick-registers#continuesOn'), multiple: false do |index|
+    index.as :stored_searchable
+  end
 end

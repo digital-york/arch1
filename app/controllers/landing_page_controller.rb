@@ -1,4 +1,5 @@
 class LandingPageController < ApplicationController
+  include RegisterFolioHelper
 
   before_filter :session_timed_out
 

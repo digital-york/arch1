@@ -13,7 +13,7 @@
                 <% end %>
                 <td style="vertical-align: top">
                     <div>
-                        <a href="/go_entries?register_id=<%= pair[0] %>&amp;register_name=<%=pair[1][0] %>"><%= image_tag "#{pair[1][0].gsub(/Abp Reg /, 'reg_') + '.png'}" %></a>
+                        <a href="/go_entries?register_id=<%= pair[0] %>&amp;register_name=<%=pair[1][0] %>"><%= image_tag get_thumb(pair[0]).gsub('/100,/','/200,/') %></a>
                     </div>
                     <div class="landing_page_text">
                         <strong><%= pair[1][0] %></strong><br/><%= pair[1][1] %>

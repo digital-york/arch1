@@ -2,6 +2,17 @@ namespace :regfols do
   desc "TODO"
   require 'csv'
   require 'nokogiri'
+=begin
+    use this to add all of the ordered collections and registers
+    the csvs must be called collections.csv and registers_existing.csv, must have no header row and must contain the following columns in order:
+    0 dc:identifier
+    1 dc:title
+    2 dc:dates
+    3 dc:description
+    4 thumbnail url
+
+    nb. there can be no data in the description, dates and thumbnail columns
+=end
   task reg_order: :environment do
 
     arr = CSV.read(Rails.root + 'lib/assets/new_regs_and_fols/collections.csv')
@@ -10,16 +21,13 @@ namespace :regfols do
     arr.each do |c|
       begin
 
-        # 0 dc:identifier
-        # 1 dc:title
-        # 2 dc:dates
-        # 3 dc:description
-
         o = OrderedCollection.create
         o.rdftype = o.add_rdf_types
         o.coll_id = c[0]
         o.preflabel = c[1]
-        o.date = c[2]
+        unless c[2].nil?
+          o.date = c[2]
+        end
         unless c[3].nil?
           o.description = c[3]
         end
@@ -31,21 +39,38 @@ namespace :regfols do
             register = Register.create
             register.rdftype = register.add_rdf_types
             register.reg_id = r[0]
-            register.date = r[2]
+            unless r[2].nil?
+              register.date = r[2]
+            end
+            unless r[3].nil?
+              register.description = r[3]
+            end
+            unless r[4].nil?
+            register.thumbnail_url = r[4]
+            end
             register.preflabel = r[1]
             # isPartOf
             register.ordered_collection = o
             # hasPart
             o.ordered_register_proxies.append_target register
-            #o.registers += [register]
           elsif r[0].start_with? 'Abp Inst AB'
             register = Register.create
             register.rdftype = register.add_rdf_types
             register.reg_id = r[0]
-            register.date = r[2]
+            register.thumbnail_url = r[2]
             register.preflabel = r[1]
+            unless r[2].nil?
+              register.date = r[2]
+            end
+            unless r[3].nil?
+              register.description = r[3]
+            end
+            unless r[4].nil?
+              register.thumbnail_url = r[4]
+            end
+            # isPartOf
+            register.ordered_collection = o
             o.ordered_register_proxies.append_target register
-            #o.registers += [register]
           end
           puts "Register #{register.id}"
           o.save
@@ -56,31 +81,53 @@ namespace :regfols do
     end
   end
 
-  task reg_single: :environment do
+=begin
+  use this to add to existing ordered collections, and to insert into the order at a specified position
+  the csv must be called registers_existing.csv, must have no header row and must contain the following columns in order:
+    0 dc:identifier
+    1 dc:title
+    2 dc:dates
+    3 dc:description
+    4 thumbnail url
+    5 position
+    6 collection
 
-
-        # 0 dc:identifier
-        # 1 dc:title
-        # 2 dc:dates
-        # 3 dc:description
-
-        o = OrderedCollection.all.first
-
-            register = Register.create
-            register.rdftype = register.add_rdf_types
-            register.reg_id = 'Abp Reg 5A'
-            register.preflabel = 'Abp Reg 5A: Sede Vacante Registers'
-            # isPartOf
-            register.ordered_collection = o
-            # hasPart
-            o.ordered_register_proxies.insert_target_at(0, register)
-
-          puts "Register #{register.id}"
-          o.save
-
+    nb. there can be no data in the description, dates, thumbnail and position columns
+=end
+  task reg_order_existing: :environment do
+    regs = CSV.read(Rails.root + 'lib/assets/new_regs_and_fols/registers_existing.csv')
+    begin
+      regs.each do |r|
+        o = OrderedCollection.find(r[6])
+        register = Register.create
+        register.rdftype = register.add_rdf_types
+        register.reg_id = r[0]
+        unless r[2].nil?
+          register.date = r[2]
+        end
+        unless r[3].nil?
+          register.description = r[3]
+        end
+        unless r[4].nil?
+          register.thumbnail_url = r[4]
+        end
+        register.preflabel = r[1]
+        # isPartOf
+        register.ordered_collection = o
+        # hasPart
+        o.ordered_register_proxies.insert_target_at(r[5].to_i, register)
+        puts "Register #{register.id}"
+        o.save
+      end
+    rescue
+      puts $!
+    end
   end
 
   desc "TODO"
+  # supply the filename and register id when starting the task, like this
+  # rake regfols:fol_order['filename.csv','register_id']
+  # the csv file MUST have column headings exactly as noted below (case ignored)
   task :fol_order, [:file, :register] => :environment  do | t,args |
 
     # get the register by searching solr for the reg_id

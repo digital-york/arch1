@@ -1,5 +1,5 @@
 class Register < ActiveFedora::Base
-  include DCTerms,RdfType,AssignId,Iana,Generic,SkosLabels,AssignRdfTypes
+  include DCTerms,RdfType,AssignId,Generic,SkosLabels,AssignRdfTypes,ThumbnailUrl
   require 'active_fedora/aggregation'
 
   has_many :folios, :dependent => :destroy

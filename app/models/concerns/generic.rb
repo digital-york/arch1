@@ -15,9 +15,5 @@ module Generic
     property :istopconcept, predicate: ::RDF::URI.new('http://dlib.york.ac.uk/ontologies/generic#isTopConcept'), multiple: false do |index|
       index.as :stored_searchable
     end
-    property :continues_on, predicate: ::RDF::URI.new('http://dlib.york.ac.uk/ontologies/generic#continuesOn'), multiple: false do |index|
-      index.as :stored_searchable
-    end
   end
-
 end

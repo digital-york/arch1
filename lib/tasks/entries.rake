@@ -1,163 +1,158 @@
 namespace :entries do
   desc "TODO"
-  task process_entries: :environment do
+  task :process_entries, [:num] => :environment do | t,args |
 
     # This task processes the three spreadsheets of pilot data and creates all of the entries, dates, people and places
     # It's a bit of a monster, so will take a good while to run
     # You are advised to stop and start tomcat/solr before running it
-    # If it fails run Entry.delete_all in the rails console - this may take a while but it does work
-
+    # If it fails then either run Entry.delete_all in the rails console - this may take a while but it does work
+    # Or write a task to delete the existing objects
+    # It shouldn't fail, though!
     require 'csv'
 
     @entry_mapping = Hash.new()
     @folio_mapping = Hash.new()
 
-    # find the register id and the folio_faces ids
-    register = SolrQuery.new.solr_query('reg_id_tesim:"Abp Reg 12"', 'id')['response']['docs'].map.first['id']
-    recto, verso = '', ''
-    SolrQuery.new.solr_query('has_model_ssim:"ConceptScheme" AND preflabel_tesim:"folio_faces"', 'id')['response']['docs'].map do |face|
-      q = "inScheme_ssim:\"#{face['id']}\" AND preflabel_tesim:"
-      recto = SolrQuery.new.solr_query(q + 'recto', 'id')['response']['docs'].map.first['id']
-      verso = SolrQuery.new.solr_query(q + 'verso', 'id')['response']['docs'].map.first['id']
-    end
+    puts args[:num]
 
     # Find the folio for each line
     puts 'Entries'
-    CSV.foreach(Rails.root + 'lib/assets/register12_data/entries_subjects.csv') do |r|
+    CSV.foreach(Rails.root + "lib/assets/register12_data/#{args[:num]}/entries_subjects.csv") do |r|
       # strip whitespace, downcase
       r[0].gsub!(' ', '')
       r[0].gsub!('A', 'a')
       a = r[0].split('-')
 
       unless $. == 1 # skip header row
-        if $..modulo(50).zero?
+        #if $..modulo(50).zero?
           puts "processed #{$.} entries"
-        end
+        #end
         fol = []
         #unless $. >= 7
-        #we should see errors only where we don't have the folio (ie. blanks)
+          #we should see errors only where we don't have the folio (ie. blanks)
 
-        # process the left hand value
-        if a[0].end_with? 'v'
-          q = "isPartOf_ssim:\"#{register}\" AND folio_no_tesim:\"#{a[0][0, a[0].length-1]}\" AND folio_face_tesim:\"#{verso}\""
-          begin
-            fol += [SolrQuery.new.solr_query(q, 'id,folio_no_tesim,folio_face_tesim')['response']['docs'].map.first['id']]
-          rescue
-            puts "#{a[0]}: #{$!}"
-          end
-        elsif a[0].end_with? 'r'
-          q = "isPartOf_ssim:\"#{register}\" AND folio_no_tesim:\"#{a[0][0, a[0].length-1]}\" AND folio_face_tesim:\"#{recto}\""
-          begin
-            fol += [SolrQuery.new.solr_query(q, 'id,folio_no_tesim,folio_face_tesim')['response']['docs'].map.first['id']]
-          rescue
-            puts "#{a[0]}: #{$!}"
-          end
-        else
-          puts 'I should never print'
-        end
-
-        if a[1] != a[0]
-          # process the right hand value if it's different to the left
-          if a[1].end_with? 'v'
-            q = "isPartOf_ssim:\"#{register}\" AND folio_no_tesim:\"#{a[1][0, a[1].length-1]}\" AND folio_face_tesim:\"#{verso}\""
+          # process the left hand value
+          if a[0].end_with? 'v'
+            q = 'preflabel_tesim:"Abp Reg 12 f.' + a[0][0, a[0].length-1] + ' (verso)*"'
             begin
-              fol += [SolrQuery.new.solr_query(q, 'id,folio_no_tesim,folio_face_tesim')['response']['docs'].map.first['id']]
+              fol += [SolrQuery.new.solr_query(q, 'id')['response']['docs'].map.first['id']]
             rescue
-              puts "#{a[1]}: #{$!}"
+              puts "#{a[0]}: #{$!}"
             end
-          elsif a[1].end_with? 'r'
-            q = "isPartOf_ssim:\"#{register}\" AND folio_no_tesim:\"#{a[1][0, a[1].length-1]}\" AND folio_face_tesim:\"#{recto}\""
+          elsif a[0].end_with? 'r'
+            q = 'preflabel_tesim:"Abp Reg 12 f.' + a[0][0, a[0].length-1] + ' (recto)*"'
             begin
-              fol += [SolrQuery.new.solr_query(q, 'id,folio_no_tesim,folio_face_tesim')['response']['docs'].map.first['id']]
+              fol += [SolrQuery.new.solr_query(q, 'id')['response']['docs'].map.first['id']]
             rescue
-              puts "#{a[1]}: #{$!}"
+              puts "#{a[0]}: #{$!}"
             end
           else
             puts 'I should never print'
           end
-        end
 
-        # Now we have the folio ids build an entry object for each line
-        unless fol == []
-          ent = build_entry(r, fol)
-          val = []
-
-          #do a foreach with fol
-          ent[:folio].each_with_index do |f, index|
-            e = Entry.new
-            e.rdftype = e.add_rdf_types
-            ff = Folio.where(id: f).first
-            e.folio = ff
-            e.former_id = [ent[:entry_no]]
-            e.language = ent[:language]
-            e.section_type = ent[:section_type]
-            e.entry_type = entry_type_lookup
-            e.summary = ent[:summary].strip
-            unless ent[:reference].nil?
-              e.is_referenced_by = [ent[:reference]]
-            end
-            unless ent[:note].nil?
-              e.note = [ent[:note]]
-            end
-            unless ent[:editorial_note].nil?
-              e.editorial_note = [ent[:editorial_note]]
-            end
-            #continues
-            if fol.length == 2 and index == 0
-              e.continues_on = Folio.where(id: fol[1]).first.id #id not object
-            end
-            e.save
-            ff.entries += [e]
-            ff.save
-            #puts "Adding Entry #{e.id}"
-            # this should be entry pid
-            #val[index] = e.former_id[0] + ':' + index.to_s
-            val[index] = e.id
-            if @folio_mapping[e.folio.id].nil?
-              @folio_mapping[e.folio.id] = [e.id]
+          if a[1] != a[0]
+            # process the right hand value if it's different to the left
+            if a[1].end_with? 'v'
+              q = 'preflabel_tesim:"Abp Reg 12 f.' + a[1][0, a[1].length-1] + ' (verso)*"'
+              begin
+                fol += [SolrQuery.new.solr_query(q, 'id')['response']['docs'].map.first['id']]
+              rescue
+                puts "#{a[1]}: #{$!}"
+              end
+            elsif a[1].end_with? 'r'
+              q = 'preflabel_tesim:"Abp Reg 12 f.' + a[1][0, a[1].length-1] + ' (recto)*"'
+              begin
+                fol += [SolrQuery.new.solr_query(q, 'id')['response']['docs'].map.first['id']]
+              rescue
+                puts "#{a[1]}: #{$!}"
+              end
             else
-              ents = @folio_mapping[e.folio.id]
-              ents += [e.id]
-              @folio_mapping[e.folio.id] = ents
+              puts 'I should never print'
             end
-            @entry_mapping["#{r[4]}#{r[5]}"] = val
           end
-        end
+
+          # Now we have the folio ids build an entry object for each line
+          unless fol == []
+            ent = build_entry(r, fol)
+            val = []
+
+            #do a foreach with fol
+            ent[:folio].each_with_index do |f, index|
+              e = Entry.new
+              e.rdftype = e.add_rdf_types
+              ff = Folio.find(f)
+              e.folio = ff
+              e.former_id = [ent[:entry_no]]
+              e.language = ent[:language]
+              e.section_type = ent[:section_type]
+              e.subject = ent[:subjects]
+              #e.entry_type = entry_type_lookup
+              #e.summary = ent[:summary].strip
+              unless ent[:reference].nil?
+                e.is_referenced_by = [ent[:reference]]
+              end
+              unless ent[:note].nil?
+                e.note = ent[:note]
+              end
+              unless ent[:editorial_note].nil?
+                e.editorial_note = [ent[:editorial_note]]
+              end
+              #continues
+              if fol.length == 2 and index == 0
+                e.continues_on = Folio.find(fol[1]).id #id not object
+              end
+              e.save
+              ff.entries += [e]
+              ff.save
+              #puts "Adding Entry #{e.id}"
+              # this should be entry pid
+              #val[index] = e.former_id[0] + ':' + index.to_s
+              val[index] = e.id
+              if @folio_mapping[e.folio.id].nil?
+                @folio_mapping[e.folio.id] = [e.id]
+              else
+                ents = @folio_mapping[e.folio.id]
+                ents += [e.id]
+                @folio_mapping[e.folio.id] = ents
+              end
+              @entry_mapping["#{r[4]}#{r[5]}"] = val
+            end
+          end
         #end
       end
     end
 
     # dates and places
     puts 'Dates and places'
-    CSV.foreach(Rails.root + 'lib/assets/register12_data/dates_places.csv') do |d|
+    CSV.foreach(Rails.root + "lib/assets/register12_data/#{args[:num]}/dates_places.csv") do |d|
       unless $. == 1
-        if $..modulo(50).zero?
+        #if $..modulo(50).zero?
           puts "processed #{$.} dates and places"
-        end
+        #end
         #unless $. >= 7
-        entries = [] # the entries
-        @entry_mapping["#{d[1]}#{d[2]}"].each do |e|
-          entries += [e] # Entry.where(id: e).first
-        end
-        build_date_place(d, entries)
+          entries = [] # the entries
+          @entry_mapping["#{d[1]}#{d[2]}"].each do |e|
+            entries += [e] # Entry.where(id: e).first
+          end
+          build_date_place(d, entries)
         #end
       end
     end
 
     # people and places
     puts 'People and places'
-    CSV.foreach(Rails.root + 'lib/assets/register12_data/persons.csv') do |p|
+    CSV.foreach(Rails.root + "lib/assets/register12_data/#{args[:num]}/persons.csv") do |p|
       unless $. == 1
-        if $..modulo(50).zero?
+        #if $..modulo(50).zero?
           puts "processed #{$.} people and places"
-        end
-        #unless $. >= 30
-        entries = [] # the entries
-        @entry_mapping["#{p[1]}#{p[2]}"].each do |e|
-          entries += [e] # Entry.where(id: e).first
-        end
-        #pass the line and the list of entries for this person
-        build_person(p, entries)
+        #end
+        #unless $. >= 7
+          entries = [] # the entries
+          @entry_mapping["#{p[1]}#{p[2]}"].each do |e|
+            entries += [e] # Entry.where(id: e).first
+          end
+          #pass the line and the list of entries for this person
+          build_person(p, entries)
         #end
       end
     end
@@ -168,7 +163,7 @@ namespace :entries do
       f.each_with_index do |e, index|
         if index == 1
           e.each_with_index do |ee, index|
-            ent = Entry.where(id: ee).first
+            ent = Entry.find(ee)
             num = index + 1
             ent.entry_no = num.to_s
             ent.save
@@ -210,218 +205,268 @@ namespace :entries do
       end
     end
 
+    subs = []
+    notes = []
+    unless line[12].nil?
+      term = subject_lookup(line[12])
+      unless term.nil?
+        subs << term
+      end
+      notes << "Subject: #{line[11]}, #{line[12]}, #{line[13]}"
+    end
+    unless line[15].nil?
+      term = subject_lookup(line[15])
+      unless term.nil?
+        subs << term
+      end
+      notes << "Subject: #{line[14]}, #{line[15]}, #{line[16]}"
+    end
+    unless line[18].nil?
+      term = subject_lookup(line[18])
+      unless term.nil?
+        subs << term
+      end
+      notes << "Subject: #{line[17]}, #{line[18]}, #{line[19]}"
+    end
+    unless line[21].nil?
+      term = subject_lookup(line[21])
+      unless term.nil?
+        subs << term
+      end
+      notes << "Subject: #{line[20]}, #{line[21]}, #{line[22]}"
+    end
+    unless line[8].nil?
+      notes << line[8].to_s
+    end
 
     hash = {
         folio: fol,
         entry_no: 'Abp Reg 12 Entry ' + line[4] + line[5].to_s,
         language: lang_ids,
         section_type: sect_ids,
-        summary: line[7].to_s + ' ' + line[8].to_s,
+        subjects: subs,
+        note: notes,
+        #summary: line[7].to_s + ' ' + line[8].to_s,
     }
 
+    unless line[7].nil?
+      hash[:reference] = line[7].to_s
+    end
     unless line[9].nil?
-      hash[:reference] = line[9].to_s
+      hash[:editorial_note] = line[9].to_s
     end
-    unless line[11].nil?
-      hash[:note] = line[11].to_s
-    end
-    unless line[12].nil?
-      hash[:editorial_note] = line[12].to_s
-    end
+
     hash
   end
 
   def build_person(line, entries)
 
     entries.each do |e|
+      # role is the one field that is ALWAYS present
+      #unless line[9].nil?
+        p = RelatedAgent.new
 
-      p = RelatedAgent.new
-
-      naw = ''
-      unless line[3].nil?
-        naw += line[3] + ' '
-      end
-      unless line[4].nil?
-        naw += line[4] + ' '
-      end
-      unless line[5].nil?
-        naw += line[5] + ' '
-      end
-      unless line[6].nil?
-        naw += line[6] + ' '
-      end
-      naw.gsub('] [', ' ')
-      if naw.end_with?('  ')
-        naw[0..naw.length-3]
-      elsif naw.end_with? ' '
-        naw = naw[0..naw.length-2]
-      end
-
-      # find out if this entry already has a person with the same name_as_written
-      # if it does, add to that Person rather than create the new one
-      pid = nil
-      unless naw == ''
-        begin
-          pid = SolrQuery.new.solr_query('relatedAgentFor_ssim:"' + e + '" AND person_as_written_tesim:"' + naw + '"', 'id')['response']['docs'].map.first['id']
-        rescue
-          pid = nil
+        naw = ''
+        unless line[3].nil?
+          naw += line[3] + ' '
         end
-      end
-      unless pid.nil?
-        puts 'add to existing (person): ' + pid
-        # switch to the existing person
-        p = RelatedAgent.where(id: pid).first
-      end
+        unless line[4].nil?
+          naw += line[4] + ' '
+        end
+        unless line[5].nil?
+          naw += line[5] + ' '
+        end
+        unless line[6].nil?
+          naw += line[6] + ' '
+        end
+        naw.gsub(' [ ]', '')
+        naw.gsub('[ ]', '')
+        naw.gsub(' []', '')
+        naw.gsub('[]', '')
+        naw.gsub('] [', ' ')
+        naw.gsub('][', ' ')
+        if naw == '?'
+          naw = ''
+        end
+        if naw = ' '
+          naw = ''
+        end
+        if naw.end_with?('  ')
+          naw[0..naw.length-3]
+        elsif naw.end_with? ' '
+          naw = naw[0..naw.length-2]
+        end
 
-      # try and guess if it's a group
-      if naw == ''
-        begin
-          if line[9].pluralize != line[9] && line[9].singularize == line[9]
-            p.rdftype = p.add_rdf_types_p
-          else
-            p.rdftype = p.add_rdf_types_g
+        # find out if this entry already has a person with the same name_as_written
+        # if it does, add to that Person rather than create the new one
+        pid = nil
+        unless naw == ''
+          begin
+            pid = SolrQuery.new.solr_query('relatedAgentFor_ssim:"' + e + '" AND person_as_written_tesim:"' + naw + '"', 'id')['response']['docs'].map.first['id']
+          rescue
+            pid = nil
           end
-        rescue
+        end
+        unless pid.nil?
+          puts 'add to existing (person): ' + pid
+          # switch to the existing person
+          p = RelatedAgent.find(pid)
+        end
+
+        # try and guess if it's a group
+        if naw == ''
+          begin
+            if line[10].pluralize != line[10] && line[10].singularize == line[10]
+              p.rdftype = p.add_rdf_types_p
+            else
+              p.rdftype = p.add_rdf_types_g
+            end
+          rescue
+            p.rdftype = p.add_rdf_types_p
+          end
+        else
+          p.person_as_written = [naw]
           p.rdftype = p.add_rdf_types_p
         end
-      else
-        p.person_as_written = [naw]
-        p.rdftype = p.add_rdf_types_p
-      end
 
-      descriptors = []
-      unless p.person_descriptor.nil?
-        descriptors = p.person_descriptor
-      end
-
-      unless line[7].nil?
-        descriptors += [person_descriptor_lookup(line[7].gsub('[', '').gsub(']', '').gsub('?', '').strip.downcase.singularize)]
-      end
-      notes = []
-      unless p.person_note.nil?
-        notes = p.person_note
-      end
-      unless line[8].nil?
-        notes += [line[8]]
-      end
-
-      # role and place
-
-      roles = []
-      unless p.person_role.nil?
-        roles = p.person_role
-      end
-      unless line[9].nil?
-        roles += [person_role_lookup(line[9].gsub('[', '').gsub(']', '').gsub('?', '').strip.downcase)]
-      end
-
-      unless line[10].nil?
-        if line[11].nil?
-          new_place_person(line[10], 'unknown', 'person role (for now)', p, nil, e)
-          notes += ["#{line[9]}, #{line[10]}"]
-        else
-          new_place_person(line[10], line[11].gsub('[', '').gsub(']', '').gsub('?', '').strip.downcase.singularize, 'person role (for now)', p, nil, e)
-          notes += ["#{line[9]}, #{line[10]}, #{line[11]}"]
-        end
-      end
-
-      unless line[13].nil?
-        descriptors += [line[13]]
-      end
-
-      unless line[14].nil?
-        descriptors += [person_descriptor_lookup(line[14].gsub('[', '').gsub(']', '').gsub('?', '').strip.downcase.singularize)]
-      end
-      unless line[15].nil?
-        stand = nil
-        unless line[16].nil?
-          stand = line[16]
-        end
-        if line[17].nil?
-          new_place_person(line[15], 'unknown', 'person status (for now)', p, stand, e)
-          notes += ["#{line[14]}, #{line[15]}"]
-        else
-          new_place_person(line[15], line[17].gsub('[', '').gsub(']', '').gsub('?', '').strip.downcase.singularize, 'person status (for now)', p, stand, e)
-          notes += ["#{line[14]}, #{line[15]}, #{line[17]}"]
+        descriptors = []
+        rel_places = []
+        desc_as_written = []
+        unless p.person_descriptor.nil?
+          descriptors = p.person_descriptor
         end
 
-      end
-
-      unless line[19].nil?
-        descriptors += [person_descriptor_lookup(line[19].gsub('[', '').gsub(']', '').gsub('?', '').strip.downcase.singularize)]
-      end
-      unless line[20].nil?
-        if line[21].nil?
-          new_place_person(line[20], 'unknown', 'person status (for now)', p, nil, e)
-          notes += ["#{line[19]}, #{line[20]}"]
-        else
-          new_place_person(line[20], line[21].gsub('[', '').gsub(']', '').gsub('?', '').strip.downcase.singularize, 'person status (for now)', p, nil, e)
-          notes += ["#{line[19]}, #{line[20]}, #{line[21]}"]
+        unless line[7].nil?
+          descriptors += [person_descriptor_lookup(line[7].gsub('[', '').gsub(']', '').gsub('?', '').strip.downcase.singularize)]
         end
-      end
-
-      unless line[23].nil?
-        descriptors += [person_descriptor_lookup(line[23].gsub('[', '').gsub(']', '').gsub('?', '').strip.downcase.singularize)]
-      end
-      unless line[24].nil?
-        if line[25].nil?
-          new_place_person(line[24], 'unknown', 'person status (for now)', p, nil, e)
-          notes += ["#{line[23]}, #{line[24]}"]
-        else
-          new_place_person(line[24], line[25].gsub('[', '').gsub(']', '').gsub('?', '').strip.downcase.singularize, 'person status (for now)', p, nil, e)
-          notes += ["#{line[23]}, #{line[24]}, #{line[25]}"]
+        notes = []
+        unless p.person_note.nil?
+          notes = p.person_note
         end
-      end
-
-      unless line[27].nil?
-        descriptors += [person_descriptor_lookup(line[27].gsub('[', '').gsub(']', '').gsub('?', '').strip.downcase.singularize)]
-      end
-      unless line[28].nil?
-        if line[28].nil?
-          new_place_person(line[28], 'unknown', 'person status (for now)', p, nil, e)
-          notes += ["#{line[27]}, #{line[28]}"]
-        else
-          new_place_person(line[28], line[29].gsub('[', '').gsub(']', '').gsub('?', '').strip.downcase.singularize, 'person status (for now)', p, nil, e)
-          notes += ["#{line[27]}, #{line[28]}, #{line[29]}"]
+        unless line[8].nil?
+          desc_as_written += [line[8]]
         end
-      end
 
-      unless line[31].nil?
-        descriptors += [person_descriptor_lookup(line[31].gsub('[', '').gsub(']', '').gsub('?', '').strip.downcase.singularize)]
-      end
-      unless line[32].nil?
-        if line[29].nil?
-          new_place_person(line[32], 'unknown', 'person status (for now)', p, nil, e)
-          notes += ["#{line[31]}, #{line[32]}"]
-        else
-          new_place_person(line[32], line[33].gsub('[', '').gsub(']', '').gsub('?', '').strip.downcase.singularize, 'person status (for now)', p, nil, e)
-          notes += ["#{line[31]}, #{line[32]}, #{line[33]}"]
+        # role and place
+
+        unless line[9].nil?
+          new_place_person(line[9], 'unknown', 'place of residence', p, nil, e)
         end
-      end
 
-      unless line[35].nil?
-        descriptors += [person_descriptor_lookup(line[35].gsub('[', '').gsub(']', '').gsub('?', '').strip.downcase.singularize)]
-      end
-      unless line[36].nil?
-        if line[37].nil?
-          new_place_person(line[36], 'unknown', 'person status (for now)', p, nil, e)
-          notes += ["#{line[35]}, #{line[36]}"]
-        else
-          new_place_person(line[36], line[37].gsub('[', '').gsub(']', '').gsub('?', '').strip.downcase.singularize, 'person status (for now)', p, nil, e)
-          notes += ["#{line[35]}, #{line[36]}, #{line[37]}"]
+        roles = []
+        unless p.person_role.nil?
+          roles = p.person_role
         end
-      end
+        unless line[10].nil?
+          r, rn = person_role_lookup(line[10].gsub('[', '').gsub(']', '').gsub('?', '').strip.downcase)
+          roles += [r]
+          unless rn.nil?
+            rolenote = ["Role: #{rn}"]
+          end
+        end
 
-      p.person_descriptor = descriptors
-      p.person_descriptor_as_written = notes
-      p.person_role += roles
-      ee = Entry.where(id: e).first
-      p.entry = ee
-      p.save
-      ee.related_agents += [p]
-      ee.save
-      #puts "Adding Person #{p.id}"
-    end
+        unless line[11].nil?
+          rel_places << line[11]
+          if line[12].nil?
+            new_place_person(line[11], 'unknown', 'place of person role', p, nil, e)
+          else
+            new_place_person(line[11], line[12].gsub('[', '').gsub(']', '').gsub('?', '').strip.downcase.singularize, 'place of person role', p, nil, e)
+          end
+        end
+
+        unless line[13].nil?
+          descriptors += [line[13]]
+        end
+
+        unless line[14].nil?
+          descriptors += [person_descriptor_lookup(line[14].gsub('[', '').gsub(']', '').gsub('?', '').strip.downcase.singularize)]
+        end
+        unless line[15].nil?
+          rel_places << line[15]
+          stand = nil
+          unless line[16].nil?
+            stand = line[16]
+          end
+          if line[17].nil?
+            new_place_person(line[15], 'unknown', 'place of person status', p, stand, e)
+            desc_as_written += ["#{line[14]}, #{line[15]}"]
+          else
+            new_place_person(line[15], line[17].gsub('[', '').gsub(']', '').gsub('?', '').strip.downcase.singularize, 'place of person status', p, stand, e)
+            desc_as_written += ["#{line[14]}, #{line[15]}"]
+          end
+
+        end
+
+        unless line[18].nil?
+          descriptors += [person_descriptor_lookup(line[18].gsub('[', '').gsub(']', '').gsub('?', '').strip.downcase.singularize)]
+        end
+        unless line[19].nil?
+          rel_places << line[19]
+          if line[20].nil?
+            new_place_person(line[19], 'unknown', 'place of person status', p, nil, e)
+            desc_as_written += ["#{line[18]}, #{line[19]}"]
+          else
+            new_place_person(line[19], line[20].gsub('[', '').gsub(']', '').gsub('?', '').strip.downcase.singularize, 'place of person status', p, nil, e)
+            desc_as_written += ["#{line[18]}, #{line[19]}"]
+          end
+        end
+
+        unless line[21].nil?
+          descriptors += [person_descriptor_lookup(line[21].gsub('[', '').gsub(']', '').gsub('?', '').strip.downcase.singularize)]
+        end
+        unless line[22].nil?
+          rel_places << line[22]
+          if line[23].nil?
+            new_place_person(line[22], 'unknown', 'place of person status', p, nil, e)
+            desc_as_written += ["#{line[21]}"]
+          else
+            new_place_person(line[22], line[23].gsub('[', '').gsub(']', '').gsub('?', '').strip.downcase.singularize, 'place of person status', p, nil, e)
+            desc_as_written += ["#{line[21]}, #{line[22]}"]
+          end
+        end
+
+        unless line[24].nil?
+          descriptors += [person_descriptor_lookup(line[24].gsub('[', '').gsub(']', '').gsub('?', '').strip.downcase.singularize)]
+        end
+        unless line[25].nil?
+          rel_places << line[25]
+          if line[26].nil?
+            new_place_person(line[25], 'unknown', 'place of person status', p, nil, e)
+            desc_as_written += ["#{line[24]}, #{line[25]}"]
+          else
+            new_place_person(line[25], line[26].gsub('[', '').gsub(']', '').gsub('?', '').strip.downcase.singularize, 'place of person status', p, nil, e)
+            desc_as_written += ["#{line[24]}, #{line[25]}"]
+          end
+        end
+
+        unless line[27].nil?
+          descriptors += [person_descriptor_lookup(line[27].gsub('[', '').gsub(']', '').gsub('?', '').strip.downcase.singularize)]
+        end
+        unless line[28].nil?
+          rel_places << line[28]
+          if line[29].nil?
+            new_place_person(line[28], 'unknown', 'place of person status', p, nil, e)
+            desc_as_written += ["#{line[27]}, #{line[28]}"]
+          else
+            new_place_person(line[28], line[29].gsub('[', '').gsub(']', '').gsub('?', '').strip.downcase.singularize, 'place of person status', p, nil, e)
+            desc_as_written += ["#{line[27]}, #{line[28]}"]
+          end
+        end
+
+        p.person_descriptor = descriptors
+        p.person_related_place = rel_places
+        p.person_descriptor_as_written = desc_as_written
+        p.person_role += roles
+        p.person_note = rolenote
+
+        ee = Entry.find(e)
+        p.entry = ee
+        p.save
+        ee.related_agents += [p]
+        ee.save
+        #puts "Adding Person #{p.id}"
+      end
+    #end
   end
 
   def build_date_place(line, entries)
@@ -429,78 +474,110 @@ namespace :entries do
     entries.each do |e|
 
       # (start, dend, inf, unc, app, role, note, entry)
-      new_entry_date(line[3], line[4], line[5], line[6], line[7], line[8], line[12], e)
+      new_entry_date(line[3], line[4], line[5], line[6], line[7], line[8], line[11], e)
 
-      unless line[13].nil?
-        new_entry_date(line[13], line[14], line[15], line[16], line[17], line[18], line[21], e)
+      unless line[12].nil?
+        if line[17].nil?
+          role = 'recited document date'
+        else
+          role = line[17]
+        end
+        new_entry_date(line[12], line[13], line[14], line[15], line[16], role, line[20], e)
       end
 
-      unless line[22].nil?
-        new_entry_date(line[13], nil, nil, nil, nil, 'unknown', nil, e)
+      unless line[21].nil?
+        new_entry_date(line[21], nil, nil, nil, nil, 'recited document date', nil, e)
       end
 
       unless line[9].nil?
-        new_place(line[9], line[10], line[11], e)
+        new_place(line[9], line[10], 'document dated at', e)
       end
 
-      unless line[19].nil?
-        new_place(line[19], line[20], 'recited', e)
+      unless line[18].nil?
+        new_place(line[18], line[19], 'recited document date at', e)
       end
 
-      unless line[23].nil?
-        new_place(line[23], line[24], line[25], e)
+      unless line[22].nil?
+        new_place(line[22], line[23], 'recited document date at', e)
       end
     end
   end
 
   def date_lookup(value)
+    term = ''
     begin
-      DateRoleTerms.new('subauthority').search(value).map.first['id']
+      term = Terms::DateRoleTerms.new('subauthority').find_id_with_alts(value)
     rescue
-      DateRoleTerms.new('subauthority').search('unknown').map.first['id']
     end
+    if term == '' or term.nil?
+      term = Terms::DateRoleTerms.new('subauthority').find_id_with_alts('unknown')
+    end
+    term
   end
 
   def place_type_lookup(value)
+    term = ''
     begin
-      PlaceTypeTerms.new('subauthority').search(value).map.first['id']
+      term = Terms::PlaceTypeTerms.new('subauthority').find_id_with_alts(value)
     rescue
-      PlaceTypeTerms.new('subauthority').search('unknown').map.first['id']
     end
+    if term == '' or term.nil?
+      term = Terms::PlaceTypeTerms.new('subauthority').find_id_with_alts('unknown')
+    end
+    term
   end
 
   def place_role_lookup(value)
+    term = ''
     begin
-      PlaceRoleTerms.new('subauthority').search(value).map.first['id']
+      term = Terms::PlaceRoleTerms.new('subauthority').find_id_with_alts(value)
     rescue
-      PlaceRoleTerms.new('subauthority').search('recited date (for now)').map.first['id']
     end
+    if term == '' or term.nil?
+      term = Terms::PlaceRoleTerms.new('subauthority').find_id_with_alts('recited date')
+    end
+    term
   end
 
   def person_role_lookup(value)
+    term = ''
+    term2 = nil
     begin
-      PersonRoleTerms.new('subauthority').search(value).map.first['id']
+      term = Terms::PersonRoleTerms.new('subauthority').find_id_with_alts(value)
     rescue
-      PersonRoleTerms.new('subauthority').search('unknown').map.first['id']
     end
+    if term == '' or term.nil?
+      term = Terms::PersonRoleTerms.new('subauthority').find_id_with_alts('unknown')
+      term2 = value
+    end
+    return term, term2
   end
 
   def person_descriptor_lookup(value)
+    term = ''
     begin
-      DescriptorTerms.new('subauthority').search(value).map.first['id']
+      term = Terms::DescriptorTerms.new('subauthority').find_id_with_alts(value)
     rescue
-      DescriptorTerms.new('subauthority').search('unknown').map.first['id']
     end
+    if term == '' or term.nil?
+      term = Terms::DescriptorTerms.new('subauthority').find_id_with_alts('unknown')
+    end
+    term
   end
 
-  def entry_type_lookup
-    EntryTypeTerms.new('subauthority').search('unknown').map.first['id']
+  def subject_lookup(value)
+    term = ''
+    begin
+      term = Terms::SubjectTerms.new('subauthority').find_id_with_alts(value)
+    rescue
+    end
+    term
   end
 
   def new_entry_date(start, dend, inf, unc, app, role, note, entry)
     date = EntryDate.new
     date.rdftype = date.add_rdf_types
-    ee = Entry.where(id: entry).first
+    ee = Entry.find(entry)
     date.entry = ee
     unless note.nil?
       date.date_note = note
@@ -530,7 +607,7 @@ namespace :entries do
     if start == '0000'
       s.date = 'undated'
     else
-      s.date = start
+      s.date = start.gsub('-','/')
     end
 
     certainty = []
@@ -554,7 +631,7 @@ namespace :entries do
     if dend.nil?
       s.date_type = 'single'
     else
-      dend.gsub('[', '').gsub(']', '').gsub('-00', '')
+      dend.gsub('[', '').gsub(']', '').gsub('-00', '').gsub('-','/')
       ss = SingleDate.new
       ss.rdftype = ss.add_rdf_types
       s.date_type = 'start'
@@ -593,14 +670,14 @@ namespace :entries do
     unless pid.nil?
       puts 'add to existing (place): ' + pid
       # switch to the existing place
-      pl = RelatedPlace.where(id: pid).first
+      pl = RelatedPlace.find(pid)
     end
 
     pl.rdftype = pl.add_rdf_types
     pl.place_as_written = [written]
     pl.place_role = [place_role_lookup(role)]
     pl.place_type = [place_type_lookup(ptype)]
-    ee = Entry.where(id: entry).first
+    ee = Entry.find(entry)
     pl.entry = ee
     pl.save
     ee.related_places += [pl]
@@ -623,7 +700,7 @@ namespace :entries do
     unless pid.nil?
       puts 'add to existing (place_person): ' + pid
       # switch to the existing place
-      pl = RelatedPlace.where(id: pid).first
+      pl = RelatedPlace.find(pid)
     end
     pl.rdftype = pl.add_rdf_types
     pl.place_as_written = [written]
@@ -638,12 +715,13 @@ namespace :entries do
     #person.related_places += [pl]
     pl.related_agent += [person]
     if person.person_related_place.nil?
-      person.person_related_place = [written]
+      person.person_related_place += [written]
     else
       person.person_related_place += [written]
     end
     person.save
-    ee = Entry.where(id: entry).first
+    ee = Entry.find(entry)
+    pl.entry = ee
     ee.related_places += [pl]
     ee.save
   end

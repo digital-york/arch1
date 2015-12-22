@@ -1,5 +1,21 @@
 namespace :regfols_cleanup do
 
+  task add_thumbs: :environment do
+
+    r = Register.find(SolrQuery.new.solr_query('reg_id_tesim:"Abp Reg 5A"', 'id', 1)['response']['docs'][0]['id'])
+    r.thumbnail_url = 'http://dlib.york.ac.uk/cgi-bin/iipsrv.fcgi?IIIF=/usr/digilib-webdocs/digilibImages/HOA/current/A/20151209/Abp_Reg_05A_1126.jp2/5000,7500,800,800/200,/0/default.jpg'
+    r.save
+
+    r = Register.find(SolrQuery.new.solr_query('reg_id_tesim:"Abp Reg 31"', 'id', 1)['response']['docs'][0]['id'])
+    r.thumbnail_url = 'http://dlib.york.ac.uk/cgi-bin/iipsrv.fcgi?IIIF=/usr/digilib-webdocs/digilibImages/HOA/current/A/20151110/Abp_Reg_31_0067.jp2/1000,3000,800,800/200,/0/default.jpg'
+    r.save
+
+    r = Register.find(SolrQuery.new.solr_query('reg_id_tesim:"Abp Reg 32"', 'id', 1)['response']['docs'][0]['id'])
+    r.thumbnail_url = 'http://dlib.york.ac.uk/cgi-bin/iipsrv.fcgi?IIIF=/usr/digilib-webdocs/digilibImages/HOA/current/A/20151110/Abp_Reg_32_0096.jp2/0,5000,800,800/200,/0/default.jpg'
+    r.save
+
+  end
+
   task a: :environment do
     path = Rails.root + 'lib/assets/'
 

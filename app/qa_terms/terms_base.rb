@@ -24,8 +24,14 @@ class TermsBase
     parse_authority_response(SolrQuery.new.solr_query(q='inScheme_ssim:"' + terms_id + '" AND id:"' + id + '"',fl='id,preflabel_tesim,definition_tesim,broader_tesim'))
   end
 
+  # use preflabel_si to get exact match (string instead of token)
   def find_id val
-    parse_terms_id_response(SolrQuery.new.solr_query(q='inScheme_ssim:"' + terms_id + '" AND preflabel_tesim:"' + val + '"', fl='id'))
+    parse_terms_id_response(SolrQuery.new.solr_query(q='inScheme_ssim:"' + terms_id + '" AND preflabel_si:"' + val + '"', fl='id'))
+  end
+
+  # use preflabel_si to get exact match (string instead of token)
+  def find_id_with_alts val
+    parse_terms_id_response(SolrQuery.new.solr_query(q='inScheme_ssim:"' + terms_id + '" AND (preflabel_si:"' + val + '" OR altlabel_tesim:"' + val + '")', fl='id'))
   end
 
   def find_value_string id

@@ -1,299 +1,299 @@
-Image,folio,recto/verso,Notes,UV
-Abp_Reg_32_0001,,,Outside of front board,
-Abp_Reg_32_0002,,,Pastedown on inside of front board; Paper,
-Abp_Reg_32_0003,,,Front flyleaf 1 (recto); Paper,
-Abp_Reg_32_0004,,,Front flyleaf 1 (verso); Paper,
-Abp_Reg_32_0005,,,Front flyleaf 2 (recto); Paper,
-Abp_Reg_32_0006,,,Front flyleaf 2 (verso); Paper,
-Abp_Reg_32_0007,,,Front flyleaf 3 (recto); Paper,
-Abp_Reg_32_0008,,,Front flyleaf 3 (verso); Paper,
-Abp_Reg_32_0009,i,r,Index; Paper,
-Abp_Reg_32_0010,i,v,Index; Paper,
-Abp_Reg_32_0011,ii,r,Index; Paper,
-Abp_Reg_32_0012,ii,v,Index; Paper,
-Abp_Reg_32_0013,iii,r,Index; Paper,
-Abp_Reg_32_0014,iii,v,Index; Paper,
-Abp_Reg_32_0015,iv,r,Index; Paper,
-Abp_Reg_32_0016,iv,v,Index; Paper,
-Abp_Reg_32_0017,v,r,Index; Paper,
-Abp_Reg_32_0018,v,r,Index; Paper,UV
-Abp_Reg_32_0019,v,v,Index; Paper,
-Abp_Reg_32_0020,vi,r,Index; Paper,
-Abp_Reg_32_0021,vi,v,Index; Paper,
-Abp_Reg_32_0022,vii,r,Index; Paper,
-Abp_Reg_32_0023,vii,v,Index; Paper,
-Abp_Reg_32_0024,viii,r,Index; Paper,
-Abp_Reg_32_0025,viii,v,Index; Paper,
-Abp_Reg_32_0026,ix,r,Index; Paper,
-Abp_Reg_32_0027,ix,v,Index; Paper,
-Abp_Reg_32_0028,x,r,Index; Paper,
-Abp_Reg_32_0029,x,v,Index; Paper,
-Abp_Reg_32_0030,xi,r,Index; Paper,
-Abp_Reg_32_0031,xi,v,Index; Paper,
-Abp_Reg_32_0032,1,r,,
-Abp_Reg_32_0033,1,v,,
-Abp_Reg_32_0034,2,r,,
-Abp_Reg_32_0035,2,v,,
-Abp_Reg_32_0036,3,r,,
-Abp_Reg_32_0037,3,v,,
-Abp_Reg_32_0038,4,r,,
-Abp_Reg_32_0039,4,v,,
-Abp_Reg_32_0040,5,r,,
-Abp_Reg_32_0041,5,v,,
-Abp_Reg_32_0042,6,r,,
-Abp_Reg_32_0043,6,v,,
-Abp_Reg_32_0044,7,r,,
-Abp_Reg_32_0045,7,v,,
-Abp_Reg_32_0046,8,r,,
-Abp_Reg_32_0047,8,v,,
-Abp_Reg_32_0048,9,r,,
-Abp_Reg_32_0049,9,v,,
-Abp_Reg_32_0050,10,r,,
-Abp_Reg_32_0051,10,v,,
-Abp_Reg_32_0052,11,r,,
-Abp_Reg_32_0053,11,v,,
-Abp_Reg_32_0054,12,r,,
-Abp_Reg_32_0055,12,v,,
-Abp_Reg_32_0056,13,r,,
-Abp_Reg_32_0057,13,v,,
-Abp_Reg_32_0058,14,r,,
-Abp_Reg_32_0059,14,v,,
-Abp_Reg_32_0060,15,r,,
-Abp_Reg_32_0061,15,v,,
-Abp_Reg_32_0062,16,r,,
-Abp_Reg_32_0063,16,v,,
-Abp_Reg_32_0064,17,r,,
-Abp_Reg_32_0065,17,v,,
-Abp_Reg_32_0066,18,r,,
-Abp_Reg_32_0067,18,v,,
-Abp_Reg_32_0068,19,r,,
-Abp_Reg_32_0069,19,v,,
-Abp_Reg_32_0070,20,r,,
-Abp_Reg_32_0071,20,v,,
-Abp_Reg_32_0072,21,r,,
-Abp_Reg_32_0073,21,v,,
-Abp_Reg_32_0074,22,r,,
-Abp_Reg_32_0075,22,v,,
-Abp_Reg_32_0076,23,r,,
-Abp_Reg_32_0077,23,v,,
-Abp_Reg_32_0078,24,r,,
-Abp_Reg_32_0079,24,v,,
-Abp_Reg_32_0080,25,r,,
-Abp_Reg_32_0081,25,v,,
-Abp_Reg_32_0082,26,r,,
-Abp_Reg_32_0083,26,v,,
-Abp_Reg_32_0084,27,r,,
-Abp_Reg_32_0085,27,v,,
-Abp_Reg_32_0086,28,r,,
-Abp_Reg_32_0087,28,v,,
-Abp_Reg_32_0088,29,r,,
-Abp_Reg_32_0089,29,v,,
-Abp_Reg_32_0090,30,r,,
-Abp_Reg_32_0091,30,v,,
-Abp_Reg_32_0092,31,r,,
-Abp_Reg_32_0093,31,v,,
-Abp_Reg_32_0094,32,r,,
-Abp_Reg_32_0095,32,v,,
-Abp_Reg_32_0096,33,r,,
-Abp_Reg_32_0097,33,v,,
-Abp_Reg_32_0098,34,r,,
-Abp_Reg_32_0099,34,v,,
-Abp_Reg_32_0100,35,r,,
-Abp_Reg_32_0101,35,v,,
-Abp_Reg_32_0102,36,r,,
-Abp_Reg_32_0103,36,v,,
-Abp_Reg_32_0104,37,r,,
-Abp_Reg_32_0105,37,v,,
-Abp_Reg_32_0106,38,r,,
-Abp_Reg_32_0107,38,v,,
-Abp_Reg_32_0108,39,r,,
-Abp_Reg_32_0109,39,v,,
-Abp_Reg_32_0110,40,r,,
-Abp_Reg_32_0111,40,v,,
-Abp_Reg_32_0112,41,r,,
-Abp_Reg_32_0113,41,v,,
-Abp_Reg_32_0114,42,r,,
-Abp_Reg_32_0115,42,v,,
-Abp_Reg_32_0116,43,r,,
-Abp_Reg_32_0117,43,v,,
-Abp_Reg_32_0118,44,r,,
-Abp_Reg_32_0119,44,v,,
-Abp_Reg_32_0120,45,r,,
-Abp_Reg_32_0121,45,v,,
-Abp_Reg_32_0122,46,r,,
-Abp_Reg_32_0123,46,v,,
-Abp_Reg_32_0124,47,r,,
-Abp_Reg_32_0125,47,v,,
-Abp_Reg_32_0126,48,r,,
-Abp_Reg_32_0127,48,v,,
-Abp_Reg_32_0128,49,r,,
-Abp_Reg_32_0129,49,v,,
-Abp_Reg_32_0130,50,r,,
-Abp_Reg_32_0131,50,v,,
-Abp_Reg_32_0132,51,r,,
-Abp_Reg_32_0133,51,v,,
-Abp_Reg_32_0134,52,r,,
-Abp_Reg_32_0135,52,v,,
-Abp_Reg_32_0136,53,r,,
-Abp_Reg_32_0137,53,v,,
-Abp_Reg_32_0138,54,r,,
-Abp_Reg_32_0139,54,v,,
-Abp_Reg_32_0140,55,r,,
-Abp_Reg_32_0141,55,v,,
-Abp_Reg_32_0142,56,r,,
-Abp_Reg_32_0143,56,v,,
-Abp_Reg_32_0144,57,r,,
-Abp_Reg_32_0145,57,v,,
-Abp_Reg_32_0146,58,r,,
-Abp_Reg_32_0147,58,v,,
-Abp_Reg_32_0148,59,r,,
-Abp_Reg_32_0149,59,v,,
-Abp_Reg_32_0150,60,r,,
-Abp_Reg_32_0151,60,v,,
-Abp_Reg_32_0152,61,r,,
-Abp_Reg_32_0153,61,v,,
-Abp_Reg_32_0154,62,r,,
-Abp_Reg_32_0155,62,v,,
-Abp_Reg_32_0156,63,r,,
-Abp_Reg_32_0157,63,v,,
-Abp_Reg_32_0158,64,r,,
-Abp_Reg_32_0159,64,v,,
-Abp_Reg_32_0160,65,r,,
-Abp_Reg_32_0161,65,v,,
-Abp_Reg_32_0162,66,r,,
-Abp_Reg_32_0163,66,v,,
-Abp_Reg_32_0164,67,r,,
-Abp_Reg_32_0165,67,v,,
-Abp_Reg_32_0166,68,r,,
-Abp_Reg_32_0167,68,v,,
-Abp_Reg_32_0168,69,r,,
-Abp_Reg_32_0169,69,v,,
-Abp_Reg_32_0170,70,r,,
-Abp_Reg_32_0171,70,v,,
-Abp_Reg_32_0172,71,r,,
-Abp_Reg_32_0173,71,v,,
-Abp_Reg_32_0174,72,r,,
-Abp_Reg_32_0175,72,v,,
-Abp_Reg_32_0176,73,r,,
-Abp_Reg_32_0177,73,v,,
-Abp_Reg_32_0178,74,r,,
-Abp_Reg_32_0179,74,v,,
-Abp_Reg_32_0180,75,r,,
-Abp_Reg_32_0181,75,v,,
-Abp_Reg_32_0182,76,r,,
-Abp_Reg_32_0183,76,v,,
-Abp_Reg_32_0184,77,r,,
-Abp_Reg_32_0185,77,v,,
-Abp_Reg_32_0186,78,r,,
-Abp_Reg_32_0187,78,v,,
-Abp_Reg_32_0188,79,r,,
-Abp_Reg_32_0189,79,v,,
-Abp_Reg_32_0190,80,r,,
-Abp_Reg_32_0191,80,v,,
-Abp_Reg_32_0192,81,r,,
-Abp_Reg_32_0193,81,v,,
-Abp_Reg_32_0194,82,r,,
-Abp_Reg_32_0195,82,v,,
-Abp_Reg_32_0196,83,r,,
-Abp_Reg_32_0197,83,v,,
-Abp_Reg_32_0198,84,r,,
-Abp_Reg_32_0199,84,v,,
-Abp_Reg_32_0200,85,r,,
-Abp_Reg_32_0201,85,v,,
-Abp_Reg_32_0202,86,r,,
-Abp_Reg_32_0203,86,v,,
-Abp_Reg_32_0204,87,r,,
-Abp_Reg_32_0205,87,v,,
-Abp_Reg_32_0206,88,r,,
-Abp_Reg_32_0207,88,v,,
-Abp_Reg_32_0208,89,r,,
-Abp_Reg_32_0209,89,v,,
-Abp_Reg_32_0210,90,r,,
-Abp_Reg_32_0211,90,v,,
-Abp_Reg_32_0212,91,r,,
-Abp_Reg_32_0213,91,v,,
-Abp_Reg_32_0214,92,r,,
-Abp_Reg_32_0215,92,v,,
-Abp_Reg_32_0216,93,r,,
-Abp_Reg_32_0217,93,v,,
-Abp_Reg_32_0218,94,r,,
-Abp_Reg_32_0219,94,v,,
-Abp_Reg_32_0220,94A,,Paper,
-Abp_Reg_32_0221,94A,,Paper,
-Abp_Reg_32_0222,94B,,,
-Abp_Reg_32_0223,94B,,,
-Abp_Reg_32_0224,94B,,,
-Abp_Reg_32_0225,94B,,,
-Abp_Reg_32_0226,94B,,,
-Abp_Reg_32_0227,94B,,,
-Abp_Reg_32_0228,94B,,,
-Abp_Reg_32_0229,94A,r,Paper,
-Abp_Reg_32_0230,94A,v,Paper,
-Abp_Reg_32_0231,95,r,,
-Abp_Reg_32_0232,95,v,,
-Abp_Reg_32_0233,96,r,,
-Abp_Reg_32_0234,96,v,,
-Abp_Reg_32_0235,97,r,,
-Abp_Reg_32_0236,97,v,,
-Abp_Reg_32_0237,98,r,,
-Abp_Reg_32_0238,98,v,,
-Abp_Reg_32_0239,99,r,,
-Abp_Reg_32_0240,99,v,,
-Abp_Reg_32_0241,100,r,,
-Abp_Reg_32_0242,100,v,,
-Abp_Reg_32_0243,101,r,,
-Abp_Reg_32_0244,101,v,,
-Abp_Reg_32_0245,102,r,,
-Abp_Reg_32_0246,102,v,,
-Abp_Reg_32_0247,103,r,,
-Abp_Reg_32_0248,103,v,,
-Abp_Reg_32_0249,104,r,,
-Abp_Reg_32_0250,104,v,,
-Abp_Reg_32_0251,105,r,,
-Abp_Reg_32_0252,105,v,,
-Abp_Reg_32_0253,106,r,,
-Abp_Reg_32_0254,106,v,,
-Abp_Reg_32_0255,107,r,,
-Abp_Reg_32_0256,107,v,,
-Abp_Reg_32_0257,108,r,,
-Abp_Reg_32_0258,108,v,,
-Abp_Reg_32_0259,109,r,,
-Abp_Reg_32_0260,109,r,,UV
-Abp_Reg_32_0261,109,v,,
-Abp_Reg_32_0262,110,r,,
-Abp_Reg_32_0263,110,v,,
-Abp_Reg_32_0264,111,r,,
-Abp_Reg_32_0265,111,v,,
-Abp_Reg_32_0266,111,v,,UV
-Abp_Reg_32_0267,112,r,,
-Abp_Reg_32_0268,112,v,,
-Abp_Reg_32_0269,113,r,,
-Abp_Reg_32_0270,113,v,,
-Abp_Reg_32_0271,114,r,,
-Abp_Reg_32_0272,114,v,,
-Abp_Reg_32_0273,115,r,,
-Abp_Reg_32_0274,115,v,,
-Abp_Reg_32_0275,116,r,,
-Abp_Reg_32_0276,116,v,,
-Abp_Reg_32_0277,117,r,,
-Abp_Reg_32_0278,117,v,,
-Abp_Reg_32_0279,118,r,,
-Abp_Reg_32_0280,118,v,,
-Abp_Reg_32_0281,119,r,,
-Abp_Reg_32_0282,119,v,,
-Abp_Reg_32_0283,120,r,,
-Abp_Reg_32_0284,120,v,,
-Abp_Reg_32_0285,,,Back flyleaf 3 (recto); Paper,
-Abp_Reg_32_0286,,,Back flyleaf 3 (verso); Paper,
-Abp_Reg_32_0287,,,Back flyleaf 2 (recto); Paper,
-Abp_Reg_32_0288,,,Back flyleaf 2 (verso); Paper,
-Abp_Reg_32_0289,,,Back flyleaf 1 (recto); Paper,
-Abp_Reg_32_0290,,,Back flyleaf 1 (verso); Paper,
-Abp_Reg_32_0291,,,Pastedown on inside of back board; Paper,
-Abp_Reg_32_0292,,,Outside of back board,
-Abp_Reg_32_0293,94A,r,Items found in gutter,
-Abp_Reg_32_0294,76,r,Item 1 found in gutter (view 1),
-Abp_Reg_32_0295,76,r,Item 1 found in gutter (view 2),
-Abp_Reg_32_0296,76,r,Items 2 and 3 found in gutter (view 1),
-Abp_Reg_32_0297,76,r,Items 2 and 3 found in gutter (view 2),
-Abp_Reg_32_2000,,,Colour reference image,
+Image,folio,recto/verso,Notes,UV,PID
+Abp_Reg_32_0001,,,Outside of front board,,york:856118
+Abp_Reg_32_0002,,,Pastedown on inside of front board; Paper,,york:856119
+Abp_Reg_32_0003,,,Front flyleaf 1 (recto); Paper,,york:856120
+Abp_Reg_32_0004,,,Front flyleaf 1 (verso); Paper,,york:856121
+Abp_Reg_32_0005,,,Front flyleaf 2 (recto); Paper,,york:856122
+Abp_Reg_32_0006,,,Front flyleaf 2 (verso); Paper,,york:856123
+Abp_Reg_32_0007,,,Front flyleaf 3 (recto); Paper,,york:856124
+Abp_Reg_32_0008,,,Front flyleaf 3 (verso); Paper,,york:856125
+Abp_Reg_32_0009,i,r,Index; Paper,,york:856126
+Abp_Reg_32_0010,i,v,Index; Paper,,york:856127
+Abp_Reg_32_0011,ii,r,Index; Paper,,york:856128
+Abp_Reg_32_0012,ii,v,Index; Paper,,york:856129
+Abp_Reg_32_0013,iii,r,Index; Paper,,york:856130
+Abp_Reg_32_0014,iii,v,Index; Paper,,york:856131
+Abp_Reg_32_0015,iv,r,Index; Paper,,york:856132
+Abp_Reg_32_0016,iv,v,Index; Paper,,york:856133
+Abp_Reg_32_0017,v,r,Index; Paper,,york:856134
+Abp_Reg_32_0018,v,r,Index; Paper,UV,york:856135
+Abp_Reg_32_0019,v,v,Index; Paper,,york:856136
+Abp_Reg_32_0020,vi,r,Index; Paper,,york:856137
+Abp_Reg_32_0021,vi,v,Index; Paper,,york:856138
+Abp_Reg_32_0022,vii,r,Index; Paper,,york:856139
+Abp_Reg_32_0023,vii,v,Index; Paper,,york:856140
+Abp_Reg_32_0024,viii,r,Index; Paper,,york:856141
+Abp_Reg_32_0025,viii,v,Index; Paper,,york:856142
+Abp_Reg_32_0026,ix,r,Index; Paper,,york:856143
+Abp_Reg_32_0027,ix,v,Index; Paper,,york:856144
+Abp_Reg_32_0028,x,r,Index; Paper,,york:856145
+Abp_Reg_32_0029,x,v,Index; Paper,,york:856146
+Abp_Reg_32_0030,xi,r,Index; Paper,,york:856147
+Abp_Reg_32_0031,xi,v,Index; Paper,,york:856148
+Abp_Reg_32_0032,1,r,,,york:856149
+Abp_Reg_32_0033,1,v,,,york:856150
+Abp_Reg_32_0034,2,r,,,york:856151
+Abp_Reg_32_0035,2,v,,,york:856152
+Abp_Reg_32_0036,3,r,,,york:856153
+Abp_Reg_32_0037,3,v,,,york:856154
+Abp_Reg_32_0038,4,r,,,york:856155
+Abp_Reg_32_0039,4,v,,,york:856156
+Abp_Reg_32_0040,5,r,,,york:856157
+Abp_Reg_32_0041,5,v,,,york:856158
+Abp_Reg_32_0042,6,r,,,york:856159
+Abp_Reg_32_0043,6,v,,,york:856160
+Abp_Reg_32_0044,7,r,,,york:856161
+Abp_Reg_32_0045,7,v,,,york:856162
+Abp_Reg_32_0046,8,r,,,york:856163
+Abp_Reg_32_0047,8,v,,,york:856164
+Abp_Reg_32_0048,9,r,,,york:856165
+Abp_Reg_32_0049,9,v,,,york:856166
+Abp_Reg_32_0050,10,r,,,york:856167
+Abp_Reg_32_0051,10,v,,,york:856168
+Abp_Reg_32_0052,11,r,,,york:856169
+Abp_Reg_32_0053,11,v,,,york:856170
+Abp_Reg_32_0054,12,r,,,york:856171
+Abp_Reg_32_0055,12,v,,,york:856172
+Abp_Reg_32_0056,13,r,,,york:856173
+Abp_Reg_32_0057,13,v,,,york:856174
+Abp_Reg_32_0058,14,r,,,york:856175
+Abp_Reg_32_0059,14,v,,,york:856176
+Abp_Reg_32_0060,15,r,,,york:856177
+Abp_Reg_32_0061,15,v,,,york:856178
+Abp_Reg_32_0062,16,r,,,york:856179
+Abp_Reg_32_0063,16,v,,,york:856180
+Abp_Reg_32_0064,17,r,,,york:856181
+Abp_Reg_32_0065,17,v,,,york:856182
+Abp_Reg_32_0066,18,r,,,york:856183
+Abp_Reg_32_0067,18,v,,,york:856184
+Abp_Reg_32_0068,19,r,,,york:856185
+Abp_Reg_32_0069,19,v,,,york:856186
+Abp_Reg_32_0070,20,r,,,york:856187
+Abp_Reg_32_0071,20,v,,,york:856188
+Abp_Reg_32_0072,21,r,,,york:856189
+Abp_Reg_32_0073,21,v,,,york:856190
+Abp_Reg_32_0074,22,r,,,york:856191
+Abp_Reg_32_0075,22,v,,,york:856192
+Abp_Reg_32_0076,23,r,,,york:856193
+Abp_Reg_32_0077,23,v,,,york:856194
+Abp_Reg_32_0078,24,r,,,york:856195
+Abp_Reg_32_0079,24,v,,,york:856196
+Abp_Reg_32_0080,25,r,,,york:856197
+Abp_Reg_32_0081,25,v,,,york:856198
+Abp_Reg_32_0082,26,r,,,york:856199
+Abp_Reg_32_0083,26,v,,,york:856200
+Abp_Reg_32_0084,27,r,,,york:856201
+Abp_Reg_32_0085,27,v,,,york:856202
+Abp_Reg_32_0086,28,r,,,york:856203
+Abp_Reg_32_0087,28,v,,,york:856204
+Abp_Reg_32_0088,29,r,,,york:856205
+Abp_Reg_32_0089,29,v,,,york:856206
+Abp_Reg_32_0090,30,r,,,york:856207
+Abp_Reg_32_0091,30,v,,,york:856208
+Abp_Reg_32_0092,31,r,,,york:856209
+Abp_Reg_32_0093,31,v,,,york:856210
+Abp_Reg_32_0094,32,r,,,york:856211
+Abp_Reg_32_0095,32,v,,,york:856212
+Abp_Reg_32_0096,33,r,,,york:856213
+Abp_Reg_32_0097,33,v,,,york:856214
+Abp_Reg_32_0098,34,r,,,york:856215
+Abp_Reg_32_0099,34,v,,,york:856216
+Abp_Reg_32_0100,35,r,,,york:856217
+Abp_Reg_32_0101,35,v,,,york:856218
+Abp_Reg_32_0102,36,r,,,york:856219
+Abp_Reg_32_0103,36,v,,,york:856220
+Abp_Reg_32_0104,37,r,,,york:856221
+Abp_Reg_32_0105,37,v,,,york:856222
+Abp_Reg_32_0106,38,r,,,york:856223
+Abp_Reg_32_0107,38,v,,,york:856224
+Abp_Reg_32_0108,39,r,,,york:856225
+Abp_Reg_32_0109,39,v,,,york:856226
+Abp_Reg_32_0110,40,r,,,york:856227
+Abp_Reg_32_0111,40,v,,,york:856228
+Abp_Reg_32_0112,41,r,,,york:856229
+Abp_Reg_32_0113,41,v,,,york:856230
+Abp_Reg_32_0114,42,r,,,york:856231
+Abp_Reg_32_0115,42,v,,,york:856232
+Abp_Reg_32_0116,43,r,,,york:856233
+Abp_Reg_32_0117,43,v,,,york:856234
+Abp_Reg_32_0118,44,r,,,york:856235
+Abp_Reg_32_0119,44,v,,,york:856236
+Abp_Reg_32_0120,45,r,,,york:856237
+Abp_Reg_32_0121,45,v,,,york:856238
+Abp_Reg_32_0122,46,r,,,york:856239
+Abp_Reg_32_0123,46,v,,,york:856240
+Abp_Reg_32_0124,47,r,,,york:856241
+Abp_Reg_32_0125,47,v,,,york:856242
+Abp_Reg_32_0126,48,r,,,york:856243
+Abp_Reg_32_0127,48,v,,,york:856244
+Abp_Reg_32_0128,49,r,,,york:856245
+Abp_Reg_32_0129,49,v,,,york:856246
+Abp_Reg_32_0130,50,r,,,york:856247
+Abp_Reg_32_0131,50,v,,,york:856248
+Abp_Reg_32_0132,51,r,,,york:856249
+Abp_Reg_32_0133,51,v,,,york:856250
+Abp_Reg_32_0134,52,r,,,york:856251
+Abp_Reg_32_0135,52,v,,,york:856252
+Abp_Reg_32_0136,53,r,,,york:856253
+Abp_Reg_32_0137,53,v,,,york:856254
+Abp_Reg_32_0138,54,r,,,york:856255
+Abp_Reg_32_0139,54,v,,,york:856256
+Abp_Reg_32_0140,55,r,,,york:856257
+Abp_Reg_32_0141,55,v,,,york:856258
+Abp_Reg_32_0142,56,r,,,york:856259
+Abp_Reg_32_0143,56,v,,,york:856260
+Abp_Reg_32_0144,57,r,,,york:856261
+Abp_Reg_32_0145,57,v,,,york:856262
+Abp_Reg_32_0146,58,r,,,york:856263
+Abp_Reg_32_0147,58,v,,,york:856264
+Abp_Reg_32_0148,59,r,,,york:856265
+Abp_Reg_32_0149,59,v,,,york:856266
+Abp_Reg_32_0150,60,r,,,york:856267
+Abp_Reg_32_0151,60,v,,,york:856268
+Abp_Reg_32_0152,61,r,,,york:856269
+Abp_Reg_32_0153,61,v,,,york:856270
+Abp_Reg_32_0154,62,r,,,york:856271
+Abp_Reg_32_0155,62,v,,,york:856272
+Abp_Reg_32_0156,63,r,,,york:856273
+Abp_Reg_32_0157,63,v,,,york:856274
+Abp_Reg_32_0158,64,r,,,york:856275
+Abp_Reg_32_0159,64,v,,,york:856276
+Abp_Reg_32_0160,65,r,,,york:856277
+Abp_Reg_32_0161,65,v,,,york:856278
+Abp_Reg_32_0162,66,r,,,york:856279
+Abp_Reg_32_0163,66,v,,,york:856280
+Abp_Reg_32_0164,67,r,,,york:856281
+Abp_Reg_32_0165,67,v,,,york:856282
+Abp_Reg_32_0166,68,r,,,york:856283
+Abp_Reg_32_0167,68,v,,,york:856284
+Abp_Reg_32_0168,69,r,,,york:856285
+Abp_Reg_32_0169,69,v,,,york:856286
+Abp_Reg_32_0170,70,r,,,york:856287
+Abp_Reg_32_0171,70,v,,,york:856288
+Abp_Reg_32_0172,71,r,,,york:856289
+Abp_Reg_32_0173,71,v,,,york:856290
+Abp_Reg_32_0174,72,r,,,york:856291
+Abp_Reg_32_0175,72,v,,,york:856292
+Abp_Reg_32_0176,73,r,,,york:856293
+Abp_Reg_32_0177,73,v,,,york:856294
+Abp_Reg_32_0178,74,r,,,york:856295
+Abp_Reg_32_0179,74,v,,,york:856296
+Abp_Reg_32_0180,75,r,,,york:856297
+Abp_Reg_32_0181,75,v,,,york:856298
+Abp_Reg_32_0182,76,r,,,york:856299
+Abp_Reg_32_0183,76,v,,,york:856300
+Abp_Reg_32_0184,77,r,,,york:856301
+Abp_Reg_32_0185,77,v,,,york:856302
+Abp_Reg_32_0186,78,r,,,york:856303
+Abp_Reg_32_0187,78,v,,,york:856304
+Abp_Reg_32_0188,79,r,,,york:856305
+Abp_Reg_32_0189,79,v,,,york:856306
+Abp_Reg_32_0190,80,r,,,york:856307
+Abp_Reg_32_0191,80,v,,,york:856308
+Abp_Reg_32_0192,81,r,,,york:856309
+Abp_Reg_32_0193,81,v,,,york:856310
+Abp_Reg_32_0194,82,r,,,york:856311
+Abp_Reg_32_0195,82,v,,,york:856312
+Abp_Reg_32_0196,83,r,,,york:856313
+Abp_Reg_32_0197,83,v,,,york:856314
+Abp_Reg_32_0198,84,r,,,york:856315
+Abp_Reg_32_0199,84,v,,,york:856316
+Abp_Reg_32_0200,85,r,,,york:856317
+Abp_Reg_32_0201,85,v,,,york:856318
+Abp_Reg_32_0202,86,r,,,york:856319
+Abp_Reg_32_0203,86,v,,,york:856320
+Abp_Reg_32_0204,87,r,,,york:856321
+Abp_Reg_32_0205,87,v,,,york:856322
+Abp_Reg_32_0206,88,r,,,york:856323
+Abp_Reg_32_0207,88,v,,,york:856324
+Abp_Reg_32_0208,89,r,,,york:856325
+Abp_Reg_32_0209,89,v,,,york:856326
+Abp_Reg_32_0210,90,r,,,york:856327
+Abp_Reg_32_0211,90,v,,,york:856328
+Abp_Reg_32_0212,91,r,,,york:856329
+Abp_Reg_32_0213,91,v,,,york:856330
+Abp_Reg_32_0214,92,r,,,york:856331
+Abp_Reg_32_0215,92,v,,,york:856332
+Abp_Reg_32_0216,93,r,,,york:856333
+Abp_Reg_32_0217,93,v,,,york:856334
+Abp_Reg_32_0218,94,r,,,york:856335
+Abp_Reg_32_0219,94,v,,,york:856336
+Abp_Reg_32_0220,94A,,Paper,,york:856337
+Abp_Reg_32_0221,94A,,Paper,,york:856338
+Abp_Reg_32_0222,94B,,,,york:856339
+Abp_Reg_32_0223,94B,,,,york:856340
+Abp_Reg_32_0224,94B,,,,york:856341
+Abp_Reg_32_0225,94B,,,,york:856342
+Abp_Reg_32_0226,94B,,,,york:856343
+Abp_Reg_32_0227,94B,,,,york:856344
+Abp_Reg_32_0228,94B,,,,york:856345
+Abp_Reg_32_0229,94A,r,Paper,,york:856346
+Abp_Reg_32_0230,94A,v,Paper,,york:856347
+Abp_Reg_32_0231,95,r,,,york:856348
+Abp_Reg_32_0232,95,v,,,york:856349
+Abp_Reg_32_0233,96,r,,,york:856350
+Abp_Reg_32_0234,96,v,,,york:856351
+Abp_Reg_32_0235,97,r,,,york:856352
+Abp_Reg_32_0236,97,v,,,york:856353
+Abp_Reg_32_0237,98,r,,,york:856354
+Abp_Reg_32_0238,98,v,,,york:856355
+Abp_Reg_32_0239,99,r,,,york:856356
+Abp_Reg_32_0240,99,v,,,york:856357
+Abp_Reg_32_0241,100,r,,,york:856358
+Abp_Reg_32_0242,100,v,,,york:856359
+Abp_Reg_32_0243,101,r,,,york:856360
+Abp_Reg_32_0244,101,v,,,york:856361
+Abp_Reg_32_0245,102,r,,,york:856362
+Abp_Reg_32_0246,102,v,,,york:856363
+Abp_Reg_32_0247,103,r,,,york:856364
+Abp_Reg_32_0248,103,v,,,york:856365
+Abp_Reg_32_0249,104,r,,,york:856366
+Abp_Reg_32_0250,104,v,,,york:856367
+Abp_Reg_32_0251,105,r,,,york:856368
+Abp_Reg_32_0252,105,v,,,york:856369
+Abp_Reg_32_0253,106,r,,,york:856370
+Abp_Reg_32_0254,106,v,,,york:856371
+Abp_Reg_32_0255,107,r,,,york:856372
+Abp_Reg_32_0256,107,v,,,york:856373
+Abp_Reg_32_0257,108,r,,,york:856374
+Abp_Reg_32_0258,108,v,,,york:856375
+Abp_Reg_32_0259,109,r,,,york:856376
+Abp_Reg_32_0260,109,r,,UV,york:856377
+Abp_Reg_32_0261,109,v,,,york:856378
+Abp_Reg_32_0262,110,r,,,york:856379
+Abp_Reg_32_0263,110,v,,,york:856380
+Abp_Reg_32_0264,111,r,,,york:856381
+Abp_Reg_32_0265,111,v,,,york:856382
+Abp_Reg_32_0266,111,v,,UV,york:856383
+Abp_Reg_32_0267,112,r,,,york:856384
+Abp_Reg_32_0268,112,v,,,york:856385
+Abp_Reg_32_0269,113,r,,,york:856386
+Abp_Reg_32_0270,113,v,,,york:856387
+Abp_Reg_32_0271,114,r,,,york:856388
+Abp_Reg_32_0272,114,v,,,york:856389
+Abp_Reg_32_0273,115,r,,,york:856390
+Abp_Reg_32_0274,115,v,,,york:856391
+Abp_Reg_32_0275,116,r,,,york:856392
+Abp_Reg_32_0276,116,v,,,york:856393
+Abp_Reg_32_0277,117,r,,,york:856394
+Abp_Reg_32_0278,117,v,,,york:856395
+Abp_Reg_32_0279,118,r,,,york:856396
+Abp_Reg_32_0280,118,v,,,york:856397
+Abp_Reg_32_0281,119,r,,,york:856398
+Abp_Reg_32_0282,119,v,,,york:856399
+Abp_Reg_32_0283,120,r,,,york:856400
+Abp_Reg_32_0284,120,v,,,york:856401
+Abp_Reg_32_0285,,,Back flyleaf 3 (recto); Paper,,york:856402
+Abp_Reg_32_0286,,,Back flyleaf 3 (verso); Paper,,york:856403
+Abp_Reg_32_0287,,,Back flyleaf 2 (recto); Paper,,york:856404
+Abp_Reg_32_0288,,,Back flyleaf 2 (verso); Paper,,york:856405
+Abp_Reg_32_0289,,,Back flyleaf 1 (recto); Paper,,york:856406
+Abp_Reg_32_0290,,,Back flyleaf 1 (verso); Paper,,york:856407
+Abp_Reg_32_0291,,,Pastedown on inside of back board; Paper,,york:856408
+Abp_Reg_32_0292,,,Outside of back board,,york:856409
+Abp_Reg_32_0293,94A,r,Items found in gutter,,york:856410
+Abp_Reg_32_0294,76,r,Item 1 found in gutter (view 1),,york:856411
+Abp_Reg_32_0295,76,r,Item 1 found in gutter (view 2),,york:856412
+Abp_Reg_32_0296,76,r,Items 2 and 3 found in gutter (view 1),,york:856413
+Abp_Reg_32_0297,76,r,Items 2 and 3 found in gutter (view 2),,york:856414
+Abp_Reg_32_2000,,,Colour reference image,,york:856415
