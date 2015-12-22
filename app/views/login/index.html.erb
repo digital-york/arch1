@@ -6,7 +6,7 @@
 
   <div style="">
 
-    <form action="/login_submit">
+    <%= form_tag(login_submit_path, method: :POST) do |f| %>
 
       <table cellspacing="0" style="font-size: 0.9em">
 
@@ -40,6 +40,6 @@
         </tr>
 
       </table>
-    </form>
+    <% end %>
   </div>
 </div>

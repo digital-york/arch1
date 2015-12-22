@@ -17,7 +17,7 @@ Rails.application.routes.draw do
   get 'image_zoom_large' => 'image_zoom_large#index'
   get 'logout' => 'login#logout'
   get 'login' => 'login#index'
-  get 'login_submit' => 'login#login_submit'
+  post 'login_submit' => 'login#login_submit'
   get 'login_temp' => 'login#login_temp'
   get 'timed_out' => 'login#timed_out'
   get 'landing_page' => 'landing_page#index'
