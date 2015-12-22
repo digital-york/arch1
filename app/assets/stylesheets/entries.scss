@@ -242,10 +242,10 @@ a, a:hover, a:focus {
 #image_header {
   font-size: 1em;
   float: left;
-  height: 28px;
   background-color: grey;
+  min-height: 28px;
   width: 100%;
-  padding-top: 5px;
+  padding: 5px 0px;
   color: #F7F4EE;
   text-align: center;
 }
