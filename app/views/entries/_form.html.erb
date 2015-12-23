@@ -148,14 +148,14 @@
                     <%# Entry Type %>
                     <tr>
                       <th>Entry Type:
-                        <img src="/assets/plus_sign.png" alt="plus icon" class="plus_icon click_select_field_button" jq_type="entry_type" jq_entry_type_list="<%= @entry_type_list.to_json %>"/>
+                        <%= image_tag 'plus_sign.png', :alt => 'plus icon', :class => 'plus_icon click_select_field_button', :jq_type => 'entry_type', :jq_entry_type_list => @entry_type_list.to_json, :context_path => ENV['CONTEXT_PATH'] %>
                       </th>
                       <td>
                         <div class="field_group">
                           <% @db_entry.db_entry_types.each do |entry_type| %>
                               <div class="field_single">
                                 <%= select_tag 'entry[entry_type][]', options_for_select(@entry_type_list.collect { |entry_type| [entry_type["label"], entry_type["id"]] }.insert(0, ["--- select ---", ""]), entry_type.name) %>
-                                <img alt="Delete icon" src="/assets/delete.png" class="delete_icon_select click_remove_field_level1" jq_tag_type="select">
+                                <%= image_tag 'delete.png', :class => 'delete_icon_select click_remove_field_level1', :jq_tag_type => 'input' %>
                               </div>
                           <% end %>
                         </div>
@@ -165,14 +165,14 @@
                     <%# Section Type %>
                     <tr>
                         <th>Section Type:
-                            <img src="/assets/plus_sign.png" alt="plus icon" class="plus_icon click_select_field_button" jq_type="section_type" jq_section_type_list="<%= @section_type_list.to_json %>"/>
+                          <%= image_tag 'plus_sign.png', :alt => 'plus icon', :class => 'plus_icon click_select_field_button', :jq_type => 'section_type', :jq_section_type_list => @section_type_list.to_json, :context_path => ENV['CONTEXT_PATH'] %>
                         </th>
                         <td>
                             <div class="field_group">
                                 <% @db_entry.db_section_types.each do |section_type| %>
                                     <div class="field_single">
                                         <%= select_tag 'entry[section_type][]', options_for_select(@section_type_list.collect { |section_type| [section_type["label"], section_type["id"]] }.insert(0, ["--- select ---", ""]), section_type.name) %>
-                                        <img alt="Delete icon" src="/assets/delete.png" class="delete_icon_select click_remove_field_level1" jq_tag_type="select">
+                                      <%= image_tag 'delete.png', :class => 'delete_icon_select click_remove_field_level1', :jq_tag_type => 'input' %>
                                     </div>
                                 <% end %>
                             </div>
@@ -203,14 +203,14 @@
                     <%# Marginalia %>
                     <tr>
                         <th>Marginalia:
-                            <img src="/assets/plus_sign.png" alt="plus icon" class="plus_icon click_multiple_text_area_field_button" jq_type="marginalia"/>
+                          <%= image_tag 'plus_sign.png', :alt => 'plus icon', :class => 'plus_icon click_multiple_text_area_field_button', :jq_type => 'marginalia', :context_path => ENV['CONTEXT_PATH'] %>
                         </th>
                         <td>
                             <div class="field_group">
                                 <% @db_entry.db_marginalia.each do |marginalia| %>
                                     <div class="field_single">
                                         <%= text_area_tag "entry[marginalia][]", marginalia.name, id: '' %>
-                                        <img alt="Delete icon" src="/assets/delete.png" class="delete_icon click_remove_field_level1" jq_tag_type="textarea">
+                                      <%= image_tag 'delete.png', :class => 'delete_icon click_remove_field_level1', :jq_tag_type => 'textarea' %>
                                     </div>
                                 <% end %>
                             </div>
@@ -220,14 +220,14 @@
                     <%# Language %>
                     <tr>
                         <th>Language:
-                            <img src="/assets/plus_sign.png" alt="plus icon" class="plus_icon click_select_field_button" jq_type="language" jq_language_list="<%= @language_list.to_json %>"/>
+                          <%= image_tag 'plus_sign.png', :alt => 'plus icon', :class => 'plus_icon click_select_field_button', :jq_type => 'language', :jq_language_list => @language_list.to_json, :context_path => ENV['CONTEXT_PATH'] %>
                         </th>
                         <td>
                             <div class="field_group">
                                 <% @db_entry.db_languages.each do |language| %>
                                     <div class="field_single">
                                         <%= select_tag 'entry[language][]', options_for_select(@language_list.collect { |language| [language["label"], language["id"]] }.insert(0, ["--- select ---", ""]), language.name) %>
-                                        <img alt="Delete icon" src="/assets/delete.png" class="delete_icon_select click_remove_field_level1" jq_tag_type="select">
+                                      <%= image_tag 'delete.png', :class => 'delete_icon_select click_remove_field_level1', :jq_tag_type => 'select' %>
                                     </div>
                                 <% end %>
                             </div>
@@ -237,7 +237,7 @@
                     <%# Subject %>
                     <tr>
                         <th>Subject:
-                            <img src="/assets/plus_sign.png" alt="plus icon" class="plus_icon click_multiple_subject_field_button" jq_type="subject" context_path="<%= ENV['CONTEXT_PATH'] %>"/>
+                          <%= image_tag 'plus_sign.png', :alt => 'plus icon', :class => 'plus_icon click_multiple_subject_field_button', :jq_type => 'subject', :context_path => ENV['CONTEXT_PATH'] %>
                         </th>
                         <td>
                             <div class="field_group">
@@ -248,7 +248,7 @@
                                           <%= terms.get_str_from_id(subject.name, 'preflabel_tesim') %>
                                         </span>
                                         <%= hidden_field_tag "entry[subject][]", subject.name, id: 'subject_' + index.to_s + '_hidden' %>
-                                        <img alt="Delete icon" src="/assets/delete.png" class="delete_icon click_remove_field_level1" jq_tag_type="input">
+                                      <%= image_tag 'delete.png', :class => 'delete_icon click_remove_field_level1', :jq_tag_type => 'input' %>
                                     </div>
                                 <% end %>
                             </div>
@@ -258,14 +258,14 @@
                     <%# Note %>
                     <tr>
                         <th>Note:
-                            <img src="/assets/plus_sign.png" alt="plus icon" class="plus_icon click_multiple_text_area_field_button" jq_type="note"/>
+                          <%= image_tag 'plus_sign.png', :alt => 'plus icon', :class => 'plus_icon click_multiple_text_area_field_button', :jq_type => 'note', :context_path => ENV['CONTEXT_PATH'] %>
                         </th>
                         <td>
                             <div class="field_group">
                                 <% @db_entry.db_notes.each do |note| %>
                                     <div class="field_single">
                                         <%= text_area_tag "entry[note][]", note.name, id: '' %>
-                                        <img alt="Delete icon" src="/assets/delete.png" class="delete_icon click_remove_field_level1" jq_tag_type="textarea">
+                                      <%= image_tag 'delete.png', :class => 'delete_icon click_remove_field_level1', :jq_tag_type => 'textarea' %>
                                     </div>
                                 <% end %>
                             </div>
@@ -275,14 +275,14 @@
                     <%# Editorial Note %>
                     <tr>
                         <th>Editorial Note:
-                            <img src="/assets/plus_sign.png" alt="plus icon" class="plus_icon click_multiple_text_area_field_button" jq_type="editorial_note"/>
+                          <%= image_tag 'plus_sign.png', :alt => 'plus icon', :class => 'plus_icon click_multiple_text_area_field_button', :jq_type => 'editorial_note', :context_path => ENV['CONTEXT_PATH'] %>
                         </th>
                         <td>
                             <div class="field_group">
                                 <% @db_entry.db_editorial_notes.each do |editorial_note| %>
                                     <div class="field_single">
                                         <%= text_area_tag "entry[editorial_note][]", editorial_note.name, id: '' %>
-                                        <img alt="Delete icon" src="/assets/delete.png" class="delete_icon click_remove_field_level1" jq_tag_type="textarea">
+                                      <%= image_tag 'delete.png', :class => 'delete_icon click_remove_field_level1', :jq_tag_type => 'textarea' %>
                                     </div>
                                 <% end %>
                             </div>
@@ -292,14 +292,14 @@
                     <%# Referenced By %>
                     <tr>
                         <th>Referenced By:
-                            <img src="/assets/plus_sign.png" alt="plus icon" class="plus_icon click_multiple_field_button" jq_type="is_referenced_by"/>
+                          <%= image_tag 'plus_sign.png', :alt => 'plus icon', :class => 'plus_icon click_multiple_field_button', :jq_type => 'is_referenced_by', :context_path => ENV['CONTEXT_PATH'] %>
                         </th>
                         <td>
                             <div class="field_group">
                                 <% @db_entry.db_is_referenced_bys.each do |is_referenced_by| %>
                                     <div class="field_single">
                                         <%= text_field_tag "entry[is_referenced_by][]", is_referenced_by.name, id: '' %>
-                                        <img alt="Delete icon" src="/assets/delete.png" class="delete_icon click_remove_field_level1" jq_tag_type="input">
+                                        <%= image_tag 'delete.png', :class => 'delete_icon click_remove_field_level1', :jq_tag_type => 'input' %>
                                     </div>
                                 <% end %>
                             </div>
@@ -311,7 +311,7 @@
 
                         <th>
                           Entry Date:
-                          <img src="/assets/plus_sign.png" alt="plus icon" class="plus_icon click_date_button" jq_date_certainty_list="<%= @date_certainty_list %>" jq_single_date_list="<%= @single_date_list %>" jq_date_role_list="<%= @date_role_list.to_json %>"/>
+                          <%= image_tag 'plus_sign.png', :alt => 'plus icon', :class => 'plus_icon click_date_button', :jq_date_certainty_list => @date_certainty_list.to_json, :jq_single_date_list => @single_date_list.to_json, :jq_date_role_list => @date_role_list.to_json, :context_path => ENV['CONTEXT_PATH'] %>
                         </th>
 
                         <td class="tab2">
@@ -326,7 +326,7 @@
 
                                             <tr>
                                                 <th>Date:
-                                                    <img src="/assets/plus_sign.png" alt="plus icon" class="plus_icon click_single_date_button" jq_index="<%= index1 %>" jq_date_certainty_list="<%= @date_certainty_list %>" jq_single_date_list="<%= @single_date_list %>"/>
+                                                  <%= image_tag 'plus_sign.png', :alt => 'plus icon', :class => 'plus_icon click_single_date_button', :jq_index => index1, :jq_date_certainty_list => @date_certainty_list.to_json, :jq_single_date_list => @single_date_list.to_json, :context_path => ENV['CONTEXT_PATH'] %>
                                                 </th>
                                                 <td>
                                                     <div class="field_group grey_box single_date">
@@ -343,14 +343,14 @@
                                                                     <%# Date Certainty %>
                                                                     <tr>
                                                                         <th>Certainty:
-                                                                            <img src="/assets/plus_sign.png" alt="plus icon" class="plus_icon click_select_field_button_date_certainty" jq_attributes="single_date_attributes" jq_index="<%= index1 %>" jq_index2="<%= index2 %>" jq_type="date_certainty" jq_date_certainty_list="<%= @date_certainty_list %>"/>
+                                                                          <%= image_tag 'plus_sign.png', :alt => 'plus icon', :class => 'plus_icon click_select_field_button_date_certainty', :jq_attributes => 'single_date_attributes', :jq_index => index1, :jq_index2 => index2, :jq_type => 'date_certainty', :jq_date_certainty_list => @date_certainty_list.to_json, :context_path => ENV['CONTEXT_PATH'] %>
                                                                         </th>
                                                                         <td>
                                                                             <div class="field_group_date_certainty grey_box">
                                                                                 <% single_date.db_date_certainties.each_with_index do |date_certainty, index3| %>
                                                                                     <div class="field_single">
                                                                                         <%= select_tag "entry[entry_dates_attributes][" + index1.to_s + "][single_dates_attributes][" + index2.to_s + "][date_certainty][]", options_for_select(@date_certainty_list.collect { |date_certainty| [date_certainty[0]] }.insert(0, ["--- select ---", ""]), date_certainty.name) %>
-                                                                                        <img alt="Delete icon" src="/assets/delete.png" class="delete_icon_select click_remove_field_level1" jq_tag_type="select">
+                                                                                      <%= image_tag 'delete.png', :class => 'delete_icon_select click_remove_field_level1', :jq_tag_type => 'select' %>
                                                                                     </div>
                                                                                 <% end %>
                                                                             </div>
@@ -365,7 +365,7 @@
                                                                         </td>
                                                                     </tr>
                                                                 </table>
-                                                                &nbsp;<img src='/assets/delete.png' alt='Delete icon' class='delete_icon click_remove_field_date' jq_index="<%= index1 %>" jq_index1="<%= index2 %>">
+                                                                &nbsp;<%= image_tag 'delete.png', :class => 'delete_icon click_remove_field_date', :jq_index => index1, :jq_index1 => index2 %>
                                                                 <input type="hidden" id="hidden_field" name="entry[entry_dates_attributes][<%= index1.to_s %>][single_dates_attributes][<%= index2.to_s %>][single_date_id]" value="<%= single_date.single_date_id %>">
 
                                                                 <div style="clear: both"></div>
@@ -390,7 +390,7 @@
                                             </tr>
                                         </table>
 
-                                        <img src='/assets/delete.png' class='delete_icon click_remove_field_level2' params_type='entry_dates' alt='Delete icon'>
+                                      <%= image_tag 'delete.png', :class => 'delete_icon click_remove_field_level2', :params_type => 'entry_dates' %>
 
                                         <input type="hidden" id="hidden_field" name="entry[entry_dates_attributes][<%= index1.to_s %>][date_id]" value="<%= entry_date.date_id %>">
                                     </div>
@@ -403,7 +403,7 @@
                     <tr>
 
                         <th>Place:
-                            <img src="/assets/plus_sign.png" alt="plus icon" class="plus_icon click_place_button" jq_place_type_list="<%= @place_type_list.to_json %>" jq_place_role_list="<%= @place_role_list.to_json %>" context_path="<%= ENV['CONTEXT_PATH'] %>" />
+                          <%= image_tag 'plus_sign.png', :alt => 'plus icon', :class => 'plus_icon click_place_button', :jq_place_type_list => @place_type_list.to_json, :jq_place_role_list => @place_role_list.to_json, :context_path => ENV['CONTEXT_PATH'] %>
                         </th>
 
                         <td class="tab2">
@@ -420,14 +420,14 @@
                                           <tr>
                                             <th>
                                               *As Written:
-                                              <img src="/assets/plus_sign.png" alt="plus icon" class="plus_icon click_multiple_field_button_level2" jq_attributes="related_places_attributes" jq_index="<%= index1 %>" jq_type="place_as_written" %>
+                                              <%= image_tag 'plus_sign.png', :alt => 'plus icon', :class => 'plus_icon click_multiple_field_button_level2', :jq_attributes => 'related_places_attributes', :jq_index => index1, :jq_type => 'place_as_written', :context_path => ENV['CONTEXT_PATH'] %>
                                             </th>
                                             <td>
                                               <div class="field_group grey_box place_as_written_block">
                                                 <% related_place.db_place_as_writtens.each_with_index do |place_as_written, index2| %>
                                                     <div class="field_single">
                                                       <input type="text" name="entry[related_places_attributes][<%= index1.to_s %>][place_as_written][]" value="<%= place_as_written.name %>" class="place_as_written">
-                                                      &nbsp;<img src='/assets/delete.png' alt='Delete icon' class='delete_icon click_remove_field_level1' jq_tag_type='input'>
+                                                      &nbsp;<%= image_tag 'delete.png', :class => 'delete_icon click_remove_field_level1', :jq_tag_type => 'input' %>
                                                     </div>
                                                 <% end %>
                                               </div>
@@ -446,7 +446,7 @@
                                                   </span>
                                                   <%= hidden_field_tag "entry[related_places_attributes][" + index1.to_s + "][place_same_as]", related_place.place_same_as, id: 'place_' + index1.to_s + '_hidden' %>
                                                   <div style="float: right; margin-right: 6px">
-                                                    <img src='/assets/delete.png' alt='Delete icon' class='delete_icon' onclick="remove_authority('place', '<%= index1 %>'); return false">
+                                                    <%= image_tag 'delete.png', :class => 'delete_icon', :onclick => "remove_authority('place', #{index1}); return false" %>
                                                   </div>
                                                 </td>
                                             </tr>
@@ -455,14 +455,14 @@
                                             <tr>
                                                 <th>
                                                     Place Role:
-                                                    <img src="/assets/plus_sign.png" alt="plus icon" class="plus_icon click_select_field_button_level2" jq_attributes="related_places_attributes" jq_index="<%= index1 %>" jq_type="place_role" jq_place_role_list="<%= @place_role_list.to_json %>"/>
+                                                  <%= image_tag 'plus_sign.png', :alt => 'plus icon', :class => 'plus_icon click_select_field_button_level2', :jq_attributes => 'related_places_attributes', :jq_index => index1, :jq_type => 'place_role', :jq_place_role_list => @place_role_list.to_json, :context_path => ENV['CONTEXT_PATH'] %>
                                                 </th>
                                                 <td>
                                                     <div class="field_group grey_box">
                                                         <% related_place.db_place_roles.each_with_index do |place_role, index2| %>
                                                             <div class="field_single">
                                                                 <%= select_tag "entry[related_places_attributes][" + index1.to_s + "][place_role][]", options_for_select(@place_role_list.collect { |place_role| [place_role["label"], place_role["id"]] }.insert(0, ["--- select ---", ""]), place_role.name) %>
-                                                                <img src='/assets/delete.png' alt='Delete icon' class='delete_icon_select click_remove_field_level1' jq_tag_type='select'>
+                                                              <%= image_tag 'delete.png', :class => 'delete_icon_select click_remove_field_level1', :jq_tag_type => 'select' %>
                                                             </div>
                                                         <% end %>
                                                     </div>
@@ -473,14 +473,14 @@
                                             <tr>
                                                 <th>
                                                     Place Type:
-                                                    <img src="/assets/plus_sign.png" alt="plus icon" class="plus_icon click_select_field_button_level2" jq_attributes="related_places_attributes" jq_index="<%= index1 %>" jq_type="place_type" jq_place_type_list="<%= @place_type_list.to_json %>"/>
+                                                  <%= image_tag 'plus_sign.png', :alt => 'plus icon', :class => 'plus_icon click_select_field_button_level2', :jq_attributes => 'related_places_attributes', :jq_index => index1, :jq_type => 'place_type', :jq_place_type_list => @place_type_list.to_json, :context_path => ENV['CONTEXT_PATH'] %>
                                                 </th>
                                                 <td>
                                                     <div class="field_group grey_box">
                                                         <% related_place.db_place_types.each_with_index do |place_type, index2| %>
                                                             <div class="field_single">
                                                                 <%= select_tag "entry[related_places_attributes][" + index1.to_s + "][place_type][]", options_for_select(@place_type_list.collect { |place_type| [place_type["label"], place_type["id"]] }.insert(0, ["--- select ---", ""]), place_type.name) %>
-                                                                <img src='/assets/delete.png' alt='Delete icon' class='delete_icon_select click_remove_field_level1' jq_tag_type='select'>
+                                                              <%= image_tag 'delete.png', :class => 'delete_icon_select click_remove_field_level1', :jq_tag_type => 'select' %>
                                                             </div>
                                                         <% end %>
                                                     </div>
@@ -491,14 +491,14 @@
                                             <tr>
                                                 <th>
                                                     Note:
-                                                    <img src="/assets/plus_sign.png" alt="plus icon" class="plus_icon click_multiple_text_area_button_level2" jq_attributes="related_places_attributes" jq_index="<%= index1 %>" jq_type="place_note"/>
+                                                  <%= image_tag 'plus_sign.png', :alt => 'plus icon', :class => 'plus_icon click_multiple_text_area_button_level2', :jq_attributes => 'related_places_attributes', :jq_index => index1, :jq_type => 'place_note', :context_path => ENV['CONTEXT_PATH'] %>
                                                 </th>
                                                 <td>
                                                     <div class="field_group grey_box">
                                                         <% related_place.db_place_notes.each_with_index do |place_note, index2| %>
                                                             <div class="field_single">
                                                                 <%= text_area_tag "entry[related_places_attributes][" + index1.to_s + "][place_note][]", place_note.name, id: '' %>
-                                                                &nbsp;<img src='/assets/delete.png' alt='Delete icon' class='delete_icon click_remove_field_level1' jq_tag_type='textarea'>
+                                                                &nbsp;<%= image_tag 'delete.png', :class => 'delete_icon click_remove_field_level1', :jq_tag_type => 'textarea' %>
                                                             </div>
                                                         <% end %>
                                                     </div>
@@ -506,7 +506,7 @@
                                             </tr>
                                         </table>
 
-                                        <img src='/assets/delete.png' class='delete_icon click_remove_field_level2' params_type='related_places' alt='Delete icon'>
+                                      <%= image_tag 'delete.png', :class => 'delete_icon click_remove_field_level2', :params_type => 'related_places' %>
 
                                         <input type="hidden" id="hidden_field" name="entry[related_places_attributes][<%= index1.to_s %>][place_id]" value="<%= related_place.place_id %>">
                                     </div>
@@ -519,7 +519,7 @@
                     <tr>
 
                         <th>Person:
-                            <img src="/assets/plus_sign.png" alt="plus icon" class="plus_icon click_person_button" jq_role_list="<%= @role_list.to_json %>" jq_descriptor_list="<%= @descriptor_list.to_json %>" jq_gender_list="<%= @gender_list %>" jq_person_group_list="<%= @person_group_list %>" context_path="<%= ENV['CONTEXT_PATH'] %>" />
+                          <%= image_tag 'plus_sign.png', :alt => 'plus icon', :class => 'plus_icon click_person_button', :jq_role_list => @role_list.to_json, :jq_descriptor_list => @descriptor_list.to_json, :jq_gender_list => @gender_list.to_json, :jq_person_group_list => @person_group_list.to_json, :context_path => ENV['CONTEXT_PATH'] %>
                         </th>
 
                         <td class="tab2">
@@ -536,14 +536,14 @@
                                             <tr>
                                                 <th>
                                                     *As Written:
-                                                    <img src="/assets/plus_sign.png" alt="plus icon" class="plus_icon click_multiple_field_button_level2" jq_attributes="related_agents_attributes" jq_index="<%= index1 %>" jq_type="person_as_written"/>
+                                                  <%= image_tag 'plus_sign.png', :alt => 'plus icon', :class => 'plus_icon click_multiple_field_button_level2', :jq_attributes => 'related_agents_attributes', :jq_index => index1, :jq_type => 'person_as_written', :context_path => ENV['CONTEXT_PATH'] %>
                                                 </th>
                                                 <td>
                                                     <div class="field_group grey_box person_as_written_block">
                                                         <% related_person.db_person_as_writtens.each_with_index do |person_as_written, index2| %>
                                                             <div class="field_single">
                                                               <input type="text" name="entry[related_agents_attributes][<%= index1.to_s %>][person_as_written][]" value="<%= person_as_written.name %>" class="person_as_written">
-                                                              &nbsp;<img src='/assets/delete.png' alt='Delete icon' class='delete_icon click_remove_field_level1' jq_tag_type='input'>
+                                                              &nbsp;<%= image_tag 'delete.png', :class => 'delete_icon click_remove_field_level1', :jq_tag_type => 'input' %>
                                                             </div>
                                                         <% end %>
                                                     </div>
@@ -586,7 +586,7 @@
                                                   </span>
                                               <%= hidden_field_tag "entry[related_agents_attributes][" + index1.to_s + "][person_same_as]", related_person.person_same_as, id: 'person_' + index1.to_s + '_hidden' %>
                                               <div style="float: right; margin-right: 6px">
-                                                <img src='/assets/delete.png' alt='Delete icon' class='delete_icon' onclick="remove_authority('person', '<%= index1 %>'); return false">
+                                                <%= image_tag 'delete.png', :class => 'delete_icon', :onclick => "remove_authority('person', #{index1}); return false" %>
                                               </div>
                                             </td>
                                           </tr>
@@ -602,14 +602,14 @@
                                             <%# Person Role %>
                                             <tr>
                                                 <th>Person Role:
-                                                    <img src="/assets/plus_sign.png" alt="plus icon" class="plus_icon click_select_field_button_level2" jq_attributes="related_agents_attributes" jq_index="<%= index1 %>" jq_type="person_role" jq_role_list="<%= @role_list.to_json %>"/>
+                                                  <%= image_tag 'plus_sign.png', :alt => 'plus icon', :class => 'plus_icon click_select_field_button_level2', :jq_attributes => 'related_agents_attributes', :jq_index => index1, :jq_type => 'person_role', :jq_role_list => @role_list.to_json, :context_path => ENV['CONTEXT_PATH'] %>
                                                 </th>
                                                 <td>
                                                     <div class="field_group grey_box">
                                                         <% related_person.db_person_roles.each_with_index do |person_role, index2| %>
                                                             <div class="field_single">
                                                                 <%= select_tag "entry[related_agents_attributes][" + index1.to_s + "][person_role][]", options_for_select(@role_list.collect { |role| [role["label"], role["id"]] }.insert(0, ["--- select ---", ""]), person_role.name) %>
-                                                                <img alt="Delete icon" src="/assets/delete.png" class="delete_icon_select click_remove_field_level1" jq_tag_type="select">
+                                                              <%= image_tag 'delete.png', :class => 'delete_icon_select click_remove_field_level1', :jq_tag_type => 'select' %>
                                                             </div>
                                                         <% end %>
                                                     </div>
@@ -619,14 +619,14 @@
                                             <%# Person Descriptor %>
                                             <tr>
                                                 <th>*Descriptor:
-                                                    <img src="/assets/plus_sign.png" alt="plus icon" class="plus_icon click_select_field_button_level2" jq_attributes="related_agents_attributes" jq_index="<%= index1 %>" jq_type="person_descriptor" jq_descriptor_list="<%= @descriptor_list.to_json %>"/>
+                                                  <%= image_tag 'plus_sign.png', :alt => 'plus icon', :class => 'plus_icon click_select_field_button_level2', :jq_attributes => 'related_agents_attributes', :jq_index => index1, :jq_type => 'person_descriptor', :jq_descriptor_list => @descriptor_list.to_json, :context_path => ENV['CONTEXT_PATH'] %>
                                                 </th>
                                                 <td>
                                                     <div class="field_group grey_box">
                                                         <% related_person.db_person_descriptors.each_with_index do |person_descriptor, index2| %>
                                                             <div class="field_single">
                                                                 <%= select_tag "entry[related_agents_attributes][" + index1.to_s + "][person_descriptor][]", options_for_select(@descriptor_list.collect { |descriptor| [descriptor["label"], descriptor["id"]] }.insert(0, ["--- select ---", ""]), person_descriptor.name) %>
-                                                                <img alt="Delete icon" src="/assets/delete.png" class="delete_icon_select click_remove_field_level1" jq_tag_type="select">
+                                                              <%= image_tag 'delete.png', :class => 'delete_icon_select click_remove_field_level1', :jq_tag_type => 'select' %>
                                                             </div>
                                                         <% end %>
                                                     </div>
@@ -637,33 +637,32 @@
                                             <tr>
                                                 <th>
                                                     Descriptor As Written:
-                                                    <img src="/assets/plus_sign.png" alt="plus icon" class="plus_icon click_multiple_field_button_level2" jq_attributes="related_agents_attributes" jq_index="<%= index1 %>" jq_type="person_descriptor_as_written"/>
+                                                  <%= image_tag 'plus_sign.png', :alt => 'plus icon', :class => 'plus_icon click_multiple_field_button_level2', :jq_attributes => 'related_agents_attributes', :jq_index => index1, :jq_type => 'person_descriptor_as_written', :context_path => ENV['CONTEXT_PATH'] %>
                                                 </th>
                                                 <td>
                                                     <div class="field_group grey_box">
                                                         <% related_person.db_person_descriptor_as_writtens.each_with_index do |person_descriptor_as_written, index2| %>
                                                             <div class="field_single">
                                                                 <%= text_field_tag "entry[related_agents_attributes][" + index1.to_s + "][person_descriptor_as_written][]", person_descriptor_as_written.name, id: '' %>
-                                                                &nbsp;<img src='/assets/delete.png' alt='Delete icon' class='delete_icon click_remove_field_level1' jq_tag_type='input'>
+                                                                &nbsp;<%= image_tag 'delete.png', :class => 'delete_icon click_remove_field_level1', :jq_tag_type => 'input' %>
                                                             </div>
                                                         <% end %>
                                                     </div>
                                                 </td>
                                             </tr>
 
-
                                             <%# Person Note %>
                                             <tr>
                                                 <th>
                                                     Note:
-                                                    <img src="/assets/plus_sign.png" alt="plus icon" class="plus_icon click_multiple_field_button_level2" jq_attributes="related_agents_attributes" jq_index="<%= index1 %>" jq_type="person_note"/>
+                                                  <%= image_tag 'plus_sign.png', :alt => 'plus icon', :class => 'plus_icon click_multiple_field_button_level2', :jq_attributes => 'related_agents_attributes', :jq_index => index1, :jq_type => 'person_note', :context_path => ENV['CONTEXT_PATH'] %>
                                                 </th>
                                                 <td>
                                                     <div class="field_group grey_box">
                                                         <% related_person.db_person_notes.each_with_index do |person_note, index2| %>
                                                             <div class="field_single">
                                                                 <%= text_area_tag "entry[related_agents_attributes][" + index1.to_s + "][person_note][]", person_note.name, id: '' %>
-                                                                &nbsp;<img src='/assets/delete.png' alt='Delete icon' class='delete_icon click_remove_field_level1' jq_tag_type='textarea'>
+                                                                &nbsp;<%= image_tag 'delete.png', :class => 'delete_icon click_remove_field_level1', :jq_tag_type => 'textarea' %>
                                                             </div>
                                                         <% end %>
                                                     </div>
@@ -674,14 +673,14 @@
                                             <tr>
                                                 <th>
                                                     Related Place:
-                                                    <img src="/assets/plus_sign.png" alt="plus icon" class="plus_icon click_person_related_field_button" jq_attributes="related_agents_attributes" jq_index="<%= index1 %>" jq_type="person_related_place"/>
+                                                  <%= image_tag 'plus_sign.png', :alt => 'plus icon', :class => 'plus_icon click_person_related_field_button', :jq_attributes => 'related_agents_attributes', :jq_index => index1, :jq_type => 'person_related_place', :context_path => ENV['CONTEXT_PATH'] %>
                                                 </th>
                                                 <td>
                                                     <div class="field_group grey_box">
                                                         <% related_person.db_person_related_places.each do |person_related_place| %>
                                                             <div class="field_single">
                                                                 <%= select_tag "entry[related_agents_attributes][" + index1.to_s + "][person_related_place][]", options_for_select(@related_place_list, person_related_place.name), class: 'related_place', id: '' %>
-                                                                <img src='/assets/delete.png' alt='Delete icon' class='delete_icon_select click_remove_field_level1' jq_tag_type='select'>
+                                                              <%= image_tag 'delete.png', :class => 'delete_icon_select click_remove_field_level1', :jq_tag_type => 'select' %>
                                                             </div>
                                                         <% end %>
                                                     </div>
@@ -692,14 +691,14 @@
                                           <tr>
                                             <th>
                                               Related Person:
-                                              <img src="/assets/plus_sign.png" alt="plus icon" class="plus_icon click_person_related_field_button" jq_attributes="related_agents_attributes" jq_index="<%= index1 %>" jq_type="person_related_person"/>
+                                              <%= image_tag 'plus_sign.png', :alt => 'plus icon', :class => 'plus_icon click_person_related_field_button', :jq_attributes => 'related_agents_attributes', :jq_index => index1, :jq_type => 'person_related_person', :context_path => ENV['CONTEXT_PATH'] %>
                                             </th>
                                             <td>
                                               <div class="field_group grey_box">
                                                 <% related_person.db_person_related_people.each do |person_related_person| %>
                                                     <div class="field_single">
                                                       <%= select_tag "entry[related_agents_attributes][" + index1.to_s + "][person_related_person][]", options_for_select(@related_person_list, person_related_person.name), class: 'related_agent', id: '' %>
-                                                      <img src='/assets/delete.png' alt='Delete icon' class='delete_icon_select click_remove_field_level1' jq_tag_type='select'>
+                                                      <%= image_tag 'delete.png', :class => 'delete_icon_select click_remove_field_level1', :jq_tag_type => 'select' %>
                                                     </div>
                                                 <% end %>
                                               </div>
@@ -708,7 +707,7 @@
 
                                         </table>
 
-                                        <img src='/assets/delete.png' class='delete_icon click_remove_field_level2' params_type='related_agents' alt='Delete icon'>
+                                      <%= image_tag 'delete.png', :class => 'delete_icon click_remove_field_level2', :params_type => 'related_agents' %>
 
                                         <input type="hidden" id="hidden_field" name="entry[related_agents_attributes][<%= index1.to_s %>][person_id]" value="<%= related_person.person_id %>">
                                     </div>

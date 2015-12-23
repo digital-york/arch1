@@ -1,4 +1,3 @@
-
 <div class="popup">
 
   <%
@@ -43,14 +42,14 @@
           <tr>
             <th>
               Alternate Label:
-              <img src="/assets/plus_sign.png" alt="plus icon" class="plus_icon click_popup_multiple_field_button" jq_type_1='concept' jq_type_2="altlabel"/>
+              <%= image_tag 'plus_sign.png', :alt => 'plus icon', :class => 'plus_icon click_popup_multiple_field_button', :jq_type_1 => 'concept', :jq_type_2 => 'altlabel', :context_path => ENV['CONTEXT_PATH'] %>
             </th>
             <td>
               <div class="field_group">
                 <% @concept.altlabel.each do |altlabel| %>
                     <div class="field_single">
                       <%= text_field_tag 'concept[altlabel][]', altlabel %>
-                      <img alt="Delete icon" src="/assets/delete.png" class="delete_icon click_remove_field_level1" jq_tag_type="input">
+                      <%= image_tag 'delete.png', :class => 'delete_icon_ click_remove_field_level1', :jq_tag_type => 'input' %>
                     </div>
                 <% end %>
               </div>

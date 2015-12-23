@@ -213,9 +213,12 @@ $(document).ready(function () {
             e.preventDefault(); // I think this prevents other events firing?
             var field_group_div = $(this).parent('th').next('td').find('>:first-child');
             var jq_type = $(this).attr('jq_type');
+            var context_path = $(this).attr('context_path');
+            alert(context_path);
+
             var new_code_block = "<div class='field_single'>"
                 + "<input type='text' value='' name='entry[" + jq_type + "][]'>"
-                + "<img alt='Delete icon' src='/assets/delete.png' class='delete_icon click_remove_field_level1' jq_tag_type='input'>"
+                + "<img alt='Delete icon' src='" + context_path + "/assets/delete.png' class='delete_icon click_remove_field_level1' jq_tag_type='input'>"
                 + "</div>";
             field_group_div.append(new_code_block);
         } catch (err) {
@@ -235,10 +238,10 @@ $(document).ready(function () {
             var context_path = $(this).attr('context_path');
 
             var new_code_block = "<div class='field_single'>"
-                + "<a href='#' onclick='popup(&#39;" + context_path + "/subjects?subject_field=subject_" + no_elements + "&#39;, &#39;subject&#39;); return false;' tabindex='-1'><img src='/assets/magnifying_glass_small.png' class='plus_icon'></a>"
+                + "<a href='#' onclick='popup(&#39;" + context_path + "/subjects?subject_field=subject_" + no_elements + "&#39;, &#39;subject&#39;); return false;' tabindex='-1'><img src=" + context_path + "'/assets/magnifying_glass_small.png' class='plus_icon'></a>"
                 + "&nbsp;<span id='subject_" + no_elements + "'></span>"
                 + "<input id='subject_" + no_elements + "_hidden' type='hidden' value='' name='entry[" + jq_type + "][]'>"
-                + "<img alt='Delete icon' src='/assets/delete.png' class='delete_icon click_remove_field_level1' jq_tag_type='input'>"
+                + "<img alt='Delete icon' src='" + context_path + "/assets/delete.png' class='delete_icon click_remove_field_level1' jq_tag_type='input'>"
                 + "</div>";
             field_group_div.append(new_code_block);
         } catch (err) {
@@ -252,9 +255,11 @@ $(document).ready(function () {
             e.preventDefault(); // I think this prevents other events firing?
             var field_group_div = $(this).parent('th').next('td').find('>:first-child');
             var jq_type = $(this).attr('jq_type');
+            var context_path = $(this).attr('context_path');
+
             var new_code_block = "<div class='field_single'>"
                 + "<textarea value='' name='entry[" + jq_type + "][]'></textarea>"
-                + "<img alt='Delete icon' src='/assets/delete.png' class='delete_icon click_remove_field_level1' jq_tag_type='textarea'>"
+                + "<img alt='Delete icon' src='" + context_path + "/assets/delete.png' class='delete_icon click_remove_field_level1' jq_tag_type='textarea'>"
                 + "</div>";
             field_group_div.append(new_code_block);
         } catch (err) {
@@ -278,9 +283,11 @@ $(document).ready(function () {
             } else if (jq_type == "person_as_written") {
                 input_class="class='person_as_written' ";
             }
+            var context_path = $(this).attr('context_path');
+
             var new_code_block = "<div class='field_single'>"
                 + "<input type='text'" + input_class + "name='entry[" + jq_attributes + "][" + jq_index + "][" + jq_type + "][]'>"
-                + "&nbsp;<img alt='Delete icon' src='/assets/delete.png' class='delete_icon click_remove_field_level1' jq_tag_type='input'>"
+                + "&nbsp;<img alt='Delete icon' src='" + context_path + "/assets/delete.png' class='delete_icon click_remove_field_level1' jq_tag_type='input'>"
                 + "</div>";
             $(this).parent('th').next('td').find('.field_group').append(new_code_block);
 
@@ -298,10 +305,11 @@ $(document).ready(function () {
             var jq_attributes = $(this).attr('jq_attributes');
             var jq_index = $(this).attr('jq_index');
             var jq_type = $(this).attr('jq_type');
+            var context_path = $(this).attr('context_path');
 
             var new_code_block = "<div class='field_single'>"
                 + "<textarea name='entry[" + jq_attributes + "][" + jq_index + "][" + jq_type + "][]'/>"
-                + "&nbsp;<img alt='Delete icon' src='/assets/delete.png' class='delete_icon click_remove_field_level1' jq_tag_type='textarea'>"
+                + "&nbsp;<img alt='Delete icon' src='" + context_path + "/assets/delete.png' class='delete_icon click_remove_field_level1' jq_tag_type='textarea'>"
                 + "</div>";
             $(this).parent('th').next('td').find('.field_group').append(new_code_block);
 
@@ -325,6 +333,7 @@ $(document).ready(function () {
             } else if (jq_type == 'section_type') {
                 list_array = $.parseJSON($(this).attr('jq_section_type_list'));
             }
+            var context_path = $(this).attr('context_path');
 
             var options = "<option value=''>--- select ---</option>";
 
@@ -333,7 +342,7 @@ $(document).ready(function () {
             }
 
             var new_code_block = "<div class='field_single'><select name='entry[" + jq_type + "][]'>" + options +
-                "</select>&nbsp;<img alt='Delete icon' src='/assets/delete.png' class='delete_icon_select click_remove_field_level1' jq_tag_type='select'></div>";
+                "</select>&nbsp;<img alt='Delete icon' src='" + context_path + "/assets/delete.png' class='delete_icon_select click_remove_field_level1' jq_tag_type='select'></div>";
             $(this).parent('th').next('td').find('.field_group').append(new_code_block);
         } catch (err) {
             alert(err);
@@ -351,6 +360,8 @@ $(document).ready(function () {
             var jq_type = $(this).attr('jq_type');
             var list_array = "";
             var options = "<option value=''>--- select ---</option>";
+            var context_path = $(this).attr('context_path');
+
             if (jq_type == 'person_role') {
                 list_array = $.parseJSON($(this).attr('jq_role_list'));
             } else if (jq_type == 'place_type') {
@@ -365,7 +376,7 @@ $(document).ready(function () {
                 options = options + "<option value='" + list_array[i].id + "'>" + list_array[i].label + "</option/>";
             }
             var new_code_block = "<div class='field_single'><select name='entry[" + jq_attributes + "][" + jq_index + "][" + jq_type + "][]'>" + options +
-                "</select>&nbsp;<img alt='Delete icon' src='/assets/delete.png' class='delete_icon_select click_remove_field_level1' jq_tag_type='select'></div>";
+                "</select>&nbsp;<img alt='Delete icon' src='" + context_path + "/assets/delete.png' class='delete_icon_select click_remove_field_level1' jq_tag_type='select'></div>";
             $(this).parent('th').next('td').find('.field_group').append(new_code_block);
         } catch (err) {
             alert(err);
@@ -381,13 +392,15 @@ $(document).ready(function () {
             var jq_type = $(this).attr('jq_type');
             var options = "<option value=''>--- select ---</option>";
             var input_class = '';
+            var context_path = $(this).attr('context_path');
+
             if (jq_type == 'person_related_place') {
                 input_class = 'related_place';
             } else {
                 input_class = 'related_agent';
             }
             var new_code_block = "<div class='field_single'><select class='" +  input_class + "' autocomplete='off' name='entry[" + jq_attributes + "][" + jq_index + "][" + jq_type + "][]'>" + options +
-                "</select>&nbsp;<img alt='Delete icon' src='/assets/delete.png' class='delete_icon_select click_remove_field_level1' jq_tag_type='select'></div>";
+                "</select>&nbsp;<img alt='Delete icon' src='" + context_path + "/assets/delete.png' class='delete_icon_select click_remove_field_level1' jq_tag_type='select'></div>";
             $(this).parent('th').next('td').find('.field_group').append(new_code_block);
 
             // Need to do this otherwise 'Related Place' will not have any options
@@ -418,33 +431,33 @@ $(document).ready(function () {
                 // As Written
                 // NOTE: 'place_as_written_block' is required for 'related places' to work - see the 'update_related_places' method below
                 "<tr><th>*As Written:" +
-                "&nbsp;<img jq_type='place_as_written' jq_index='" + jq_index + "' jq_attributes='related_places_attributes' class='plus_icon click_multiple_field_button_level2' src='/assets/plus_sign.png'>" +
+                "&nbsp;<img jq_type='place_as_written' jq_index='" + jq_index + "' context_path = '" + context_path + "' jq_attributes='related_places_attributes' class='plus_icon click_multiple_field_button_level2' src='" + context_path + "/assets/plus_sign.png'>" +
                 "</th><td><div class='field_group grey_box place_as_written_block'></div></td></tr>" +
 
                 // Place Name Authority (Same As)
                 "<tr><th>Place Name Authority:</th><td class='input_single'>" +
-                "<a href='' onclick='popup(&#39;" + context_path + "/places?start=true&amp;place_field=place_" + jq_index + "&#39;, &#39;place&#39;); return false;' tabindex='-1'><img src='/assets/magnifying_glass_small.png' class='plus_icon'></a>" +
+                "<a href='' onclick='popup(&#39;" + context_path + "/places?start=true&amp;place_field=place_" + jq_index + "&#39;, &#39;place&#39;); return false;' tabindex='-1'><img src='" + context_path + "/assets/magnifying_glass_small.png' class='plus_icon'></a>" +
                 "&nbsp;<span id='place_" + jq_index + "'></span>" +
                 "<input type='hidden' id='place_" + jq_index + "_hidden' value='' name='entry[related_places_attributes][" + jq_index + "][place_same_as]'>" +
                 "</td></tr>" +
 
                 // Place Role
                 "<tr><th>Place Role:&nbsp;<img jq_place_role_list=" + jq_place_role_list +
-                " jq_type='" + "place_role" + "' jq_index='" + jq_index + "' jq_attributes='related_places_attributes' class='plus_icon click_select_field_button_level2' src='/assets/plus_sign.png'>" +
+                " jq_type='" + "place_role" + "' jq_index='" + jq_index + "' context_path = '" + context_path + "' jq_attributes='related_places_attributes' class='plus_icon click_select_field_button_level2' src='" + context_path + "/assets/plus_sign.png'>" +
                 "</th><td><div class='field_group grey_box'></div></td></tr>" +
 
                 // Place Type
                 "<tr><th>Place Type:&nbsp;<img jq_place_type_list=" + jq_place_type_list +
-                " jq_type='" + "place_type" + "' jq_index='" + jq_index + "' jq_attributes='related_places_attributes' class='plus_icon click_select_field_button_level2' src='/assets/plus_sign.png'>" +
+                " jq_type='" + "place_type" + "' jq_index='" + jq_index + "' context_path = '" + context_path + "' jq_attributes='related_places_attributes' class='plus_icon click_select_field_button_level2' src='" + context_path + "/assets/plus_sign.png'>" +
                 "</th><td><div class='field_group grey_box'></div></td></tr>" +
 
                 // Note
                 "<tr><th>Note:" +
-                "&nbsp;<img jq_type='place_note' jq_index='" + jq_index + "' jq_attributes='related_places_attributes' class='plus_icon click_multiple_text_area_button_level2' src='/assets/plus_sign.png'>" +
+                "&nbsp;<img jq_type='place_note' jq_index='" + jq_index + "' context_path = '" + context_path + "' jq_attributes='related_places_attributes' class='plus_icon click_multiple_text_area_button_level2' src='" + context_path + "/assets/plus_sign.png'>" +
                 "</th><td><div class='field_group grey_box'></div></td></tr>" +
 
                 "</table>" +
-                "<img src='/assets/delete.png' alt='Delete icon' class='delete_icon click_remove_field_level2' params_type='related_places'>" +
+                "<img src='" + context_path + "/assets/delete.png' alt='Delete icon' class='delete_icon click_remove_field_level2' params_type='related_places'>" +
                 "</div>";
 
             field_group_div.append(new_code_block);
@@ -491,7 +504,7 @@ $(document).ready(function () {
 
                  // As Written
                 "<tr><th style='width: 115px'>*As Written:" +
-                "&nbsp;<img jq_type='person_as_written' jq_index='" + jq_index + "' jq_attributes='related_agents_attributes' class='plus_icon click_multiple_field_button_level2' src='/assets/plus_sign.png'>" +
+                "&nbsp;<img jq_type='person_as_written' jq_index='" + jq_index + "' context_path = '" + context_path + "' jq_attributes='related_agents_attributes' class='plus_icon click_multiple_field_button_level2' src='" + context_path + "/assets/plus_sign.png'>" +
                 "</th><td><div class='field_group grey_box person_as_written_block'></div></td></tr>" +
 
                     // Person or Group
@@ -499,7 +512,7 @@ $(document).ready(function () {
 
                     // Person Name Authority (Same As)
                 "<tr><th>Person Name Authority:</th><td class='input_single'>" +
-                "<a href='' onclick='popup(&#39;" + context_path + "/people?start=true&amp;person_field=person_" + jq_index + "&#39;, &#39;person&#39;); return false;' tabindex='-1'><img src='/assets/magnifying_glass_small.png' class='plus_icon'></a>" +
+                "<a href='' onclick='popup(&#39;" + context_path + "/people?start=true&amp;person_field=person_" + jq_index + "&#39;, &#39;person&#39;); return false;' tabindex='-1'><img src='" + context_path + "/assets/magnifying_glass_small.png' class='plus_icon'></a>" +
                 "&nbsp;<span id='person_" + jq_index + "'></span>" +
                 "<input type='hidden' id='person_" + jq_index + "_hidden' value='' name='entry[related_agents_attributes][" + jq_index + "][person_same_as]'>" +
                 "</td></tr>" +
@@ -509,36 +522,36 @@ $(document).ready(function () {
 
                 // Role
                 "<tr><th>Person Role:" +
-                "&nbsp;<img jq_role_list=" + jq_role_list + " jq_type='" + "person_role" + "' jq_index='" + jq_index + "' jq_attributes='related_agents_attributes' class='plus_icon click_select_field_button_level2' src='/assets/plus_sign.png'>" +
+                "&nbsp;<img jq_role_list=" + jq_role_list + " jq_type='" + "person_role" + "' jq_index='" + jq_index + "' context_path = '" + context_path  + "' jq_attributes='related_agents_attributes' class='plus_icon click_select_field_button_level2' src='" + context_path + "/assets/plus_sign.png'>" +
                 "</th><td><div class='field_group grey_box'></div></td></tr>" +
 
                 // Descriptor
                 "<tr><th>Descriptor:" +
-                "&nbsp;<img jq_descriptor_list=" + jq_descriptor_list + " jq_type='" + "person_descriptor" + "' jq_index='" + jq_index + "' jq_attributes='related_agents_attributes' class='plus_icon click_select_field_button_level2' src='/assets/plus_sign.png'>" +
+                "&nbsp;<img jq_descriptor_list=" + jq_descriptor_list + " jq_type='" + "person_descriptor" + "' jq_index='" + jq_index + "' context_path = '" + context_path  + "' jq_attributes='related_agents_attributes' class='plus_icon click_select_field_button_level2' src='" + context_path + "/assets/plus_sign.png'>" +
                 "</th><td><div class='field_group grey_box'></div></td></tr>" +
 
                 // Descriptor As Written
                 "<tr><th>Descriptor As Written:" +
-                "&nbsp;<img jq_type='person_descriptor_as_written' jq_index='" + jq_index + "' jq_attributes='related_agents_attributes' class='plus_icon click_multiple_field_button_level2' src='/assets/plus_sign.png'>" +
+                "&nbsp;<img jq_type='person_descriptor_as_written' jq_index='" + jq_index + "' context_path = '" + context_path  + "' jq_attributes='related_agents_attributes' class='plus_icon click_multiple_field_button_level2' src='" + context_path + "/assets/plus_sign.png'>" +
                 "</th><td><div class='field_group grey_box'></div></td></tr>" +
 
                 // Note
                 "<tr><th>Note:" +
-                "&nbsp;<img jq_type='person_note' jq_index='" + jq_index + "' jq_attributes='related_agents_attributes' class='plus_icon click_multiple_text_area_button_level2' src='/assets/plus_sign.png'>" +
+                "&nbsp;<img jq_type='person_note' jq_index='" + jq_index + "' context_path = '" + context_path  + "' jq_attributes='related_agents_attributes' class='plus_icon click_multiple_text_area_button_level2' src='" + context_path + "/assets/plus_sign.png'>" +
                 "</th><td><div class='field_group grey_box'></div></td></tr>" +
 
                 // Related Place
                 "<tr><th>Related Place:" +
-                "&nbsp;<img jq_type='person_related_place' jq_index='" + jq_index + "' jq_attributes='related_agents_attributes' class='plus_icon click_person_related_field_button' src='/assets/plus_sign.png'>" +
+                "&nbsp;<img jq_type='person_related_place' jq_index='" + jq_index + "' context_path = '" + context_path  + "' jq_attributes='related_agents_attributes' class='plus_icon click_person_related_field_button' src='" + context_path + "/assets/plus_sign.png'>" +
                 "</th><td><div class='field_group grey_box'></div></td></tr>" +
 
                 // Related Agent
                 "<tr><th>Related Person or Group:" +
-                "&nbsp;<img jq_type='person_related_person' jq_index='" + jq_index + "' jq_attributes='related_agents_attributes' class='plus_icon click_person_related_field_button' src='/assets/plus_sign.png'>" +
+                "&nbsp;<img jq_type='person_related_person' jq_index='" + jq_index + "' context_path = '" + context_path  + "' jq_attributes='related_agents_attributes' class='plus_icon click_person_related_field_button' src='" + context_path + "/assets/plus_sign.png'>" +
                 "</th><td><div class='field_group grey_box'></div></td></tr>" +
 
                 "</table>" +
-                "<img src='/assets/delete.png' alt='Delete icon' class='delete_icon click_remove_field_level2' params_type='related_agents'>" +
+                "<img src='" + context_path + "/assets/delete.png' alt='Delete icon' class='delete_icon click_remove_field_level2' params_type='related_agents'>" +
                 "</div>";
 
             field_group_div.append(new_code_block);
@@ -558,6 +571,7 @@ $(document).ready(function () {
             var jq_date_role_list = $.parseJSON($(this).attr('jq_date_role_list')) // See note on line above
             var jq_date_certainty_list = $(this).attr('jq_date_certainty_list').replace(/ /g, "&#32;");  // Appears to be a problem when list is added as a nested list, i.e. Level 2, therefore replace them here
             var jq_single_date_list = $(this).attr('jq_single_date_list').replace(/ /g, "&#32;"); // See note on line above
+            var context_path = $(this).attr('context_path');
 
             var date_role_options = "<option value=''>--- select ---</option>";
 
@@ -570,7 +584,7 @@ $(document).ready(function () {
                 "<table class='tab3' cellspacing='0'>" +
 
                     // Date
-                "<tr><th>Date:&nbsp;<img jq_date_certainty_list='" + jq_date_certainty_list + "' jq_single_date_list='" + jq_single_date_list + "' jq_index='" + jq_index + "' class='plus_icon click_single_date_button' src='/assets/plus_sign.png'></th><td><div class='field_group grey_box single_date'></div></td></tr>" +
+                "<tr><th>Date:&nbsp;<img jq_date_certainty_list='" + jq_date_certainty_list + "' jq_single_date_list='" + jq_single_date_list + "' context_path = '" + context_path + "' jq_index='" + jq_index + "' class='plus_icon click_single_date_button' src='" + context_path + "/assets/plus_sign.png'></th><td><div class='field_group grey_box single_date'></div></td></tr>" +
 
                     // Date Role
                 "<tr><th>Date Role:</th><td><select name='entry[entry_dates_attributes][" + jq_index + "][date_role]'>" + date_role_options + "</select></td></tr>" +
@@ -579,7 +593,7 @@ $(document).ready(function () {
                 "<tr><th>Note:</th><td class='input_single'><textarea value='' id='' name='entry[entry_dates_attributes][" + jq_index + "][date_note]'/></td></tr>" +
 
                 "</table>" +
-                "<img src='/assets/delete.png' alt='Delete icon' class='delete_icon click_remove_field_level2' params_type='entry_dates'>" +
+                "<img src='" + context_path + "/assets/delete.png' alt='Delete icon' class='delete_icon click_remove_field_level2' params_type='entry_dates'>" +
                 "</div>";
 
             field_group_div.append(new_code_block);
@@ -599,6 +613,7 @@ $(document).ready(function () {
             var jq_index2 = field_group_div.children().length;
             var jq_date_certainty_list = $(this).attr('jq_date_certainty_list'); //.replace(/ /g, "&#32;"); // Doesn't like spaces but quotes are OK?!
             var jq_single_date_list = $.parseJSON($(this).attr('jq_single_date_list')); //.replace(/ /g, "&#32;"); // Doesn't like spaces but quotes are OK?!
+            var context_path = $(this).attr('context_path');
 
             var single_date_options = "<option value=''>--- select ---</option>";
 
@@ -617,7 +632,7 @@ $(document).ready(function () {
 
                     // Date Certainty
                 "<tr><th style='width: 110px'>Certainty:&nbsp;" +
-                "<img src='/assets/plus_sign.png' alt='plus icon' class='plus_icon click_select_field_button_date_certainty' jq_index='" + jq_index + "' jq_index2='" + jq_index2 + "' jq_date_certainty_list='" + jq_date_certainty_list + "'/>" +
+                "<img src='" + context_path + "/assets/plus_sign.png' alt='plus icon' class='plus_icon click_select_field_button_date_certainty' jq_index='" + jq_index + "' jq_index2='" + jq_index2 + "' context_path = '" + context_path + "' jq_date_certainty_list='" + jq_date_certainty_list + "'/>" +
                 "</th><td><div class='field_group_date_certainty grey_box'></div></td></tr>" +
 
                     // Type
@@ -625,7 +640,7 @@ $(document).ready(function () {
                 "<td><select name='entry[entry_dates_attributes][" + jq_index + "][single_dates_attributes][" + jq_index2 + "][date_type]'>" + single_date_options + "</select></td>" +
 
                 "</table>" +
-                "<img alt='Delete icon' src='/assets/delete.png' class='delete_icon click_remove_field_date' jq_index='" + jq_index + "' jq_index1='" + jq_index2 + "'>" +
+                "<img alt='Delete icon' src='" + context_path + "/assets/delete.png' class='delete_icon click_remove_field_date' jq_index='" + jq_index + "' jq_index1='" + jq_index2 + "'>" +
                 "<div style='clear: both'></div></div>";
 
             $(this).parent('th').next('td').find('.field_group').append(new_code_block);
@@ -645,6 +660,8 @@ $(document).ready(function () {
             var jq_index2 = $(this).attr('jq_index2');
             var jq_type = $(this).attr('jq_type');
             var options = "<option value=''>--- select ---</option>";
+            var context_path = $(this).attr('context_path');
+
             var list_array = $.parseJSON($(this).attr('jq_date_certainty_list')); //.replace(/ /g, "&#32;");
 
             for (i = 0; i < list_array.length; i++) {
@@ -652,7 +669,7 @@ $(document).ready(function () {
             }
 
             var new_code_block = "<div class='field_single'><select name='entry[entry_dates_attributes][" + jq_index + "][single_dates_attributes][" + jq_index2 + "][date_certainty][]'>" + options +
-                "</select>&nbsp;<img alt='Delete icon' src='/assets/delete.png' class='delete_icon_select click_remove_field_level1' jq_tag_type='select'></div>";
+                "</select>&nbsp;<img alt='Delete icon' src='" + context_path + "/assets/delete.png' class='delete_icon_select click_remove_field_level1' jq_tag_type='select'></div>";
 
             $(this).parent('th').next('td').find('.field_group_date_certainty').append(new_code_block);
         } catch (err) {
@@ -670,14 +687,14 @@ $(document).ready(function () {
         if (person_group === 'person') {
             // Person Name Authority (Same As)
             var new_code_block =  "<tr><th>Person Name Authority:</th><td class='input_single'>" +
-                "<a href='' onclick='popup(&#39;" + context_path + "/people?start=true&amp;person_field=person_" + jq_index + "&#39;, &#39;person&#39;); return false;' tabindex='-1'><img src='/assets/magnifying_glass_small.png' class='plus_icon'></a>" +
+                "<a href='' onclick='popup(&#39;" + context_path + "/people?start=true&amp;person_field=person_" + jq_index + "&#39;, &#39;person&#39;); return false;' tabindex='-1'><img src='" + context_path + "/assets/magnifying_glass_small.png' class='plus_icon'></a>" +
                 "&nbsp;<span id='person_" + jq_index + "'></span>" +
                 "<input type='hidden' id='person_" + jq_index + "_hidden' value='' name='entry[related_agents_attributes][" + jq_index + "][person_same_as]'>" +
                 "</td></tr>";
         } else if (person_group === 'group') {
             // Group Name Authority (Same As)
             var new_code_block =  "<tr><th>Group Name Authority:</th><td class='input_single'>" +
-                "<a href='' onclick='popup(&#39;" + context_path + "/groups?start=true&amp;group_field=person_" + jq_index + "&#39;, &#39;person&#39;); return false;' tabindex='-1'><img src='/assets/magnifying_glass_small.png' class='plus_icon'></a>" +
+                "<a href='' onclick='popup(&#39;" + context_path + "/groups?start=true&amp;group_field=person_" + jq_index + "&#39;, &#39;person&#39;); return false;' tabindex='-1'><img src='" + context_path + "/assets/magnifying_glass_small.png' class='plus_icon'></a>" +
                 "&nbsp;<span id='person_" + jq_index + "'></span>" +
                 "<input type='hidden' id='person_" + jq_index + "_hidden' value='' name='entry[related_agents_attributes][" + jq_index + "][person_same_as]'>" +
                 "</td></tr>";
@@ -845,9 +862,11 @@ $(document).ready(function () {
             var field_group_div = $(this).parent('th').next('td').find('>:first-child');
             var jq_type_1 = $(this).attr('jq_type_1');
             var jq_type_2 = $(this).attr('jq_type_2');
+            var context_path = $(this).attr('context_path');
+
             var new_code_block = "<div class='field_single'>"
                 + "<input type='text' value='' name='" + jq_type_1 + "[" + jq_type_2 + "][]'>"
-                + "&nbsp;<img alt='Delete icon' src='/assets/delete.png' class='delete_icon click_remove_field_level1' jq_tag_type='input'>"
+                + "&nbsp;<img alt='Delete icon' src='" + context_path + "/assets/delete.png' class='delete_icon click_remove_field_level1' jq_tag_type='input'>"
                 + "</div>";
             field_group_div.append(new_code_block);
         } catch (err) {

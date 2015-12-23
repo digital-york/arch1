@@ -56,14 +56,14 @@
           <%# Type %>
           <tr>
             <th>Group Type:
-              <img src="/assets/plus_sign.png" alt="plus icon" class="plus_icon click_popup_multiple_field_button" jq_type_1='group' jq_type_2="group_type"/>
+              <%= image_tag 'plus_sign.png', :alt => 'plus icon', :class => 'plus_icon click_popup_multiple_field_button', :jq_type_1 => 'group', :jq_type_2 => 'group_type', :context_path => ENV['CONTEXT_PATH'] %>
             </th>
             <td>
               <div class="field_group">
                 <% @group.group_type.each do |group_type| %>
                     <div class="field_single">
                       <%= text_field_tag 'group[group_type][]', group_type %>
-                      <img alt="Delete icon" src="/assets/delete.png" class="delete_icon click_remove_field_level1" jq_tag_type="input">
+                      <%= image_tag 'delete.png', :class => 'delete_icon click_remove_field_level1', :jq_tag_type => 'input' %>
                     </div>
                 <% end %>
               </div>
@@ -73,14 +73,14 @@
           <%# Same As %>
           <tr>
             <th>Same As:
-              <img src="/assets/plus_sign.png" alt="plus icon" class="plus_icon click_popup_multiple_field_button" jq_type_1='group' jq_type_2="same_as"/>
+              <%= image_tag 'plus_sign.png', :alt => 'plus icon', :class => 'plus_icon click_popup_multiple_field_button', :jq_type_1 => 'group', :jq_type_2 => 'same_as', :context_path => ENV['CONTEXT_PATH'] %>
             </th>
             <td>
               <div class="same_as">
                 <% @group.same_as.each do |same_as| %>
                     <div class="field_single">
                       <%= text_field_tag 'group[same_as][]', same_as %>
-                      <img alt="Delete icon" src="/assets/delete.png" class="delete_icon click_remove_field_level1" jq_tag_type="input">
+                      <%= image_tag 'delete.png', :class => 'delete_icon click_remove_field_level1', :jq_tag_type => 'input' %>
                     </div>
                 <% end %>
               </div>
@@ -90,14 +90,14 @@
           <%# Related Authority %>
           <tr>
             <th>Related Authority:
-              <img src="/assets/plus_sign.png" alt="plus icon" class="plus_icon click_popup_multiple_field_button" jq_type_1='group' jq_type_2="related_authority"/>
+              <%= image_tag 'plus_sign.png', :alt => 'plus icon', :class => 'plus_icon click_popup_multiple_field_button', :jq_type_1 => 'group', :jq_type_2 => 'related_authority', :context_path => ENV['CONTEXT_PATH'] %>
             </th>
             <td>
               <div class="field_group">
                 <% @group.related_authority.each do |related_authority| %>
                     <div class="field_single">
                       <%= text_field_tag 'group[related_authority][]', related_authority %>
-                      <img alt="Delete icon" src="/assets/delete.png" class="delete_icon click_remove_field_level1" jq_tag_type="input">
+                      <%= image_tag 'delete.png', :class => 'delete_icon click_remove_field_level1', :jq_tag_type => 'input' %>
                     </div>
                 <% end %>
               </div>
@@ -108,14 +108,14 @@
           <%# Note that this is 'altlabel' in the model %>
           <tr>
             <th>Variant Names:
-              <img src="/assets/plus_sign.png" alt="plus icon" class="plus_icon click_popup_multiple_field_button" jq_type_1='group' jq_type_2="altlabel"/>
+              <%= image_tag 'plus_sign.png', :alt => 'plus icon', :class => 'plus_icon click_popup_multiple_field_button', :jq_type_1 => 'group', :jq_type_2 => 'altlabel', :context_path => ENV['CONTEXT_PATH'] %>
             </th>
             <td>
               <div class="field_group">
                 <% @group.altlabel.each do |altlabel| %>
                     <div class="field_single">
                       <%= text_field_tag 'group[altlabel][]', altlabel %>
-                      <img alt="Delete icon" src="/assets/delete.png" class="delete_icon click_remove_field_level1" jq_tag_type="input">
+                      <%= image_tag 'delete.png', :class => 'delete_icon click_remove_field_level1', :jq_tag_type => 'input' %>
                     </div>
                 <% end %>
               </div>
@@ -125,14 +125,14 @@
           <%# Note %>
           <tr>
             <th>Note:
-              <img src="/assets/plus_sign.png" alt="plus icon" class="plus_icon click_popup_multiple_field_button" jq_type_1='group' jq_type_2="note"/>
+              <%= image_tag 'plus_sign.png', :alt => 'plus icon', :class => 'plus_icon click_popup_multiple_field_button', :jq_type_1 => 'group', :jq_type_2 => 'note', :context_path => ENV['CONTEXT_PATH'] %>
             </th>
             <td>
               <div class="note">
                 <% @group.note.each do |note| %>
                     <div class="field_single">
                       <%= text_field_tag 'group[note][]', note %>
-                      <img alt="Delete icon" src="/assets/delete.png" class="delete_icon click_remove_field_level1" jq_tag_type="input">
+                      <%= image_tag 'delete.png', :class => 'delete_icon click_remove_field_level1', :jq_tag_type => 'input' %>
                     </div>
                 <% end %>
               </div>
