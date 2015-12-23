@@ -124,6 +124,7 @@ namespace :entries do
 
     # dates and places
     puts 'Dates and places'
+
     CSV.foreach(Rails.root + "lib/assets/register12_data/#{args[:num]}/dates_places.csv") do |d|
       unless $. == 1
         #if $..modulo(50).zero?
@@ -288,7 +289,7 @@ namespace :entries do
         if naw == '?'
           naw = ''
         end
-        if naw = ' '
+        if naw == ' '
           naw = ''
         end
         if naw.end_with?('  ')

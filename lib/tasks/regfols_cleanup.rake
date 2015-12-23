@@ -1,5 +1,22 @@
 namespace :regfols_cleanup do
 
+  task e12_cleanup: :environment do
+    count = 1
+    while count <= 511 do
+
+      begin
+        e = Entry.find(SolrQuery.new.solr_query('former_id_tesim:"Abp Reg 12 Entry ' + count.to_s + '*"', 'id', 1)['response']['docs'][0]['id'])
+        puts e.former_id
+        e.destroy.eradicate
+        count = count + 1
+      rescue
+        puts 'skipping' + "Abp Reg 12 Entry #{count.to_s}"
+        count = count + 1
+      end
+    end
+
+  end
+
   task add_thumbs: :environment do
 
     r = Register.find(SolrQuery.new.solr_query('reg_id_tesim:"Abp Reg 5A"', 'id', 1)['response']['docs'][0]['id'])
@@ -124,5 +141,7 @@ namespace :regfols_cleanup do
     puts "#{fol.id} folio created"
     fol
   end
+
+
 
 end

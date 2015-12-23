@@ -98,7 +98,7 @@ namespace :regfols do
   task :reg_order_existing, [:file] => :environment do |t,args|
     filename = 'registers_existing.csv'
     unless args[:file].nil?
-      filename = argh[:file]
+      filename = args[:file]
     end
     regs = CSV.read(Rails.root + 'lib/assets/new_regs_and_fols/' + filename)
     begin
