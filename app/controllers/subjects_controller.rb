@@ -5,6 +5,8 @@ class SubjectsController < ApplicationController
   #INDEX
   def index
 
+puts params
+
     begin
 
       # This variable identifies the 'Subject' field on the form (i.e. it is used when the user clicks a subject magniying glass)

@@ -14,7 +14,8 @@
         <%= link_to 'Go back to admin page', admins_path, style: 'margin-left: 6px' %>
     <% else %>
         <div>
-          <a href="/subjects?subject_field=<%= params[:subject_field] %>"><input type="button" value="Refresh Page"></a>
+          <%= button_to "Refresh Page", subjects_path, :method => :get, params: { :subject_field => params[:subject_field] }  %>
+          &nbsp;
           <%= link_to 'Click here to edit subjects', '#', onclick: "popup('/admins?start=true', 'admin'); return false;" %>
         </div>
     <% end %>

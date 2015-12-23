@@ -26,6 +26,19 @@ function reset_box(id) {
   document.getElementById('search_box').value = '';
 }
 
+/*function validate_form() {
+
+    var x = document.getElementsByClassName("date_field");
+    console.log("hi there!");
+    console.log(x);
+    for (i = 0; i < x.length; i++) {
+      console.log(i);
+      console.log(x[i]);
+    }
+    alert('hello world2!');
+
+}*/
+
 function popup(page, type) {
 
     var popup_id = Math.floor(Math.random() * 100000) + 1;
@@ -121,6 +134,22 @@ function info(title) {
 // Methods which add/remove elements to the form
 $(document).ready(function () {
 
+    $("#entry_form" ).submit(function( event ) {
+
+    /*    $(".date_field").each(function(index) {
+
+          var date_value = $(this).val();
+
+          if (!date_value.match(/^[0-9]{4}\/[0-9]{2}\/[0-9]{2}$/)) {
+            alert("Please check that dates are formatted as 'yyyy/mm/dd'");
+            console.log(date_value + ":" + "NO MATCH!");
+              event.preventDefault();
+          } else {
+            //console.log(date_value + ":" + "MATCH!");
+          }
+        });*/
+    });
+
     // Not used any more - keep here just in case they're needed again
     // Open subject popup group
     /*$('body').on('click', '.plus_icon_subject', function(e) {
@@ -203,8 +232,10 @@ $(document).ready(function () {
             //field_group_div.css("border", "1px solid red");
             var no_elements = field_group_div.children('.field_single').length;
             var jq_type = $(this).attr('jq_type');
+            var context_path = $(this).attr('context_path');
+
             var new_code_block = "<div class='field_single'>"
-                + "<a href='#' onclick='popup(&#39;/subjects?subject_field=subject_" + no_elements + "&#39;, &#39;subject&#39;); return false;' tabindex='-1'><img src='/assets/magnifying_glass_small.png' class='plus_icon'></a>"
+                + "<a href='#' onclick='popup(&#39;" + context_path + "/subjects?subject_field=subject_" + no_elements + "&#39;, &#39;subject&#39;); return false;' tabindex='-1'><img src='/assets/magnifying_glass_small.png' class='plus_icon'></a>"
                 + "&nbsp;<span id='subject_" + no_elements + "'></span>"
                 + "<input id='subject_" + no_elements + "_hidden' type='hidden' value='' name='entry[" + jq_type + "][]'>"
                 + "<img alt='Delete icon' src='/assets/delete.png' class='delete_icon click_remove_field_level1' jq_tag_type='input'>"
@@ -377,6 +408,8 @@ $(document).ready(function () {
             var jq_index = field_group_div.children().length;
             var jq_place_type_list = $(this).attr('jq_place_type_list').replace(/ /g, "&#32;"); // Appears to be a problem when list is added as a nested list, i.e. Level 2, therefore replace them here
             var jq_place_role_list = $(this).attr('jq_place_role_list').replace(/ /g, "&#32;"); // See above
+            var jq_type = $(this).attr('jq_type');
+            var context_path = $(this).attr('context_path');
 
             var new_code_block = "<div class='field_single'>" +
 
@@ -390,7 +423,7 @@ $(document).ready(function () {
 
                 // Place Name Authority (Same As)
                 "<tr><th>Place Name Authority:</th><td class='input_single'>" +
-                "<a href='' onclick='popup(&#39;/places?start=true&amp;place_field=place_" + jq_index + "&#39;, &#39;place&#39;); return false;' tabindex='-1'><img src='/assets/magnifying_glass_small.png' class='plus_icon'></a>" +
+                "<a href='' onclick='popup(&#39;" + context_path + "/places?start=true&amp;place_field=place_" + jq_index + "&#39;, &#39;place&#39;); return false;' tabindex='-1'><img src='/assets/magnifying_glass_small.png' class='plus_icon'></a>" +
                 "&nbsp;<span id='place_" + jq_index + "'></span>" +
                 "<input type='hidden' id='place_" + jq_index + "_hidden' value='' name='entry[related_places_attributes][" + jq_index + "][place_same_as]'>" +
                 "</td></tr>" +
@@ -432,6 +465,7 @@ $(document).ready(function () {
             var jq_descriptor_list = $(this).attr('jq_descriptor_list').replace(/ /g, "&#32;"); // See above
             var jq_gender_list = $.parseJSON($(this).attr('jq_gender_list')); // Don't need to remove spaces because not nested like the above lists (I think)
             var jq_person_group_list = $.parseJSON($(this).attr('jq_person_group_list')); // Don't need to remove spaces because not nested like the above lists (I think)
+            var context_path = $(this).attr('context_path');
 
             var descriptor_options = "<option value=''>--- select ---</option>";
 
@@ -461,11 +495,11 @@ $(document).ready(function () {
                 "</th><td><div class='field_group grey_box person_as_written_block'></div></td></tr>" +
 
                     // Person or Group
-                "<tr><th>Person or Group:</th><td><select name='entry[related_agents_attributes][" + jq_index + "][person_group]' jq_index='" + jq_index + "' class='select_person_group'>" + person_group_options + "</select></td></tr>" +
+                "<tr><th>Person or Group:</th><td><select name='entry[related_agents_attributes][" + jq_index + "][person_group]' jq_index='" + jq_index + "' context_path='" + context_path + "' class='select_person_group'>" + person_group_options + "</select></td></tr>" +
 
                     // Person Name Authority (Same As)
                 "<tr><th>Person Name Authority:</th><td class='input_single'>" +
-                "<a href='' onclick='popup(&#39;/people?start=true&amp;person_field=person_" + jq_index + "&#39;, &#39;person&#39;); return false;' tabindex='-1'><img src='/assets/magnifying_glass_small.png' class='plus_icon'></a>" +
+                "<a href='' onclick='popup(&#39;" + context_path + "/people?start=true&amp;person_field=person_" + jq_index + "&#39;, &#39;person&#39;); return false;' tabindex='-1'><img src='/assets/magnifying_glass_small.png' class='plus_icon'></a>" +
                 "&nbsp;<span id='person_" + jq_index + "'></span>" +
                 "<input type='hidden' id='person_" + jq_index + "_hidden' value='' name='entry[related_agents_attributes][" + jq_index + "][person_same_as]'>" +
                 "</td></tr>" +
@@ -631,18 +665,19 @@ $(document).ready(function () {
 
         var jq_index = $(this).attr('jq_index');
         var person_group = $(this).val();
+        var context_path = $(this).attr('context_path');
 
         if (person_group === 'person') {
             // Person Name Authority (Same As)
             var new_code_block =  "<tr><th>Person Name Authority:</th><td class='input_single'>" +
-                "<a href='' onclick='popup(&#39;/people?start=true&amp;person_field=person_" + jq_index + "&#39;, &#39;person&#39;); return false;' tabindex='-1'><img src='/assets/magnifying_glass_small.png' class='plus_icon'></a>" +
+                "<a href='' onclick='popup(&#39;" + context_path + "/people?start=true&amp;person_field=person_" + jq_index + "&#39;, &#39;person&#39;); return false;' tabindex='-1'><img src='/assets/magnifying_glass_small.png' class='plus_icon'></a>" +
                 "&nbsp;<span id='person_" + jq_index + "'></span>" +
                 "<input type='hidden' id='person_" + jq_index + "_hidden' value='' name='entry[related_agents_attributes][" + jq_index + "][person_same_as]'>" +
                 "</td></tr>";
         } else if (person_group === 'group') {
             // Group Name Authority (Same As)
             var new_code_block =  "<tr><th>Group Name Authority:</th><td class='input_single'>" +
-                "<a href='' onclick='popup(&#39;/groups?start=true&amp;group_field=person_" + jq_index + "&#39;, &#39;person&#39;); return false;' tabindex='-1'><img src='/assets/magnifying_glass_small.png' class='plus_icon'></a>" +
+                "<a href='' onclick='popup(&#39;" + context_path + "/groups?start=true&amp;group_field=person_" + jq_index + "&#39;, &#39;person&#39;); return false;' tabindex='-1'><img src='/assets/magnifying_glass_small.png' class='plus_icon'></a>" +
                 "&nbsp;<span id='person_" + jq_index + "'></span>" +
                 "<input type='hidden' id='person_" + jq_index + "_hidden' value='' name='entry[related_agents_attributes][" + jq_index + "][person_same_as]'>" +
                 "</td></tr>";

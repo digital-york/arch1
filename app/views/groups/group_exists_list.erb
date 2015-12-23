@@ -18,7 +18,9 @@
 
   <div style="margin-top: 10px; margin-left: 0px">
     <% @existing_location_list.each do |t| %>
-        <div style="margin-top: 5px"><a href="javascript:void(0);" onClick="window.opener.location.href='/entries?id=<%= t[0] %>&amp;folio_id=<%= t[1] %>&amp;set_folio=true'"><%= t[2] %></a></div>
+        <div style="margin-top: 5px">
+          <%= link_to t[2], '#', :onclick => "window.opener.location.href='/entries?id=#{t[0]}&amp;folio_id=#{t[1]}&amp;set_folio=true'" %>
+        </div>
     <% end %>
   </div>
 </div>

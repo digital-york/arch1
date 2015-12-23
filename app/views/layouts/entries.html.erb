@@ -29,7 +29,9 @@
 
   <div id="navbar">
 
-    <div style="float: left"><a href='/landing_page'><%= image_tag 'back_icon2.png', class: 'home_icon', :title => 'Back to Registers' %></a></div>
+    <div style="float: left">
+      <%= link_to image_tag('back_icon2.png', :class => 'home_icon', :title => 'Back to Registers'), landing_page_path %>
+    </div>
 
     <div style="float: left">&nbsp;&nbsp;<strong>Current Register</strong>: <span style="font-size: 0.95em; color: #FFFFFF"><%= session[:register_name] %></span></div>
 
