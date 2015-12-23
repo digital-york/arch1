@@ -86,5 +86,5 @@ Rails.application.configure do
   # Added by py (23/12/2015)
   # Add the context path here, e.g. /edit
   # Would be better to do this via an environment variable
-  config.action_controller.relative_url_root = '/edit'
+  #config.action_controller.relative_url_root = '/edit'
 end
