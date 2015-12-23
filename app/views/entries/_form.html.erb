@@ -54,7 +54,7 @@
     end
   %>
 
-  <%= form_for @db_entry, url: eval(form_url), method: eval(form_method) do |f| %>
+  <%= form_for @db_entry, :url => eval(form_url), :method => eval(form_method), :html => { :id => 'entry_form' } do |f| %>
 
       <input type="hidden" name="entry[folio]" value="<%= session[:folio_id] %>"/>
 
@@ -108,7 +108,7 @@
                                     </li>
                                 <% end %>
                                 <li style='float: right; height: 1px'>
-                                    <a href='#' onclick='info("Help Text"); return false'><%= image_tag "help_icon.png", :class => 'help_icon', :title => 'Help for form fields' %></a>
+                                  <%= link_to image_tag('help_icon.png', :class => 'help_icon', :title => 'Help page for form fields'), '#', :onclick => "info('Help_text')" %>
                                 </li>
                             </ul>
                         </th>
@@ -235,13 +235,13 @@
                     <%# Subject %>
                     <tr>
                         <th>Subject:
-                            <img src="/assets/plus_sign.png" alt="plus icon" class="plus_icon click_multiple_subject_field_button" jq_type="subject"/>
+                            <img src="/assets/plus_sign.png" alt="plus icon" class="plus_icon click_multiple_subject_field_button" jq_type="subject" context_path="<%= ENV['CONTEXT_PATH'] %>"/>
                         </th>
                         <td>
                             <div class="field_group">
                                 <% @db_entry.db_subjects.each_with_index do |subject, index| %>
                                     <div class="field_single">
-                                        <a href='#' onclick="popup('/subjects?subject_field=subject_<%= index.to_s %>', 'subject'); return false;" tabindex="-1"><%= image_tag "magnifying_glass_small.png", class: "plus_icon" %></a>
+                                        <%= link_to image_tag('magnifying_glass_small.png', :class => 'plus_icon'), '#', :onclick => "popup('/subjects?subject_field=subject_#{index.to_s}', 'subject'); return false;" %>
                                         <span id="subject_<%= index.to_s %>">
                                           <%= terms.get_str_from_id(subject.name, 'preflabel_tesim') %>
                                         </span>
@@ -335,7 +335,7 @@
                                                                     <%# Date %>
                                                                     <tr>
                                                                        <th style='width: 120px'>Date (yyyy/mm/dd):</th>
-                                                                        <td class="input_single"><%= text_field_tag "entry[entry_dates_attributes][" + index1.to_s + "][single_dates_attributes][" + index2.to_s + "][date]", single_date.date, id: '' %></td>
+                                                                        <td class="input_single"><%= text_field_tag "entry[entry_dates_attributes][" + index1.to_s + "][single_dates_attributes][" + index2.to_s + "][date]", single_date.date, id: '', class: 'date_field' %></td>
                                                                     </tr>
 
                                                                     <%# Date Certainty %>
@@ -401,7 +401,7 @@
                     <tr>
 
                         <th>Place:
-                            <img src="/assets/plus_sign.png" alt="plus icon" class="plus_icon click_place_button" jq_place_type_list="<%= @place_type_list.to_json %>" jq_place_role_list="<%= @place_role_list.to_json %>"/>
+                            <img src="/assets/plus_sign.png" alt="plus icon" class="plus_icon click_place_button" jq_place_type_list="<%= @place_type_list.to_json %>" jq_place_role_list="<%= @place_role_list.to_json %>" context_path="<%= ENV['CONTEXT_PATH'] %>" />
                         </th>
 
                         <td class="tab2">
@@ -436,7 +436,7 @@
                                             <tr>
                                                 <th style="width: 110px">Place Name Authority:</th>
                                                 <td class="input_single">
-                                                  <a href='#' onclick="popup('/places?start=true&amp;place_field=place_<%= index1 %>', 'place'); return false;" tabindex="-1"><%= image_tag "magnifying_glass_small.png", class: "plus_icon" %></a>
+                                                  <%= link_to image_tag('magnifying_glass_small.png', :class => 'plus_icon'), '#', :onclick => "popup('/places?start=true&amp;place_field=place_#{index1.to_s}', 'place'); return false;" %>
                                                   <span id="place_<%= index1 %>">
                                                   <% if related_place.place_same_as != nil %>
                                                     <%= terms.get_place_same_as(related_place.place_same_as) %>
@@ -517,7 +517,7 @@
                     <tr>
 
                         <th>Person:
-                            <img src="/assets/plus_sign.png" alt="plus icon" class="plus_icon click_person_button" jq_role_list="<%= @role_list.to_json %>" jq_descriptor_list="<%= @descriptor_list.to_json %>" jq_gender_list="<%= @gender_list %>" jq_person_group_list="<%= @person_group_list %>"/>
+                            <img src="/assets/plus_sign.png" alt="plus icon" class="plus_icon click_person_button" jq_role_list="<%= @role_list.to_json %>" jq_descriptor_list="<%= @descriptor_list.to_json %>" jq_gender_list="<%= @gender_list %>" jq_person_group_list="<%= @person_group_list %>" context_path="<%= ENV['CONTEXT_PATH'] %>" />
                         </th>
 
                         <td class="tab2">
@@ -567,7 +567,7 @@
                                             <tr>
                                                 <th>Person or Group:</th>
                                                 <td>
-                                                    <%= select_tag "entry[related_agents_attributes][" + index1.to_s + "][person_group]", options_for_select(@person_group_list.collect { |group| [group[0]] }, related_person.person_group), { :class => 'select_person_group', :jq_index => index1 , :disabled => disable} %>
+                                                    <%= select_tag "entry[related_agents_attributes][" + index1.to_s + "][person_group]", options_for_select(@person_group_list.collect { |group| [group[0]] }, related_person.person_group), { :class => 'select_person_group', :jq_index => index1 , :context_path => ENV['CONTEXT_PATH'], :disabled => disable} %>
                                                  </td>
                                             </tr>
 
@@ -576,7 +576,7 @@
                                           <tr>
                                             <th style="width: 110px"><%= pg_search.capitalize %> Name Authority:</th>
                                             <td class="input_single person_authority">
-                                              <a href='#' onclick="popup('/<%= pg_search %>?start=true&amp;<%= pg_field %>_field=person_<%= index1 %>', 'person'); return false;" tabindex="-1"><%= image_tag "magnifying_glass_small.png", class: "plus_icon" %></a>
+                                              <%= link_to image_tag('magnifying_glass_small.png', :class => 'plus_icon'), '#', :onclick => "popup('/#{pg_search}?start=true&amp;#{pg_search}_field=person_#{index1.to_s}', 'person'); return false;" %>
                                                   <span id="person_<%= index1 %>">
                                                   <% if related_person.person_same_as != nil %>
                                                     <%= terms.get_person_same_as(related_person.person_same_as) %>
