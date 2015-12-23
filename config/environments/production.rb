@@ -84,6 +84,7 @@ Rails.application.configure do
   config.active_record.dump_schema_after_migration = false
 
   # Added by py (23/12/2015)
-  # Sets the context path for the app, e.g. /edit
-  config.action_controller.relative_url_root = ENV["CONTEXT_PATH"]
+  # Add the context path here, e.g. /edit
+  # Would be better to do this via an environment variable
+  config.action_controller.relative_url_root = '/edit'
 end
