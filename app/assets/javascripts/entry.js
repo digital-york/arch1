@@ -26,19 +26,6 @@ function reset_box(id) {
   document.getElementById('search_box').value = '';
 }
 
-/*function validate_form() {
-
-    var x = document.getElementsByClassName("date_field");
-    console.log("hi there!");
-    console.log(x);
-    for (i = 0; i < x.length; i++) {
-      console.log(i);
-      console.log(x[i]);
-    }
-    alert('hello world2!');
-
-}*/
-
 function popup(page, type) {
 
     var popup_id = Math.floor(Math.random() * 100000) + 1;
@@ -136,52 +123,19 @@ $(document).ready(function () {
 
     $("#entry_form" ).submit(function( event ) {
 
-    /*    $(".date_field").each(function(index) {
+        $(".date_field").each(function(index) {
 
           var date_value = $(this).val();
 
-          if (!date_value.match(/^[0-9]{4}\/[0-9]{2}\/[0-9]{2}$/)) {
+          if (date_value != '' && !date_value.match(/^[0-9]{4}\/[0-9]{2}\/[0-9]{2}$/)) {
             alert("Please check that dates are formatted as 'yyyy/mm/dd'");
             console.log(date_value + ":" + "NO MATCH!");
               event.preventDefault();
           } else {
             //console.log(date_value + ":" + "MATCH!");
           }
-        });*/
+        });
     });
-
-    // Not used any more - keep here just in case they're needed again
-    // Open subject popup group
-    /*$('body').on('click', '.plus_icon_subject', function(e) {
-
-        try {
-            e.preventDefault(); // I think this prevents other events firing?
-            $(this).attr("src", "/assets/minus_icon_subject.png");
-            $(this).removeClass('plus_icon_subject');
-            $(this).addClass('minus_icon_subject');
-            var div_tag = $(this).next();
-            div_tag.show();
-
-        } catch (err) {
-            alert(err);
-        }
-    });
-
-    // Close subject popup group
-    $('body').on('click', '.minus_icon_subject', function(e) {
-
-        try {
-            e.preventDefault(); // I think this prevents other events firing?
-            $(this).attr("src", "/assets/plus_icon_subject.png");
-            $(this).removeClass('minus_icon_subject');
-            $(this).addClass('plus_icon_subject');
-            var div_tag = $(this).next();
-            div_tag.hide();
-
-        } catch (err) {
-            alert(err);
-        }
-    });*/
 
     // Called when the user chooses a folio from the menu drop-down list
     $('body').on('change', '.choose_folio', function(e) {
@@ -627,7 +581,7 @@ $(document).ready(function () {
 
                     // Date
                 "<tr><th style='width: 120px'>Date (yyyy/mm/dd):</th>" +
-                "<td class='input_single'><input id='' type='text' name='entry[entry_dates_attributes][" + jq_index + "][single_dates_attributes][" + jq_index2 + "][date]'></td>" +
+                "<td class='input_single'><input id='' type='text' class='date_field' name='entry[entry_dates_attributes][" + jq_index + "][single_dates_attributes][" + jq_index2 + "][date]'></td>" +
 
                     // Date Certainty
                 "<tr><th style='width: 110px'>Certainty:&nbsp;" +
@@ -743,6 +697,8 @@ $(document).ready(function () {
         try {
             e.preventDefault(); // I think this prevents other events firing?
             var field_single_div = $(this).parent('div');
+            var input_tag = field_single_div.find('.date_field');
+            input_tag.val('');
             field_single_div.css({'display': 'none'});
 
             // Add a '_destroy' = '1' hidden element to make sure that the block is deleted from Fedora
@@ -793,6 +749,8 @@ $(document).ready(function () {
             //var field_group_div = field_single_div.parent('div');
             var jq_index1 = $(this).attr('jq_index1');
             var jq_index = $(this).attr('jq_index');
+            var input_tag = field_single_div.find('.date_field');
+            input_tag.val('');
             field_single_div.css({'display': 'none'});
             // If there is a hidden input element with an 'id', add a '_destroy' = '1' hidden element to make sure
             // that it is deleted from Fedora but don't do it for elements without an 'id' otherwise the element is added to Fedora!
