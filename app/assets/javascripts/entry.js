@@ -383,7 +383,7 @@ $(document).ready(function () {
 
                 // As Written
                 // NOTE: 'place_as_written_block' is required for 'related places' to work - see the 'update_related_places' method below
-                "<tr><th>*As Written:" +
+                "<tr><th>As Written:" +
                 "&nbsp;<img jq_type='place_as_written' jq_index='" + jq_index + "' context_path = '" + context_path + "' jq_attributes='related_places_attributes' class='plus_icon click_multiple_field_button_level2' src='" + context_path + "/assets/plus_sign.png'>" +
                 "</th><td><div class='field_group grey_box place_as_written_block'></div></td></tr>" +
 
@@ -456,7 +456,7 @@ $(document).ready(function () {
                 "<table class='tab3' cellspacing='0'>" +
 
                  // As Written
-                "<tr><th style='width: 115px'>*As Written:" +
+                "<tr><th style='width: 115px'>As Written:" +
                 "&nbsp;<img jq_type='person_as_written' jq_index='" + jq_index + "' context_path = '" + context_path + "' jq_attributes='related_agents_attributes' class='plus_icon click_multiple_field_button_level2' src='" + context_path + "/assets/plus_sign.png'>" +
                 "</th><td><div class='field_group grey_box person_as_written_block'></div></td></tr>" +
 
