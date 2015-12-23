@@ -82,4 +82,8 @@ Rails.application.configure do
 
   # Do not dump schema after migrations.
   config.active_record.dump_schema_after_migration = false
+
+  # Added by py (23/12/2015)
+  # Sets the context path for the app, e.g. /edit
+  config.action_controller.relative_url_root = ENV["CONTEXT_PATH"]
 end
