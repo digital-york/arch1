@@ -1,3 +1,5 @@
+<% context_path = ENV['CONTEXT_PATH'] %>
+
 <div class='tab1'>
 
     <%
@@ -241,7 +243,7 @@
                             <div class="field_group">
                                 <% @db_entry.db_subjects.each_with_index do |subject, index| %>
                                     <div class="field_single">
-                                        <%= link_to image_tag('magnifying_glass_small.png', :class => 'plus_icon'), '#', :onclick => "popup('/subjects?subject_field=subject_#{index.to_s}', 'subject'); return false;" %>
+                                        <%= link_to image_tag('magnifying_glass_small.png', :class => 'plus_icon'), '#', :onclick => "popup('#{context_path}/subjects?subject_field=subject_#{index.to_s}', 'subject'); return false;" %>
                                         <span id="subject_<%= index.to_s %>">
                                           <%= terms.get_str_from_id(subject.name, 'preflabel_tesim') %>
                                         </span>
@@ -436,7 +438,7 @@
                                             <tr>
                                                 <th style="width: 110px">Place Name Authority:</th>
                                                 <td class="input_single">
-                                                  <%= link_to image_tag('magnifying_glass_small.png', :class => 'plus_icon'), '#', :onclick => "popup('/places?start=true&amp;place_field=place_#{index1.to_s}', 'place'); return false;" %>
+                                                  <%= link_to image_tag('magnifying_glass_small.png', :class => 'plus_icon'), '#', :onclick => "popup('#{context_path}/places?start=true&amp;place_field=place_#{index1.to_s}', 'place'); return false;" %>
                                                   <span id="place_<%= index1 %>">
                                                   <% if related_place.place_same_as != nil %>
                                                     <%= terms.get_place_same_as(related_place.place_same_as) %>
@@ -576,7 +578,7 @@
                                           <tr>
                                             <th style="width: 110px"><%= pg_search.capitalize %> Name Authority:</th>
                                             <td class="input_single person_authority">
-                                              <%= link_to image_tag('magnifying_glass_small.png', :class => 'plus_icon'), '#', :onclick => "popup('/#{pg_search}?start=true&amp;#{pg_search}_field=person_#{index1.to_s}', 'person'); return false;" %>
+                                              <%= link_to image_tag('magnifying_glass_small.png', :class => 'plus_icon'), '#', :onclick => "popup('#{context_path}/#{pg_search}?start=true&amp;#{pg_search}_field=person_#{index1.to_s}', 'person'); return false;" %>
                                                   <span id="person_<%= index1 %>">
                                                   <% if related_person.person_same_as != nil %>
                                                     <%= terms.get_person_same_as(related_person.person_same_as) %>

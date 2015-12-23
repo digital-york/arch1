@@ -1,3 +1,5 @@
+<% context_path = ENV['CONTEXT_PATH'] %>
+
 <div class="popup">
 
   <div class="popup_title">
@@ -13,7 +15,7 @@
         <%= button_to "Add Person", new_person_path, method: :get, params: { :search_term => @search_term, :person_field => @person_field }, style: 'margin-top: -5px', title: 'Add element' %>
         <%= link_to 'Go back to admin page', admins_path, style: 'margin-left: 6px' %>
     <% else %>
-        <%= link_to 'Click here to edit people in the Admin interface', '#', onclick: "popup('/admins?start=true', 'admin'); return false;" %>
+        <%= link_to 'Click here to edit people in the Admin interface', '#', onclick: "popup('#{context_path}/admins?start=true', 'admin'); return false;" %>
     <% end %>
   </div>
 
