@@ -237,7 +237,7 @@ $(document).ready(function () {
             var context_path = $(this).attr('context_path');
 
             var new_code_block = "<div class='field_single'>"
-                + "<a href='#' onclick='popup(&#39;" + context_path + "/subjects?subject_field=subject_" + no_elements + "&#39;, &#39;subject&#39;); return false;' tabindex='-1'><img src=" + context_path + "/assets/magnifying_glass_small.png' class='plus_icon'></a>"
+                + "<a href='#' onclick='popup(&#39;" + context_path + "/subjects?subject_field=subject_" + no_elements + "&#39;, &#39;subject&#39;); return false;' tabindex='-1'><img src='" + context_path + "/assets/magnifying_glass_small.png' class='plus_icon'></a>"
                 + "&nbsp;<span id='subject_" + no_elements + "'></span>"
                 + "<input id='subject_" + no_elements + "_hidden' type='hidden' value='' name='entry[" + jq_type + "][]'>"
                 + "<img alt='Delete icon' src='" + context_path + "/assets/delete.png' class='delete_icon click_remove_field_level1' jq_tag_type='input'>"
