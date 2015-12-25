@@ -12,18 +12,22 @@
     end
   %>
 
+  <%# Display concept title %>
   <div class="popup_title">
     <%= start_text %> <%= capitalize_first_letter(@list_type) %>
   </div>
 
+  <%# Display concept errors %>
   <% if @error != nil && @error != '' %>
       <div class="popup_error"><%= @error.html_safe %></div>
   <% end %>
 
+  <%# Display 'Go Back' link %>
   <div>
     <%= link_to 'Go back to search page', concepts_path(:search_term => @search_term, :list_type => @list_type), style: "font-style: italic" %>
   </div>
 
+  <%# Add / Edit concept form %>
   <%= form_for @concept, url: eval(form_url), method: eval(form_method), html: { style: 'margin-top: 15px; margin-bottom: 0px' } do |f| %>
 
       <div class='tab1'>
@@ -49,7 +53,7 @@
                 <% @concept.altlabel.each do |altlabel| %>
                     <div class="field_single">
                       <%= text_field_tag 'concept[altlabel][]', altlabel %>
-                      <%= image_tag 'delete.png', :class => 'delete_icon_ click_remove_field_level1', :jq_tag_type => 'input' %>
+                      <%= image_tag 'delete.png', :alt => 'delete icon', :class => 'delete_icon_ click_remove_field_level1', :jq_tag_type => 'input' %>
                     </div>
                 <% end %>
               </div>
@@ -65,6 +69,7 @@
           </tr>
         </table>
 
+        <%# Hidden fields %>
         <%= hidden_field_tag 'search_term', @search_term %>
         <%= hidden_field_tag 'list_type', @list_type %>
 

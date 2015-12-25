@@ -199,7 +199,7 @@ class EntriesController < ApplicationController
       entry_params.delete(:entry_id)
 
       # Remove the additional id fields
-      unless entry_params["related_agents_attributes"].nil?
+      unless entry_paramss["related_agents_attributes"].nil?
         entry_params["related_agents_attributes"].each do |p|
           entry_params["related_agents_attributes"][p[0]].delete(:person_id)
         end

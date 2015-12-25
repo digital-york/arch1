@@ -47,6 +47,6 @@ Rails.application.configure do
   config.log_level = :error
 
   # This line can be used to redirect to the 'public' error pages (normally the errors just appear on the page in the development environment)
-  #config.consider_all_requests_local = false
+  config.consider_all_requests_local = false
 
 end

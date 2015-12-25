@@ -1,9 +1,11 @@
+<%# This is needed if there is a relative url path %>
 <% context_path = ENV['CONTEXT_PATH'] %>
 
 <div class='tab1'>
 
     <%
-       # This instantiates the Terms class which is used to dereference ids
+       # This instantiates the Terms class which is used to dereference ids, i.e. get_str_from_id()
+       # Maybe this method should be part of a helper class?
        terms = TermsBase.new('subauthority')
     %>
 
@@ -58,7 +60,8 @@
 
   <%= form_for @db_entry, :url => eval(form_url), :method => eval(form_method), :html => { :id => 'entry_form' } do |f| %>
 
-      <input type="hidden" name="entry[folio]" value="<%= session[:folio_id] %>"/>
+      <%# Pass session folio_id when the form is submitted %>
+      <%= hidden_field_tag 'entry[folio]', session[:folio_id] %>
 
         <div id='form_modified'>
 
@@ -70,9 +73,10 @@
                         <th colspan='2' id='entry_menu'>
                             <ul>
                                 <li style='margin-left: 3px'></li>
-
+                                <%# If this is a new form... %>
                                 <% if @form_type == 'NEW' %>
 
+                                    <%# Create tabs in menu bar %>
                                     <% @entry_list.each do |entry| %>
                                       <%
                                         entry_id = entry[0]
@@ -83,12 +87,18 @@
                                         </li>
                                     <% end %>
                                     <li><span class='highlight'>New Entry</span></li>
+
+                                <%# Else if it is an updated form... %>
                                 <% else %>
+
+                                  <%# Create tabs in menu bar %>
                                     <% @entry_list.each_with_index do |entry, index| %>
                                         <%
                                            entry_id = entry[0]
                                            entry_no = entry[1]
                                            str = ''
+
+                                           # Add '(continues)' text to tab title if it continues onto next folio
                                            if @folio_continues_id == entry_no
                                              str = ' (continues)'
                                            end
@@ -101,6 +111,8 @@
                                             </li>
                                         <% end %>
                                     <% end %>
+
+                                    <%# Add 'New Entry' tab top menu bar (but not if it continues onto next folio %>
                                     <li>
                                         <% if @folio_continues_id == '' %>
                                       <span class='nohighlight'>
@@ -108,14 +120,18 @@
                                       </span>
                                         <% end %>
                                     </li>
+
                                 <% end %>
+
+                                <%# Help icon %>
                                 <li style='float: right; height: 1px'>
-                                  <%= link_to image_tag('help_icon.png', :class => 'help_icon', :title => 'Help page for form fields'), '#', :onclick => "info('Help_text')" %>
+                                  <%= link_to image_tag('help_icon.png', :alt => 'help icon', :class => 'help_icon', :title => 'Help page for form fields'), '#', :onclick => "info('Help_text')" %>
                                 </li>
                             </ul>
                         </th>
                     </tr>
 
+                  <%# Add buttons, i.e. Submit, Continue, Back for new nntries or Continue, Back to View for updated entries %>
                   <tr>
                     <th colspan='2' id="entry_menubar">
                    <span class='edit_button'>
@@ -125,6 +141,7 @@
                       <%= f.submit 'Back' %>
 				  <% else %>
 				    <%= f.submit 'Update' %>
+				      <%# Only add 'Continue' button if this is the last entry on the folio and doesn't already continue %>
                       <% if @is_last_entry == true && @folio_continues_id == '' %>
                       <%= f.submit 'Continue', :onclick => "return confirm('" + button_str + "')" %>
                     <% end %>
@@ -139,9 +156,9 @@
                         <th style="width: 145px">Entry No:</th>
                         <td>
                             <%= @db_entry.entry_no %>
-                            <%#= f.hidden_field :entry[entry_no], :value => @db_entry.entry_no %>
-                            <input type="hidden" name="entry[entry_no]" value="<%= @db_entry.entry_no %>"/>
-                            <input type="hidden" name="entry[entry_id]" value="<%= @db_entry.entry_id %>"/>
+                            <%# Pass entry_no and entry_id when the form is submitted %>
+                            <%= hidden_field_tag 'entry[entry_no]', @db_entry.entry_no %>
+                            <%= hidden_field_tag 'entry[entry_id]', @db_entry.entry_id %>
                         </td>
                     </tr>
 
@@ -155,7 +172,7 @@
                           <% @db_entry.db_entry_types.each do |entry_type| %>
                               <div class="field_single">
                                 <%= select_tag 'entry[entry_type][]', options_for_select(@entry_type_list.collect { |entry_type| [entry_type["label"], entry_type["id"]] }.insert(0, ["--- select ---", ""]), entry_type.name) %>
-                                <%= image_tag 'delete.png', :class => 'delete_icon_select click_remove_field_level1', :jq_tag_type => 'input' %>
+                                <%= image_tag 'delete.png', :alt => 'delete icon', :class => 'delete_icon_select click_remove_field_level1', :jq_tag_type => 'input' %>
                               </div>
                           <% end %>
                         </div>
@@ -172,7 +189,7 @@
                                 <% @db_entry.db_section_types.each do |section_type| %>
                                     <div class="field_single">
                                         <%= select_tag 'entry[section_type][]', options_for_select(@section_type_list.collect { |section_type| [section_type["label"], section_type["id"]] }.insert(0, ["--- select ---", ""]), section_type.name) %>
-                                      <%= image_tag 'delete.png', :class => 'delete_icon_select click_remove_field_level1', :jq_tag_type => 'input' %>
+                                      <%= image_tag 'delete.png', :alt => 'delete icon', :class => 'delete_icon_select click_remove_field_level1', :jq_tag_type => 'input' %>
                                     </div>
                                 <% end %>
                             </div>
@@ -184,8 +201,9 @@
                         <tr>
                             <th>Continues on next folio:</th>
                             <td>
+                                <%# Display tick if entry continues onto next folio %>
                                 <% if @db_entry.continues_on != nil && @db_entry.continues_on != '' %>
-                                    <%= image_tag 'tick.png' %>
+                                    <%= image_tag 'tick.png', :alt => 'tick icon' %>
                                 <% end %>
                             </td>
                         </tr>
@@ -210,7 +228,7 @@
                                 <% @db_entry.db_marginalia.each do |marginalia| %>
                                     <div class="field_single">
                                         <%= text_area_tag "entry[marginalia][]", marginalia.name, id: '' %>
-                                      <%= image_tag 'delete.png', :class => 'delete_icon click_remove_field_level1', :jq_tag_type => 'textarea' %>
+                                      <%= image_tag 'delete.png', :alt => 'delete icon', :class => 'delete_icon click_remove_field_level1', :jq_tag_type => 'textarea' %>
                                     </div>
                                 <% end %>
                             </div>
@@ -227,7 +245,7 @@
                                 <% @db_entry.db_languages.each do |language| %>
                                     <div class="field_single">
                                         <%= select_tag 'entry[language][]', options_for_select(@language_list.collect { |language| [language["label"], language["id"]] }.insert(0, ["--- select ---", ""]), language.name) %>
-                                      <%= image_tag 'delete.png', :class => 'delete_icon_select click_remove_field_level1', :jq_tag_type => 'select' %>
+                                      <%= image_tag 'delete.png', :alt => 'delete icon', :class => 'delete_icon_select click_remove_field_level1', :jq_tag_type => 'select' %>
                                     </div>
                                 <% end %>
                             </div>
@@ -243,12 +261,13 @@
                             <div class="field_group">
                                 <% @db_entry.db_subjects.each_with_index do |subject, index| %>
                                     <div class="field_single">
-                                        <%= link_to image_tag('magnifying_glass_small.png', :class => 'plus_icon'), '#', :onclick => "popup('#{context_path}/subjects?subject_field=subject_#{index.to_s}', 'subject'); return false;" %>
+                                        <%= link_to image_tag('magnifying_glass_small.png', :alt => 'magnifying glass icon', :class => 'plus_icon'), '#', :onclick => "popup('#{context_path}/subjects?subject_field=subject_#{index.to_s}', 'subject'); return false;" %>
                                         <span id="subject_<%= index.to_s %>">
                                           <%= terms.get_str_from_id(subject.name, 'preflabel_tesim') %>
                                         </span>
+                                        <%# Pass subject id when the form is submitted %>
                                         <%= hidden_field_tag "entry[subject][]", subject.name, id: 'subject_' + index.to_s + '_hidden' %>
-                                      <%= image_tag 'delete.png', :class => 'delete_icon click_remove_field_level1', :jq_tag_type => 'input' %>
+                                      <%= image_tag 'delete.png', :alt => 'delete icon', :class => 'delete_icon click_remove_field_level1', :jq_tag_type => 'input' %>
                                     </div>
                                 <% end %>
                             </div>
@@ -265,7 +284,7 @@
                                 <% @db_entry.db_notes.each do |note| %>
                                     <div class="field_single">
                                         <%= text_area_tag "entry[note][]", note.name, id: '' %>
-                                      <%= image_tag 'delete.png', :class => 'delete_icon click_remove_field_level1', :jq_tag_type => 'textarea' %>
+                                      <%= image_tag 'delete.png', :alt => 'delete icon', :class => 'delete_icon click_remove_field_level1', :jq_tag_type => 'textarea' %>
                                     </div>
                                 <% end %>
                             </div>
@@ -282,7 +301,7 @@
                                 <% @db_entry.db_editorial_notes.each do |editorial_note| %>
                                     <div class="field_single">
                                         <%= text_area_tag "entry[editorial_note][]", editorial_note.name, id: '' %>
-                                      <%= image_tag 'delete.png', :class => 'delete_icon click_remove_field_level1', :jq_tag_type => 'textarea' %>
+                                      <%= image_tag 'delete.png', :alt => 'delete icon', :class => 'delete_icon click_remove_field_level1', :jq_tag_type => 'textarea' %>
                                     </div>
                                 <% end %>
                             </div>
@@ -299,7 +318,7 @@
                                 <% @db_entry.db_is_referenced_bys.each do |is_referenced_by| %>
                                     <div class="field_single">
                                         <%= text_field_tag "entry[is_referenced_by][]", is_referenced_by.name, id: '' %>
-                                        <%= image_tag 'delete.png', :class => 'delete_icon click_remove_field_level1', :jq_tag_type => 'input' %>
+                                        <%= image_tag 'delete.png', :alt => 'delete icon', :class => 'delete_icon click_remove_field_level1', :jq_tag_type => 'input' %>
                                     </div>
                                 <% end %>
                             </div>
@@ -350,7 +369,7 @@
                                                                                 <% single_date.db_date_certainties.each_with_index do |date_certainty, index3| %>
                                                                                     <div class="field_single">
                                                                                         <%= select_tag "entry[entry_dates_attributes][" + index1.to_s + "][single_dates_attributes][" + index2.to_s + "][date_certainty][]", options_for_select(@date_certainty_list.collect { |date_certainty| [date_certainty[0]] }.insert(0, ["--- select ---", ""]), date_certainty.name) %>
-                                                                                      <%= image_tag 'delete.png', :class => 'delete_icon_select click_remove_field_level1', :jq_tag_type => 'select' %>
+                                                                                      <%= image_tag 'delete.png', :alt => 'delete icon', :class => 'delete_icon_select click_remove_field_level1', :jq_tag_type => 'select' %>
                                                                                     </div>
                                                                                 <% end %>
                                                                             </div>
@@ -365,8 +384,10 @@
                                                                         </td>
                                                                     </tr>
                                                                 </table>
-                                                                &nbsp;<%= image_tag 'delete.png', :class => 'delete_icon click_remove_field_date', :jq_index => index1, :jq_index1 => index2 %>
-                                                                <input type="hidden" id="hidden_field" name="entry[entry_dates_attributes][<%= index1.to_s %>][single_dates_attributes][<%= index2.to_s %>][single_date_id]" value="<%= single_date.single_date_id %>">
+                                                                &nbsp;<%= image_tag 'delete.png', :alt => 'delete icon', :class => 'delete_icon click_remove_field_date', :jq_index => index1, :jq_index1 => index2 %>
+
+                                                                <%# Pass single_date_id when the form is submitted %>
+                                                                <%= hidden_field_tag "entry[entry_dates_attributes][#{index1.to_s}][single_dates_attributes][#{index2.to_s}]single_date_id]", single_date.single_date_id %>
 
                                                                 <div style="clear: both"></div>
                                                             </div>
@@ -390,9 +411,10 @@
                                             </tr>
                                         </table>
 
-                                      <%= image_tag 'delete.png', :class => 'delete_icon click_remove_field_level2', :params_type => 'entry_dates' %>
+                                      <%= image_tag 'delete.png', :alt => 'delete icon', :class => 'delete_icon click_remove_field_level2', :params_type => 'entry_dates' %>
 
-                                        <input type="hidden" id="hidden_field" name="entry[entry_dates_attributes][<%= index1.to_s %>][date_id]" value="<%= entry_date.date_id %>">
+                                      <%# Pass date_id when the form is submitted %>
+                                      <%= hidden_field_tag "entry[entry_dates_attributes][#{index1.to_s}][date_id]", entry_date.date_id %>
                                     </div>
                                 <% end %>
                             </div>
@@ -426,7 +448,7 @@
                                                 <% related_place.db_place_as_writtens.each_with_index do |place_as_written, index2| %>
                                                     <div class="field_single">
                                                       <input type="text" name="entry[related_places_attributes][<%= index1.to_s %>][place_as_written][]" value="<%= place_as_written.name %>" class="place_as_written">
-                                                      &nbsp;<%= image_tag 'delete.png', :class => 'delete_icon click_remove_field_level1', :jq_tag_type => 'input' %>
+                                                      &nbsp;<%= image_tag 'delete.png', :alt => 'delete icon', :class => 'delete_icon click_remove_field_level1', :jq_tag_type => 'input' %>
                                                     </div>
                                                 <% end %>
                                               </div>
@@ -437,15 +459,16 @@
                                             <tr>
                                                 <th style="width: 110px">Place Name Authority:</th>
                                                 <td class="input_single">
-                                                  <%= link_to image_tag('magnifying_glass_small.png', :class => 'plus_icon'), '#', :onclick => "popup('#{context_path}/places?start=true&amp;place_field=place_#{index1.to_s}', 'place'); return false;" %>
+                                                  <%= link_to image_tag('magnifying_glass_small.png', :alt => 'magnifying glass icon', :class => 'plus_icon'), '#', :onclick => "popup('#{context_path}/places?start=true&amp;place_field=place_#{index1.to_s}', 'place'); return false;" %>
                                                   <span id="place_<%= index1 %>">
                                                   <% if related_place.place_same_as != nil %>
                                                     <%= terms.get_place_same_as(related_place.place_same_as) %>
                                                   <% end %>
                                                   </span>
+                                                  <%# Pass place_same_as id when the form is submitted %>
                                                   <%= hidden_field_tag "entry[related_places_attributes][" + index1.to_s + "][place_same_as]", related_place.place_same_as, id: 'place_' + index1.to_s + '_hidden' %>
                                                   <div style="float: right; margin-right: 6px">
-                                                    <%= image_tag 'delete.png', :class => 'delete_icon', :onclick => "remove_authority('place', #{index1}); return false" %>
+                                                    <%= image_tag 'delete.png', :alt => 'delete icon', :class => 'delete_icon', :onclick => "remove_authority('place', #{index1}); return false" %>
                                                   </div>
                                                 </td>
                                             </tr>
@@ -461,7 +484,7 @@
                                                         <% related_place.db_place_roles.each_with_index do |place_role, index2| %>
                                                             <div class="field_single">
                                                                 <%= select_tag "entry[related_places_attributes][" + index1.to_s + "][place_role][]", options_for_select(@place_role_list.collect { |place_role| [place_role["label"], place_role["id"]] }.insert(0, ["--- select ---", ""]), place_role.name) %>
-                                                              <%= image_tag 'delete.png', :class => 'delete_icon_select click_remove_field_level1', :jq_tag_type => 'select' %>
+                                                              <%= image_tag 'delete.png', :alt => 'delete icon', :class => 'delete_icon_select click_remove_field_level1', :jq_tag_type => 'select' %>
                                                             </div>
                                                         <% end %>
                                                     </div>
@@ -479,7 +502,7 @@
                                                         <% related_place.db_place_types.each_with_index do |place_type, index2| %>
                                                             <div class="field_single">
                                                                 <%= select_tag "entry[related_places_attributes][" + index1.to_s + "][place_type][]", options_for_select(@place_type_list.collect { |place_type| [place_type["label"], place_type["id"]] }.insert(0, ["--- select ---", ""]), place_type.name) %>
-                                                              <%= image_tag 'delete.png', :class => 'delete_icon_select click_remove_field_level1', :jq_tag_type => 'select' %>
+                                                              <%= image_tag 'delete.png', :alt => 'delete icon', :class => 'delete_icon_select click_remove_field_level1', :jq_tag_type => 'select' %>
                                                             </div>
                                                         <% end %>
                                                     </div>
@@ -497,7 +520,7 @@
                                                         <% related_place.db_place_notes.each_with_index do |place_note, index2| %>
                                                             <div class="field_single">
                                                                 <%= text_area_tag "entry[related_places_attributes][" + index1.to_s + "][place_note][]", place_note.name, id: '' %>
-                                                                &nbsp;<%= image_tag 'delete.png', :class => 'delete_icon click_remove_field_level1', :jq_tag_type => 'textarea' %>
+                                                                &nbsp;<%= image_tag 'delete.png', :alt => 'delete icon', :class => 'delete_icon click_remove_field_level1', :jq_tag_type => 'textarea' %>
                                                             </div>
                                                         <% end %>
                                                     </div>
@@ -505,9 +528,10 @@
                                             </tr>
                                         </table>
 
-                                      <%= image_tag 'delete.png', :class => 'delete_icon click_remove_field_level2', :params_type => 'related_places' %>
+                                      <%= image_tag 'delete.png', :alt => 'delete icon', :class => 'delete_icon click_remove_field_level2', :params_type => 'related_places' %>
 
-                                        <input type="hidden" id="hidden_field" name="entry[related_places_attributes][<%= index1.to_s %>][place_id]" value="<%= related_place.place_id %>">
+                                      <%# Pass place_id when the form is submitted %>
+                                      <%= hidden_field_tag "entry[related_places_attributes][#{index1.to_s}][place_id]", related_place.place_id, :id => 'hidden_field' %>
                                     </div>
                                 <% end %>
                             </div>
@@ -541,7 +565,7 @@
                                                         <% related_person.db_person_as_writtens.each_with_index do |person_as_written, index2| %>
                                                             <div class="field_single">
                                                               <input type="text" name="entry[related_agents_attributes][<%= index1.to_s %>][person_as_written][]" value="<%= person_as_written.name %>" class="person_as_written">
-                                                              &nbsp;<%= image_tag 'delete.png', :class => 'delete_icon click_remove_field_level1', :jq_tag_type => 'input' %>
+                                                              &nbsp;<%= image_tag 'delete.png', :alt => 'delete icon', :class => 'delete_icon click_remove_field_level1', :jq_tag_type => 'input' %>
                                                             </div>
                                                         <% end %>
                                                     </div>
@@ -555,10 +579,10 @@
                                                  disable = true
                                                end
                                                if related_person.person_group == 'group'
-                                                 pg_field = 'group'
+                                                 pg_field = 'group' # Is needed?
                                                  pg_search = 'groups'
                                                else
-                                                 pg_field = 'person'
+                                                 pg_field = 'person' # Is needed?
                                                  pg_search = 'people'
                                                end
                                             %>
@@ -576,15 +600,16 @@
                                           <tr>
                                             <th style="width: 110px"><%= pg_search.capitalize %> Name Authority:</th>
                                             <td class="input_single person_authority">
-                                              <%= link_to image_tag('magnifying_glass_small.png', :class => 'plus_icon'), '#', :onclick => "popup('#{context_path}/#{pg_search}?start=true&amp;#{pg_search}_field=person_#{index1.to_s}', 'person'); return false;" %>
+                                              <%= link_to image_tag('magnifying_glass_small.png', :alt => 'magnifying glass icon', :class => 'plus_icon'), '#', :onclick => "popup('#{context_path}/#{pg_search}?start=true&amp;#{pg_search}_field=person_#{index1.to_s}', 'person'); return false;" %>
                                                   <span id="person_<%= index1 %>">
                                                   <% if related_person.person_same_as != nil %>
                                                     <%= terms.get_person_same_as(related_person.person_same_as) %>
                                                   <% end %>
                                                   </span>
+                                              <%# Pass person_same_as id when the form is submitted %>
                                               <%= hidden_field_tag "entry[related_agents_attributes][" + index1.to_s + "][person_same_as]", related_person.person_same_as, id: 'person_' + index1.to_s + '_hidden' %>
                                               <div style="float: right; margin-right: 6px">
-                                                <%= image_tag 'delete.png', :class => 'delete_icon', :onclick => "remove_authority('person', #{index1}); return false" %>
+                                                <%= image_tag 'delete.png', :alt => 'delete icon', :class => 'delete_icon', :onclick => "remove_authority('person', #{index1}); return false" %>
                                               </div>
                                             </td>
                                           </tr>
@@ -607,7 +632,7 @@
                                                         <% related_person.db_person_roles.each_with_index do |person_role, index2| %>
                                                             <div class="field_single">
                                                                 <%= select_tag "entry[related_agents_attributes][" + index1.to_s + "][person_role][]", options_for_select(@role_list.collect { |role| [role["label"], role["id"]] }.insert(0, ["--- select ---", ""]), person_role.name) %>
-                                                              <%= image_tag 'delete.png', :class => 'delete_icon_select click_remove_field_level1', :jq_tag_type => 'select' %>
+                                                              <%= image_tag 'delete.png', :alt => 'delete icon', :class => 'delete_icon_select click_remove_field_level1', :jq_tag_type => 'select' %>
                                                             </div>
                                                         <% end %>
                                                     </div>
@@ -624,7 +649,7 @@
                                                         <% related_person.db_person_descriptors.each_with_index do |person_descriptor, index2| %>
                                                             <div class="field_single">
                                                                 <%= select_tag "entry[related_agents_attributes][" + index1.to_s + "][person_descriptor][]", options_for_select(@descriptor_list.collect { |descriptor| [descriptor["label"], descriptor["id"]] }.insert(0, ["--- select ---", ""]), person_descriptor.name) %>
-                                                              <%= image_tag 'delete.png', :class => 'delete_icon_select click_remove_field_level1', :jq_tag_type => 'select' %>
+                                                              <%= image_tag 'delete.png', :alt => 'delete icon', :class => 'delete_icon_select click_remove_field_level1', :jq_tag_type => 'select' %>
                                                             </div>
                                                         <% end %>
                                                     </div>
@@ -642,7 +667,7 @@
                                                         <% related_person.db_person_descriptor_as_writtens.each_with_index do |person_descriptor_as_written, index2| %>
                                                             <div class="field_single">
                                                                 <%= text_field_tag "entry[related_agents_attributes][" + index1.to_s + "][person_descriptor_as_written][]", person_descriptor_as_written.name, id: '' %>
-                                                                &nbsp;<%= image_tag 'delete.png', :class => 'delete_icon click_remove_field_level1', :jq_tag_type => 'input' %>
+                                                                &nbsp;<%= image_tag 'delete.png', :alt => 'delete icon', :class => 'delete_icon click_remove_field_level1', :jq_tag_type => 'input' %>
                                                             </div>
                                                         <% end %>
                                                     </div>
@@ -660,7 +685,7 @@
                                                         <% related_person.db_person_notes.each_with_index do |person_note, index2| %>
                                                             <div class="field_single">
                                                                 <%= text_area_tag "entry[related_agents_attributes][" + index1.to_s + "][person_note][]", person_note.name, id: '' %>
-                                                                &nbsp;<%= image_tag 'delete.png', :class => 'delete_icon click_remove_field_level1', :jq_tag_type => 'textarea' %>
+                                                                &nbsp;<%= image_tag 'delete.png', :alt => 'delete icon', :class => 'delete_icon click_remove_field_level1', :jq_tag_type => 'textarea' %>
                                                             </div>
                                                         <% end %>
                                                     </div>
@@ -678,7 +703,7 @@
                                                         <% related_person.db_person_related_places.each do |person_related_place| %>
                                                             <div class="field_single">
                                                                 <%= select_tag "entry[related_agents_attributes][" + index1.to_s + "][person_related_place][]", options_for_select(@related_place_list, person_related_place.name), class: 'related_place', id: '' %>
-                                                              <%= image_tag 'delete.png', :class => 'delete_icon_select click_remove_field_level1', :jq_tag_type => 'select' %>
+                                                              <%= image_tag 'delete.png', :alt => 'delete icon', :class => 'delete_icon_select click_remove_field_level1', :jq_tag_type => 'select' %>
                                                             </div>
                                                         <% end %>
                                                     </div>
@@ -696,7 +721,7 @@
                                                 <% related_person.db_person_related_people.each do |person_related_person| %>
                                                     <div class="field_single">
                                                       <%= select_tag "entry[related_agents_attributes][" + index1.to_s + "][person_related_person][]", options_for_select(@related_person_list, person_related_person.name), class: 'related_agent', id: '' %>
-                                                      <%= image_tag 'delete.png', :class => 'delete_icon_select click_remove_field_level1', :jq_tag_type => 'select' %>
+                                                      <%= image_tag 'delete.png', :alt => 'delete icon', :class => 'delete_icon_select click_remove_field_level1', :jq_tag_type => 'select' %>
                                                     </div>
                                                 <% end %>
                                               </div>
@@ -705,9 +730,10 @@
 
                                         </table>
 
-                                      <%= image_tag 'delete.png', :class => 'delete_icon click_remove_field_level2', :params_type => 'related_agents' %>
+                                      <%= image_tag 'delete.png', :alt => 'delete icon', :class => 'delete_icon click_remove_field_level2', :params_type => 'related_agents' %>
 
-                                        <input type="hidden" id="hidden_field" name="entry[related_agents_attributes][<%= index1.to_s %>][person_id]" value="<%= related_person.person_id %>">
+                                      <%# Pass person_id when the form is submitted %>
+                                      <%= hidden_field_tag "entry[related_agents_attributes][#{index1.to_s}][person_id]", related_person.person_id, :id => 'hidden_field' %>
                                     </div>
 
                                 <% end %>
@@ -719,19 +745,21 @@
                       <th colspan='2'>
                         <div id='entry_menubar'>
 
-                          <span class='edit_button'>
-				       <% if @form_type == 'NEW' %>
-                                <%= f.submit 'Submit' %>
-                      <%= f.submit 'Continue', :onclick => "return confirm('" + button_str + "')" %>
-                                <%= f.submit 'Back' %>
-				  <% else %>
-				    <%= f.submit 'Update' %>
-                        <% if @is_last_entry == true && @folio_continues_id == '' %>
-                      <%= f.submit 'Continue', :onclick => "return confirm('" + button_str + "')" %>
-                    <% end %>
-                      <%= f.submit 'Back to View' %>
-				  <% end %>
-				</span>
+                        <%# Add buttons, i.e. Submit, Continue, Back for new nntries or Continue, Back to View for updated entries %>
+                        <span class='edit_button'>
+				          <% if @form_type == 'NEW' %>
+                            <%= f.submit 'Submit' %>
+                            <%= f.submit 'Continue', :onclick => "return confirm('" + button_str + "')" %>
+                            <%= f.submit 'Back' %>
+				          <% else %>
+				           <%= f.submit 'Update' %>
+                           <%# Only add 'Continue' button if this is the last entry on the folio and doesn't already continue %>
+                           <% if @is_last_entry == true && @folio_continues_id == '' %>
+                             <%= f.submit 'Continue', :onclick => "return confirm('" + button_str + "')" %>
+                           <% end %>
+                             <%= f.submit 'Back to View' %>
+				          <% end %>
+				        </span>
                         </div>
                       </th>
                     </tr>
@@ -745,8 +773,8 @@
 
 <div style='clear: both'></div>
 
-<% if @errors != nil && @errors != '' %>
+<!--<%# if @errors != nil && @errors != '' %>
     <script type="text/javascript">
         hide_elements_when_errors();
     </script>
-<% end %>
+<%# end %>-->

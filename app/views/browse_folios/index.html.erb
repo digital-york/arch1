@@ -1,14 +1,11 @@
 <div style="width: 100%">
 
-  <!--<div style="text-align: center; background-color: #d9c6a5; font-weight: bold; height: 32px; padding-top: 7px; text-align: center;">
-    Browse Folios
-  </div>-->
-
-  <div id="image_frame3" style="margin: 0px auto 0px auto; width: 520px">
+  <div id="browse" style="margin: 0px auto 0px auto; width: 520px">
 
     <div style="color: #f7f4ee; text-align: center; font-size: 1em; padding: 9px 0px 3px 0px; background-color: grey; height: 30px">
 
       <%
+         # Get the folio title from solr using the browse_id and remove the initial part
          terms = TermsBase.new('subauthority')
          folio_title = terms.get_str_from_id(session[:browse_id], 'preflabel_tesim')
          folio_title = folio_title.gsub(/Abp Reg \d+[a-z] /, "")
@@ -18,18 +15,21 @@
 
     </div>
 
+    <%# Display OpenSeadragon image here %>
     <div id="location1" style="background-color: black; width: 500px; height: 500px"></div>
 
     <div id="image_footer3" style="background-color: grey; height: 30px; padding: 9px 0px 3px 0px">
 
         <% current_folio = session[:browse_id] %>
 
+        <%# Display '<' button or make it disabled if is the first folio %>
         <% if current_folio == session[:first_folio_id] %>
             <%= button_to "<", {}, :style => 'margin-right: 5px', :disabled => 'true', :class => 'button_previous' %>
         <% else %>
             <%= button_to "<", browse_folios_path, :method => "get", params: {:browse_action => 'prev_tesim'}, :style => 'margin-right: 5px', :title => 'previous image', :class => 'button_previous' %>
         <% end %>
 
+        <%# Display '>' button or make it disabled if is the last folio %>
         <% if current_folio == session[:last_folio_id] %>
             <%= button_to ">", {}, :disabled => 'true', :class => 'button_next' %>
         <% else %>
@@ -43,6 +43,7 @@
 
 </div>
 
+<%# Display OpenSeadragon image at 'location1' above  %>
 <script type="text/javascript">
     var viewer = OpenSeadragon({
         id: "location1",

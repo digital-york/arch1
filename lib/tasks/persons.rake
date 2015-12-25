@@ -153,11 +153,11 @@ namespace :persons do
 
     begin
 
-      @scheme = ConceptScheme.find('hq37vn837')
-      #@scheme = ConceptScheme.new
-      #@scheme.preflabel = "groups"
-      #@scheme.rdftype = @scheme.add_rdf_types
-      #@scheme.save
+      #@scheme = ConceptScheme.find('hq37vn837')
+      @scheme = ConceptScheme.new
+      @scheme.preflabel = "groups"
+      @scheme.rdftype = @scheme.add_rdf_types
+      @scheme.save
       puts "Concept scheme for groups created at #{@scheme.id}"
     rescue
       puts $!

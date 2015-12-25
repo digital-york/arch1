@@ -6,6 +6,10 @@ class ImageZoomLargeController < ApplicationController
 
   def index
 
+# TODO - is this code necessary?
+
+=begin
+
     begin
 
       remote_server = "http://dlib.york.ac.uk"
@@ -25,10 +29,8 @@ class ImageZoomLargeController < ApplicationController
       raise
     end
 
-  end
+=end
 
-  #def alt
-#
- # end
+  end
 
 end

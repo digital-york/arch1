@@ -1,5 +1,7 @@
 <!DOCTYPE html>
 
+<% context_path = ENV['CONTEXT_PATH'] %>
+
 <html lang="en" class="no-js">
 
 <head>
@@ -14,7 +16,7 @@
 
 <div id="container">
 
-  <div id="header" style="border-bottom: 1px solid #898989">
+  <div id="header" style="border-bottom: 1px solid #898989; background: url('<%= context_path %>/assets/header.jpg') repeat-x scroll 0 50% #000000;">
 
     <div id="header_text">
       Archbishops&#39; Registers Editing Tool

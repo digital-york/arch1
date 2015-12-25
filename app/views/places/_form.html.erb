@@ -13,18 +13,22 @@
     end
   %>
 
+  <%# Display place title %>
   <div class="popup_title">
     <%= start_text %> Place
   </div>
 
+  <%# Display place errors %>
   <% if @error != nil && @error != '' %>
       <div class="popup_error"><%= @error.html_safe %></div>
   <% end %>
 
+  <%# Display 'Go Back' link %>
   <div>
     <%= link_to 'Go back to search page', places_path(:search_term => @search_term, :place_field => @place_field) %>
   </div>
 
+  <%# Add / Edit place form %>
   <%= form_for @place, url: eval(form_url), method: eval(form_method), html: { style: 'margin-top: 15px; margin-bottom: 0px' } do |f| %>
 
       <div class='tab1'>
@@ -89,7 +93,7 @@
                 <% @place.feature_code.each do |feature_code| %>
                     <div class="field_single">
                       <%= text_field_tag 'place[feature_code][]', feature_code %>
-                      <%= image_tag 'delete.png', :class => 'delete_icon click_remove_field_level1', :jq_tag_type => 'input' %>
+                      <%= image_tag 'delete.png', :alt => 'delete icon', :class => 'delete_icon click_remove_field_level1', :jq_tag_type => 'input' %>
                     </div>
                 <% end %>
               </div>
@@ -106,7 +110,7 @@
                 <% @place.same_as.each do |same_as| %>
                     <div class="field_single">
                       <%= text_field_tag 'place[same_as][]', same_as %>
-                      <%= image_tag 'delete.png', :class => 'delete_icon click_remove_field_level1', :jq_tag_type => 'input' %>
+                      <%= image_tag 'delete.png', :alt => 'delete icon', :class => 'delete_icon click_remove_field_level1', :jq_tag_type => 'input' %>
                     </div>
                 <% end %>
               </div>
@@ -123,7 +127,7 @@
                 <% @place.related_authority.each do |related_authority| %>
                     <div class="field_single">
                       <%= text_field_tag 'place[related_authority][]', related_authority %>
-                      <%= image_tag 'delete.png', :class => 'delete_icon click_remove_field_level1', :jq_tag_type => 'input' %>
+                      <%= image_tag 'delete.png', :alt => 'delete icon', :class => 'delete_icon click_remove_field_level1', :jq_tag_type => 'input' %>
                     </div>
                 <% end %>
               </div>
@@ -141,7 +145,7 @@
                 <% @place.altlabel.each do |altlabel| %>
                     <div class="field_single">
                       <%= text_field_tag 'place[altlabel][]', altlabel %>
-                      <%= image_tag 'delete.png', :class => 'delete_icon click_remove_field_level1', :jq_tag_type => 'input' %>
+                      <%= image_tag 'delete.png', :alt => 'delete icon', :alt => 'delete icon', :class => 'delete_icon click_remove_field_level1', :jq_tag_type => 'input' %>
                     </div>
                 <% end %>
               </div>
@@ -157,7 +161,7 @@
                         <% @place.note.each do |note| %>
                             <div class="field_single">
                                 <%= text_field_tag 'place[note][]', note %>
-                              <%= image_tag 'delete.png', :class => 'delete_icon click_remove_field_level1', :jq_tag_type => 'input' %>
+                              <%= image_tag 'delete.png', :alt => 'delete icon', :class => 'delete_icon click_remove_field_level1', :jq_tag_type => 'input' %>
                             </div>
                         <% end %>
                     </div>
@@ -165,6 +169,7 @@
             </tr>
         </table>
 
+        <%# Hidden fields %>
         <%= hidden_field_tag 'search_term', @search_term %>
         <%= hidden_field_tag 'place_field', @place_field %>
 

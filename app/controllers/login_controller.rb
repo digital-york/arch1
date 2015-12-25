@@ -1,8 +1,5 @@
 class LoginController < ApplicationController
 
-  def index
-  end
-
   def login_submit
 
     begin
