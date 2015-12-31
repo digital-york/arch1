@@ -16,6 +16,7 @@
 
 <div id="container">
 
+  <%# Display header including background image and Admin, Logout buttons %>
   <div id="header" style="background: url('<%= context_path %>/assets/header.jpg') repeat-x scroll 0 50% #000000;">
 
     <div id="header_text">
@@ -29,6 +30,7 @@
 
   </div>
 
+  <%# Display the navigation bar, i.e. the 'go back' arrow, the current register and a drop-down list of folios %>
   <div id="navbar">
 
     <div style="float: left">
@@ -56,6 +58,7 @@
     </div>
   </div>
 
+  <%# Display the entry form %>
   <div id="main">
     <%= yield %>
   </div>

@@ -1,15 +1,4 @@
-// This code is used if an error occurs and the form is shown again
-// Hide any elements which have been removed by the user
-// as they will reappear on the page if an error occurs
-function hide_elements_when_errors() {
-    $('input').each(function (index) {
-        if (this.type === 'hidden' && this.value === 'true') {
-            var parentTag = $(this).parent().get(0).tagName;
-            $(this).parent().parent().css('display', 'none');
-        }
-    });
-}
-
+/***** JAVASCRIPT METHODS *****/
 // Used to post value back to calling page, i.e. in subject, person and place popups
 function post_value(value, id, field) {
     opener.document.getElementById(field).innerHTML = value;
@@ -17,15 +6,23 @@ function post_value(value, id, field) {
     self.close();
 }
 
+// Allows user to delete a person / place authority on the entry form
 function remove_authority(type, index) {
     document.getElementById(type + "_" + index).innerHTML = '';
     document.getElementById(type + "_" + index + "_hidden").value = '';
 }
 
+// I don't think this is being used currently but would delete any text in a search box
+// when the user clicks in the box
 function reset_box(id) {
   document.getElementById('search_box').value = '';
 }
 
+// General function to display various pop-up boxes
+// The boxes have various widths and heights
+// Note that giving the pop-ups an id means that they are independent
+// i.e. if the place pop-up is open, clicking the person pop-up will open another box
+// and will not override the place box
 function popup(page, type) {
 
     var popup_id = Math.floor(Math.random() * 100000) + 1;
@@ -66,9 +63,12 @@ function popup(page, type) {
         left = (screen.width - popupWidth) / 2;
     }
 
+    // Code to open the pop-up
     window.open(page, type + "_" + popup_id, 'status = 1, location = 1, top = ' + top + ', left = ' + left + ', height = ' + popupHeight + ', width = ' + popupWidth + ', scrollbars=yes');
 }
 
+// Help text - corresponds to the question mark icon on the entry form
+// Not sure this is the best place for help text...
 var dummy_text = "\
 <p class='help_text_header'>Entry:</p>\
 <p><strong>Entry Number</strong>: automatically generated sequence number for entries on a particular folio</p>\
@@ -100,7 +100,7 @@ var dummy_text = "\
 <p><strong>Note</strong>: general notes about the person</p>\
 <p><strong>Related Place</strong>: if a place entered above is related to this person rather than the entry as a whole, link them here</p>";
 
-// Shows the info pop-up when a question mark is clicked
+// Shows the info pop-up when the help question mark is clicked, i.e. gets the text above
 function info(title) {
     var text = "..."
     var string = "<html><head><style>li { padding: 5px; } .help_text_header { font-size: 1.3em; font-weight: bold; }</style><title>" + title + "</title><body style='font-family: Arial,Helvetica,sans-serif; font-size: 80%;'>";
@@ -118,10 +118,115 @@ function info(title) {
     helpWindow.document.close();
 }
 
-// Methods which add/remove elements to the form
+// This is called if the user changes a place 'As Written' field or the user adds a new place
+// It updates all the person 'Related Place' drop-down lists by adding new terms and removing old terms
+// Note that I tried to do it when the user actually clicked on the 'Related Place' list but there was
+// a problem with removing elements and someone on StackOverflow said that the options are being
+// destroyed every time and that's why you can't select from the list - see here:
+// http://stackoverflow.com/questions/30736354/choosing-options-after-dynamically-changing-a-select-list-with-jquery/30737208#30737208
+// Note that this code also relies on a 'place_as_written' class and 'place_as_written_block' class
+// which are put on the appropriate divs
+function update_related_fields(type) {
+
+    try {
+
+        var block_type = ''
+        var class_type = ''
+
+        if (type == 'related_place') {
+            block_class_type = '.place_as_written_block';
+            field_class_type = '.place_as_written';
+            class_type = '.related_place';
+        } else {
+            block_class_type = '.person_as_written_block';
+            field_class_type = '.person_as_written';
+            class_type = '.related_agent';
+        }
+
+        var field_array = new Array();
+
+        // Get all the Place As Written / Person As Written values into an array
+        // Note that we only look for the first value which is not equal to '' because there can be more than one
+        $(block_class_type).each(function (index) {
+
+            var field_class = $(this).find(field_class_type)
+
+            field_class.each(function() {
+
+                field_value = $(this).val();
+
+                if (field_value != '') {
+                    field_array[index] = field_value;
+                    return false;
+                }
+            });
+        });
+
+        // Firstly, remove any 'Related Place' / 'Related Person' options which don't exist any more in the place 'As Written' / person 'As Written' text fields
+        $(class_type).each(function () {
+
+            var select_tag = $(this);
+
+            //console.log("\n\n");
+
+            select_tag.find('option').each(function () {
+
+                var exists = false;
+
+                var option_tag = $(this);
+                var related_place_text = option_tag.text(); // Use text rather than value because '--- select ---' doesn't have a value
+
+                $.each(field_array, function (index, field_value) {
+
+                    if (related_place_text == field_value) {
+                        exists = true
+                    }
+                });
+
+                if (exists == false && related_place_text != "--- select ---") {
+                    option_tag.remove();
+                }
+            });
+        });
+
+        // Secondly, append the place 'As Written' fields to the 'Related Place' drop_down lists (if they don't already exist)
+        if (field_array.length > 0) {
+
+            $.each(field_array, function (index, field_value) {
+
+                $(class_type).each(function () {
+
+                    var exists = false
+                    var select_tag = $(this)
+
+                    select_tag.find('option').each(function () {
+                        var related_place_value = $(this).val();
+
+                        if (field_value == related_place_value) {
+                            exists = true;
+                        }
+                    });
+
+                    // Add the option if it doesn't exist.
+                    if (exists == false && field_value != null) {
+                        select_tag.append("<option value='" + field_value + "'>" + field_value + "</option>");
+                    }
+                });
+            });
+        }
+
+    } catch (err) {
+        alert(err);
+    }
+}
+/***** END OF JAVASCRIPT METHODS *****/
+
+
+
+/***** JQUERY METHODS *****/
 $(document).ready(function () {
 
-    // Check date validity when form is submitted
+    // Check entry date validity when the form is submitted
     $("#entry_form" ).submit(function( event ) {
 
         $(".date_field").each(function(index) {
@@ -149,6 +254,7 @@ $(document).ready(function () {
     /***** ADD ELEMENT METHODS *****/
     /******************************/
 
+    // The following methods add elements to the form, e.g. section types
     // Note there are two types of lists which are passed as parameters to the jquery
     // 1 - those which originate from Solr, e.g. role, descriptor
     // 2 - those which originate from a local file, e.g. language and gender
@@ -661,6 +767,8 @@ $(document).ready(function () {
     /***** REMOVE ELEMENT METHODS *****/
     /**********************************/
 
+    // The following methods delete elements from the form, e.g. section types
+
     // Find the 'field_single' div and make 'display' = 'none' in order to hide it, then set the
     // value to '' so that it is deleted by the controller code (see the 'remove_multivalue_blanks' method)
     $('body').on('click', '.click_remove_field_level1', function (e) {
@@ -768,6 +876,7 @@ $(document).ready(function () {
         }
     });
 
+    // Utility methods used by the above code
     function get_index(attr) {
 
         try {
@@ -810,7 +919,8 @@ $(document).ready(function () {
         }
     }
 
-    // Click multiple field button on person / place popup
+    // ADMIN POP-UPS
+    // Click multiple field button on person, place, etc popups
     $('body').on('click', '.click_popup_multiple_field_button', function (e) {
 
         try {
@@ -840,6 +950,8 @@ $(document).ready(function () {
         update_related_fields('related_person');
     });
 
+    // I believe the following code checks to see if the user has changed any code before submitting
+    // and if so warns the user
     var form_modified = 0;
 
     $('#form_modified *').change(function(){
@@ -857,8 +969,10 @@ $(document).ready(function () {
     $("input[name='commit']").click(function() {
         form_modified = 0;
     });
+    // End of code to check if the form has been submitted
 
-
+    // This displayed a nice error dialog in the admin section but it wasn't quite right
+    // and I don't think this is being used anymore
     $("#popup_info").dialog({
         autoOpen: false,
         draggable: false,
@@ -888,108 +1002,7 @@ $(document).ready(function () {
     // the dialog has opened. It runs the close function! After it has
     // faded out the dialog is destroyed
     $("#popup_info").dialog("open");
-
+    // End of code to display error dialog
 
 });
-
-// This is called if the user changes a place 'As Written' field or the user adds a new place
-// It updates all the person 'Related Place' drop-down lists by adding new terms and removing old terms
-// Note that I tried to do it when the user actually clicked on the 'Related Place' list but there was
-// a problem with removing elements and someone on StackOverflow said that the options are being
-// destroyed every time and that's why you can't select from the list - see here:
-// http://stackoverflow.com/questions/30736354/choosing-options-after-dynamically-changing-a-select-list-with-jquery/30737208#30737208
-// Note that this code also relies on a 'place_as_written' class and 'place_as_written_block' class
-// which are put on the appropriate divs
-function update_related_fields(type) {
-
-    try {
-
-        var block_type = ''
-        var class_type = ''
-
-        if (type == 'related_place') {
-            block_class_type = '.place_as_written_block';
-            field_class_type = '.place_as_written';
-            class_type = '.related_place';
-        } else {
-            block_class_type = '.person_as_written_block';
-            field_class_type = '.person_as_written';
-            class_type = '.related_agent';
-        }
-
-        var field_array = new Array();
-
-        // Get all the Place As Written / Person As Written values into an array
-        // Note that we only look for the first value which is not equal to '' because there can be more than one
-        $(block_class_type).each(function (index) {
-
-           var field_class = $(this).find(field_class_type)
-
-           field_class.each(function() {
-
-               field_value = $(this).val();
-
-               if (field_value != '') {
-                   field_array[index] = field_value;
-                   return false;
-               }
-           });
-        });
-
-        // Firstly, remove any 'Related Place' / 'Related Person' options which don't exist any more in the place 'As Written' / person 'As Written' text fields
-        $(class_type).each(function () {
-
-            var select_tag = $(this);
-
-            //console.log("\n\n");
-
-            select_tag.find('option').each(function () {
-
-                var exists = false;
-
-                var option_tag = $(this);
-                var related_place_text = option_tag.text(); // Use text rather than value because '--- select ---' doesn't have a value
-
-                $.each(field_array, function (index, field_value) {
-
-                    if (related_place_text == field_value) {
-                        exists = true
-                    }
-                });
-
-                if (exists == false && related_place_text != "--- select ---") {
-                    option_tag.remove();
-                }
-            });
-        });
-
-        // Secondly, append the place 'As Written' fields to the 'Related Place' drop_down lists (if they don't already exist)
-        if (field_array.length > 0) {
-
-            $.each(field_array, function (index, field_value) {
-
-                $(class_type).each(function () {
-
-                    var exists = false
-                    var select_tag = $(this)
-
-                    select_tag.find('option').each(function () {
-                        var related_place_value = $(this).val();
-
-                        if (field_value == related_place_value) {
-                            exists = true;
-                        }
-                    });
-
-                    // Add the option if it doesn't exist.
-                    if (exists == false && field_value != null) {
-                        select_tag.append("<option value='" + field_value + "'>" + field_value + "</option>");
-                    }
-                });
-            });
-        }
-
-    } catch (err) {
-        alert(err);
-    }
-}
+/***** END OF JQUERY METHODS *****/

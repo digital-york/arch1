@@ -452,8 +452,9 @@ module RegisterFolio
       end
 
       return error
-    rescue => error
-      log_error(__method__, __FILE__, error)
+
+    rescue => error2
+      log_error(__method__, __FILE__, error2)
       raise
     end
 

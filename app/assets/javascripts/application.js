@@ -19,5 +19,5 @@
 // require blacklight/blacklight
 //= require_tree .
 //
-// commented out turblinks because jquery wasn't working properly on the 'new' page
+// Commented out turblinks because jquery wasn't working properly on the 'new' page (py)
 // require turbolinks
