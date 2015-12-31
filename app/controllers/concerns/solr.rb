@@ -1,5 +1,11 @@
 module Solr
 
+  # This method gets all the solr data from an entry into a db_entry database object
+  # We did this because getting the data using activeFedora is too slow
+  # It is used to display the data on the view pages and when a user is editing the entry form
+  # but activeFedora is used when the user actually saves the form (so that the data goes into Fedora)
+  # Note that although we are using an object which corresponds to the database tables, we don't actually populate the tables with any data
+  # It appears that rails requires the tables to be there even if you don't use them in order to create a database object
   def get_solr_data(db_entry)
 
     begin
@@ -8,7 +14,7 @@ module Solr
 
         if result['entry_no_tesim'] != nil
 
-          db_entry.id = 1 #db_entry.entry_id.gsub(/test:/, '').to_i
+          db_entry.id = 1
 
           db_entry.entry_no = result['entry_no_tesim'].join()
 
@@ -112,7 +118,7 @@ module Solr
 
               db_entry_date.date_id = date_id
 
-              db_entry_date.id = 1 #date_id.gsub(/test:/, '').to_i
+              db_entry_date.id = 1
 
               SolrQuery.new.solr_query('has_model_ssim:SingleDate AND dateFor_ssim:' + date_id, 'id, date_tesim, date_type_tesim, date_certainty_tesim', 100)['response']['docs'].map do |result2|
 
@@ -124,7 +130,7 @@ module Solr
 
                   db_single_date.single_date_id = single_date_id
 
-                  db_single_date.id = 1 #single_date_id.gsub(/test:/, '').to_i
+                  db_single_date.id = 1
 
                   date_certainty_list = result2['date_certainty_tesim'];
 

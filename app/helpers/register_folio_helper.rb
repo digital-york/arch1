@@ -1,5 +1,6 @@
 module RegisterFolioHelper
-# get the thumbnail image for the register
+
+  # Get the thumbnail image for the register
   def get_thumb(register)
 
     thumb = SolrQuery.new.solr_query("id:#{register}", 'thumbnail_url_tesim', 1)['response']['docs'][0]['thumbnail_url_tesim']
