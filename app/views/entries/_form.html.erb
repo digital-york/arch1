@@ -579,10 +579,10 @@
                                                  disable = true
                                                end
                                                if related_person.person_group == 'group'
-                                                 pg_field = 'group' # Is needed?
+                                                 pg_field = 'group'
                                                  pg_search = 'groups'
                                                else
-                                                 pg_field = 'person' # Is needed?
+                                                 pg_field = 'person'
                                                  pg_search = 'people'
                                                end
                                             %>
@@ -600,7 +600,9 @@
                                           <tr>
                                             <th style="width: 110px"><%= pg_search.capitalize %> Name Authority:</th>
                                             <td class="input_single person_authority">
-                                              <%= link_to image_tag('magnifying_glass_small.png', :alt => 'magnifying glass icon', :class => 'plus_icon'), '#', :onclick => "popup('#{context_path}/#{pg_search}?start=true&amp;#{pg_search}_field=person_#{index1.to_s}', 'person'); return false;" %>
+                                              <% puts "#{context_path}/#{pg_search}?start=true&amp;#{pg_search}_field=person_#{index1.to_s}" %>
+                                              <% puts "#{context_path}/places?start=true&amp;place_field=place_#{index1.to_s}" %>
+                                              <%= link_to image_tag('magnifying_glass_small.png', :alt => 'magnifying glass icon', :class => 'plus_icon'), '#', :onclick => "popup('#{context_path}/#{pg_search}?start=true&amp;#{pg_field}_field=person_#{index1.to_s}', 'person'); return false;" %>
                                                   <span id="person_<%= index1 %>">
                                                   <% if related_person.person_same_as != nil %>
                                                     <%= terms.get_person_same_as(related_person.person_same_as) %>
