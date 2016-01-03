@@ -247,9 +247,8 @@ namespace :persons do
     arr.each do |c|
       begin
         # 0: id
-        #p = Person.find(c[0])
-        p = Person.new()
-        p.rdftype << p.add_rdf_types
+        p = Person.find(c[0])
+        #p.rdftype << p.add_rdf_types
         p.concept_scheme = @scheme
         # 1: Family Name
         unless c[1].nil? or c[1] == ''
