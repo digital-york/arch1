@@ -90,8 +90,8 @@ namespace :regfols do
     2 dc:dates
     3 dc:description
     4 thumbnail url
-    5 position
-    6 collection
+    5 position - position in sequence (starting at 0)
+    6 collection - id of collection to add this register to
 
     nb. there can be no data in the description, dates, thumbnail and position columns
 =end
@@ -320,9 +320,7 @@ namespace :regfols do
       end
       conn.basic_auth(ENV['YODL_ADMIN_USER'], ENV['YODL_ADMIN_PASS'])
       response = conn.get "/fedora/objects/#{pid}/datastreams/JP2?format=xml"
-      #f = File.open(path + "new_regs_and_fols/xml/#{r[0].sub('york:', '')}.xml")
       @doc = Nokogiri::XML(response.body)
-      #f.close
       return @doc.css('datastreamProfile dsLocation').text.sub('http://dlib.york.ac.uk/', '/usr/digilib-webdocs/')
     rescue
       puts $!

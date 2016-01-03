@@ -5,7 +5,7 @@ namespace :persons do
     # 0: Family Name
     # 1: Pre-Title
     # 2: Given Name
-    # 3: Qualifyer
+    # 3: Qualifier
     # 4: Dates
     # 5: Dates of Office
     # 6: Title
@@ -39,7 +39,7 @@ namespace :persons do
 
     puts 'Processing the person. This may take some time ... '
 
-    arr = CSV.read(Rails.root + 'lib/assets/lists/persons03-12-15.csv')
+    arr = CSV.read(Rails.root + 'lib/assets/lists/persons.csv')
 
     arr.each do |c|
       begin
@@ -221,21 +221,18 @@ namespace :persons do
     # 2: Given Name
     # 3: Dates
     # 4: Pre-Title
-    # 5: epthet
+    # 5: epithet
     # 6: Dates of Office
-    # 7: Epithet
-    # 8: Related Authority
-    # 9: Variant Names
-    # 10: Notes
+    # 7: Related Authority
+    # 8: Variant Names
 
-    # ??: Title
+    # ??: Title - I missed this from the source sheet so it won't be updated
 
     begin
 
       response = SolrQuery.new.solr_query(q='preflabel_tesim:"people" AND has_model_ssim:"ConceptScheme"', fl='id', rows=1)['response']
       @scheme = ConceptScheme.find(response['docs'][0]['id'])
       puts "Using existing Concept scheme #{@scheme.id}"
-
 
     rescue
       puts "ERROR in ConceptScheme!"
@@ -249,42 +246,47 @@ namespace :persons do
 
     arr.each do |c|
       begin
-
-        p = Person.find(c[0])
+        # 0: id
+        #p = Person.find(c[0])
+        p = Person.new()
         p.rdftype << p.add_rdf_types
-        #p.id = p.create_container_id(@scheme.id)
         p.concept_scheme = @scheme
-        unless c[1].nil?
+        # 1: Family Name
+        unless c[1].nil? or c[1] == ''
           p.family = c[1].strip
         end
-        unless c[4].nil?
-          p.pre_title = c[4].strip
-        end
-        unless c[2].nil?
+        # 2: Given Name
+        unless c[2].nil? or c[2] == ''
           p.given_name = c[2].strip
         end
-        unless c[5].nil?
-          p.epithet = c[5].strip
-        end
-        unless c[3].nil?
+        # 3: Dates
+        unless c[3].nil? or c[3] == ''
           p.dates = c[3].strip
         end
-        unless c[6].nil?
+        # 4: Pre-Title
+        unless c[4].nil? or c[4] == ''
+          p.pre_title = c[4].strip
+        end
+        # 5: epithet
+        unless c[5].nil? or c[5] == ''
+          p.epithet = c[5].strip.gsub('\,',',')
+        end
+        # 6: Dates of Office
+        unless c[6].nil? or c[6] == ''
           p.dates_of_office = c[6].strip
         end
-        unless c[7].nil?
-          p.epithet = c[7].strip
+        # 7: Related Authority
+        unless c[7].nil? or c[7] == ''
+          p.related_authority = [c[7].strip.gsub('\,',',')]
         end
-        unless c[8].nil?
-          p.related_authority = [c[8]]
-        end
-        unless c[9].nil?
-          if c[9].include? ','
-            c[9].split(',').each do | v |
+        # 8: Variant Names
+        unless c[8].nil? or c[8] == ''
+          if c[8].include? ','
+            c[8].split(',').each do | v |
               p.altlabel << v.strip
             end
           else
-          p.altlabel = [c[9].strip]
+          p.altlabel = [c[8].strip]
           end
 
         end
@@ -305,7 +307,7 @@ namespace :persons do
 
         @scheme.persons += [p]
         @scheme.save
-        puts "Created #{p.preflabel}"
+        puts "Updated #{p.preflabel}"
       rescue
         puts $!
       end
