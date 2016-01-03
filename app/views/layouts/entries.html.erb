@@ -16,6 +16,7 @@
 
 <div id="container">
 
+  <%# Display header including background image and Admin, Logout buttons %>
   <div id="header" style="background: url('<%= context_path %>/assets/header.jpg') repeat-x scroll 0 50% #000000;">
 
     <div id="header_text">
@@ -29,21 +30,22 @@
 
   </div>
 
+  <%# Display the navigation bar, i.e. the 'go back' arrow, the current register and a drop-down list of folios %>
   <div id="navbar">
 
     <div style="float: left">
-      <%= link_to image_tag('back_icon2.png', :class => 'home_icon', :title => 'Back to Registers'), landing_page_path %>
+      <%= link_to image_tag('go_back.png', :alt => 'go back icon', :class => 'home_icon', :title => 'Back to Registers'), landing_page_path %>
     </div>
 
     <div style="float: left">&nbsp;&nbsp;<strong>Current Register</strong>: <span style="font-size: 0.95em; color: #FFFFFF"><%= session[:register_name] %></span></div>
 
     <div style="float: left">
+
       <form name="myForm" id="choose_folio">
 
         <strong style="margin-left: 20px">Current Folio</strong>:
 
-        <select name="folio_id" class="choose_folio"
-         <% if controller.action_name.to_s != 'index' then %>disabled<% end %>>
+        <select name="folio_id" class="choose_folio" <% if controller.action_name.to_s != 'index' then %>disabled<% end %>>
           <option value="">--- select folio ---</option>
           <% @folio_list.each do |folio| %>
               <option value="<%= folio[0] %> "<% if session[:folio_id] == folio[0] then %>selected<% end %>><%= folio[1] %></option>
@@ -56,6 +58,7 @@
     </div>
   </div>
 
+  <%# Display the entry form %>
   <div id="main">
     <%= yield %>
   </div>

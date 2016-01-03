@@ -16,20 +16,15 @@
 
 <div id="container">
 
+  <%# Display header including background image %>
   <div id="header" style="border-bottom: 1px solid #898989; background: url('<%= context_path %>/assets/header.jpg') repeat-x scroll 0 50% #000000;">
 
     <div id="header_text">
       Archbishops&#39; Registers Editing Tool
     </div>
-
-    <div style="float: right; margin-right: 6px; margin-top: 25px">
-      <%= button_to 'Logout', logout_path, :method => 'get', :data => {:confirm => 'Are you sure you want to logout?'} %>
-    </div>
-
   </div>
 
-  <!--<div id="navbar"></div>-->
-
+  <%# Display login form %>
   <div id="main" style="margin-top: 10px">
     <%= yield %>
   </div>

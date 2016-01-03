@@ -1,7 +1,9 @@
 <div class="popup">
 
+  <%# Display title %>
   <div class="popup_title"><%= capitalize_first_letter(@list_type) %></div>
 
+  <%# Display links %>
   <div>
     <%= button_to "Add #{capitalize_first_letter(@list_type)}", new_concept_path, method: :get, params: {:search_term => @search_term, :list_type => @list_type}, style: 'margin-top: -5px' %>
     <%= link_to 'Go back to admin page', admins_path, style: 'margin-left: 6px' %>
@@ -9,6 +11,7 @@
 
   <div style="clear: both"></div>
 
+  <%# Search concepts %>
   <%= form_tag concepts_path, :method => :get, style: 'margin-top: 8px' do |f| %>
       <div class="search_box">
         <table>
@@ -28,10 +31,10 @@
 
   <div style="margin: 30px 0px 20px 2px">
 
+    <%# Display search results %>
     <%
        if @search_array != nil && @search_array != ''
     %>
-
         <div style="font-size: 1.1em">
           Results: <strong><%= @search_array.size %></strong>
         </div>
@@ -82,6 +85,7 @@
         </div>
     <% end %>
 
+    <%# Focus on search box %>
     <script>
         window.onload = function () {
             document.getElementById("search_box").focus();

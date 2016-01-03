@@ -1,11 +1,13 @@
 <div class="login" style="margin-top: 100px">
 
+  <%# Login error %>
   <% if @invalid_login == 'true' %>
       <div class='message error' style="text-align: center; width: 300px; margin: 5px auto 12px auto">Invalid username and / or password</div>
   <% end %>
 
-  <div style="">
+  <div>
 
+    <%# Login form (username, password) %>
     <%= form_tag(login_submit_path, method: :POST) do |f| %>
 
       <table cellspacing="0" style="font-size: 0.9em">

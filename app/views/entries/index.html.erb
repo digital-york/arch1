@@ -58,7 +58,7 @@
                         </li>
                         <% if @entry_list.length > 0 %>
                           <li style='float: right; height: 1px'>
-                            <%= link_to image_tag('help_icon.png', :class => 'help_icon', :title => 'Help page for form fields'), '#', :onclick => "info('Help_text')" %>
+                            <%= link_to image_tag('help_icon.png', :alt => 'help icon', :class => 'help_icon', :title => 'Help page for form fields'), '#', :onclick => "info('Help_text')" %>
                           </li>
                         <% end %>
                       </ul>
@@ -119,7 +119,7 @@
                         <th>Continues on next folio:</th>
                         <td>
                           <% if @db_entry.continues_on != nil && @db_entry.continues_on != '' %>
-                              <%= image_tag 'tick.png', class: 'tick_icon' %>
+                              <%= image_tag 'tick.png', :alt => 'tick icon', class: 'tick_icon' %>
                               <%= link_to 'Discontinue', entry_path(@db_entry.entry_id, :discontinue => 'true'), :onclick => "return confirm('Are you sure you want to remove the link with the next folio?')" %>
                           <% end %>
                         </td>

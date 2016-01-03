@@ -1,5 +1,11 @@
 class NewSolrFieldsController < ApplicationController
 
+  # This code adds new solr fields which are required for the serach application
+  # Note that this code is called from initializers/active_fedora.rb and overrides the to_solr active_fedora method
+  # '_search' fields are added for searching in the interface and are lowercase versions of the actual terms
+  # '_new_tesim' fields are created from ids, e.g. for language, so that solr doesn't have to join documents
+  # 'search' is a new fieldType which is defined in the solr schema.xml
+  # 'new_tesim' already exists as fieldType 'tesim' in schema.xml
   def modify_sdoc(sdoc)
 
     begin
@@ -76,6 +82,8 @@ class NewSolrFieldsController < ApplicationController
     end
   end
 
+  # Convert field to lowercase so that all variations can be searched
+  # for in the search interface, e.g. 'Paul' 'PAUL', 'paul'
   def array_to_lowercase(old_array)
 
     begin
@@ -97,6 +105,7 @@ class NewSolrFieldsController < ApplicationController
 
   end
 
+  # Return name array for the corresponding ids
   def get_preflabel_array(input_array)
 
     begin

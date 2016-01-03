@@ -26,9 +26,9 @@ Rails.application.routes.draw do
   get 'go_entries' => 'landing_page#go_entries'
   get 'admins' => 'admins#index'
 
-  get "/404" => "errors#not_found"
-  get "/422" => "errors#unprocessable_entity"
-  get "/500" => "errors#internal_server_error"
+  #get "/404" => "errors#not_found"
+  #get "/422" => "errors#unprocessable_entity"
+  #get "/500" => "errors#internal_server_error"
 
   #root :to => "catalog#login"
   #blacklight_for :catalog

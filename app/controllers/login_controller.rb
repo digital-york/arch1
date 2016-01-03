@@ -1,8 +1,5 @@
 class LoginController < ApplicationController
 
-  def index
-  end
-
   def login_submit
 
     begin
@@ -21,7 +18,7 @@ class LoginController < ApplicationController
 
         redirect_to :controller => 'landing_page', :action => 'index'
 
-        # Else request has come from the session timeout page so do this...
+      # Else request has come from the session timeout page so do this...
       else
         @invalid_login = 'true'
         render 'index'

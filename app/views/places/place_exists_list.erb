@@ -1,3 +1,4 @@
+<%# User is directed to this page if they try to delete a place which is still being used %>
 <div class="popup popup_subject">
 
   <div class="popup_title">Place Exists in Entry</div>
@@ -8,6 +9,7 @@
     The place <strong><%= @place_name %></strong> exists in one or more entries. Please remove it from the records displayed below (using the main interface) and then click on this button:
   </div>
 
+  <%# Refresh button %>
   <div style="margin-top: 5px">
     <%= button_to 'Refresh', place_path(id), :method => :delete, params: { :search_term => @search_term, :place_field => @place_field }, title: "Delete '#{@place_name}'" %>
   </div>
@@ -16,6 +18,7 @@
 
   <hr/>
 
+  <%# Display all the entries (with links) where the place still exists %>
   <div style="margin-top: 10px; margin-left: 0px">
     <% @existing_location_list.each do |t| %>
         <div style="margin-top: 5px">

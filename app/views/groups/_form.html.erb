@@ -12,17 +12,22 @@
      end
   %>
 
+  <%# Display group title %>
   <div class="popup_title">
     <%= start_text %> group
   </div>
 
+  <%# Display group errors %>
   <% if @error != nil && @error != '' %>
       <div class="popup_error"><%= @error.html_safe %></div>
   <% end %>
 
+  <%# Add / Edit group form %>
   <div>
     <%= link_to 'Go back to search page', groups_path(:search_term => @search_term, :group_field => @group_field) %>
   </div>
+
+  <%# Add / Edit group form %>
   <%= form_for @group, url: eval(form_url), method: eval(form_method), html: {style: 'margin-top: 15px; margin-bottom: 0px'} do |f| %>
 
       <div class='tab1'>
@@ -63,7 +68,7 @@
                 <% @group.group_type.each do |group_type| %>
                     <div class="field_single">
                       <%= text_field_tag 'group[group_type][]', group_type %>
-                      <%= image_tag 'delete.png', :class => 'delete_icon click_remove_field_level1', :jq_tag_type => 'input' %>
+                      <%= image_tag 'delete.png', :alt => 'delete icon', :class => 'delete_icon click_remove_field_level1', :jq_tag_type => 'input' %>
                     </div>
                 <% end %>
               </div>
@@ -80,7 +85,7 @@
                 <% @group.same_as.each do |same_as| %>
                     <div class="field_single">
                       <%= text_field_tag 'group[same_as][]', same_as %>
-                      <%= image_tag 'delete.png', :class => 'delete_icon click_remove_field_level1', :jq_tag_type => 'input' %>
+                      <%= image_tag 'delete.png', :alt => 'delete icon', :class => 'delete_icon click_remove_field_level1', :jq_tag_type => 'input' %>
                     </div>
                 <% end %>
               </div>
@@ -97,7 +102,7 @@
                 <% @group.related_authority.each do |related_authority| %>
                     <div class="field_single">
                       <%= text_field_tag 'group[related_authority][]', related_authority %>
-                      <%= image_tag 'delete.png', :class => 'delete_icon click_remove_field_level1', :jq_tag_type => 'input' %>
+                      <%= image_tag 'delete.png', :alt => 'delete icon', :class => 'delete_icon click_remove_field_level1', :jq_tag_type => 'input' %>
                     </div>
                 <% end %>
               </div>
@@ -115,7 +120,7 @@
                 <% @group.altlabel.each do |altlabel| %>
                     <div class="field_single">
                       <%= text_field_tag 'group[altlabel][]', altlabel %>
-                      <%= image_tag 'delete.png', :class => 'delete_icon click_remove_field_level1', :jq_tag_type => 'input' %>
+                      <%= image_tag 'delete.png', :alt => 'delete icon', :class => 'delete_icon click_remove_field_level1', :jq_tag_type => 'input' %>
                     </div>
                 <% end %>
               </div>
@@ -132,7 +137,7 @@
                 <% @group.note.each do |note| %>
                     <div class="field_single">
                       <%= text_field_tag 'group[note][]', note %>
-                      <%= image_tag 'delete.png', :class => 'delete_icon click_remove_field_level1', :jq_tag_type => 'input' %>
+                      <%= image_tag 'delete.png', :alt => 'delete icon', :class => 'delete_icon click_remove_field_level1', :jq_tag_type => 'input' %>
                     </div>
                 <% end %>
               </div>
@@ -140,6 +145,7 @@
           </tr>
         </table>
 
+        <%# Hidden fields %>
         <%= hidden_field_tag 'search_term', @search_term %>
         <%= hidden_field_tag 'group_field', @group_field %>
 

@@ -5,6 +5,7 @@
     <div id="image_header">
 
       <%
+         # Get the folio title and display at the top of the popup
          terms = TermsBase.new('subauthority')
          folio_title = terms.get_str_from_id(session[:folio_id], 'preflabel_tesim')
          folio_title = folio_title
@@ -16,6 +17,7 @@
 
     <div id="image_frame" style="text-align: center">
 
+      <%# Display OpenSeadragon image here %>
       <div id="location1" style="background-color: black"></div>
 
       <div id="image_footer">
@@ -24,12 +26,14 @@
 
           <% current_folio = session[:folio_id] %>
 
+          <%# Display '<' button or make it disabled if is the first folio %>
           <% if current_folio == session[:first_folio_id] %>
               <%= button_to "<", {}, :style => 'margin-right: 5px', :disabled => 'true' %>
           <% else %>
               <%= button_to "<", entries_path, :method => "get", params: {:small_zoom_action => 'prev_tesim'}, :style => 'margin-right: 5px', :title => 'previous folio' %>
           <% end %>
 
+          <%# Display '>' button or make it disabled if is the last folio %>
           <% if current_folio == session[:last_folio_id] %>
               <%= button_to ">", {}, :disabled => 'true' %>
           <% else %>
@@ -37,7 +41,7 @@
           <% end %>
         </div>
 
-        <div style="float: left; margin-left: 70px"><%= link_to image_tag("magnifying_glass.png", :alt => "register", :class => "icon", :style => "position: relative; top: 7px", :title => 'Image zoom'), "#", :onclick => "popup('#{context_path}/image_zoom_large', 'image_zoom_large'); return false", :title => "" %></div>
+        <div style="float: left; margin-left: 70px"><%= link_to image_tag('magnifying_glass.png', :alt => 'magnifying glass icon', :class => 'icon', :style => 'position: relative; top: 7px', :title => 'Image zoom'), '#', :onclick => "popup('#{context_path}/image_zoom_large', 'image_zoom_large'); return false", :title => "" %></div>
 
         <div style="clear: both"></div>
       </div>
@@ -45,12 +49,12 @@
 
     <div style="clear: both"></div>
 
-<% context_path = ENV["CONTEXT_PATH"] %>
+    <% context_path = ENV["CONTEXT_PATH"] %>
 
     <% if session['alt_image'] != [] %>
         <div style="margin-top: 20px; text-align: center">
             <em><%= link_to "View UV image", "#", :onclick => "popup('#{context_path}/image_zoom_large/alt', 'image_zoom_large'); return false" %></em>
-            <%= link_to image_tag("magnifying_glass.png", :alt => "register", :class => "icon", :style => "position: relative; top: 7px", :title => 'Image zoom'), "#", :onclick => "popup('#{context_path}/image_zoom_large/alt', 'image_zoom_large'); return false", :title => "" %>
+            <%= link_to image_tag('magnifying_glass.png', :alt => 'magnifying glass icon', :class => 'icon', :style => 'position: relative; top: 7px', :title => 'Image zoom'), '#', :onclick => "popup('#{context_path}/image_zoom_large/alt', 'image_zoom_large'); return false", :title => '' %>
         </div>
     <% end %>
 
@@ -59,6 +63,7 @@
     </div>
 <% end %>
 
+<%# Display OpenSeadragon image at 'location1' above  %>
 <script type="text/javascript">
     var viewer = OpenSeadragon({
         id: "location1",

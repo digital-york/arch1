@@ -2,8 +2,49 @@
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
 
-label {
-  font-weight: normal;
+html, body {
+  width: 100%;
+}
+
+body {
+  font-family: Arial, Verdana;
+  background-color: #fff8eb;
+  margin: 0px;
+  padding: 0px;
+  font-size: 100%;
+}
+
+#container {
+  min-width: 1200px;
+}
+
+#header_text {
+  color: #FFFFFF;
+  font-size: 1.7em;
+  width: 500px;
+  font-weight: bold;
+  padding-top: 8px;
+  padding-left: 10px;
+  font-family: "Trebuchet MS", Helvetica, sans-serif
+}
+
+#header_text a {
+  color: #FFFFFF;
+}
+
+#main {
+  color: #000000;
+  margin-top: 40px;
+  margin-bottom: 60px;
+}
+
+#navbar {
+  background-color: #C4AF8C;
+  border-bottom: 1px solid #B89C5D;
+  border-top: 1px solid #B89C5D;
+  color: #333232;
+  height: 23px;
+  padding: 5px 0 5px 30px;
 }
 
 table {
@@ -72,53 +113,6 @@ input[type="text"] {
   top: 2px;
 }
 
-html, body {
-  width: 100%;
-}
-
-body {
-  font-family: Arial, Verdana;
-  background-color: #fff8eb;
-  margin: 0px;
-  padding: 0px;
-  font-size: 100%;
-}
-
-#header_text {
-  color: #FFFFFF;
-  font-size: 1.7em;
-   width: 500px;
-  font-weight: bold;
-  padding-top: 8px;
-  padding-left: 10px;
-  font-family: "Trebuchet MS", Helvetica, sans-serif
-}
-
-#header_text a {
-  color: #FFFFFF;
-}
-
-#container {
-  min-width: 1200px;
-}
-
-#register_menu {
-  font-size: 1.2em;
-  height: 32px;
-  margin-top: 5px;
-  padding: 5px 0px 25px 40px;
-}
-
-#register_menu select {
-  width: 120px;
-}
-
-#main {
-  color: #000000;
-  margin-top: 40px;
-  margin-bottom: 60px;
-}
-
 #left_frame {
   float: left;
   width: 280px;
@@ -152,7 +146,6 @@ body {
 }
 
 #entry_menu li {
-  //display: inline-block;
   float: left;
   font-size: 1.1em;
   list-style: outside none none;
@@ -177,8 +170,6 @@ a, a:hover, a:focus {
   background-color: #E1E1E1;
   border-radius: 6px 6px 0 0;
   padding: 6px 10px 7px 12px;
-  // This solves a problem in IE where the 'highlighted' tab is behind the row below thereby displaying a line which should be displayed
-  // Not sure why but it seems to move the element in front
   opacity: 0.99;
 }
 
@@ -302,10 +293,6 @@ a, a:hover, a:focus {
   background-color: #FFFFFF;
   width: 115px;
 }
-
-//.tab2 td {
-//  height: 38px;
-//}
 
 .delete_icon {
   float: right;
@@ -499,14 +486,6 @@ textarea {
   top: 2px;
 }
 
-#navbar {
-  background-color: #C4AF8C;
-  border-bottom: 1px solid #B89C5D;
-  border-top: 1px solid #B89C5D;
-  color: #333232;
-  height: 23px;
-  padding: 5px 0 5px 30px;
-}
 
 .home_icon {
   position: relative;
@@ -535,7 +514,6 @@ textarea {
   text-align: center;
   color: black;
   padding-top: 10px;
-  //height: 60px;
 }
 
 .landing_page img {

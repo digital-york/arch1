@@ -1,15 +1,4 @@
-// This code is used if an error occurs and the form is shown again
-// Hide any elements which have been removed by the user
-// as they will reappear on the page if an error occurs
-function hide_elements_when_errors() {
-    $('input').each(function (index) {
-        if (this.type === 'hidden' && this.value === 'true') {
-            var parentTag = $(this).parent().get(0).tagName;
-            $(this).parent().parent().css('display', 'none');
-        }
-    });
-}
-
+/***** JAVASCRIPT METHODS *****/
 // Used to post value back to calling page, i.e. in subject, person and place popups
 function post_value(value, id, field) {
     opener.document.getElementById(field).innerHTML = value;
@@ -17,15 +6,23 @@ function post_value(value, id, field) {
     self.close();
 }
 
+// Allows user to delete a person / place authority on the entry form
 function remove_authority(type, index) {
     document.getElementById(type + "_" + index).innerHTML = '';
     document.getElementById(type + "_" + index + "_hidden").value = '';
 }
 
+// I don't think this is being used currently but would delete any text in a search box
+// when the user clicks in the box
 function reset_box(id) {
   document.getElementById('search_box').value = '';
 }
 
+// General function to display various pop-up boxes
+// The boxes have various widths and heights
+// Note that giving the pop-ups an id means that they are independent
+// i.e. if the place pop-up is open, clicking the person pop-up will open another box
+// and will not override the place box
 function popup(page, type) {
 
     var popup_id = Math.floor(Math.random() * 100000) + 1;
@@ -66,9 +63,12 @@ function popup(page, type) {
         left = (screen.width - popupWidth) / 2;
     }
 
+    // Code to open the pop-up
     window.open(page, type + "_" + popup_id, 'status = 1, location = 1, top = ' + top + ', left = ' + left + ', height = ' + popupHeight + ', width = ' + popupWidth + ', scrollbars=yes');
 }
 
+// Help text - corresponds to the question mark icon on the entry form
+// Not sure this is the best place for help text...
 var dummy_text = "\
 <p class='help_text_header'>Entry:</p>\
 <p><strong>Entry Number</strong>: automatically generated sequence number for entries on a particular folio</p>\
@@ -100,7 +100,7 @@ var dummy_text = "\
 <p><strong>Note</strong>: general notes about the person</p>\
 <p><strong>Related Place</strong>: if a place entered above is related to this person rather than the entry as a whole, link them here</p>";
 
-// Shows the info pop-up when a question mark is clicked
+// Shows the info pop-up when the help question mark is clicked, i.e. gets the text above
 function info(title) {
     var text = "..."
     var string = "<html><head><style>li { padding: 5px; } .help_text_header { font-size: 1.3em; font-weight: bold; }</style><title>" + title + "</title><body style='font-family: Arial,Helvetica,sans-serif; font-size: 80%;'>";
@@ -118,21 +118,125 @@ function info(title) {
     helpWindow.document.close();
 }
 
-// Methods which add/remove elements to the form
+// This is called if the user changes a place 'As Written' field or the user adds a new place
+// It updates all the person 'Related Place' drop-down lists by adding new terms and removing old terms
+// Note that I tried to do it when the user actually clicked on the 'Related Place' list but there was
+// a problem with removing elements and someone on StackOverflow said that the options are being
+// destroyed every time and that's why you can't select from the list - see here:
+// http://stackoverflow.com/questions/30736354/choosing-options-after-dynamically-changing-a-select-list-with-jquery/30737208#30737208
+// Note that this code also relies on a 'place_as_written' class and 'place_as_written_block' class
+// which are put on the appropriate divs
+function update_related_fields(type) {
+
+    try {
+
+        var block_type = ''
+        var class_type = ''
+
+        if (type == 'related_place') {
+            block_class_type = '.place_as_written_block';
+            field_class_type = '.place_as_written';
+            class_type = '.related_place';
+        } else {
+            block_class_type = '.person_as_written_block';
+            field_class_type = '.person_as_written';
+            class_type = '.related_agent';
+        }
+
+        var field_array = new Array();
+
+        // Get all the Place As Written / Person As Written values into an array
+        // Note that we only look for the first value which is not equal to '' because there can be more than one
+        $(block_class_type).each(function (index) {
+
+            var field_class = $(this).find(field_class_type)
+
+            field_class.each(function() {
+
+                field_value = $(this).val();
+
+                if (field_value != '') {
+                    field_array[index] = field_value;
+                    return false;
+                }
+            });
+        });
+
+        // Firstly, remove any 'Related Place' / 'Related Person' options which don't exist any more in the place 'As Written' / person 'As Written' text fields
+        $(class_type).each(function () {
+
+            var select_tag = $(this);
+
+            //console.log("\n\n");
+
+            select_tag.find('option').each(function () {
+
+                var exists = false;
+
+                var option_tag = $(this);
+                var related_place_text = option_tag.text(); // Use text rather than value because '--- select ---' doesn't have a value
+
+                $.each(field_array, function (index, field_value) {
+
+                    if (related_place_text == field_value) {
+                        exists = true
+                    }
+                });
+
+                if (exists == false && related_place_text != "--- select ---") {
+                    option_tag.remove();
+                }
+            });
+        });
+
+        // Secondly, append the place 'As Written' fields to the 'Related Place' drop_down lists (if they don't already exist)
+        if (field_array.length > 0) {
+
+            $.each(field_array, function (index, field_value) {
+
+                $(class_type).each(function () {
+
+                    var exists = false
+                    var select_tag = $(this)
+
+                    select_tag.find('option').each(function () {
+                        var related_place_value = $(this).val();
+
+                        if (field_value == related_place_value) {
+                            exists = true;
+                        }
+                    });
+
+                    // Add the option if it doesn't exist.
+                    if (exists == false && field_value != null) {
+                        select_tag.append("<option value='" + field_value + "'>" + field_value + "</option>");
+                    }
+                });
+            });
+        }
+
+    } catch (err) {
+        alert(err);
+    }
+}
+/***** END OF JAVASCRIPT METHODS *****/
+
+
+
+/***** JQUERY METHODS *****/
 $(document).ready(function () {
 
+    // Check entry date validity when the form is submitted
     $("#entry_form" ).submit(function( event ) {
 
         $(".date_field").each(function(index) {
 
           var date_value = $(this).val();
 
+          // Matches yyyy/mm/dd but doesn't check if a valid date, i.e. user could enter 0000/00/00
           if (date_value != '' && !date_value.match(/^[0-9]{4}\/[0-9]{2}\/[0-9]{2}$/)) {
             alert("Please check that dates are formatted as 'yyyy/mm/dd'");
-            console.log(date_value + ":" + "NO MATCH!");
-              event.preventDefault();
-          } else {
-            //console.log(date_value + ":" + "MATCH!");
+            event.preventDefault(); // Prevent form being submitted
           }
         });
     });
@@ -150,6 +254,7 @@ $(document).ready(function () {
     /***** ADD ELEMENT METHODS *****/
     /******************************/
 
+    // The following methods add elements to the form, e.g. section types
     // Note there are two types of lists which are passed as parameters to the jquery
     // 1 - those which originate from Solr, e.g. role, descriptor
     // 2 - those which originate from a local file, e.g. language and gender
@@ -171,7 +276,7 @@ $(document).ready(function () {
 
             var new_code_block = "<div class='field_single'>"
                 + "<input type='text' value='' name='entry[" + jq_type + "][]'>"
-                + "<img alt='Delete icon' src='" + context_path + "/assets/delete.png' class='delete_icon click_remove_field_level1' jq_tag_type='input'>"
+                + "<img alt='delete icon' src='" + context_path + "/assets/delete.png' class='delete_icon click_remove_field_level1' jq_tag_type='input'>"
                 + "</div>";
             field_group_div.append(new_code_block);
         } catch (err) {
@@ -194,7 +299,7 @@ $(document).ready(function () {
                 + "<a href='#' onclick='popup(&#39;" + context_path + "/subjects?subject_field=subject_" + no_elements + "&#39;, &#39;subject&#39;); return false;' tabindex='-1'><img src='" + context_path + "/assets/magnifying_glass_small.png' class='plus_icon'></a>"
                 + "&nbsp;<span id='subject_" + no_elements + "'></span>"
                 + "<input id='subject_" + no_elements + "_hidden' type='hidden' value='' name='entry[" + jq_type + "][]'>"
-                + "<img alt='Delete icon' src='" + context_path + "/assets/delete.png' class='delete_icon click_remove_field_level1' jq_tag_type='input'>"
+                + "<img alt='delete icon' src='" + context_path + "/assets/delete.png' class='delete_icon click_remove_field_level1' jq_tag_type='input'>"
                 + "</div>";
             field_group_div.append(new_code_block);
         } catch (err) {
@@ -212,7 +317,7 @@ $(document).ready(function () {
 
             var new_code_block = "<div class='field_single'>"
                 + "<textarea value='' name='entry[" + jq_type + "][]'></textarea>"
-                + "<img alt='Delete icon' src='" + context_path + "/assets/delete.png' class='delete_icon click_remove_field_level1' jq_tag_type='textarea'>"
+                + "<img alt='delete icon' src='" + context_path + "/assets/delete.png' class='delete_icon click_remove_field_level1' jq_tag_type='textarea'>"
                 + "</div>";
             field_group_div.append(new_code_block);
         } catch (err) {
@@ -240,7 +345,7 @@ $(document).ready(function () {
 
             var new_code_block = "<div class='field_single'>"
                 + "<input type='text'" + input_class + "name='entry[" + jq_attributes + "][" + jq_index + "][" + jq_type + "][]'>"
-                + "&nbsp;<img alt='Delete icon' src='" + context_path + "/assets/delete.png' class='delete_icon click_remove_field_level1' jq_tag_type='input'>"
+                + "&nbsp;<img alt='delete icon' src='" + context_path + "/assets/delete.png' class='delete_icon click_remove_field_level1' jq_tag_type='input'>"
                 + "</div>";
             $(this).parent('th').next('td').find('.field_group').append(new_code_block);
 
@@ -262,7 +367,7 @@ $(document).ready(function () {
 
             var new_code_block = "<div class='field_single'>"
                 + "<textarea name='entry[" + jq_attributes + "][" + jq_index + "][" + jq_type + "][]'/>"
-                + "&nbsp;<img alt='Delete icon' src='" + context_path + "/assets/delete.png' class='delete_icon click_remove_field_level1' jq_tag_type='textarea'>"
+                + "&nbsp;<img alt='delete icon' src='" + context_path + "/assets/delete.png' class='delete_icon click_remove_field_level1' jq_tag_type='textarea'>"
                 + "</div>";
             $(this).parent('th').next('td').find('.field_group').append(new_code_block);
 
@@ -295,7 +400,7 @@ $(document).ready(function () {
             }
 
             var new_code_block = "<div class='field_single'><select name='entry[" + jq_type + "][]'>" + options +
-                "</select>&nbsp;<img alt='Delete icon' src='" + context_path + "/assets/delete.png' class='delete_icon_select click_remove_field_level1' jq_tag_type='select'></div>";
+                "</select>&nbsp;<img alt='delete icon' src='" + context_path + "/assets/delete.png' class='delete_icon_select click_remove_field_level1' jq_tag_type='select'></div>";
             $(this).parent('th').next('td').find('.field_group').append(new_code_block);
         } catch (err) {
             alert(err);
@@ -329,7 +434,7 @@ $(document).ready(function () {
                 options = options + "<option value='" + list_array[i].id + "'>" + list_array[i].label + "</option/>";
             }
             var new_code_block = "<div class='field_single'><select name='entry[" + jq_attributes + "][" + jq_index + "][" + jq_type + "][]'>" + options +
-                "</select>&nbsp;<img alt='Delete icon' src='" + context_path + "/assets/delete.png' class='delete_icon_select click_remove_field_level1' jq_tag_type='select'></div>";
+                "</select>&nbsp;<img alt='delete icon' src='" + context_path + "/assets/delete.png' class='delete_icon_select click_remove_field_level1' jq_tag_type='select'></div>";
             $(this).parent('th').next('td').find('.field_group').append(new_code_block);
         } catch (err) {
             alert(err);
@@ -353,7 +458,7 @@ $(document).ready(function () {
                 input_class = 'related_agent';
             }
             var new_code_block = "<div class='field_single'><select class='" +  input_class + "' autocomplete='off' name='entry[" + jq_attributes + "][" + jq_index + "][" + jq_type + "][]'>" + options +
-                "</select>&nbsp;<img alt='Delete icon' src='" + context_path + "/assets/delete.png' class='delete_icon_select click_remove_field_level1' jq_tag_type='select'></div>";
+                "</select>&nbsp;<img alt='delete icon' src='" + context_path + "/assets/delete.png' class='delete_icon_select click_remove_field_level1' jq_tag_type='select'></div>";
             $(this).parent('th').next('td').find('.field_group').append(new_code_block);
 
             // Need to do this otherwise 'Related Place' will not have any options
@@ -384,7 +489,7 @@ $(document).ready(function () {
                 // As Written
                 // NOTE: 'place_as_written_block' is required for 'related places' to work - see the 'update_related_places' method below
                 "<tr><th>As Written:" +
-                "&nbsp;<img jq_type='place_as_written' jq_index='" + jq_index + "' context_path = '" + context_path + "' jq_attributes='related_places_attributes' class='plus_icon click_multiple_field_button_level2' src='" + context_path + "/assets/plus_sign.png'>" +
+                "&nbsp;<img alt='plus icon' jq_type='place_as_written' jq_index='" + jq_index + "' context_path = '" + context_path + "' jq_attributes='related_places_attributes' class='plus_icon click_multiple_field_button_level2' src='" + context_path + "/assets/plus_sign.png'>" +
                 "</th><td><div class='field_group grey_box place_as_written_block'></div></td></tr>" +
 
                 // Place Name Authority (Same As)
@@ -395,22 +500,22 @@ $(document).ready(function () {
                 "</td></tr>" +
 
                 // Place Role
-                "<tr><th>Place Role:&nbsp;<img jq_place_role_list=" + jq_place_role_list +
+                "<tr><th>Place Role:&nbsp;<img alt='plus icon' jq_place_role_list=" + jq_place_role_list +
                 " jq_type='" + "place_role" + "' jq_index='" + jq_index + "' context_path = '" + context_path + "' jq_attributes='related_places_attributes' class='plus_icon click_select_field_button_level2' src='" + context_path + "/assets/plus_sign.png'>" +
                 "</th><td><div class='field_group grey_box'></div></td></tr>" +
 
                 // Place Type
-                "<tr><th>Place Type:&nbsp;<img jq_place_type_list=" + jq_place_type_list +
+                "<tr><th>Place Type:&nbsp;<img alt='plus icon' jq_place_type_list=" + jq_place_type_list +
                 " jq_type='" + "place_type" + "' jq_index='" + jq_index + "' context_path = '" + context_path + "' jq_attributes='related_places_attributes' class='plus_icon click_select_field_button_level2' src='" + context_path + "/assets/plus_sign.png'>" +
                 "</th><td><div class='field_group grey_box'></div></td></tr>" +
 
                 // Note
                 "<tr><th>Note:" +
-                "&nbsp;<img jq_type='place_note' jq_index='" + jq_index + "' context_path = '" + context_path + "' jq_attributes='related_places_attributes' class='plus_icon click_multiple_text_area_button_level2' src='" + context_path + "/assets/plus_sign.png'>" +
+                "&nbsp;<img alt='plus icon' jq_type='place_note' jq_index='" + jq_index + "' context_path = '" + context_path + "' jq_attributes='related_places_attributes' class='plus_icon click_multiple_text_area_button_level2' src='" + context_path + "/assets/plus_sign.png'>" +
                 "</th><td><div class='field_group grey_box'></div></td></tr>" +
 
                 "</table>" +
-                "<img src='" + context_path + "/assets/delete.png' alt='Delete icon' class='delete_icon click_remove_field_level2' params_type='related_places'>" +
+                "<img src='" + context_path + "/assets/delete.png' alt='delete icon' class='delete_icon click_remove_field_level2' params_type='related_places'>" +
                 "</div>";
 
             field_group_div.append(new_code_block);
@@ -457,7 +562,7 @@ $(document).ready(function () {
 
                  // As Written
                 "<tr><th style='width: 115px'>As Written:" +
-                "&nbsp;<img jq_type='person_as_written' jq_index='" + jq_index + "' context_path = '" + context_path + "' jq_attributes='related_agents_attributes' class='plus_icon click_multiple_field_button_level2' src='" + context_path + "/assets/plus_sign.png'>" +
+                "&nbsp;<img alt='plus icon' jq_type='person_as_written' jq_index='" + jq_index + "' context_path = '" + context_path + "' jq_attributes='related_agents_attributes' class='plus_icon click_multiple_field_button_level2' src='" + context_path + "/assets/plus_sign.png'>" +
                 "</th><td><div class='field_group grey_box person_as_written_block'></div></td></tr>" +
 
                     // Person or Group
@@ -465,7 +570,7 @@ $(document).ready(function () {
 
                     // Person Name Authority (Same As)
                 "<tr><th>Person Name Authority:</th><td class='input_single'>" +
-                "<a href='' onclick='popup(&#39;" + context_path + "/people?start=true&amp;person_field=person_" + jq_index + "&#39;, &#39;person&#39;); return false;' tabindex='-1'><img src='" + context_path + "/assets/magnifying_glass_small.png' class='plus_icon'></a>" +
+                "<a href='' onclick='popup(&#39;" + context_path + "/people?start=true&amp;person_field=person_" + jq_index + "&#39;, &#39;person&#39;); return false;' tabindex='-1'><img alt='magnifying glass icon' src='" + context_path + "/assets/magnifying_glass_small.png' class='plus_icon'></a>" +
                 "&nbsp;<span id='person_" + jq_index + "'></span>" +
                 "<input type='hidden' id='person_" + jq_index + "_hidden' value='' name='entry[related_agents_attributes][" + jq_index + "][person_same_as]'>" +
                 "</td></tr>" +
@@ -475,36 +580,36 @@ $(document).ready(function () {
 
                 // Role
                 "<tr><th>Person Role:" +
-                "&nbsp;<img jq_role_list=" + jq_role_list + " jq_type='" + "person_role" + "' jq_index='" + jq_index + "' context_path = '" + context_path  + "' jq_attributes='related_agents_attributes' class='plus_icon click_select_field_button_level2' src='" + context_path + "/assets/plus_sign.png'>" +
+                "&nbsp;<img alt='plus icon' jq_role_list=" + jq_role_list + " jq_type='" + "person_role" + "' jq_index='" + jq_index + "' context_path = '" + context_path  + "' jq_attributes='related_agents_attributes' class='plus_icon click_select_field_button_level2' src='" + context_path + "/assets/plus_sign.png'>" +
                 "</th><td><div class='field_group grey_box'></div></td></tr>" +
 
                 // Descriptor
                 "<tr><th>Descriptor:" +
-                "&nbsp;<img jq_descriptor_list=" + jq_descriptor_list + " jq_type='" + "person_descriptor" + "' jq_index='" + jq_index + "' context_path = '" + context_path  + "' jq_attributes='related_agents_attributes' class='plus_icon click_select_field_button_level2' src='" + context_path + "/assets/plus_sign.png'>" +
+                "&nbsp;<img alt='plus icon' jq_descriptor_list=" + jq_descriptor_list + " jq_type='" + "person_descriptor" + "' jq_index='" + jq_index + "' context_path = '" + context_path  + "' jq_attributes='related_agents_attributes' class='plus_icon click_select_field_button_level2' src='" + context_path + "/assets/plus_sign.png'>" +
                 "</th><td><div class='field_group grey_box'></div></td></tr>" +
 
                 // Descriptor As Written
                 "<tr><th>Descriptor As Written:" +
-                "&nbsp;<img jq_type='person_descriptor_as_written' jq_index='" + jq_index + "' context_path = '" + context_path  + "' jq_attributes='related_agents_attributes' class='plus_icon click_multiple_field_button_level2' src='" + context_path + "/assets/plus_sign.png'>" +
+                "&nbsp;<img alt='plus icon' jq_type='person_descriptor_as_written' jq_index='" + jq_index + "' context_path = '" + context_path  + "' jq_attributes='related_agents_attributes' class='plus_icon click_multiple_field_button_level2' src='" + context_path + "/assets/plus_sign.png'>" +
                 "</th><td><div class='field_group grey_box'></div></td></tr>" +
 
                 // Note
                 "<tr><th>Note:" +
-                "&nbsp;<img jq_type='person_note' jq_index='" + jq_index + "' context_path = '" + context_path  + "' jq_attributes='related_agents_attributes' class='plus_icon click_multiple_text_area_button_level2' src='" + context_path + "/assets/plus_sign.png'>" +
+                "&nbsp;<img alt='plus icon' jq_type='person_note' jq_index='" + jq_index + "' context_path = '" + context_path  + "' jq_attributes='related_agents_attributes' class='plus_icon click_multiple_text_area_button_level2' src='" + context_path + "/assets/plus_sign.png'>" +
                 "</th><td><div class='field_group grey_box'></div></td></tr>" +
 
                 // Related Place
                 "<tr><th>Related Place:" +
-                "&nbsp;<img jq_type='person_related_place' jq_index='" + jq_index + "' context_path = '" + context_path  + "' jq_attributes='related_agents_attributes' class='plus_icon click_person_related_field_button' src='" + context_path + "/assets/plus_sign.png'>" +
+                "&nbsp;<img alt='plus icon' jq_type='person_related_place' jq_index='" + jq_index + "' context_path = '" + context_path  + "' jq_attributes='related_agents_attributes' class='plus_icon click_person_related_field_button' src='" + context_path + "/assets/plus_sign.png'>" +
                 "</th><td><div class='field_group grey_box'></div></td></tr>" +
 
                 // Related Agent
                 "<tr><th>Related Person or Group:" +
-                "&nbsp;<img jq_type='person_related_person' jq_index='" + jq_index + "' context_path = '" + context_path  + "' jq_attributes='related_agents_attributes' class='plus_icon click_person_related_field_button' src='" + context_path + "/assets/plus_sign.png'>" +
+                "&nbsp;<img alt='plus icon' jq_type='person_related_person' jq_index='" + jq_index + "' context_path = '" + context_path  + "' jq_attributes='related_agents_attributes' class='plus_icon click_person_related_field_button' src='" + context_path + "/assets/plus_sign.png'>" +
                 "</th><td><div class='field_group grey_box'></div></td></tr>" +
 
                 "</table>" +
-                "<img src='" + context_path + "/assets/delete.png' alt='Delete icon' class='delete_icon click_remove_field_level2' params_type='related_agents'>" +
+                "<img src='" + context_path + "/assets/delete.png' alt='delete icon' class='delete_icon click_remove_field_level2' params_type='related_agents'>" +
                 "</div>";
 
             field_group_div.append(new_code_block);
@@ -546,7 +651,7 @@ $(document).ready(function () {
                 "<tr><th>Note:</th><td class='input_single'><textarea value='' id='' name='entry[entry_dates_attributes][" + jq_index + "][date_note]'/></td></tr>" +
 
                 "</table>" +
-                "<img src='" + context_path + "/assets/delete.png' alt='Delete icon' class='delete_icon click_remove_field_level2' params_type='entry_dates'>" +
+                "<img src='" + context_path + "/assets/delete.png' alt='delete icon' class='delete_icon click_remove_field_level2' params_type='entry_dates'>" +
                 "</div>";
 
             field_group_div.append(new_code_block);
@@ -593,7 +698,7 @@ $(document).ready(function () {
                 "<td><select name='entry[entry_dates_attributes][" + jq_index + "][single_dates_attributes][" + jq_index2 + "][date_type]'>" + single_date_options + "</select></td>" +
 
                 "</table>" +
-                "<img alt='Delete icon' src='" + context_path + "/assets/delete.png' class='delete_icon click_remove_field_date' jq_index='" + jq_index + "' jq_index1='" + jq_index2 + "'>" +
+                "<img alt='delete icon' src='" + context_path + "/assets/delete.png' class='delete_icon click_remove_field_date' jq_index='" + jq_index + "' jq_index1='" + jq_index2 + "'>" +
                 "<div style='clear: both'></div></div>";
 
             $(this).parent('th').next('td').find('.field_group').append(new_code_block);
@@ -622,7 +727,7 @@ $(document).ready(function () {
             }
 
             var new_code_block = "<div class='field_single'><select name='entry[entry_dates_attributes][" + jq_index + "][single_dates_attributes][" + jq_index2 + "][date_certainty][]'>" + options +
-                "</select>&nbsp;<img alt='Delete icon' src='" + context_path + "/assets/delete.png' class='delete_icon_select click_remove_field_level1' jq_tag_type='select'></div>";
+                "</select>&nbsp;<img alt='delete icon' src='" + context_path + "/assets/delete.png' class='delete_icon_select click_remove_field_level1' jq_tag_type='select'></div>";
 
             $(this).parent('th').next('td').find('.field_group_date_certainty').append(new_code_block);
         } catch (err) {
@@ -640,14 +745,14 @@ $(document).ready(function () {
         if (person_group === 'person') {
             // Person Name Authority (Same As)
             var new_code_block =  "<tr><th>Person Name Authority:</th><td class='input_single'>" +
-                "<a href='' onclick='popup(&#39;" + context_path + "/people?start=true&amp;person_field=person_" + jq_index + "&#39;, &#39;person&#39;); return false;' tabindex='-1'><img src='" + context_path + "/assets/magnifying_glass_small.png' class='plus_icon'></a>" +
+                "<a href='' onclick='popup(&#39;" + context_path + "/people?start=true&amp;person_field=person_" + jq_index + "&#39;, &#39;person&#39;); return false;' tabindex='-1'><img alt='magnifying glass icon' src='" + context_path + "/assets/magnifying_glass_small.png' class='plus_icon'></a>" +
                 "&nbsp;<span id='person_" + jq_index + "'></span>" +
                 "<input type='hidden' id='person_" + jq_index + "_hidden' value='' name='entry[related_agents_attributes][" + jq_index + "][person_same_as]'>" +
                 "</td></tr>";
         } else if (person_group === 'group') {
             // Group Name Authority (Same As)
             var new_code_block =  "<tr><th>Group Name Authority:</th><td class='input_single'>" +
-                "<a href='' onclick='popup(&#39;" + context_path + "/groups?start=true&amp;group_field=person_" + jq_index + "&#39;, &#39;person&#39;); return false;' tabindex='-1'><img src='" + context_path + "/assets/magnifying_glass_small.png' class='plus_icon'></a>" +
+                "<a href='' onclick='popup(&#39;" + context_path + "/groups?start=true&amp;group_field=person_" + jq_index + "&#39;, &#39;person&#39;); return false;' tabindex='-1'><img alt='magnifying glass icon' src='" + context_path + "/assets/magnifying_glass_small.png' class='plus_icon'></a>" +
                 "&nbsp;<span id='person_" + jq_index + "'></span>" +
                 "<input type='hidden' id='person_" + jq_index + "_hidden' value='' name='entry[related_agents_attributes][" + jq_index + "][person_same_as]'>" +
                 "</td></tr>";
@@ -661,6 +766,8 @@ $(document).ready(function () {
     /**********************************/
     /***** REMOVE ELEMENT METHODS *****/
     /**********************************/
+
+    // The following methods delete elements from the form, e.g. section types
 
     // Find the 'field_single' div and make 'display' = 'none' in order to hide it, then set the
     // value to '' so that it is deleted by the controller code (see the 'remove_multivalue_blanks' method)
@@ -769,6 +876,7 @@ $(document).ready(function () {
         }
     });
 
+    // Utility methods used by the above code
     function get_index(attr) {
 
         try {
@@ -811,7 +919,8 @@ $(document).ready(function () {
         }
     }
 
-    // Click multiple field button on person / place popup
+    // ADMIN POP-UPS
+    // Click multiple field button on person, place, etc popups
     $('body').on('click', '.click_popup_multiple_field_button', function (e) {
 
         try {
@@ -823,7 +932,7 @@ $(document).ready(function () {
 
             var new_code_block = "<div class='field_single'>"
                 + "<input type='text' value='' name='" + jq_type_1 + "[" + jq_type_2 + "][]'>"
-                + "&nbsp;<img alt='Delete icon' src='" + context_path + "/assets/delete.png' class='delete_icon click_remove_field_level1' jq_tag_type='input'>"
+                + "&nbsp;<img alt='delete icon' src='" + context_path + "/assets/delete.png' class='delete_icon click_remove_field_level1' jq_tag_type='input'>"
                 + "</div>";
             field_group_div.append(new_code_block);
         } catch (err) {
@@ -841,6 +950,8 @@ $(document).ready(function () {
         update_related_fields('related_person');
     });
 
+    // I believe the following code checks to see if the user has changed any code before submitting
+    // and if so warns the user
     var form_modified = 0;
 
     $('#form_modified *').change(function(){
@@ -858,8 +969,10 @@ $(document).ready(function () {
     $("input[name='commit']").click(function() {
         form_modified = 0;
     });
+    // End of code to check if the form has been submitted
 
-
+    // This displayed a nice error dialog in the admin section but it wasn't quite right
+    // and I don't think this is being used anymore
     $("#popup_info").dialog({
         autoOpen: false,
         draggable: false,
@@ -889,108 +1002,7 @@ $(document).ready(function () {
     // the dialog has opened. It runs the close function! After it has
     // faded out the dialog is destroyed
     $("#popup_info").dialog("open");
-
+    // End of code to display error dialog
 
 });
-
-// This is called if the user changes a place 'As Written' field or the user adds a new place
-// It updates all the person 'Related Place' drop-down lists by adding new terms and removing old terms
-// Note that I tried to do it when the user actually clicked on the 'Related Place' list but there was
-// a problem with removing elements and someone on StackOverflow said that the options are being
-// destroyed every time and that's why you can't select from the list - see here:
-// http://stackoverflow.com/questions/30736354/choosing-options-after-dynamically-changing-a-select-list-with-jquery/30737208#30737208
-// Note that this code also relies on a 'place_as_written' class and 'place_as_written_block' class
-// which are put on the appropriate divs
-function update_related_fields(type) {
-
-    try {
-
-        var block_type = ''
-        var class_type = ''
-
-        if (type == 'related_place') {
-            block_class_type = '.place_as_written_block';
-            field_class_type = '.place_as_written';
-            class_type = '.related_place';
-        } else {
-            block_class_type = '.person_as_written_block';
-            field_class_type = '.person_as_written';
-            class_type = '.related_agent';
-        }
-
-        var field_array = new Array();
-
-        // Get all the Place As Written / Person As Written values into an array
-        // Note that we only look for the first value which is not equal to '' because there can be more than one
-        $(block_class_type).each(function (index) {
-
-           var field_class = $(this).find(field_class_type)
-
-           field_class.each(function() {
-
-               field_value = $(this).val();
-
-               if (field_value != '') {
-                   field_array[index] = field_value;
-                   return false;
-               }
-           });
-        });
-
-        // Firstly, remove any 'Related Place' / 'Related Person' options which don't exist any more in the place 'As Written' / person 'As Written' text fields
-        $(class_type).each(function () {
-
-            var select_tag = $(this);
-
-            //console.log("\n\n");
-
-            select_tag.find('option').each(function () {
-
-                var exists = false;
-
-                var option_tag = $(this);
-                var related_place_text = option_tag.text(); // Use text rather than value because '--- select ---' doesn't have a value
-
-                $.each(field_array, function (index, field_value) {
-
-                    if (related_place_text == field_value) {
-                        exists = true
-                    }
-                });
-
-                if (exists == false && related_place_text != "--- select ---") {
-                    option_tag.remove();
-                }
-            });
-        });
-
-        // Secondly, append the place 'As Written' fields to the 'Related Place' drop_down lists (if they don't already exist)
-        if (field_array.length > 0) {
-
-            $.each(field_array, function (index, field_value) {
-
-                $(class_type).each(function () {
-
-                    var exists = false
-                    var select_tag = $(this)
-
-                    select_tag.find('option').each(function () {
-                        var related_place_value = $(this).val();
-
-                        if (field_value == related_place_value) {
-                            exists = true;
-                        }
-                    });
-
-                    // Add the option if it doesn't exist.
-                    if (exists == false && field_value != null) {
-                        select_tag.append("<option value='" + field_value + "'>" + field_value + "</option>");
-                    }
-                });
-            });
-        }
-
-    } catch (err) {
-        alert(err);
-    }
-}
+/***** END OF JQUERY METHODS *****/

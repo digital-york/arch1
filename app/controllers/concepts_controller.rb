@@ -22,7 +22,7 @@ class ConceptsController < ApplicationController
 
       @search_array = []
 
-      # Get Concepts for the ConceptScheme and filter according to search_term
+      # Get Concepts for the ConceptScheme and list type according to search_term
       SolrQuery.new.solr_query(q='has_model_ssim:Concept AND inScheme_ssim:' + get_concept_scheme_id(@list_type), fl='id, preflabel_tesim, altlabel_tesim, definition_tesim', rows=1000, sort='id asc')['response']['docs'].map.each do |result|
 
         concept_id = result['id']
@@ -113,10 +113,11 @@ class ConceptsController < ApplicationController
 
       @concept = Concept.new(concept_params)
 
+      # Go back to 'new' page if there is an error
+      # Else save the concept and return to 'index' page
       if @error != ''
         @list_type = params[:list_type]
         @search_term = params[:search_term]
-        #render 'new', :locals => { :@search_term => params[:search_term], :@list_type => params[:list_type] }
         render 'new'
       else
         @concept.concept_scheme_id = get_concept_scheme_id(params[:list_type])
@@ -153,6 +154,8 @@ class ConceptsController < ApplicationController
       @concept = Concept.find(params[:id])
       @concept.attributes = concept_params
 
+      # Go back to 'new' page if there is an error
+      # Else save the concept and return to 'index' page
       if @error != ''
         @search_term = params[:search_term]
         @list_type = params[:list_type]
@@ -177,7 +180,7 @@ class ConceptsController < ApplicationController
       @concept = Concept.find(params[:id])
 
       # Check if the concept is present in any of the entries
-      # If so, direct the user to a page with the entry locations so that they can remove them
+      # If so, direct the user to a page with the entry locations so that they can be removed
       existing_location_list = get_existing_location_list(params[:list_type], @concept.id)
 
       if existing_location_list.size > 0

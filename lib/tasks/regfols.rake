@@ -15,8 +15,8 @@ namespace :regfols do
 =end
   task reg_order: :environment do
 
-    arr = CSV.read(Rails.root + 'lib/assets/new_regs_and_fols/collections.csv')
-    regs = CSV.read(Rails.root + 'lib/assets/new_regs_and_fols/registers.csv')
+    arr = CSV.read(Rails.root + 'lib/assets/new_regs_and_fols/old_lists/collections.csv')
+    regs = CSV.read(Rails.root + 'lib/assets/new_regs_and_fols/old_lists/registers.csv')
 
     arr.each do |c|
       begin

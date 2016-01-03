@@ -452,8 +452,9 @@ module RegisterFolio
       end
 
       return error
-    rescue => error
-      log_error(__method__, __FILE__, error)
+
+    rescue => error2
+      log_error(__method__, __FILE__, error2)
       raise
     end
 
@@ -719,8 +720,12 @@ module RegisterFolio
 
   # Writes error message to the log
   def log_error(method, file, error)
-    time = Time.now.strftime('[%d/%m/%Y %H:%M:%S]').to_s
-    logger.error "#{time} EXCEPTION IN #{file}, method='#{method}' [#{error}]"
+    time = ''
+    # Only add time for development log because production already outputs timestamp
+    if Rails.env == 'development'
+      time = Time.now.strftime('[%d/%m/%Y %H:%M:%S] ').to_s
+    end
+    logger.error "#{time}EXCEPTION IN #{file}, method='#{method}' [#{error}]"
   end
 
 end

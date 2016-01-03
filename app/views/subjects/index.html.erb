@@ -2,6 +2,7 @@
 
 <div class="popup popup_subject">
 
+  <%# Display title %>
   <div class="popup_title">
     <% if @subject_field == nil %>
         Subject List
@@ -10,6 +11,7 @@
     <% end %>
   </div>
 
+  <%# Display links %>
   <div>
     <% if @subject_field == nil %>
         <%= button_to "Add Top-Level Subject", new_subject_path, method: :get, params: { :go_back_id => 'none' }, style: 'margin-top: -5px', title: 'Add top-level subject' %>
@@ -27,6 +29,8 @@
 
   <hr style="margin: 10px 0px"/>
 
+  <%# Display all the subjects but only link back to the entry form if @subject_field is not nil %>
+  <%# If @subject_field is nil then this is in the admin section and the link allows the user to edit the subject %>
   <table style="width: 100%; border: 0px solid #FFFFFF">
 
   <%
