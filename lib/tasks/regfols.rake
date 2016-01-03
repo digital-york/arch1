@@ -90,8 +90,8 @@ namespace :regfols do
     2 dc:dates
     3 dc:description
     4 thumbnail url
-    5 position
-    6 collection
+    5 position - position in sequence (starting at 0)
+    6 collection - id of collection to add this register to
 
     nb. there can be no data in the description, dates, thumbnail and position columns
 =end
