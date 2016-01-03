@@ -320,9 +320,7 @@ namespace :regfols do
       end
       conn.basic_auth(ENV['YODL_ADMIN_USER'], ENV['YODL_ADMIN_PASS'])
       response = conn.get "/fedora/objects/#{pid}/datastreams/JP2?format=xml"
-      #f = File.open(path + "new_regs_and_fols/xml/#{r[0].sub('york:', '')}.xml")
       @doc = Nokogiri::XML(response.body)
-      #f.close
       return @doc.css('datastreamProfile dsLocation').text.sub('http://dlib.york.ac.uk/', '/usr/digilib-webdocs/')
     rescue
       puts $!
