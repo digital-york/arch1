@@ -1,11 +1,11 @@
 namespace :regfols_cleanup do
 
   task e12_cleanup: :environment do
-    count = 1
-    while count <= 511 do
+    count = 1401
+    while count <= 1534 do
 
       begin
-        e = Entry.find(SolrQuery.new.solr_query('former_id_tesim:"Abp Reg 12 Entry ' + count.to_s + '*"', 'id', 1)['response']['docs'][0]['id'])
+        e = Entry.find(SolrQuery.new.solr_query('former_id_tesim:"Abp Reg 12 Entry ' + count.to_s + '"', 'id', 1)['response']['docs'][0]['id'])
         puts e.former_id
         e.destroy.eradicate
         count = count + 1
