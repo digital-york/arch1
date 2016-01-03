@@ -180,7 +180,10 @@ namespace :regfols do
               fol.rdftype = fol.add_rdf_types
             end
             # isPartOf
-           # fol.register = @reg
+            # I dunno why I commented this out, it's there for 31 and 32 on opal, but not the others
+            # doesn't cause any problems
+            # could easily be added later
+            #fol.register = @reg
             fol.save
 
             puts "Creating folio #{fol.id} - #{fol.preflabel}"

@@ -240,7 +240,7 @@ namespace :persons do
       exit
     end
 
-    puts 'Processing the person. This may take some time ... '
+    puts 'Processing the persons. This may take some time ... '
 
     arr = CSV.read(Rails.root + 'lib/assets/lists/persons_full.csv')
 
