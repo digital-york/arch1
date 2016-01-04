@@ -264,6 +264,18 @@ namespace :regfols do
               @title_hash['rv'] = ' (verso)'
             end
           end
+        when 'membrane'
+          unless pair[1].nil?
+            @title_hash['folio'] = ' membrane ' + pair[1].to_s
+          end
+        when 'face/dorse'
+          unless pair[1].nil?
+            if pair[1] == 'f'
+              @title_hash['rv'] = ' (face)'
+            elsif pair[1] == 'd'
+              @title_hash['rv'] = ' (dorse)'
+            end
+          end
         when 'notes'
           unless pair[1].nil?
             # use as title if there is no folio number
