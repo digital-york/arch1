@@ -44,7 +44,7 @@
           <% if @subject_field == nil %>
             <%= link_to top_level_label, subject_path(top_level_id), title: 'Edit subject', style: 'color: #7e2c2c' %>
           <% else %>
-            <%= link_to top_level_label, '#', onClick: "post_value('#{top_level_label}', '#{top_level_id}', '#{params[:subject_field]}')", style: 'color: #7e2c2c' %>
+            <%= link_to top_level_label, '#', onClick: "post_value(\"#{top_level_label}\", '#{top_level_id}', '#{params[:subject_field]}')", style: 'color: #7e2c2c' %>
           <% end %>
         </td>
       </tr>
@@ -60,7 +60,7 @@
               <% if @subject_field == nil %>
                 - <%= second_level_label %>
               <% else %>
-                - <%= link_to second_level_label, '#', onClick: "post_value('#{second_level_label}', '#{second_level_id}', '#{params[:subject_field]}')", style: 'color: #7e2c2c' %>
+                - <%= link_to second_level_label, '#', onClick: "post_value(\"#{second_level_label}\", '#{second_level_id}', '#{params[:subject_field]}')", style: 'color: #7e2c2c' %>
               <% end %>
              </span>
            </td>
@@ -77,7 +77,7 @@
                 <% if @subject_field == nil %>
                   - <%= third_level_label %>
                 <% else %>
-                  - <%= link_to third_level_label, '#', onClick: "post_value('#{third_level_label}', '#{third_level_id }', '#{params[:subject_field]}')", style: 'color: #7e2c2c' %>
+                  - <%= link_to third_level_label, '#', onClick: "post_value(\"#{third_level_label}\", '#{third_level_id }', '#{params[:subject_field]}')", style: 'color: #7e2c2c' %>
                 <% end %>
              </span>
               </span>
