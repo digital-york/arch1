@@ -121,6 +121,7 @@ namespace :regfols_cleanup do
         r.save
         puts 'deleted' end
     end
+=begin
     r.ordered_folio_proxies.each_with_index do | e, i |
       if e.proxy_for.end_with? "b8515p88p"
         r.ordered_folio_proxies.delete_at(i)
@@ -505,6 +506,7 @@ namespace :regfols_cleanup do
       r.save
       puts 'deleted' end
     end
+=end
 
   end
 
