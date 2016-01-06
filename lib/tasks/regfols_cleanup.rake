@@ -115,7 +115,6 @@ namespace :regfols_cleanup do
 
     r = Register.find('4x51hk428')
 
-
     i = 0
     r.ordered_folio_proxies.delete_at(0)
     i = i + 1
@@ -157,6 +156,71 @@ namespace :regfols_cleanup do
     i = i + 1
     puts 'saving ... ' + i.to_s
     r.save
+    r.ordered_folio_proxies.delete_at(0)
+    i = i + 1
+    puts 'saving ... ' + i.to_s
+    r.save
+    r.ordered_folio_proxies.delete_at(0)
+    i = i + 1
+    puts 'saving ... ' + i.to_s
+    r.save
+    r.ordered_folio_proxies.delete_at(0)
+    i = i + 1
+    puts 'saving ... ' + i.to_s
+    r.save
+    r.ordered_folio_proxies.delete_at(0)
+    i = i + 1
+    puts 'saving ... ' + i.to_s
+    r.save
+    r.ordered_folio_proxies.delete_at(0)
+    i = i + 1
+    puts 'saving ... ' + i.to_s
+    r.save
+    r.ordered_folio_proxies.delete_at(0)
+    i = i + 1
+    puts 'saving ... ' + i.to_s
+    r.save
+    r.ordered_folio_proxies.delete_at(0)
+    i = i + 1
+    puts 'saving ... ' + i.to_s
+    r.save
+    r.ordered_folio_proxies.delete_at(0)
+    i = i + 1
+    puts 'saving ... ' + i.to_s
+    r.save
+    r.ordered_folio_proxies.delete_at(0)
+    i = i + 1
+    puts 'saving ... ' + i.to_s
+    r.save
+    r.ordered_folio_proxies.delete_at(0)
+    i = i + 1
+    puts 'saving ... ' + i.to_s
+    r.save
+    r.ordered_folio_proxies.delete_at(0)
+    i = i + 1
+    puts 'saving ... ' + i.to_s
+    r.save
+    r.ordered_folio_proxies.delete_at(0)
+    i = i + 1
+    puts 'saving ... ' + i.to_s
+    r.save
+    r.ordered_folio_proxies.delete_at(0)
+    i = i + 1
+    puts 'saving ... ' + i.to_s
+    r.save
+    r.ordered_folio_proxies.delete_at(0)
+    i = i + 1
+    puts 'saving ... ' + i.to_s
+    r.save
+    r.ordered_folio_proxies.delete_at(0)
+    i = i + 1
+    puts 'saving ... ' + i.to_s
+    r.save
+    r.ordered_folio_proxies.delete_at(0)
+    i = i + 1
+    puts 'saving ... ' + i.to_s
+    r.save
+
 
 
   end
