@@ -116,47 +116,6 @@ namespace :regfols_cleanup do
     r = Register.find('4x51hk428')
 
     r.ordered_folio_proxies.each_with_index do | e, i |
-      if e.proxy_for.end_with? "sf268649s"
-        r.ordered_folio_proxies.delete_at(i)
-        r.save
-        puts 'deleted'
-      end
-    end
-    r.ordered_folio_proxies.each_with_index do | e, i |
-      if e.proxy_for.end_with? "np193b36b"
-        r.ordered_folio_proxies.delete_at(i)
-        r.save
-        puts 'deleted'
-      end
-    end
-    r.ordered_folio_proxies.each_with_index do | e, i |
-      if e.proxy_for.end_with? "ms35t9936"
-        r.ordered_folio_proxies.delete_at(i)
-        r.save
-        puts 'deleted'
-      end
-    end
-    r.ordered_folio_proxies.each_with_index do | e, i |
-      if e.proxy_for.end_with? "kw52j9675"
-        r.ordered_folio_proxies.delete_at(i)
-        r.save
-        puts 'deleted'
-      end
-    end
-    r.ordered_folio_proxies.each_with_index do | e, i |
-      if e.proxy_for.end_with? "st74cr714"
-        r.ordered_folio_proxies.delete_at(i)
-        r.save
-        puts 'deleted'
-      end
-    end
-    r.ordered_folio_proxies.each_with_index do | e, i |
-      if e.proxy_for.end_with? "dj52w6133"
-        r.ordered_folio_proxies.delete_at(i)
-        r.save
-        puts 'deleted' end
-    end
-    r.ordered_folio_proxies.each_with_index do | e, i |
       if e.proxy_for.end_with? "ws859h04r"
         r.ordered_folio_proxies.delete_at(i)
         r.save
