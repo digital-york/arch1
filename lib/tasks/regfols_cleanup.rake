@@ -246,6 +246,7 @@ namespace :regfols_cleanup do
       #   r.ordered_folio_proxies.delete_at(i)
       end
     end
+    puts 'saving'
     r.save
 
   end
