@@ -116,432 +116,432 @@ namespace :regfols_cleanup do
     r = Register.find('4x51hk428')
 
     r.ordered_folio_proxies.each_with_index do | e, i |
-      if i < 72 and e.proxy_for.end_with? "sf268649s"
+      if e.proxy_for.end_with? "sf268649s"
         r.ordered_folio_proxies.delete_at(i)
         r.save
         puts 'deleted'
       end
     end
     r.ordered_folio_proxies.each_with_index do | e, i |
-      if i < 72 and e.proxy_for.end_with? "np193b36b"
+      if e.proxy_for.end_with? "np193b36b"
         r.ordered_folio_proxies.delete_at(i)
         r.save
         puts 'deleted'
       end
     end
     r.ordered_folio_proxies.each_with_index do | e, i |
-      if i < 72 and e.proxy_for.end_with? "ms35t9936"
+      if e.proxy_for.end_with? "ms35t9936"
         r.ordered_folio_proxies.delete_at(i)
         r.save
         puts 'deleted'
       end
     end
     r.ordered_folio_proxies.each_with_index do | e, i |
-      if i < 72 and e.proxy_for.end_with? "kw52j9675"
+      if e.proxy_for.end_with? "kw52j9675"
         r.ordered_folio_proxies.delete_at(i)
         r.save
         puts 'deleted'
       end
     end
     r.ordered_folio_proxies.each_with_index do | e, i |
-      if i < 72 and e.proxy_for.end_with? "st74cr714"
+      if e.proxy_for.end_with? "st74cr714"
         r.ordered_folio_proxies.delete_at(i)
         r.save
         puts 'deleted'
       end
     end
     r.ordered_folio_proxies.each_with_index do | e, i |
-      if i < 72 and e.proxy_for.end_with? "dj52w6133"
+      if e.proxy_for.end_with? "dj52w6133"
         r.ordered_folio_proxies.delete_at(i)
         r.save
         puts 'deleted' end
     end
     r.ordered_folio_proxies.each_with_index do | e, i |
-      if i < 72 and e.proxy_for.end_with? "ws859h04r"
+      if e.proxy_for.end_with? "ws859h04r"
         r.ordered_folio_proxies.delete_at(i)
         r.save
         puts 'deleted' end
     end
     r.ordered_folio_proxies.each_with_index do | e, i |
-      if i < 72 and e.proxy_for.end_with? "b8515p88p"
+      if e.proxy_for.end_with? "b8515p88p"
         r.ordered_folio_proxies.delete_at(i)
         r.save
         puts 'deleted' end
     end
     r.ordered_folio_proxies.each_with_index do | e, i |
-      if i < 72 and e.proxy_for.end_with? "4f16c416k"
+      if e.proxy_for.end_with? "4f16c416k"
         r.ordered_folio_proxies.delete_at(i)
         r.save
         puts 'deleted' end
     end
     r.ordered_folio_proxies.each_with_index do | e, i |
-      if i < 72 and e.proxy_for.end_with? "dr26xz81m"
+      if e.proxy_for.end_with? "dr26xz81m"
         r.ordered_folio_proxies.delete_at(i)
         r.save
         puts 'deleted' end
     end
     r.ordered_folio_proxies.each_with_index do | e, i |
-      if i < 72 and e.proxy_for.end_with? "9w0324469"
+      if e.proxy_for.end_with? "9w0324469"
         r.ordered_folio_proxies.delete_at(i)
         r.save
         puts 'deleted' end
     end
     r.ordered_folio_proxies.each_with_index do | e, i |
-      if i < 72 and e.proxy_for.end_with? "8p58pf22f"
+      if e.proxy_for.end_with? "8p58pf22f"
         r.ordered_folio_proxies.delete_at(i)
         r.save
         puts 'deleted' end
     end
     r.ordered_folio_proxies.each_with_index do | e, i |
-      if i < 72 and e.proxy_for.end_with? "t148fj484"
+      if e.proxy_for.end_with? "t148fj484"
         r.ordered_folio_proxies.delete_at(i)
         r.save
         puts 'deleted' end
     end
     r.ordered_folio_proxies.each_with_index do | e, i |
-      if i < 72 and e.proxy_for.end_with? "gt54kp407"
+      if e.proxy_for.end_with? "gt54kp407"
         r.ordered_folio_proxies.delete_at(i)
         r.save
         puts 'deleted' end
     end
     r.ordered_folio_proxies.each_with_index do | e, i |
-      if i < 72 and e.proxy_for.end_with? "ff3656776"
+      if e.proxy_for.end_with? "ff3656776"
         r.ordered_folio_proxies.delete_at(i)
         r.save
         puts 'deleted' end
     end
     r.ordered_folio_proxies.each_with_index do | e, i |
-      if i < 72 and e.proxy_for.end_with? "wd375x89v"
+      if e.proxy_for.end_with? "wd375x89v"
         r.ordered_folio_proxies.delete_at(i)
         r.save
         puts 'deleted' end
     end
     r.ordered_folio_proxies.each_with_index do | e, i |
-      if i < 72 and e.proxy_for.end_with? "mg74qn657"
+      if e.proxy_for.end_with? "mg74qn657"
         r.ordered_folio_proxies.delete_at(i)
         r.save
         puts 'deleted' end
     end
     r.ordered_folio_proxies.each_with_index do | e, i |
-      if i < 72 and e.proxy_for.end_with? "ns0647384"
+      if e.proxy_for.end_with? "ns0647384"
         r.ordered_folio_proxies.delete_at(i)
         r.save
         puts 'deleted' end
     end
     r.ordered_folio_proxies.each_with_index do | e, i |
-      if i < 72 and e.proxy_for.end_with? "dj52w614c"
+      if e.proxy_for.end_with? "dj52w614c"
         r.ordered_folio_proxies.delete_at(i)
         r.save
         puts 'deleted' end
     end
     r.ordered_folio_proxies.each_with_index do | e, i |
-      if i < 72 and e.proxy_for.end_with? "c247dt504"
+      if e.proxy_for.end_with? "c247dt504"
         r.ordered_folio_proxies.delete_at(i)
         r.save
         puts 'deleted' end
     end
     r.ordered_folio_proxies.each_with_index do | e, i |
-      if i < 72 and e.proxy_for.end_with? "fj2363519"
+      if e.proxy_for.end_with? "fj2363519"
         r.ordered_folio_proxies.delete_at(i)
         r.save
         puts 'deleted' end
     end
     r.ordered_folio_proxies.each_with_index do | e, i |
-      if i < 72 and e.proxy_for.end_with? "4b29b742z"
+      if e.proxy_for.end_with? "4b29b742z"
         r.ordered_folio_proxies.delete_at(i)
         r.save
         puts 'deleted' end
     end
     r.ordered_folio_proxies.each_with_index do | e, i |
-      if i < 72 and e.proxy_for.end_with? "pz50gx560"
+      if e.proxy_for.end_with? "pz50gx560"
         r.ordered_folio_proxies.delete_at(i)
         r.save
         puts 'deleted' end
     end
     r.ordered_folio_proxies.each_with_index do | e, i |
-      if i < 72 and e.proxy_for.end_with? "1831cm31n"
+      if e.proxy_for.end_with? "1831cm31n"
         r.ordered_folio_proxies.delete_at(i)
         r.save
         puts 'deleted' end
     end
     r.ordered_folio_proxies.each_with_index do | e, i |
-      if i < 72 and e.proxy_for.end_with? "m039k642v"
+      if e.proxy_for.end_with? "m039k642v"
         r.ordered_folio_proxies.delete_at(i)
         r.save
         puts 'deleted' end
     end
     r.ordered_folio_proxies.each_with_index do | e, i |
-      if i < 72 and e.proxy_for.end_with? "r494vm54v"
+      if e.proxy_for.end_with? "r494vm54v"
         r.ordered_folio_proxies.delete_at(i)
         r.save
         puts 'deleted' end
     end
     r.ordered_folio_proxies.each_with_index do | e, i |
-      if i < 72 and e.proxy_for.end_with? "9593tw88n"
+      if e.proxy_for.end_with? "9593tw88n"
         r.ordered_folio_proxies.delete_at(i)
         r.save
         puts 'deleted' end
     end
     r.ordered_folio_proxies.each_with_index do | e, i |
-      if i < 72 and e.proxy_for.end_with? "d217qq72t"
+      if e.proxy_for.end_with? "d217qq72t"
         r.ordered_folio_proxies.delete_at(i)
         r.save
         puts 'deleted' end
     end
     r.ordered_folio_proxies.each_with_index do | e, i |
-      if i < 72 and e.proxy_for.end_with? "6969z240w"
+      if e.proxy_for.end_with? "6969z240w"
         r.ordered_folio_proxies.delete_at(i)
         r.save
         puts 'deleted' end
     end
     r.ordered_folio_proxies.each_with_index do | e, i |
-      if i < 72 and e.proxy_for.end_with? "g158bj64r"
+      if e.proxy_for.end_with? "g158bj64r"
         r.ordered_folio_proxies.delete_at(i)
         r.save
         puts 'deleted' end
     end
     r.ordered_folio_proxies.each_with_index do | e, i |
-      if i < 72 and e.proxy_for.end_with? "mg74qn66h"
+      if e.proxy_for.end_with? "mg74qn66h"
         r.ordered_folio_proxies.delete_at(i)
         r.save
         puts 'deleted' end
     end
     r.ordered_folio_proxies.each_with_index do | e, i |
-      if i < 72 and e.proxy_for.end_with? "vh53ww87j"
+      if e.proxy_for.end_with? "vh53ww87j"
         r.ordered_folio_proxies.delete_at(i)
         r.save
         puts 'deleted' end
     end
     r.ordered_folio_proxies.each_with_index do | e, i |
-      if i < 72 and e.proxy_for.end_with? "bk128c38g"
+      if e.proxy_for.end_with? "bk128c38g"
         r.ordered_folio_proxies.delete_at(i)
         r.save
         puts 'deleted' end
     end
     r.ordered_folio_proxies.each_with_index do | e, i |
-      if i < 72 and e.proxy_for.end_with? "6108vc769"
+      if e.proxy_for.end_with? "6108vc769"
         r.ordered_folio_proxies.delete_at(i)
         r.save
         puts 'deleted' end
     end
     r.ordered_folio_proxies.each_with_index do | e, i |
-      if i < 72 and e.proxy_for.end_with? "0z708x670"
+      if e.proxy_for.end_with? "0z708x670"
         r.ordered_folio_proxies.delete_at(i)
         r.save
         puts 'deleted' end
     end
     r.ordered_folio_proxies.each_with_index do | e, i |
-      if i < 72 and e.proxy_for.end_with? "6682x539m"
+      if e.proxy_for.end_with? "6682x539m"
         r.ordered_folio_proxies.delete_at(i)
         r.save
         puts 'deleted' end
     end
     r.ordered_folio_proxies.each_with_index do | e, i |
-      if i < 72 and e.proxy_for.end_with? "nc580p18m"
+      if e.proxy_for.end_with? "nc580p18m"
         r.ordered_folio_proxies.delete_at(i)
         r.save
         puts 'deleted' end
     end
     r.ordered_folio_proxies.each_with_index do | e, i |
-      if i < 72 and e.proxy_for.end_with? "w3763825p"
+      if e.proxy_for.end_with? "w3763825p"
         r.ordered_folio_proxies.delete_at(i)
         r.save
         puts 'deleted' end
     end
     r.ordered_folio_proxies.each_with_index do | e, i |
-      if i < 72 and e.proxy_for.end_with? "xg94hr090"
+      if e.proxy_for.end_with? "xg94hr090"
         r.ordered_folio_proxies.delete_at(i)
         r.save
         puts 'deleted' end
     end
     r.ordered_folio_proxies.each_with_index do | e, i |
-      if i < 72 and e.proxy_for.end_with? "v692t7818"
+      if e.proxy_for.end_with? "v692t7818"
         r.ordered_folio_proxies.delete_at(i)
         r.save
         puts 'deleted' end
     end
     r.ordered_folio_proxies.each_with_index do | e, i |
-      if i < 72 and e.proxy_for.end_with? "tx31qk190"
+      if e.proxy_for.end_with? "tx31qk190"
         r.ordered_folio_proxies.delete_at(i)
         r.save
         puts 'deleted' end
     end
     r.ordered_folio_proxies.each_with_index do | e, i |
-      if i < 72 and e.proxy_for.end_with? "4m90dw79x"
+      if e.proxy_for.end_with? "4m90dw79x"
         r.ordered_folio_proxies.delete_at(i)
         r.save
         puts 'deleted' end
     end
     r.ordered_folio_proxies.each_with_index do | e, i |
-      if i < 72 and e.proxy_for.end_with? "r207tq95w"
+      if e.proxy_for.end_with? "r207tq95w"
         r.ordered_folio_proxies.delete_at(i)
         r.save
         puts 'deleted' end
     end
     r.ordered_folio_proxies.each_with_index do | e, i |
-      if i < 72 and e.proxy_for.end_with? "2n49t3101"
+      if e.proxy_for.end_with? "2n49t3101"
         r.ordered_folio_proxies.delete_at(i)
         r.save
         puts 'deleted' end
     end
     r.ordered_folio_proxies.each_with_index do | e, i |
-      if i < 72 and e.proxy_for.end_with? "pg15bg380"
+      if e.proxy_for.end_with? "pg15bg380"
         r.ordered_folio_proxies.delete_at(i)
         r.save
         puts 'deleted' end
     end
     r.ordered_folio_proxies.each_with_index do | e, i |
-      if i < 72 and e.proxy_for.end_with? "9w032448v"
+      if e.proxy_for.end_with? "9w032448v"
         r.ordered_folio_proxies.delete_at(i)
         r.save
         puts 'deleted' end
     end
     r.ordered_folio_proxies.each_with_index do | e, i |
-      if i < 72 and e.proxy_for.end_with? "xk81jm94t"
+      if e.proxy_for.end_with? "xk81jm94t"
         r.ordered_folio_proxies.delete_at(i)
         r.save
         puts 'deleted' end
     end
     r.ordered_folio_proxies.each_with_index do | e, i |
-      if i < 72 and e.proxy_for.end_with? "fj236352k"
+      if e.proxy_for.end_with? "fj236352k"
         r.ordered_folio_proxies.delete_at(i)
         r.save
         puts 'deleted' end
     end
     r.ordered_folio_proxies.each_with_index do | e, i |
-      if i < 72 and e.proxy_for.end_with? "9z9031368"
+      if e.proxy_for.end_with? "9z9031368"
         r.ordered_folio_proxies.delete_at(i)
         r.save
         puts 'deleted' end
     end
     r.ordered_folio_proxies.each_with_index do | e, i |
-      if i < 72 and e.proxy_for.end_with? "cf95jc78t"
+      if e.proxy_for.end_with? "cf95jc78t"
         r.ordered_folio_proxies.delete_at(i)
         r.save
         puts 'deleted' end
     end
     r.ordered_folio_proxies.each_with_index do | e, i |
-      if i < 72 and e.proxy_for.end_with? "6h440t846"
+      if e.proxy_for.end_with? "6h440t846"
         r.ordered_folio_proxies.delete_at(i)
         r.save
         puts 'deleted' end
     end
     r.ordered_folio_proxies.each_with_index do | e, i |
-      if i < 72 and e.proxy_for.end_with? "fb494979h"
+      if e.proxy_for.end_with? "fb494979h"
         r.ordered_folio_proxies.delete_at(i)
         r.save
         puts 'deleted' end
     end
     r.ordered_folio_proxies.each_with_index do | e, i |
-      if i < 72 and e.proxy_for.end_with? "4b29b7437"
+      if e.proxy_for.end_with? "4b29b7437"
         r.ordered_folio_proxies.delete_at(i)
         r.save
         puts 'deleted' end
     end
     r.ordered_folio_proxies.each_with_index do | e, i |
-      if i < 72 and e.proxy_for.end_with? "5425kb965"
+      if e.proxy_for.end_with? "5425kb965"
         r.ordered_folio_proxies.delete_at(i)
         r.save
         puts 'deleted' end
     end
     r.ordered_folio_proxies.each_with_index do | e, i |
-      if i < 72 and e.proxy_for.end_with? "pg15bg398"
+      if e.proxy_for.end_with? "pg15bg398"
         r.ordered_folio_proxies.delete_at(i)
         r.save
         puts 'deleted' end
     end
     r.ordered_folio_proxies.each_with_index do | e, i |
-      if i < 72 and e.proxy_for.end_with? "hd76s1380"
+      if e.proxy_for.end_with? "hd76s1380"
         r.ordered_folio_proxies.delete_at(i)
         r.save
         puts 'deleted' end
     end
     r.ordered_folio_proxies.each_with_index do | e, i |
-      if i < 72 and e.proxy_for.end_with? "8s45qb514"
+      if e.proxy_for.end_with? "8s45qb514"
         r.ordered_folio_proxies.delete_at(i)
         r.save
         puts 'deleted' end
     end
     r.ordered_folio_proxies.each_with_index do | e, i |
-      if i < 72 and e.proxy_for.end_with? "8w32r716s"
+      if e.proxy_for.end_with? "8w32r716s"
         r.ordered_folio_proxies.delete_at(i)
         r.save
         puts 'deleted' end
     end
     r.ordered_folio_proxies.each_with_index do | e, i |
-      if i < 72 and e.proxy_for.end_with? "jq085m32z"
+      if e.proxy_for.end_with? "jq085m32z"
         r.ordered_folio_proxies.delete_at(i)
         r.save
         puts 'deleted' end
     end
     r.ordered_folio_proxies.each_with_index do | e, i |
-      if i < 72 and e.proxy_for.end_with? "pn89d8080"
+      if e.proxy_for.end_with? "pn89d8080"
         r.ordered_folio_proxies.delete_at(i)
         r.save
         puts 'deleted' end
     end
     r.ordered_folio_proxies.each_with_index do | e, i |
-      if i < 72 and e.proxy_for.end_with? "v405sb64d"
+      if e.proxy_for.end_with? "v405sb64d"
         r.ordered_folio_proxies.delete_at(i)
         r.save
         puts 'deleted' end
     end
     r.ordered_folio_proxies.each_with_index do | e, i |
-      if i < 72 and e.proxy_for.end_with? "736665815"
+      if e.proxy_for.end_with? "736665815"
         r.ordered_folio_proxies.delete_at(i)
         r.save
         puts 'deleted' end
     end
     r.ordered_folio_proxies.each_with_index do | e, i |
-      if i < 72 and e.proxy_for.end_with? "6682x540c"
+      if e.proxy_for.end_with? "6682x540c"
         r.ordered_folio_proxies.delete_at(i)
         r.save
         puts 'deleted' end
     end
     r.ordered_folio_proxies.each_with_index do | e, i |
-      if i < 72 and e.proxy_for.end_with? "zk51vj05s"
+      if e.proxy_for.end_with? "zk51vj05s"
         r.ordered_folio_proxies.delete_at(i)
         r.save
         puts 'deleted' end
     end
     r.ordered_folio_proxies.each_with_index do | e, i |
-      if i < 72 and e.proxy_for.end_with? "3f462675w"
+      if e.proxy_for.end_with? "3f462675w"
         r.ordered_folio_proxies.delete_at(i)
         r.save
         puts 'deleted' end
     end
     r.ordered_folio_proxies.each_with_index do | e, i |
-      if i < 72 and e.proxy_for.end_with? "jw827d161"
+      if e.proxy_for.end_with? "jw827d161"
         r.ordered_folio_proxies.delete_at(i)
         r.save
         puts 'deleted' end
     end
     r.ordered_folio_proxies.each_with_index do | e, i |
-      if i < 72 and e.proxy_for.end_with? "js956h06j"
+      if e.proxy_for.end_with? "js956h06j"
         r.ordered_folio_proxies.delete_at(i)
         r.save
         puts 'deleted' end
     end
     r.ordered_folio_proxies.each_with_index do | e, i |
-      if i < 72 and e.proxy_for.end_with? "h128ng20j"
+      if e.proxy_for.end_with? "h128ng20j"
         r.ordered_folio_proxies.delete_at(i)
         r.save
         puts 'deleted' end
     end
     r.ordered_folio_proxies.each_with_index do | e, i |
-      if i < 72 and e.proxy_for.end_with? "2b88qd518"
+      if e.proxy_for.end_with? "2b88qd518"
         r.ordered_folio_proxies.delete_at(i)
         r.save
         puts 'deleted' end
     end
     r.ordered_folio_proxies.each_with_index do | e, i |
-      if i < 72 and e.proxy_for.end_with? "tt44pp28q"
+      if e.proxy_for.end_with? "tt44pp28q"
         r.ordered_folio_proxies.delete_at(i)
         r.save
         puts 'deleted' end
     end
     r.ordered_folio_proxies.each_with_index do | e, i |
-      if i < 72 and e.proxy_for.end_with? "bv73c201s"
+      if e.proxy_for.end_with? "bv73c201s"
       r.ordered_folio_proxies.delete_at(i)
       r.save
       puts 'deleted' end
