@@ -212,97 +212,11 @@ namespace :regfols_cleanup do
     i = i + 1
     puts 'saving ... ' + i.to_s
     r.save
-    r.ordered_folio_proxies.delete_at(0)
-    i = i + 1
-    puts 'saving ... ' + i.to_s
-    r.save
-    r.ordered_folio_proxies.delete_at(0)
-    i = i + 1
-    puts 'saving ... ' + i.to_s
-    r.save
+
 
 
 
   end
-
-  task e: :environment do
-    r = Register.find('s7526d74c')
-
-    r.ordered_folio_proxies.append_target Folio.find("sf268649s")
-    r.ordered_folio_proxies.append_target Folio.find("np193b36b")
-    r.ordered_folio_proxies.append_target Folio.find("ms35t9936")
-    r.ordered_folio_proxies.append_target Folio.find("kw52j9675")
-    r.ordered_folio_proxies.append_target Folio.find("st74cr714")
-    r.ordered_folio_proxies.append_target Folio.find("dj52w6133")
-    r.ordered_folio_proxies.append_target Folio.find("ws859h04r")
-    r.ordered_folio_proxies.append_target Folio.find("b8515p88p")
-    r.ordered_folio_proxies.append_target Folio.find("4f16c416k")
-    r.ordered_folio_proxies.append_target Folio.find("dr26xz81m")
-    r.ordered_folio_proxies.append_target Folio.find("9w0324469")
-    r.ordered_folio_proxies.append_target Folio.find("8p58pf22f")
-    r.ordered_folio_proxies.append_target Folio.find("t148fj484")
-    r.ordered_folio_proxies.append_target Folio.find("gt54kp407")
-    r.ordered_folio_proxies.append_target Folio.find("ff3656776")
-    r.ordered_folio_proxies.append_target Folio.find("wd375x89v")
-    r.ordered_folio_proxies.append_target Folio.find("mg74qn657")
-    r.ordered_folio_proxies.append_target Folio.find("ns0647384")
-    r.ordered_folio_proxies.append_target Folio.find("dj52w614c")
-    r.ordered_folio_proxies.append_target Folio.find("c247dt504")
-    r.ordered_folio_proxies.append_target Folio.find("fj2363519")
-    r.ordered_folio_proxies.append_target Folio.find("4b29b742z")
-    r.ordered_folio_proxies.append_target Folio.find("pz50gx560")
-    r.ordered_folio_proxies.append_target Folio.find("1831cm31n")
-    r.ordered_folio_proxies.append_target Folio.find("m039k642v")
-    r.ordered_folio_proxies.append_target Folio.find("r494vm54v")
-    r.ordered_folio_proxies.append_target Folio.find("9593tw88n")
-    r.ordered_folio_proxies.append_target Folio.find("d217qq72t")
-    r.ordered_folio_proxies.append_target Folio.find("6969z240w")
-    r.ordered_folio_proxies.append_target Folio.find("g158bj64r")
-    r.ordered_folio_proxies.append_target Folio.find("mg74qn66h")
-    r.ordered_folio_proxies.append_target Folio.find("vh53ww87j")
-    r.ordered_folio_proxies.append_target Folio.find("bk128c38g")
-    r.ordered_folio_proxies.append_target Folio.find("6108vc769")
-    r.ordered_folio_proxies.append_target Folio.find("0z708x670")
-    r.ordered_folio_proxies.append_target Folio.find("6682x539m")
-    r.ordered_folio_proxies.append_target Folio.find("nc580p18m")
-    r.ordered_folio_proxies.append_target Folio.find("w3763825p")
-    r.ordered_folio_proxies.append_target Folio.find("xg94hr090")
-    r.ordered_folio_proxies.append_target Folio.find("v692t7818")
-    r.ordered_folio_proxies.append_target Folio.find("tx31qk190")
-    r.ordered_folio_proxies.append_target Folio.find("4m90dw79x")
-    r.ordered_folio_proxies.append_target Folio.find("r207tq95w")
-    r.ordered_folio_proxies.append_target Folio.find("2n49t3101")
-    r.ordered_folio_proxies.append_target Folio.find("pg15bg380")
-    r.ordered_folio_proxies.append_target Folio.find("9w032448v")
-    r.ordered_folio_proxies.append_target Folio.find("xk81jm94t")
-    r.ordered_folio_proxies.append_target Folio.find("fj236352k")
-    r.ordered_folio_proxies.append_target Folio.find("9z9031368")
-    r.ordered_folio_proxies.append_target Folio.find("cf95jc78t")
-    r.ordered_folio_proxies.append_target Folio.find("6h440t846")
-    r.ordered_folio_proxies.append_target Folio.find("fb494979h")
-    r.ordered_folio_proxies.append_target Folio.find("4b29b7437")
-    r.ordered_folio_proxies.append_target Folio.find("5425kb965")
-    r.ordered_folio_proxies.append_target Folio.find("pg15bg398")
-    r.ordered_folio_proxies.append_target Folio.find("hd76s1380")
-    r.ordered_folio_proxies.append_target Folio.find("8s45qb514")
-    r.ordered_folio_proxies.append_target Folio.find("8w32r716s")
-    r.ordered_folio_proxies.append_target Folio.find("jq085m32z")
-    r.ordered_folio_proxies.append_target Folio.find("pn89d8080")
-    r.ordered_folio_proxies.append_target Folio.find("v405sb64d")
-    r.ordered_folio_proxies.append_target Folio.find("736665815")
-    r.ordered_folio_proxies.append_target Folio.find("6682x540c")
-    r.ordered_folio_proxies.append_target Folio.find("zk51vj05s")
-    r.ordered_folio_proxies.append_target Folio.find("3f462675w")
-    r.ordered_folio_proxies.append_target Folio.find("jw827d161")
-    r.ordered_folio_proxies.append_target Folio.find("js956h06j")
-    r.ordered_folio_proxies.append_target Folio.find("h128ng20j")
-    r.ordered_folio_proxies.append_target Folio.find("2b88qd518")
-    r.ordered_folio_proxies.append_target Folio.find("tt44pp28q")
-    r.ordered_folio_proxies.append_target Folio.find("bv73c201s")
-    r.save
-  end
-
-
 
   def create_image(pid,fol)
     path = Rails.root + 'lib/assets/'
