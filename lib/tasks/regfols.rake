@@ -81,6 +81,17 @@ namespace :regfols do
     end
   end
 
+  task coll: :environment do
+    o = OrderedCollection.create
+    o.rdftype = o.add_rdf_types
+    o.coll_id = 'Abp Inst AB'
+    o.preflabel = 'Abp Inst AB: Institution Act Books'
+    o.date = '1545-1668'
+    o.description = 'All leaves within the Institution Act Books are paper unless marked as parchment'
+    puts "Ordered Collection #{o.id}"
+    o.save
+  end
+
 =begin
   use this to add to existing ordered collections, and to insert into the order at a specified position
   the csv must be called registers_existing.csv or you can provide another filename at runtime with regfols:reg_oder['filename']
