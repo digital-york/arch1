@@ -10,4 +10,8 @@ class ImageZoomLargeController < ApplicationController
 
   end
 
+  def alt
+
+  end
+
 end

@@ -233,6 +233,8 @@ class PlacesController < ApplicationController
       else
         @place.preflabel = get_label(false, @place.place_name, @place.parent_ADM4, @place.parent_ADM3, @place.parent_ADM2, @place.parent_ADM1)
         @place.save
+        # solr update any related objects
+        update_related('place',@place.id)
         redirect_to :controller => 'places', :action => 'index', :place_field => 'none', :search_term => params[:search_term]
       end
 

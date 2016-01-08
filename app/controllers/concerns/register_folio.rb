@@ -493,7 +493,7 @@ module RegisterFolio
         entry_params["related_agents_attributes"].each do |key, value|
           if entry_params["related_agents_attributes"][key]['person_group'] == 'person'
             entry_params["related_agents_attributes"][key]["rdftype"] = ['http://dlib.york.ac.uk/ontologies/borthwick-registers#RelatedAgent', 'http://xmlns.com/foaf/0.1/Person', 'http://dlib.york.ac.uk/ontologies/borthwick-registers#All']
-          else
+          elsif entry_params["related_agents_attributes"][key]['person_group'] == 'group'
             entry_params["related_agents_attributes"][key]["rdftype"] = ['http://dlib.york.ac.uk/ontologies/borthwick-registers#RelatedAgent', 'http://xmlns.com/foaf/0.1/Group', 'http://dlib.york.ac.uk/ontologies/borthwick-registers#All']
           end
         end
@@ -716,6 +716,29 @@ module RegisterFolio
       raise
     end
 
+  end
+
+  # if a person, place, group or subject is updated, reindex any objects that reference it
+  def update_related(type, id)
+    begin
+      q = SolrQuery.new
+      if type == 'group' or type == 'person'
+        q.solr_query('person_same_as_tesim:' + id, fl='id', rows=1000)['response']['docs'].map do |result|
+          RelatedAgent.find(result['id']).update_index
+        end
+      elsif type == 'place'
+        q.solr_query('place_same_as_tesim:' + id, fl='id', rows=1000)['response']['docs'].map do |result|
+          RelatedPlace.find(result['id']).update_index
+        end
+      elsif type == 'concept'
+        q.solr_query('subject_tesim:' + id, fl='id', rows=1000)['response']['docs'].map do |result|
+          Entry.find(result['id']).update_index
+        end
+      end
+    rescue => error
+      log_error(__method__, __FILE__, error)
+      raise
+    end
   end
 
   # Writes error message to the log

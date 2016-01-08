@@ -148,6 +148,8 @@ class SubjectsController < ApplicationController
         render 'edit'
       else
         @concept.save
+        # solr update any related objects
+        update_related('concept',@concept.id)
         redirect_to :controller => 'subjects', :action => 'show', :id => params[:go_back_id] #, :subject_field => params[:subject_field]
       end
 

@@ -175,6 +175,8 @@ class PeopleController < ApplicationController
       else
         @person.preflabel = get_preflabel(@person.family, @person.pre_title, @person.given_name, @person.dates, @person.post_title, @person.epithet)
         @person.save
+        # solr update any related objects
+        update_related('person',@person.id)
         redirect_to :controller => 'people', :action => 'index', :search_term => params[:search_term], :person_field => params[:person_field]
       end
 

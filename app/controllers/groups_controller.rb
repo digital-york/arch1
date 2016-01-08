@@ -176,6 +176,8 @@ class GroupsController < ApplicationController
       else
         @group.preflabel = get_preflabel(@group.name, @group.dates, @group.qualifier)
         @group.save
+        # solr update any related objects
+        update_related('group',@group.id)
         redirect_to :controller => 'groups', :action => 'index', :search_term => params[:search_term], :group_field => params[:group_field]
       end
 
