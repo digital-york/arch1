@@ -14,8 +14,6 @@ module AssignId
   def create_container_id(parent)
     if self.class.name == 'ContainedFile'
       "#{parent}/files/#{noid_service.mint}"
-    elsif self.class.name == 'Person'
-      "#{parent}/persons/#{noid_service.mint}"
     else
       "#{parent}/#{self.class.name.pluralize.downcase}/#{noid_service.mint}"
     end

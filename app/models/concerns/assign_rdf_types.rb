@@ -10,8 +10,8 @@ module AssignRdfTypes
         ['http://www.w3.org/2004/02/skos/core#ConceptScheme', 'http://pcdm.org/models#Object']
       when 'OrderedCollection'
         ['http://dlib.york.ac.uk/ontologies/generic#OrderedCollection', 'http://www.openarchives.org/ore/terms/Aggregation', 'http://pcdm.org/models#Collection','http://dlib.york.ac.uk/ontologies/borthwick-registers#All']
-      when 'ContainedFile'
-        ['http://pcdm.org/models#hasFile','http://dlib.york.ac.uk/ontologies/borthwick-registers#All']
+      #when 'ContainedFile'
+      #  ['http://pcdm.org/models#File','http://dlib.york.ac.uk/ontologies/borthwick-registers#All']
       when 'Image'
         ['http://www.w3.org/ns/oa#Annotation', 'http://pcdm.org/models#Object', 'http://purl.org/vra/Image','http://dlib.york.ac.uk/ontologies/borthwick-registers#All']
       when 'Register'
