@@ -51,14 +51,14 @@ namespace :cleanup do
     # beverley
     # york
 
-    puts 'looking for ' + args[:name1] + ' ' args[:name2]
+    puts 'looking for ' + args[:name1] + ' ' + args[:name2]
 
     q = SolrQuery.new
     q.solr_query('has_model_ssim:RelatedPlace', 'id,person_as_written_tesim', 10000)['response']['docs'].each do |result|
       unless result['person_as_written_tesim'].nil?
         # find the authority, add to sameas
         if result['person_as_written_tesim'][0].downcase.include? args[:name1] and result['person_as_written_tesim'][0].downcase.include? args[:name2]
-            r = RelatedAgent.find(result['id'])
+          r = RelatedAgent.find(result['id'])
           r.place_same_as = args[:authority]
           r.save
           puts 'added to ' + r.id
