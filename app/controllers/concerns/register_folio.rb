@@ -561,9 +561,7 @@ module RegisterFolio
 
   # This method adds adds Related Agent ids to the relatedPersonFor field in Related Place
   def update_related_people
-
     begin
-
       # Get each Related Person for the Entry...
       q = SolrQuery.new
       query = 'relatedAgentFor_ssim:"' + @entry.id + '"'
@@ -579,6 +577,61 @@ module RegisterFolio
             people += [RelatedAgent.find(result2['id'])]
             person.related_agent = people
             person.save
+          end
+        end
+      end
+
+    rescue => error
+      log_error(__method__, __FILE__, error)
+      raise
+    end
+
+  end
+
+  # Mark any newly used authorities as 'used'
+  def update_new_people_group
+    begin
+      # Get each Related Person for the Entry...
+      q = SolrQuery.new
+      query = 'relatedAgentFor_ssim:"' + @entry.id + '"'
+      q.solr_query(query, 'person_same_as_tesim', 50)['response']['docs'].each do |result|
+        unless result['person_same_as_tesim'].nil?
+            begin
+              person = Person.find(result['person_same_as_tesim'].join)
+            rescue
+              person = Group.find(result['person_same_as_tesim'].join)
+            end
+            if person.used.class == NilClass
+              person.used = 'used'
+              person.save
+            end
+        end
+      end
+
+    rescue => error
+      log_error(__method__, __FILE__, error)
+      raise
+    end
+
+  end
+
+  # Mark any newly used authorities as 'used'
+  def update_new_place
+    begin
+      # Get each Related Person for the Entry...
+      q = SolrQuery.new
+      query = 'relatedPlaceFor_ssim:"' + @entry.id + '"'
+      q.solr_query(query, 'place_same_as_tesim', 50)['response']['docs'].each do |result|
+        unless result['place_same_as_tesim'].nil?
+          # Get each person_related_place string (i.e. as chosen from the drop-down list) for each Related Agent in the Entry
+          query = 'id:' + result['place_same_as_tesim'][0]
+          q.solr_query(query, 'id', 1)['response']['docs'].each do |result2|
+            # Add the Related Person id to the related_agent_for field in the Related Person
+            place = Place.find(result2['id'])
+            if place.used.class == NilClass
+              place.used = 'used'
+              place.save
+            end
           end
         end
       end

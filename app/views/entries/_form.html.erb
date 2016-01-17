@@ -600,8 +600,6 @@
                                           <tr>
                                             <th style="width: 110px"><%= pg_search.capitalize %> Name Authority:</th>
                                             <td class="input_single person_authority">
-                                              <% puts "#{context_path}/#{pg_search}?start=true&amp;#{pg_search}_field=person_#{index1.to_s}" %>
-                                              <% puts "#{context_path}/places?start=true&amp;place_field=place_#{index1.to_s}" %>
                                               <%= link_to image_tag('magnifying_glass_small.png', :alt => 'magnifying glass icon', :class => 'plus_icon'), '#', :onclick => "popup('#{context_path}/#{pg_search}?start=true&amp;#{pg_field}_field=person_#{index1.to_s}', 'person'); return false;" %>
                                                   <span id="person_<%= index1 %>">
                                                   <% if related_person.person_same_as != nil %>

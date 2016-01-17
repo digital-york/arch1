@@ -189,8 +189,6 @@ class TermsBase
         hash['broader_id'] = broader[broader.length-1]
         hash['broader_label'] = find_value_string(broader[broader.length-1]).join
       end
-
-
       hash
     end
   end

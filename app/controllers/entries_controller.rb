@@ -260,6 +260,10 @@ class EntriesController < ApplicationController
         update_related_places
         update_related_people
 
+        # Mark any new person, place or group authorities 'used'
+        update_new_people_group
+        update_new_place
+
         # If entry continues, redirect to the first entry on the next folio, else redirect to the index page
         if next_entry_id != ''
           redirect_to :controller => 'entries', :action => 'edit', :id => next_entry_id
@@ -361,6 +365,10 @@ class EntriesController < ApplicationController
         # These methods link people and places to Related People
         update_related_places
         update_related_people
+
+        # Mark any new person, place or group authorities 'used'
+        update_new_people_group
+        update_new_place
 
         # If entry continues, redirect to the first entry on the next folio
         # Else redirect to the index page
