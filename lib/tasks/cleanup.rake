@@ -19,12 +19,12 @@ namespace :cleanup do
   end
 
   #could pass in the authority id and term to search
-  task :places, [:name, :authority] => :environment  do | t,args |
+  task :places, [:name, :authority, :dryrun] => :environment do |t, args|
 
     # cawood
     # london
     # beverley
-    # york
+    # ebor
 
     puts 'looking for ' + args[:name]
 
@@ -33,10 +33,20 @@ namespace :cleanup do
       unless result['place_as_written_tesim'].nil?
         # find the authority, add to sameas
         if result['place_as_written_tesim'][0].downcase.starts_with? args[:name]
-          r = RelatedPlace.find(result['id'])
-          r.place_same_as = args[:authority]
-          r.save
-          puts 'added to ' + r.id
+          if args[:dryrun].nil?
+            r = RelatedPlace.find(result['id'])
+            r.place_same_as = args[:authority]
+            r.save
+            auth = Place.find(args[:authority])
+            if auth.used == nil
+              auth.used = 'used'
+              auth.save
+            end
+            puts 'added to ' + r.id
+          else
+            puts result['place_as_written_tesim'][0]
+          end
+
         end
       end
     end
@@ -44,30 +54,33 @@ namespace :cleanup do
   end
 
   #could pass in the authority id and term to search
-  task :people, [:name1,:name2, :authority] => :environment  do | t,args |
-
-    # cawood
-    # london
-    # beverley
-    # york
+  task :people, [:name1,:name2,:authority,:dryrun] => :environment do |t, args|
 
     puts 'looking for ' + args[:name1] + ' ' + args[:name2]
 
     q = SolrQuery.new
-    q.solr_query('has_model_ssim:RelatedPlace', 'id,person_as_written_tesim', 10000)['response']['docs'].each do |result|
+    q.solr_query('has_model_ssim:RelatedAgent', 'id,person_as_written_tesim', 10000)['response']['docs'].each do |result|
       unless result['person_as_written_tesim'].nil?
         # find the authority, add to sameas
         if result['person_as_written_tesim'][0].downcase.include? args[:name1] and result['person_as_written_tesim'][0].downcase.include? args[:name2]
-          r = RelatedAgent.find(result['id'])
-          r.place_same_as = args[:authority]
-          r.save
-          puts 'added to ' + r.id
+          if args[:dryrun].nil?
+            r = RelatedAgent.find(result['id'])
+            r.person_same_as = args[:authority]
+            r.save
+            auth = Person.find(args[:authority])
+            if auth.used == nil
+              auth.used = 'used'
+              auth.save
+            end
+            puts 'added to ' + r.id
+          else
+            puts result['person_as_written_tesim'][0]
+          end
         end
       end
     end
 
   end
-
 
 
   task same_as: :environment do
@@ -92,16 +105,35 @@ namespace :cleanup do
     q.solr_query('has_model_ssim:RelatedPlace', 'place_same_as_tesim', 10000)['response']['docs'].each do |result|
       unless result['place_same_as_tesim'].nil?
 
-          place = Place.find(result['place_same_as_tesim'].join)
+        place = Place.find(result['place_same_as_tesim'].join)
 
-          if place.used.class == NilClass
-            puts 'updating place ' + place.id
-            place.used = 'used'
-            place.save
+        if place.used.class == NilClass
+          puts 'updating place ' + place.id
+          place.used = 'used'
+          place.save
+        end
+      end
+    end
+  end
+
+  task subjects: :environment do
+
+    q = SolrQuery.new
+    q.solr_query('has_model_ssim:Entry', 'subject_tesim', 10000)['response']['docs'].each do |result|
+      unless result['subject_tesim'].nil?
+
+        result['subject_tesim'].each do |sub|
+          subject = Concept.find(sub)
+
+          if subject.used.class == NilClass
+            puts 'updating subjects ' + subject.id
+            subject.used = 'used'
+            subject.save
           end
         end
       end
     end
+  end
 
 end
 
