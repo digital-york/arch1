@@ -607,7 +607,6 @@ module RegisterFolio
             end
         end
       end
-
     rescue => error
       log_error(__method__, __FILE__, error)
       raise
@@ -618,15 +617,13 @@ module RegisterFolio
   # Mark any newly used authorities as 'used'
   def update_new_place
     begin
-      # Get each Related Person for the Entry...
+      # Get each Related Place for the Entry...
       q = SolrQuery.new
       query = 'relatedPlaceFor_ssim:"' + @entry.id + '"'
       q.solr_query(query, 'place_same_as_tesim', 50)['response']['docs'].each do |result|
         unless result['place_same_as_tesim'].nil?
-          # Get each person_related_place string (i.e. as chosen from the drop-down list) for each Related Agent in the Entry
           query = 'id:' + result['place_same_as_tesim'][0]
           q.solr_query(query, 'id', 1)['response']['docs'].each do |result2|
-            # Add the Related Person id to the related_agent_for field in the Related Person
             place = Place.find(result2['id'])
             if place.used.class == NilClass
               place.used = 'used'
@@ -635,13 +632,36 @@ module RegisterFolio
           end
         end
       end
-
     rescue => error
       log_error(__method__, __FILE__, error)
       raise
     end
-
   end
+
+  # Mark any newly used authorities as 'used'
+  def update_new_subject
+    begin
+      # Get the entries
+      q = SolrQuery.new
+      query = 'id:"' + @entry.id + '"'
+      q.solr_query(query, 'subject_tesim', 1)['response']['docs'].each do |result|
+        unless result['subject_tesim'].nil?
+          # Get each person_related_place string (i.e. as chosen from the drop-down list) for each Related Agent in the Entry
+          result['subject_tesim'].each do |subject|
+            sub = Concept.find(subject)
+            if sub.used.class == NilClass
+              sub.used = 'used'
+              sub.save
+            end
+          end
+        end
+      end
+    rescue => error
+      log_error(__method__, __FILE__, error)
+      raise
+    end
+  end
+
 
   # Return array of folio / entry numbers which contain the specified concept / subject
   def get_existing_location_list(type, element_id)
