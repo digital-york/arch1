@@ -1,20 +1,25 @@
 namespace :cleanup do
   require 'csv'
 
-  desc "TODO"
-  task registers: :environment do
+  task reindex: :environment do
 
-    Register.all.each do |r|
-
-      if r.preflabel == 'Abp Reg 32: Richard Neile (1632-1640):  John Williams (1641-1650)'
-        r.preflabel = 'Abp Reg 32: Samuel Harsnett (1619-1631), Richard Neile (1632-1640), John Williams (1641-1650)'
-        r.save
-      end
+    q = SolrQuery.new
+    q.solr_query('has_model_ssim:EntryDate', 'id', 10000)['response']['docs'].each do |result|
+      puts result['id']
+      EntryDate.find(result['id']).update_index
     end
-  end
-
-  task neville: :environment do
-
+    q.solr_query('has_model_ssim:Entry', 'id', 10000)['response']['docs'].each do |result|
+      puts result['id']
+      Entry.find(result['id']).update_index
+    end
+    q.solr_query('has_model_ssim:RelatedAgent', 'id', 10000)['response']['docs'].each do |result|
+      puts result['id']
+      RelatedAgent.find(result['id']).update_index
+    end
+    q.solr_query('has_model_ssim:RelatedPlace', 'id', 10000)['response']['docs'].each do |result|
+      puts result['id']
+      RelatedPlace.find(result['id']).update_index
+    end
 
   end
 
