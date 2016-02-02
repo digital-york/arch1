@@ -89,6 +89,10 @@ namespace :cleanup do
       puts result['id']
       RelatedPlace.find(result['id']).update_index
     end
+    q.solr_query('has_model_ssim:SingleDate', 'id', 10000)['response']['docs'].each do |result|
+      puts result['id']
+      SingleDate.find(result['id']).update_index
+    end
 
   end
 

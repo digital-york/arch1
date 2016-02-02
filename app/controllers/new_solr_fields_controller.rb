@@ -108,6 +108,9 @@ class NewSolrFieldsController < ApplicationController
 
       sdoc['date_note_search'] = array_to_lowercase(sdoc['date_note_tesim'])
 
+      date_facet = get_date_array(sdoc[:id])
+      sdoc['date_facet_ssim'] = date_facet
+
       # add the register name and folio label to the entries
       register_new,folio_new = get_entry_register_array(sdoc['folio_ssim'])
       sdoc['entry_register_facet_ssim'] = register_new
@@ -264,9 +267,7 @@ class NewSolrFieldsController < ApplicationController
                 date = date_tesim.gsub('[', '').gsub(']', '')
                 begin
                   # get the first four chars; if these are a valid number over 1000 add them
-                  if date == 'undated'
-                    date_array << date
-                  elsif date[0..3].to_i >= 1000
+                  if date[0..3].to_i >= 1000
                     date_array << date[0..3].to_i
                   end
                 rescue
@@ -278,6 +279,41 @@ class NewSolrFieldsController < ApplicationController
         end
       end
     date_array
+
+    rescue => error
+      log_error(__method__, __FILE__, error)
+      raise
+    end
+
+  end
+
+  def get_date_array(id)
+
+    begin
+
+      date_array = []
+      query = SolrQuery.new
+      q = 'id:' + id
+
+      unless id.nil?
+        query.solr_query(q, 'date_tesim', 1)['response']['docs'].map do |result|
+            unless result['date_tesim'].nil?
+              result['date_tesim'].each do |date_tesim|
+                # get year only
+                date = date_tesim.gsub('[', '').gsub(']', '')
+                begin
+                  # get the first four chars; if these are a valid number over 1000 add them
+                  if date[0..3].to_i >= 1000
+                    date_array << date[0..3].to_i
+                  end
+                rescue
+                  # if the value isn't a number, skip
+                end
+              end
+            end
+          end
+      end
+      date_array
 
     rescue => error
       log_error(__method__, __FILE__, error)
