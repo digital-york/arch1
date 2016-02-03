@@ -1,43 +1,48 @@
 namespace :cleanup do
   require 'csv'
 
-  # this tests if entry is ever NOT the first relatedAgentFor_ssim or relatedPlaceFor_ssim
-  task related: :environment do
 
-    q = SolrQuery.new
-    q.solr_query('has_model_ssim:RelatedAgent', 'relatedAgentFor_ssim', 10000)['response']['docs'].each do |result|
-      result['relatedAgentFor_ssim'].each_with_index do |r, index|
-        model = q.solr_query('id:' + r, 'has_model_ssim', 1)['response']['docs'][0]['has_model_ssim'][0]
-        if index == 0
-          unless model == 'Entry'
-            puts puts index.to_s + ': ' + model
-          end
-        else
-          unless model != 'Entry'
-            puts puts index.to_s + ': ' + model
-          end
-        end
+  task broader: :environment do
+
+    file = File.open("concepts.csv", "w")
+
+    SolrQuery.new.solr_query('has_model_ssim:Concept and broader_tesim:*','id,broader_tesim',10000)['response']['docs'].each do |result|
+      unless result['broader_tesim'].nil?
+        file.write("#{result['id']},#{result['broader_tesim'].join}\n")
       end
     end
+    file.close
+  end
 
-    q.solr_query('has_model_ssim:RelatedPlace', 'relatedPlaceFor_ssim', 10000)['response']['docs'].each do |result|
-      result['relatedPlaceFor_ssim'].each_with_index do |r, index|
-        model = q.solr_query('id:' + r, 'has_model_ssim', 1)['response']['docs'][0]['has_model_ssim'][0]
-        if index == 0
-          unless model == 'Entry'
-            puts puts index.to_s + ': ' + model
-          end
-        else
-          unless model != 'Entry'
-            puts puts index.to_s + ': ' + model
-          end
-        end
-      end
+  task del_broader: :environment do
+
+    CSV.read('concepts.csv').each_with_index do |broader,index|
+      puts index
+      c = Concept.find(broader[0])
+      c.broader = nil
+      c.save
+      puts c
     end
 
   end
 
-  # Update all folios with the relationship to the register; this adds 'isPartOf_ssim' in solr
+
+  #2514nk919,#<ActiveTriples::Resource:0x00000001aa2340>
+
+  task add_broader: :environment do
+
+    CSV.read('concepts.csv').each_with_index do |broader,index|
+      puts index
+      c = Concept.find(broader[0])
+      cc = Concept.find(broader[1][broader[1].size-9..broader[1].size-1])
+      c.broader << cc
+      c.save
+    end
+
+  end
+
+
+    # Update all folios with the relationship to the register; this adds 'isPartOf_ssim' in solr
   task ispartof: :environment do
     #find all registers
     q = SolrQuery.new
