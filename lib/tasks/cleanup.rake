@@ -34,9 +34,14 @@ namespace :cleanup do
     CSV.read('concepts.csv').each_with_index do |broader,index|
       puts index
       c = Concept.find(broader[0])
-      cc = Concept.find(broader[1][broader[1].size-9..broader[1].size-1])
-      c.broader << cc
-      c.save
+      if broader[1].include? 'Active'
+        puts broader[0]
+        puts broader[1]
+      else
+        cc = Concept.find(broader[1][broader[1].size-9..broader[1].size-1])
+        c.broader << cc
+        c.save
+      end
     end
 
   end
