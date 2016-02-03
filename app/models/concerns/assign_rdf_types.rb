@@ -15,7 +15,7 @@ module AssignRdfTypes
       when 'Image'
         ['http://www.w3.org/ns/oa#Annotation', 'http://pcdm.org/models#Object', 'http://purl.org/vra/Image','http://dlib.york.ac.uk/ontologies/borthwick-registers#All']
       when 'Register'
-        ['http://dlib.york.ac.uk/ontologies/borthwick-registers#Register', 'http://pcdm.org/models#Object', 'http://www.shared-canvas.org/ns/OrderedCollection','http://dlib.york.ac.uk/ontologies/borthwick-registers#All']
+        ['http://dlib.york.ac.uk/ontologies/borthwick-registers#Register', 'http://pcdm.org/models#Object', 'http://www.shared-canvas.org/ns/Collection','http://dlib.york.ac.uk/ontologies/borthwick-registers#All']
       when 'Folio'
         ['http://dlib.york.ac.uk/ontologies/borthwick-registers#Folio',
          'http://pcdm.org/models#Object',

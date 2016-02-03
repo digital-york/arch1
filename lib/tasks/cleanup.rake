@@ -1,7 +1,26 @@
 namespace :cleanup do
   require 'csv'
 
+  task register_rdftype: :environment do
+    #http://www.shared-canvas.org/ns/Collection
 
+    SolrQuery.new.solr_query('has_model_ssim:"Register"','id',1000)['response']['docs'].each do |result|
+      r = Register.find(result['id'])
+      r.rdftype.each do | t |
+          if t.id == 'http://www.shared-canvas.org/ns/OrderedCollection'
+            puts t.id
+            r.rdftype -= ['http://www.shared-canvas.org/ns/OrderedCollection']
+            r.rdftype += ['http://www.shared-canvas.org/ns/Collection']
+            r.save
+          end
+        end
+    end
+  end
+
+
+  # The following three tasks were used to fix a problem where the broader property on concept was being changed by AF
+  # to a string and thus losing the relation to the broader
+  # I changed it to use has_and_belongs_to_many and used these tasks to cleanup existing data
   task broader: :environment do
 
     file = File.open("concepts.csv", "w")
@@ -26,9 +45,7 @@ namespace :cleanup do
 
   end
 
-
-  #2514nk919,#<ActiveTriples::Resource:0x00000001aa2340>
-
+  # Change the model here!
   task add_broader: :environment do
 
     CSV.read('concepts.csv').each_with_index do |broader,index|
