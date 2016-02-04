@@ -14,7 +14,7 @@ namespace :persons do
     # 10: Variant Names
     # 11: Notes
 
-    puts 'Creating the Concept Scheme'
+    puts 'Concept Scheme ... '
 
     begin
 
@@ -39,7 +39,7 @@ namespace :persons do
 
     puts 'Processing the person. This may take some time ... '
 
-    arr = CSV.read(Rails.root + 'lib/assets/lists/persons.csv')
+    arr = CSV.read(Rails.root + 'lib/assets/lists/Persons_01_02_16.csv')
 
     arr.each do |c|
       begin

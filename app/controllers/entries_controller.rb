@@ -265,6 +265,9 @@ class EntriesController < ApplicationController
         update_new_place
         update_new_subject
 
+        # Make sure solr index is up to date with person, place and date fields
+        @entry.update_index
+
         # If entry continues, redirect to the first entry on the next folio, else redirect to the index page
         if next_entry_id != ''
           redirect_to :controller => 'entries', :action => 'edit', :id => next_entry_id
@@ -371,6 +374,9 @@ class EntriesController < ApplicationController
         # Mark any new person, place or group authorities 'used'
         update_new_people_group
         update_new_place
+
+        # Make sure solr index is up to date with person, place and date fields
+        @entry.update_index
 
         # If entry continues, redirect to the first entry on the next folio
         # Else redirect to the index page

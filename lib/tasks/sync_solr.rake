@@ -158,7 +158,7 @@ namespace :sync_solr do
       end
       if id != 'dev'
         begin
-          puts "#{count}, ***#{id}***"
+          #puts "#{count}, ***#{id}***"
           ActiveFedora::Base.find(id).update_index
         rescue Exception => e
           puts "Error! #{child[:model]} -- #{child[:url]} -- id: #{id}"

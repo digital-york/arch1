@@ -17,11 +17,11 @@ class TermsBase
     if terms_list == 'languages'
       sort_order = 'id asc'
     end
-    parse_authority_response(SolrQuery.new.solr_query(q='inScheme_ssim:"' + terms_id + '"',fl='id,preflabel_tesim,definition_tesim,broader_tesim',rows=1000,sort=sort_order))
+    parse_authority_response(SolrQuery.new.solr_query(q='inScheme_ssim:"' + terms_id + '"',fl='id,preflabel_tesim,definition_tesim,broader_ssim',rows=1000,sort=sort_order))
   end
 
   def find id
-    parse_authority_response(SolrQuery.new.solr_query(q='inScheme_ssim:"' + terms_id + '" AND id:"' + id + '"',fl='id,preflabel_tesim,definition_tesim,broader_tesim'))
+    parse_authority_response(SolrQuery.new.solr_query(q='inScheme_ssim:"' + terms_id + '" AND id:"' + id + '"',fl='id,preflabel_tesim,definition_tesim,broader_ssim'))
   end
 
   # use preflabel_si to get exact match (string instead of token)
@@ -39,7 +39,7 @@ class TermsBase
   end
 
   def search q
-    parse_authority_response(SolrQuery.new.solr_query(q='inScheme_ssim:"' + terms_id + '" AND preflabel_tesim:"' + q + '"',fl='id,preflabel_tesim,definition_tesim,broader_tesim'))
+    parse_authority_response(SolrQuery.new.solr_query(q='inScheme_ssim:"' + terms_id + '" AND preflabel_tesim:"' + q + '"',fl='id,preflabel_tesim,definition_tesim,broader_ssim'))
   end
 
   # Dereference id into a string for display purposes - e.g. test:101 -> 'abbey'
@@ -101,7 +101,7 @@ class TermsBase
 
       id = t1['id']
 
-      middle_level_list = parse_authority_response(SolrQuery.new.solr_query(q='broader_tesim:' + id,fl='id,preflabel_tesim',rows=1000, sort='preflabel_si asc'))
+      middle_level_list = parse_authority_response(SolrQuery.new.solr_query(q='broader_ssim:' + id,fl='id,preflabel_tesim',rows=1000, sort='preflabel_si asc'))
 
       t1[:elements] = middle_level_list
 
@@ -109,7 +109,7 @@ class TermsBase
 
         id2 = t2['id']
 
-        bottom_level_list = parse_authority_response(SolrQuery.new.solr_query(q='broader_tesim:' + id2,fl='id,preflabel_tesim',rows=1000, sort='preflabel_si asc'))
+        bottom_level_list = parse_authority_response(SolrQuery.new.solr_query(q='broader_ssim:' + id2,fl='id,preflabel_tesim',rows=1000, sort='preflabel_si asc'))
 
         t2[:elements] = bottom_level_list
 
@@ -131,7 +131,7 @@ class TermsBase
 
       id = t1['id']
 
-      second_level_list = parse_authority_response(SolrQuery.new.solr_query(q='broader_tesim:' + id,fl='id,preflabel_tesim',rows=1000, sort='preflabel_si asc'))
+      second_level_list = parse_authority_response(SolrQuery.new.solr_query(q='broader_ssim:' + id,fl='id,preflabel_tesim',rows=1000, sort='preflabel_si asc'))
 
       t1[:elements] = second_level_list
 
@@ -139,7 +139,7 @@ class TermsBase
 
         id2 = t2['id']
 
-        third_level_list = parse_authority_response(SolrQuery.new.solr_query(q='broader_tesim:' + id2,fl='id,preflabel_tesim',rows=1000, sort='preflabel_si asc'))
+        third_level_list = parse_authority_response(SolrQuery.new.solr_query(q='broader_ssim:' + id2,fl='id,preflabel_tesim',rows=1000, sort='preflabel_si asc'))
 
         t2[:elements] = third_level_list
       end
@@ -156,7 +156,7 @@ class TermsBase
 
       #id = t1['id']
 
-      second_level_list = parse_authority_response(SolrQuery.new.solr_query(q='broader_tesim:' + id,fl='id,preflabel_tesim',rows=1000, sort='preflabel_si asc'))
+      second_level_list = parse_authority_response(SolrQuery.new.solr_query(q='broader_ssim:' + id,fl='id,preflabel_tesim',rows=1000, sort='preflabel_si asc'))
 
       t1[:elements] = second_level_list
 
@@ -164,7 +164,7 @@ class TermsBase
 
         id2 = t2['id']
 
-        third_level_list = parse_authority_response(SolrQuery.new.solr_query(q='broader_tesim:' + id2,fl='id,preflabel_tesim',rows=1000, sort='preflabel_si asc'))
+        third_level_list = parse_authority_response(SolrQuery.new.solr_query(q='broader_ssim:' + id2,fl='id,preflabel_tesim',rows=1000, sort='preflabel_si asc'))
 
         t2[:elements] = third_level_list
       end
@@ -184,10 +184,10 @@ class TermsBase
        'definition' => if result['definition_tesim'] then result['definition_tesim'].join end
       }
       # Only add broader where it exists (ie. subjects)
-      if result['broader_tesim']
-        broader = result['broader_tesim'].join.split('/')
-        hash['broader_id'] = broader[broader.length-1]
-        hash['broader_label'] = find_value_string(broader[broader.length-1]).join
+      #assumes only one broader
+      if result['broader_ssim']
+        hash['broader_id'] = result['broader_ssim'].join
+        hash['broader_label'] = find_value_string(result['broader_ssim'].join).join
       end
       hash
     end

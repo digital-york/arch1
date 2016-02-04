@@ -60,8 +60,11 @@ class SubjectsController < ApplicationController
 
       @concept = Concept.find(params[:id])
       @go_back_id = params[:go_back_id]
-      @broader = @concept.broader
-        #@subject_field = params[:subject_field]
+      # Assume there is only one broader, pass the Concept id
+      unless @concept.broader[0].nil?
+        @broader = @concept.broader[0].id
+      end
+      #@subject_field = params[:subject_field]
 
     rescue => error
       log_error(__method__, __FILE__, error)
@@ -87,6 +90,9 @@ class SubjectsController < ApplicationController
         @error = "Please enter a 'Subject'"
       end
 
+      unless subject_params[:broader].nil?
+        subject_params[:broader] = Concept.find(subject_params[:broader])
+      end
       @concept = Concept.new(subject_params)
 
       if @error != ''
@@ -139,6 +145,11 @@ class SubjectsController < ApplicationController
 
       # Get a concept object using the id and populate it with the subject parameters
       @concept = Concept.find(params[:id])
+
+      #Get the Concept from the id
+      unless subject_params[:broader].nil?
+        subject_params[:broader] = Concept.find(subject_params[:broader])
+      end
       @concept.attributes = subject_params
 
       if @error != ''
