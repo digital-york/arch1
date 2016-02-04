@@ -781,7 +781,10 @@ $(document).ready(function () {
 
             // Delete the value from the field
             if ($(this).attr('jq_tag_type') == 'select') {
+                // select doesn't have a value?
                 field_single_div.find('select').val('');
+                // ja added to remove the 'selected'
+                field_single_div.find('option').removeAttr('selected')
             } else if ($(this).attr('jq_tag_type') == 'input') {
                 field_single_div.find('input').val('');
             } else if ($(this).attr('jq_tag_type') == 'textarea') {

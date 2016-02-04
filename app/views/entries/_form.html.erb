@@ -172,7 +172,7 @@
                           <% @db_entry.db_entry_types.each do |entry_type| %>
                               <div class="field_single">
                                 <%= select_tag 'entry[entry_type][]', options_for_select(@entry_type_list.collect { |entry_type| [entry_type["label"], entry_type["id"]] }.insert(0, ["--- select ---", ""]), entry_type.name) %>
-                                <%= image_tag 'delete.png', :alt => 'delete icon', :class => 'delete_icon_select click_remove_field_level1', :jq_tag_type => 'input' %>
+                                <%= image_tag 'delete.png', :alt => 'delete icon', :class => 'delete_icon_select click_remove_field_level1', :jq_tag_type => 'select' %>
                               </div>
                           <% end %>
                         </div>
@@ -189,7 +189,7 @@
                                 <% @db_entry.db_section_types.each do |section_type| %>
                                     <div class="field_single">
                                         <%= select_tag 'entry[section_type][]', options_for_select(@section_type_list.collect { |section_type| [section_type["label"], section_type["id"]] }.insert(0, ["--- select ---", ""]), section_type.name) %>
-                                      <%= image_tag 'delete.png', :alt => 'delete icon', :class => 'delete_icon_select click_remove_field_level1', :jq_tag_type => 'input' %>
+                                      <%= image_tag 'delete.png', :alt => 'delete icon', :class => 'delete_icon_select click_remove_field_level1', :jq_tag_type => 'select' %>
                                     </div>
                                 <% end %>
                             </div>
