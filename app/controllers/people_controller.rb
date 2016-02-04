@@ -21,8 +21,8 @@ class PeopleController < ApplicationController
       @search_array = []
 
     # Get Concepts for the Person ConceptScheme and filter according to search_term
-    # NB. Persons aren't currently going into a concept scheme so we look for all Person objects
-    SolrQuery.new.solr_query(q='has_model_ssim:Person', fl='id, preflabel_tesim', rows=1000, sort='preflabel_si asc')['response']['docs'].map.each do |result|
+    num = SolrQuery.new.solr_query(q='has_model_ssim:Person', fl='id', rows=0)['response']['numFound']
+    SolrQuery.new.solr_query(q='has_model_ssim:Person', fl='id, preflabel_tesim', rows=num, sort='preflabel_si asc')['response']['docs'].map.each do |result|
         id = result['id']
         preflabel = result['preflabel_tesim'].join
 

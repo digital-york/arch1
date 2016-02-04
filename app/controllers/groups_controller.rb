@@ -21,8 +21,8 @@ class GroupsController < ApplicationController
       @search_array = []
 
       # Get Concepts for the group ConceptScheme and filter according to search_term
-      # NB. groups aren't currently going into a concept scheme so we look for all group objects
-      SolrQuery.new.solr_query(q='has_model_ssim:Group', fl='id, preflabel_tesim', rows=1000, sort='id asc')['response']['docs'].map.each do |result|
+      num = SolrQuery.new.solr_query(q='has_model_ssim:Group', fl='id', rows=0)['response']['numFound']
+      SolrQuery.new.solr_query(q='has_model_ssim:Group', fl='id, preflabel_tesim', rows=num, sort='id asc')['response']['docs'].map.each do |result|
 
         id = result['id']
         preflabel = result['preflabel_tesim'].join

@@ -26,8 +26,8 @@ class PlacesController < ApplicationController
         @deep_checked = false
 
         # Get Concepts for the Place ConceptScheme and filter according to search_term
-        # NB. Place aren't currently going into a concept scheme so we look for all Place objects
-        SolrQuery.new.solr_query(q='has_model_ssim:Place', fl='id, place_name_tesim, parent_ADM4_tesim, parent_ADM3_tesim, parent_ADM2_tesim, parent_ADM1_tesim', rows=5000, sort='id asc')['response']['docs'].map.each do |result|
+        num = SolrQuery.new.solr_query(q='has_model_ssim:Place', fl='id', rows=0)['response']['numFound']
+        SolrQuery.new.solr_query(q='has_model_ssim:Place', fl='id, place_name_tesim, parent_ADM4_tesim, parent_ADM3_tesim, parent_ADM2_tesim, parent_ADM1_tesim', rows=num, sort='id asc')['response']['docs'].map.each do |result|
 
           id = result['id']
           place_name = result['place_name_tesim']

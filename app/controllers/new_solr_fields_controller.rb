@@ -8,33 +8,34 @@ class NewSolrFieldsController < ApplicationController
   # 'search' is a new fieldType which is defined in the solr schema.xml
   # 'new_tesim' already exists as fieldType 'tesim' in schema.xml
   # 'label_ssim' already exists as fieldType 'ssim' in schema.xml
+  # For 'search' and new_tesim, altlabels from related objects have been added into the array
   def modify_sdoc(sdoc)
 
     begin
 
-      entry_type_new = get_preflabel_array(sdoc['entry_type_tesim'])
-      sdoc['entry_type_new_tesim'] = entry_type_new
+      entry_type_new,entry_type_alt = get_preflabel_array(sdoc['entry_type_tesim'])
+      sdoc['entry_type_new_tesim'] = entry_type_new.merge(entry_type_alt)
       sdoc['entry_type_label_ssim'] = entry_type_new
-      sdoc['entry_type_search'] = array_to_lowercase(entry_type_new)
+      sdoc['entry_type_search'] = array_to_lowercase(entry_type_new).merge(array_to_lowercase(entry_type_alt))
 
-      section_type_new = get_preflabel_array(sdoc['section_type_tesim'])
-      sdoc['section_type_new_tesim'] = section_type_new
+      section_type_new,section_type_alt = get_preflabel_array(sdoc['section_type_tesim'])
+      sdoc['section_type_new_tesim'] = section_type_new.merge(section_type_alt)
       sdoc['section_type_label_ssim'] = section_type_new
-      sdoc['section_type_search'] = array_to_lowercase(section_type_new)
+      sdoc['section_type_search'] = array_to_lowercase(section_type_new).merge(array_to_lowercase(section_type_alt))
 
       sdoc['summary_search'] = array_to_lowercase(sdoc['summary_tesim'])
 
       sdoc['marginalia_search'] = array_to_lowercase(sdoc['marginalia_tesim'])
 
-      language_new = get_preflabel_array(sdoc['language_tesim'])
+      language_new,unused = get_preflabel_array(sdoc['language_tesim'])
       sdoc['language_new_tesim'] = language_new
       sdoc['language_label_ssim'] = language_new
       sdoc['language_search'] = array_to_lowercase(language_new)
 
-      subject_new = get_preflabel_array(sdoc['subject_tesim'])
-      sdoc['subject_new_tesim'] = subject_new
-      sdoc['subject_search'] = array_to_lowercase(subject_new)
+      subject_new, subject_alt = get_preflabel_array(sdoc['subject_tesim'])
+      sdoc['subject_new_tesim'] = subject_new.merge(subject_alt)
       sdoc['subject_label_ssim'] = subject_new
+      sdoc['subject_search'] = array_to_lowercase(subject_new).merge(array_to_lowercase(subject_alt))
 
       sdoc['note_search'] = array_to_lowercase(sdoc['note_tesim'])
 
@@ -42,41 +43,41 @@ class NewSolrFieldsController < ApplicationController
 
       sdoc['is_referenced_by_search'] = array_to_lowercase(sdoc['is_referenced_by_tesim'])
 
-      sdoc['place_as_written_search'] = array_to_lowercase(sdoc['place_as_written_tesim'])
+      sdoc['place_as_written_search'] = array_to_lowercasae(sdoc['place_as_written_tesim'])
 
-      place_name_authority_new = get_preflabel_array(sdoc['place_same_as_tesim'])
-      sdoc['place_same_as_new_tesim'] = place_name_authority_new
+      place_name_authority_new,place_name_authority_alt = get_preflabel_array(sdoc['place_same_as_tesim'])
+      sdoc['place_same_as_new_tesim'] = place_name_authority_new.merge(place_name_authority_alt)
       sdoc['place_same_as_label_ssim'] = place_name_authority_new
-      sdoc['place_same_as_search'] = array_to_lowercase(place_name_authority_new)
+      sdoc['place_same_as_search'] = array_to_lowercase(place_name_authority_new).merge(array_to_lowercase(place_name_authority_alt))
 
-      place_role_new = get_preflabel_array(sdoc['place_role_tesim'])
-      sdoc['place_role_new_tesim'] = place_role_new
+      place_role_new,place_role_alt = get_preflabel_array(sdoc['place_role_tesim'])
+      sdoc['place_role_new_tesim'] = place_role_new.merge(place_role_alt)
       sdoc['place_role_label_ssim'] = place_role_new
-      sdoc['place_role_search'] = array_to_lowercase(place_role_new)
+      sdoc['place_role_search'] = array_to_lowercase(place_role_new).merge(array_to_lowercase(place_role_alt))
 
-      place_type_new = get_preflabel_array(sdoc['place_type_tesim'])
-      sdoc['place_type_new_tesim'] = place_type_new
+      place_type_new,place_type_alt = get_preflabel_array(sdoc['place_type_tesim'])
+      sdoc['place_type_new_tesim'] = place_type_new.merge(place_type_alt)
       sdoc['place_type_label_ssim'] = place_type_new
-      sdoc['place_type_search'] = array_to_lowercase(place_type_new)
+      sdoc['place_type_search'] = array_to_lowercase(place_type_new).merge(array_to_lowercase(place_type_alt))
 
       sdoc['place_note_search'] = array_to_lowercase(sdoc['place_note_tesim'])
 
       sdoc['person_as_written_search'] = array_to_lowercase(sdoc['person_as_written_tesim'])
 
-      person_name_authority_new = get_preflabel_array(sdoc['person_same_as_tesim'])
-      sdoc['person_same_as_new_tesim'] = person_name_authority_new
+      person_name_authority_new,person_name_authority_alt = get_preflabel_array(sdoc['person_same_as_tesim'])
+      sdoc['person_same_as_new_tesim'] = person_name_authority_new.merge(person_name_authority_alt)
       sdoc['person_same_as_label_ssim'] = person_name_authority_new
-      sdoc['person_same_as_search'] = array_to_lowercase(person_name_authority_new)
+      sdoc['person_same_as_search'] = array_to_lowercase(person_name_authority_new).merge(array_to_lowercase(person_name_authority_alt))
 
-      person_role_new = get_preflabel_array(sdoc['person_role_tesim'])
-      sdoc['person_role_new_tesim'] = person_role_new
+      person_role_new,person_role_alt = get_preflabel_array(sdoc['person_role_tesim'])
+      sdoc['person_role_new_tesim'] = person_role_new.merge(person_role_alt)
       sdoc['person_role_label_ssim'] = person_role_new
-      sdoc['person_role_search'] = array_to_lowercase(person_role_new)
+      sdoc['person_role_search'] = array_to_lowercase(person_role_new).merge(array_to_lowercase(person_role_alt))
 
-      person_descriptor_new = get_preflabel_array(sdoc['person_descriptor_tesim'])
-      sdoc['person_descriptor_new_tesim'] = person_descriptor_new
+      person_descriptor_new,person_descriptor_alt = get_preflabel_array(sdoc['person_descriptor_tesim'])
+      sdoc['person_descriptor_new_tesim'] = person_descriptor_new.merge(person_descriptor_alt)
       sdoc['person_descriptor_label_ssim'] = person_descriptor_new
-      sdoc['person_descriptor_search'] = array_to_lowercase(person_descriptor_new)
+      sdoc['person_descriptor_search'] = array_to_lowercase(person_descriptor_new).merge(array_to_lowercase(person_descriptor_alt))
 
       sdoc['person_descriptor_as_written_search'] = array_to_lowercase(sdoc['person_descriptor_tesim'])
 
@@ -87,10 +88,10 @@ class NewSolrFieldsController < ApplicationController
       sdoc['person_related_person_search'] = array_to_lowercase(sdoc['person_related_person_tesim'])
 
       # dates
-      date_role_new = get_preflabel_array(sdoc['date_role_tesim'])
-      sdoc['date_role_new_tesim'] = date_role_new
+      date_role_new,date_role_alt = get_preflabel_array(sdoc['date_role_tesim'])
+      sdoc['date_role_new_tesim'] = date_role_new.merge(date_role_alt)
       sdoc['date_role_label_ssim'] = date_role_new
-      sdoc['date_role_search'] = array_to_lowercase(date_role_new)
+      sdoc['date_role_search'] = array_to_lowercase(date_role_new).merge(array_to_lowercase(date_role_alt))
 
       sdoc['date_note_search'] = array_to_lowercase(sdoc['date_note_tesim'])
 
@@ -131,18 +132,21 @@ class NewSolrFieldsController < ApplicationController
     begin
 
       preflabel_array = []
+      altlabel_array = []
 
       if input_array != nil
 
         input_array.each do |id|
-          SolrQuery.new.solr_query('id:' + id, 'preflabel_tesim', 1)['response']['docs'].map do |result|
+          SolrQuery.new.solr_query('id:' + id, 'preflabel_tesim,altlabel_tesim', 1)['response']['docs'].map do |result|
             preflabel = result['preflabel_tesim'].join
+            altlabel = result['altlabel_tesim'].join
             preflabel_array << preflabel
+            altlabel_array << altlabel
           end
         end
       end
 
-      return preflabel_array
+      return preflabel_array, altlabel_array
 
     rescue => error
       log_error(__method__, __FILE__, error)
