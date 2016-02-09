@@ -1,6 +1,33 @@
 namespace :cleanup do
   require 'csv'
 
+  #create a backup file of the old thumbnails before replacing them
+  task get_thumbs: :environment do
+
+    file = File.open("thumbs.csv", "w")
+
+    SolrQuery.new.solr_query('has_model_ssim:Register','id,reg_id_tesim,thumbnail_url_tesim',100)['response']['docs'].each do |result|
+      unless result['thumbnail_url_tesim'].nil? or result['reg_id_tesim'].nil?
+        file.write("#{result['id']},#{result['reg_id_tesim'].join},#{result['thumbnail_url_tesim'].join}\n")
+      end
+    end
+    file.close
+  end
+
+  #replace thumbnails
+  task replace_thumbs: :environment do
+
+    CSV.read('lib/assets/thumbs_replace.csv').each do |reg|
+      SolrQuery.new.solr_query('reg_id_tesim:"' + reg[0] + '"','id,reg_id_tesim',1)['response']['docs'].each do |result|
+        puts result['reg_id_tesim']
+        r = Register.find(result['id'])
+        r.thumbnail_url= reg[1]
+        r.save
+      end
+    end
+  end
+
+  #Cleanup typo in rdf type
   task register_rdftype: :environment do
     #http://www.shared-canvas.org/ns/Collection
 
@@ -16,7 +43,6 @@ namespace :cleanup do
         end
     end
   end
-
 
   # The following three tasks were used to fix a problem where the broader property on concept was being changed by AF
   # to a string and thus losing the relation to the broader
