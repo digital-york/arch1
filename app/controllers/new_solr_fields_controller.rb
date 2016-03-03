@@ -322,7 +322,7 @@ class NewSolrFieldsController < ApplicationController
 
   end
 
-  # Return name array for the corresponding related registers
+  # Return name array for the corresponding related registers and folios
   def get_entry_register_array(folio)
 
     begin
@@ -335,11 +335,15 @@ class NewSolrFieldsController < ApplicationController
             folio_array << result['preflabel_tesim'][0].gsub('Abp Reg','Register')
           end
           unless result['isPartOf_ssim'].nil?
-            SolrQuery.new.solr_query('id:' + result['isPartOf_ssim'][0], 'reg_id_tesim', 1)['response']['docs'].map do |result2|
-
+            SolrQuery.new.solr_query('id:' + result['isPartOf_ssim'][0], 'reg_id_tesim,date_tesim', 1)['response']['docs'].map do |result2|
+              reg = ''
               unless result2['reg_id_tesim'].nil?
-                register_array << result2['reg_id_tesim'][0].gsub('Abp Reg','Register')
+                reg = result2['reg_id_tesim'][0].gsub('Abp Reg','Register')
               end
+              unless result2['date_tesim'].nil?
+                reg += " (#{result2['date_tesim'][0]})"
+              end
+              register_array << reg
             end
           end
         end
