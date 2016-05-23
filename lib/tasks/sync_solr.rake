@@ -105,7 +105,7 @@ namespace :sync_solr do
       # Assume localhost
       user = 'fedoraAdmin'
       password = 'secret3'
-      fedora_url = "http://localhost:8080/fedora/rest/dev"
+      fedora_url = "http://localhost:8080/fedora/rest/production"
    # elsif ARGV.count == 3
       # Use provided parameters
     #  user = ARGV[0]
@@ -133,32 +133,34 @@ namespace :sync_solr do
       id = child[:url]
       #id = id.gsub(/\/images.*/, "")
       #id = id.gsub(/\/folios.*/, "")
-      if id.include? 'folios'
-        if id.end_with? 'folios'
-          id = id.split('/')[-3] + '/' + id.split('/')[-2] + '/' + id.split('/')[-1]
-        else
-          id = id.split('/')[-2] + '/' + id.split('/')[-1]
-        end
-      elsif id.include? 'registers'
-        if id.end_with? 'registers'
-          id = id.split('/')[-2] + '/' + id.split('/')[-1]
-        else
-          id = id.split('/')[-3] + '/' + id.split('/')[-2] + '/' + id.split('/')[-1]
-        end
-      elsif id.include? 'images'
-        if id.end_with? 'images'
-          id = id.split('/')[-2] + '/' + id.split('/')[-1]
-        else
-          id = id.split('/')[-3] + '/' + id.split('/')[-2] + '/' + id.split('/')[-1]
-        end
-      elsif id.include? 'list_source'
-        id = id.split('/')[-2] + '/' + id.split('/')[-1]
-      else
-        id = id.split('/')[-1]
+      if id.split('/').length > 9
+      	arr = id.split('/')
+	tmp = ''
+	arr.each_with_index do |a, index|
+	  if index == 10
+	    tmp += arr[10]
+	  end
+          if index == 11
+	    tmp += '/' + arr[11]
+	  end
+          if index == 12
+	    tmp += '/' + arr[12]
+	  end
+          if index == 13
+	    tmp += '/' + arr[13]
+	  end
+          if index == 14
+	    tmp += '/' + arr[14]
+	  end
+          if index == 15
+	    tmp += '/' + arr[15]
+	  end
+	end
+	id = tmp	
       end
-      if id != 'dev'
+      if id != 'production'
         begin
-          #puts "#{count}, ***#{id}***"
+          puts "#{count}, ***#{id}***"
           ActiveFedora::Base.find(id).update_index
         rescue Exception => e
           puts "Error! #{child[:model]} -- #{child[:url]} -- id: #{id}"
