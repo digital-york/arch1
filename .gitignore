@@ -15,7 +15,7 @@
 # Ignore jetty directory (from hydra-jetty)
 /jetty
 
-#Ignore .env
+# Ignore .env
 .env
 
 # Ignore rubyMine IDE
@@ -24,10 +24,10 @@
 # Ignore intellij .iml file
 *.iml
 
-#ignore minter state file
+# Ignore minter state file
 /config/noid-minter-state
 
-#ignore large directories of xml files
+# Ignore large directories of xml files
 /lib/assets/folios/xml
 /lib/assets/new_regs_and_fols/xml
 
@@ -35,8 +35,8 @@ config/settings.local.yml
 config/settings/*.local.yml
 config/environments/*.local.yml
 
-#ignore Gemfile.lock
-Gemfile.lock
-
-#Ignore assets
+# Ignore assets
 public/assets
+
+# Ignore vendor
+vendor/*

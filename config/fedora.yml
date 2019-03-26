@@ -1,15 +1,15 @@
 development:
   user: fedoraAdmin
   password: <%= ENV['DEV_ADMIN_PASSWORD'] %>
-  url: <%= ENV['DEV_FEDORA'] %>
-  base_path: /dev
+  url: <%= ENV['DEV_FEDORA_URL'] %>
+  base_path: <%= ENV['DEV_FEDORA_BASE_PATH'] %>
 test:
   user: fedoraAdmin
   password: <%= ENV['TEST_ADMIN_PASSWORD'] %>
-  url: <%= ENV['TEST_FEDORA'] %>
-  base_path: /test
+  url: <%= ENV['TEST_FEDORA_URL'] %>
+  base_path: <%= ENV['TEST_FEDORA_BASE_PATH'] %>
 production:
   user: fedoraAdmin
   password: <%= ENV['PROD_ADMIN_PASSWORD'] %>
-  url: <%= ENV['PRODUCTION_FEDORA'] %>
-  base_path: /production
+  url: <%= ENV['PRODUCTION_FEDORA_URL'] %>
+  base_path: <%= ENV['PRODUCTION_FEDORA_BASE_PATH'] %>

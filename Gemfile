@@ -9,9 +9,9 @@ gem 'qa'
 
 # gem 'hydra', '9.0.0'
 # Install hydra gems individually to get latest versions
-gem 'active-fedora'
+gem 'active-fedora', '10.3.0'
 gem 'hydra-head'
-gem 'om'
+gem 'om', '~> 3.1.0'
 gem 'solrizer'
 gem 'rsolr'
 gem 'blacklight'
@@ -25,10 +25,10 @@ gem 'active_fedora-noid'
 gem 'nokogiri'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem 'rails', '4.2.7.1'
-gem 'sprockets', '~>3.7.2'
+gem 'rails', '~> 5.0'
+gem 'sprockets', '~> 3.7.2'
 # Use sqlite3 as the database for Active Record
-gem 'sqlite3'
+gem 'sqlite3', '~> 1.3.13'
 # Use SCSS for stylesheets
 gem 'sass-rails', '~> 5.0'
 # Use Uglifier as compressor for JavaScript assets
@@ -61,6 +61,8 @@ gem 'sdoc', '~> 0.4.0', group: :doc
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   #gem 'byebug'
+  gem 'pry-rails'
+  gem 'pry-byebug'
 
   # Access an IRB console on exception pages or by using <%= console %> in views
   gem 'web-console', '~> 2.0'
