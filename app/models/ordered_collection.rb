@@ -1,6 +1,6 @@
 class OrderedCollection < ActiveFedora::Base
   include AssignId,RdfType,DCTerms,SkosLabels,AssignRdfTypes
-  require 'active_fedora/aggregation'
+  # require 'active_fedora/aggregation'
 
   has_many :registers # do not destroy
   #has_many :ordered_collections # do not destroy

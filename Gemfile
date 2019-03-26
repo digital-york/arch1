@@ -17,7 +17,6 @@ gem 'rsolr'
 gem 'blacklight'
 gem 'active-triples'
 gem 'nom-xml'
-gem 'activefedora-aggregation'
 
 gem 'active_fedora-noid'
 #gem 'active_fedora-noid', '1.0.0'
