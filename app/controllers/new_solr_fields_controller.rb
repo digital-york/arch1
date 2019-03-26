@@ -145,7 +145,7 @@ class NewSolrFieldsController < ApplicationController
 
       if old_array != nil
         old_array.each do |t|
-          new_array << t.downcase
+          new_array << t.downcase unless t.nil?
         end
       end
 
@@ -170,8 +170,8 @@ class NewSolrFieldsController < ApplicationController
 
         input_array.each do |id|
           SolrQuery.new.solr_query('id:' + id, 'preflabel_tesim,altlabel_tesim', 1)['response']['docs'].map do |result|
-            preflabel = result['preflabel_tesim'].join
-            unless result['altlabel_tesim'].nil? then altlabel = result['altlabel_tesim'].join end
+            preflabel = result['preflabel_tesim'].join unless result['preflabel_tesim'].nil?
+            altlabel = result['altlabel_tesim'].join unless result['altlabel_tesim'].nil?
             preflabel_array << preflabel
             altlabel_array << altlabel
           end
@@ -202,7 +202,7 @@ class NewSolrFieldsController < ApplicationController
           unless result['place_same_as_tesim'].nil?
             result['place_same_as_tesim'].each do |place|
               query.solr_query('id:' + place, 'preflabel_tesim', 1)['response']['docs'].map do |result2|
-                preflabel = result2['preflabel_tesim'].join
+                preflabel = result2['preflabel_tesim'].join unless result['preflabel_tesim'].nil?
                 preflabel_array << preflabel
               end
             end
@@ -231,7 +231,7 @@ class NewSolrFieldsController < ApplicationController
           unless result['person_same_as_tesim'].nil?
             result['person_same_as_tesim'].each do |agent|
               query.solr_query('id:' + agent, 'preflabel_tesim', 1)['response']['docs'].map do |result2|
-                preflabel = result2['preflabel_tesim'].join
+                preflabel = result2['preflabel_tesim'].join unless result['preflabel_tesim'].nil?
                 preflabel_array << preflabel
               end
             end
