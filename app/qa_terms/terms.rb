@@ -1,6 +1,6 @@
 module Terms
 
-  include Qa::Authorities::WebServiceBase
+  #include Qa::Authorities::WebServiceBase
 
   class FolioFaceTerms < TermsBase
     def terms_list
