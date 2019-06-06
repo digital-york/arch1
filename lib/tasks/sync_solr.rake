@@ -1,11 +1,9 @@
+require 'dotenv/tasks'
+
 namespace :sync_solr do
 
-  desc "TODO"
-
+  desc "get all Fedora data to Solr"
   task sync: :environment do
-
-    Rails.env = 'development'
-
     # Fetches all the object IDs in Fedora 4
     require "net/http"
     require "uri"
@@ -100,20 +98,11 @@ namespace :sync_solr do
       end
 
     end
+    ENV_ID = Rails.env.upcase
 
-    #if ARGV.empty?
-      # Assume localhost
-      user = 'fedoraAdmin'
-      password = 'secret3'
-      fedora_url = "http://localhost:8080/fedora/rest/production"
-   # elsif ARGV.count == 3
-      # Use provided parameters
-    #  user = ARGV[0]
-    #  password = ARGV[1]
-    #  fedora_url = ARGV[2]
-    #else
-    #  abort "Syntax: fedora_explorer user password URL"
-    #end
+    user       = ENV["#{ENV_ID}_ADMIN"] || 'fedoraAdmin'
+    password   = ENV["#{ENV_ID}_ADMIN_PASSWORD"] || ''
+    fedora_url = ENV["#{ENV_ID}_FEDORA_URL"] + '/' + ENV["#{ENV_ID}_FEDORA_BASE_PATH"]
 
     fedora4 = FedoraExplorer.new(fedora_url, user, password)
 
