@@ -73,6 +73,7 @@ group :development, :test do
   gem 'rspec-rails'
   gem 'jettywrapper'
   gem 'thin'
+  gem 'xray-rails'
 end
 
 gem 'devise'
