@@ -1,7 +1,7 @@
 # This is a sample config file that points to a solr server for each environment
 development:
-  url: <%= ENV['DEV_SOLR'] %>
+  url: <%= ENV['DEVELOPMENT_SOLR'] %>
 test:
   url: <%= ENV['TEST_SOLR'] %>
 production:
-  url: <%= ENV['PROD_SOLR'] %>
+  url: <%= ENV['PRODUCTION_SOLR'] %>
