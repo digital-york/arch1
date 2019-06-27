@@ -174,7 +174,8 @@ module RegisterFolio
       set_order
       # Get the list of folios in order
       @order.each do |o|
-        q.solr_query('id:"' + o + '"', 'id,preflabel_tesim', rows=1)['response']['docs'].map.each do |res|
+        id = get_id(o)
+        q.solr_query('id:"' + id + '"', 'id,preflabel_tesim', rows=1)['response']['docs'].map.each do |res|
           folio_hash[res['id']] = res['preflabel_tesim'].join()
           @folio_list += [[res['id'], folio_hash[res['id']]]]
         end
@@ -384,7 +385,10 @@ module RegisterFolio
         q.solr_query('id:"' + collection + '/list_source"', 'ordered_targets_ssim')['response']['docs'].map.each do |res|
           order = res['ordered_targets_ssim']
           order.each do |o|
-            q.solr_query('id:"' + o + '"', 'id,preflabel_tesim,reg_id_tesim')['response']['docs'].map.each do |r|
+            # to parse object id from format like: "production/dz/01/0r/92/dz010r92r"
+            # this is may be caused by the version changes of Fedora/Active Fedora
+            id = get_id(o)
+            q.solr_query('id:"' + id + '"', 'id,preflabel_tesim,reg_id_tesim')['response']['docs'].map.each do |r|
               registers[r['id']] = [r['reg_id_tesim'][0], r['preflabel_tesim'][0]]
             end
           end
@@ -822,6 +826,10 @@ module RegisterFolio
       time = Time.now.strftime('[%d/%m/%Y %H:%M:%S] ').to_s
     end
     logger.error "#{time}EXCEPTION IN #{file}, method='#{method}' [#{error}]"
+  end
+
+  def get_id(o)
+    id = (o.include? '/') ? o.rpartition('/').last : o
   end
 
 end
