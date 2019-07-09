@@ -202,14 +202,13 @@ class NewSolrFieldsController < ApplicationController
           unless result['place_same_as_tesim'].nil?
             result['place_same_as_tesim'].each do |place|
               query.solr_query('id:' + place, 'preflabel_tesim', 1)['response']['docs'].map do |result2|
-                preflabel = result2['preflabel_tesim'].join unless result['preflabel_tesim'].nil?
+                preflabel = result2['preflabel_tesim'].join unless result2['preflabel_tesim'].nil?
                 preflabel_array << preflabel
               end
             end
           end
         end
       end
-
       preflabel_array
 
     rescue => error
@@ -231,7 +230,7 @@ class NewSolrFieldsController < ApplicationController
           unless result['person_same_as_tesim'].nil?
             result['person_same_as_tesim'].each do |agent|
               query.solr_query('id:' + agent, 'preflabel_tesim', 1)['response']['docs'].map do |result2|
-                preflabel = result2['preflabel_tesim'].join unless result['preflabel_tesim'].nil?
+                preflabel = result2['preflabel_tesim'].join unless result2['preflabel_tesim'].nil?
                 preflabel_array << preflabel
               end
             end
