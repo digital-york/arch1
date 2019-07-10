@@ -37,7 +37,7 @@ module RegisterFolio
 
     begin
 
-      folio_id = params[:folio_id].strip
+      folio_id = get_id(params[:folio_id].strip)
 
       session[:folio_id] = folio_id
       session[:alt_image] = []
@@ -86,9 +86,9 @@ module RegisterFolio
         set_order
         hash = Hash[@order.map.with_index.to_a]
         if action == 'next_tesim'
-          next_id = @order[hash[id].to_i + 1]
+          next_id = get_id(@order[hash[id].to_i + 1])
         elsif action == 'prev_tesim'
-          next_id = @order[hash[id].to_i - 1]
+          next_id = get_id(@order[hash[id].to_i - 1])
         end
       end
 
