@@ -723,18 +723,20 @@ module RegisterFolio
 
         # First find the Date, Related Place or Related Agent objects which contain the element
         q.solr_query(search_term1 + ':' + element_id, fl=fl_term, rows=100000, sort='id ASC')['response']['docs'].map do |result|
-          search_term2 = 'id:' + result[fl_term].join
-          # Then find out which entries contain them
-          q.solr_query(search_term2, fl='id, folio_ssim, entry_no_tesim', rows=100000, sort='id ASC')['response']['docs'].map do |result|
-            element = []
-            id = result['id']
-            folio_id = result['folio_ssim'].join
-            entry_no = result['entry_no_tesim'].join
-            folio = q.solr_query('id:' + folio_id, fl='preflabel_tesim', rows=100000, sort='id ASC')['response']['docs'].map.first['preflabel_tesim'].join
-            element[0] = id
-            element[1] = folio_id
-            element[2] = folio + ' (Entry No = ' + entry_no + ')'
-            existing_location_list << element
+          unless result[fl_term].nil?
+            search_term2 = 'id:' + result[fl_term].join
+            # Then find out which entries contain them
+            q.solr_query(search_term2, fl='id, folio_ssim, entry_no_tesim', rows=100000, sort='id ASC')['response']['docs'].map do |result|
+              element = []
+              id = result['id']
+              folio_id = result['folio_ssim'].join
+              entry_no = result['entry_no_tesim'].join
+              folio = q.solr_query('id:' + folio_id, fl='preflabel_tesim', rows=100000, sort='id ASC')['response']['docs'].map.first['preflabel_tesim'].join
+              element[0] = id
+              element[1] = folio_id
+              element[2] = folio + ' (Entry No = ' + entry_no + ')'
+              existing_location_list << element
+            end
           end
         end
       end
