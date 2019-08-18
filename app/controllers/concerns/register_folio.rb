@@ -771,18 +771,17 @@ module RegisterFolio
 
   # Return hash of parent /child ids and labels
   def get_parent_child_list
-
     begin
 
       parent_child_list = {}
       parent_child_list[@concept.id] = @concept.preflabel
       q = SolrQuery.new
 
-      q.solr_query('broader_tesim:' + @concept.id, fl='id, preflabel_tesim', rows=1000, sort='id ASC')['response']['docs'].map do |result|
+      q.solr_query('broader_ssim:' + @concept.id, fl='id, preflabel_tesim', rows=1000, sort='id ASC')['response']['docs'].map do |result|
         id = result['id']
         preflabel = result['preflabel_tesim'].join
         parent_child_list[id] = preflabel
-        q.solr_query('broader_tesim:' + id, fl='id, preflabel_tesim', rows=1000, sort='id ASC')['response']['docs'].map do |result|
+        q.solr_query('broader_ssim:' + id, fl='id, preflabel_tesim', rows=1000, sort='id ASC')['response']['docs'].map do |result|
           id2 = result['id']
           preflabel2 = result['preflabel_tesim'].join
           parent_child_list[id2] = preflabel2
