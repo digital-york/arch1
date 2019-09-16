@@ -21,7 +21,7 @@ gem 'nom-xml'
 gem 'active_fedora-noid'
 #gem 'active_fedora-noid', '1.0.0'
 
-gem 'nokogiri'
+gem "nokogiri", ">= 1.10.4"
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '~> 5.0'
@@ -76,5 +76,5 @@ group :development, :test do
   gem 'xray-rails'
 end
 
-gem 'devise'
+gem "devise", ">= 4.7.1"
 gem 'devise-guests', '~> 0.3'
