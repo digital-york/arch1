@@ -108,7 +108,7 @@ class NewSolrFieldsController < ApplicationController
 
       sdoc['date_note_search'] = array_to_lowercase(sdoc['date_note_tesim'])
 
-      date_facet = get_date_array(sdoc[:id])
+      date_facet = get_date_array(get_id(sdoc[:id]))
       sdoc['date_facet_ssim'] = date_facet
 
       # add the register name and folio label to the entries
@@ -118,13 +118,13 @@ class NewSolrFieldsController < ApplicationController
 
       # facets from dates, related places/agents and folio/register added to entries
       # these runs on everything because it uses id, the only other field that ALL entries have is entry_no, but that is not unique
-      entry_place_name_authority_new = get_entry_place_array(sdoc[:id])
+      entry_place_name_authority_new = get_entry_place_array(get_id(sdoc[:id]))
       sdoc['entry_place_same_as_facet_ssim'] = entry_place_name_authority_new
 
-      entry_person_name_authority_new = get_entry_agent_array(sdoc[:id])
+      entry_person_name_authority_new = get_entry_agent_array(get_id(sdoc[:id]))
       sdoc['entry_person_same_as_facet_ssim'] = entry_person_name_authority_new
 
-      entry_date_new = get_entry_date_array(sdoc[:id])
+      entry_date_new = get_entry_date_array(get_id(sdoc[:id]))
       sdoc['entry_date_facet_ssim'] = entry_date_new
 
       sdoc
@@ -354,6 +354,10 @@ class NewSolrFieldsController < ApplicationController
       raise
     end
 
+  end
+
+  def get_id(o)
+    id = (o.include? '/') ? o.rpartition('/').last : o
   end
 
 end
