@@ -43,6 +43,7 @@ namespace :datachecker do
         ],
         "Concept" => %w[
             preflabel_tesim
+            altlabel_tesim
         ],
         "ConceptScheme" => %w[
             preflabel_tesim
