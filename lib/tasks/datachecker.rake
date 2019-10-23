@@ -201,12 +201,6 @@ namespace :datachecker do
         errors           = []
         no_model_objects = []
 
-        puts "Loading object ids from: #{solr1} ..."
-        idlist1 = get_ids(solr1, false)
-
-        puts "Loading object ids from: #{solr2} ..."
-        idlist2 = get_ids(solr2, false)
-
         FIELDS_TO_CHECK.each do |model, fields_to_check|
             puts "checking model: #{model}"
 
