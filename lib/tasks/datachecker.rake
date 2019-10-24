@@ -201,6 +201,10 @@ namespace :datachecker do
         errors           = []
         no_model_objects = []
 
+        ###########################TEST DATA SET#############################
+        #fields = {"Entry" => %w[entry_place_same_as_facet_ssim]}
+        #fields.each do |model, fields_to_check|
+        ###########################END OF TEST DATA SET######################
         FIELDS_TO_CHECK.each do |model, fields_to_check|
             puts "checking model: #{model}"
 
@@ -229,7 +233,10 @@ namespace :datachecker do
                             value1 = normalize_field_values(field, solr_object1[field])
                             value2 = normalize_field_values(field, solr_object2[field])
 
-                            if solr_object1[field] != solr_object2[field]
+                            # compare two field values, and ignore the order of values in the array
+                            unless (solr_object1[field] == solr_object2[field]) or
+                                   (!solr_object1[field].nil? and !solr_object2[field].nil? and
+                                    solr_object1[field].sort == solr_object2[field].sort)
                                 mismatches << "Mismatch object: #{model},#{id},#{field},#{value1},#{value2}"
                             end
                         end
