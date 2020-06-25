@@ -78,3 +78,4 @@ end
 
 gem "devise", ">= 4.7.1"
 gem 'devise-guests', '~> 0.3'
+gem 'smarter_csv'

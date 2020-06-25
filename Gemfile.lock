@@ -388,6 +388,7 @@ GEM
       json (~> 1.7, >= 1.7.7)
       rdoc (~> 4.0)
     slop (4.6.2)
+    smarter_csv (1.2.6)
     solrizer (3.4.1)
       activesupport
       daemons
@@ -485,6 +486,7 @@ DEPENDENCIES
   rspec-rails
   sass-rails (~> 5.0)
   sdoc (~> 0.4.0)
+  smarter_csv
   solrizer
   spring
   sprockets (~> 3.7.2)
