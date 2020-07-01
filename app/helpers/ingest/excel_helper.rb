@@ -1,5 +1,3 @@
-require 'csv'
-
 module Ingest
     module ExcelHelper
         # parse a row from Borthwick spreadsheet
