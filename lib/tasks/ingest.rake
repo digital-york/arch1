@@ -4,7 +4,7 @@ namespace :ingest do
     desc "Ingest entries from excel."
     task :ingest_from_excel, [:excel_file] => [:environment] do |t, args|
         # Parse entry from Excel
-        entry_rows = Ingest::ExcelHelper.parse_borthwick_spradsheet(args[:excel_file])
+        entry_rows = Ingest::ExcelHelper.parse_borthwick_spreadsheet(args[:excel_file])
         entry_rows.each_with_index { |entry_row, index|
             if index < 5
                 puts entry_row.to_s

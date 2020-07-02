@@ -3,7 +3,7 @@ require 'roo'
 module Ingest
     module ExcelHelper
         # parse a row from Borthwick spreadsheet
-        def self.parse_borthwick_spradsheet(filename)
+        def self.parse_borthwick_spreadsheet(filename)
             entry_rows = []
             entries = Roo::Spreadsheet.open(filename)
             entries.each_with_index { |entry, index|
