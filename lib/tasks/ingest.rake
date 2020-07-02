@@ -6,8 +6,11 @@ namespace :ingest do
         # Parse entry from Excel
         entry_rows = Ingest::ExcelHelper.parse_borthwick_spreadsheet(args[:excel_file])
         entry_rows.each_with_index { |entry_row, index|
-            if index < 5
+            # For test purpose, only print first 2 entry rows
+            if index < 2
                 puts entry_row.to_s
+            else
+                break
             end
             # Search Register from Solr
             #
@@ -30,12 +33,6 @@ namespace :ingest do
             # entry.save
             # folio.entries += [entry]
             # folio.save
-
-
-            # For testing, exit after processed first 3 rows (0, 1 are the headers)
-            if index > 2
-                break
-            end
         }
 
     end
