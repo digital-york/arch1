@@ -1,4 +1,5 @@
 module Ingest
+    # This class defines all fields loaded from Borthwick spreadsheet
     class BorthwickEntryRow
         attr_reader :register,
                     :folio_no,
