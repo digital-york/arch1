@@ -1,20 +1,14 @@
-require 'roo'
-
 namespace :ingest do
 
     # bundle exec rake ingest:ingest_from_excel[EXCEL_FILE_NAME]
     desc "Ingest entries from excel."
     task :ingest_from_excel, [:excel_file] => [:environment] do |t, args|
-        entries = Roo::Spreadsheet.open(args[:excel_file])
-        entries.each_with_index { |entry, index|
-            # Ignore the double header
-            if index < 2
-                next
+        # Parse entry from Excel
+        entry_rows = Ingest::ExcelHelper.parse_borthwick_spradsheet(args[:excel_file])
+        entry_rows.each_with_index { |entry_row, index|
+            if index < 5
+                puts entry_row.to_s
             end
-
-            # Parse entry from Excel
-            entry_row = Ingest::ExcelHelper.parse_borthwick_row(entry)
-
             # Search Register from Solr
             #
             # If not found, log error
