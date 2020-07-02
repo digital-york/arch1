@@ -30,7 +30,7 @@ namespace :ingest do
 
             # Check entries.rake -> build_entry method,
             # Get attributes for an entry: language, section_type, note, reference, editorial_note
-
+            # Build notes field from subject, check entries.rake, from line 216
 
             # Create Entry object and save all attributes
             # entry.save
