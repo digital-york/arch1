@@ -67,7 +67,7 @@ module Ingest
             places_ids = []
             places.each do |place|
                 response = SolrQuery.new.solr_query('has_model_ssim:"ConceptScheme" AND preflabel_tesim:"places"', 'id')
-                # first, query ConceptSchema for languages
+                # first, query ConceptSchema for places
                 response['response']['docs'].map do |l|
                     resp = SolrQuery.new.solr_query('inScheme_ssim:"' + l['id'] + '" AND preflabel_tesim:"' + place.downcase + '"', 'id')
                     resp['response']['docs'].map do |p|
@@ -76,6 +76,27 @@ module Ingest
                 end
             end
             places_ids
+        end
+
+        # find people object ids from label
+        # input: people name as array, e.g. ['Normavell, Eleanor, fl 1539-1540, Prioress of Nun Appleton']
+        # output: people object ids, e.g. ['xxxxxx']
+        # e.g.
+        # pry(main)> Ingest::AuthorityHelper.s_get_people_object_ids(['Normavell, Eleanor, fl 1539-1540, Prioress of Nun Appleton'])
+        # => ["1c18df79x"]
+        def self.s_get_people_object_ids(people)
+            people_ids = []
+            people.each do |p|
+                response = SolrQuery.new.solr_query('has_model_ssim:"ConceptScheme" AND preflabel_tesim:"people"', 'id')
+                # first, query ConceptSchema for people
+                response['response']['docs'].map do |l|
+                    resp = SolrQuery.new.solr_query('inScheme_ssim:"' + l['id'] + '" AND preflabel_tesim:"' + p.downcase + '"', 'id')
+                    resp['response']['docs'].map do |pobj|
+                        people_ids += [pobj['id']]
+                    end
+                end
+            end
+            people_ids
         end
 
     end
