@@ -13,9 +13,9 @@ module Ingest
         # input: languages as array, e.g. ['English']
         # output: language object ids, e.g. ['xxxxxx']
         # e.g.
-        # [1] pry(main)> Ingest::AuthorityHelper.s_get_language_object_id(['English','Latin'])
+        # [1] pry(main)> Ingest::AuthorityHelper.s_get_language_object_ids(['English','Latin'])
         # => ["w37636771", "pz50gw105"]
-        def self.s_get_language_object_id(languages)
+        def self.s_get_language_object_ids(languages)
             language_ids = []
             languages.each do |lang|
                 response = SolrQuery.new.solr_query('has_model_ssim:"ConceptScheme" AND preflabel_tesim:"languages"', 'id')
@@ -34,9 +34,9 @@ module Ingest
         # input: section_types as array, e.g. ["diverse letters"]
         # output: section type object ids, e.g. ['xxxxxx']
         # e.g.
-        # [1] pry(main)> Ingest::AuthorityHelper.s_get_section_type_object_id(['diverse letters'])
+        # [1] pry(main)> Ingest::AuthorityHelper.s_get_section_type_object_ids(['diverse letters'])
         # => ["j6731378s"]
-        def self.s_get_section_type_object_id(section_types)
+        def self.s_get_section_type_object_ids(section_types)
             section_type_ids = []
             section_types.each do |sect|
                 response = SolrQuery.new.solr_query('has_model_ssim:"ConceptScheme" AND preflabel_tesim:"section_types"', 'id')
@@ -57,7 +57,26 @@ module Ingest
             Terms::SubjectTerms.new('subauthority').find_id_with_alts(subject_text)
         end
 
-
+        # find place object ids from label
+        # input: places as array, e.g. ['Yarm, North Riding of Yorkshire, England']
+        # output: place object ids, e.g. ['xxxxxx']
+        # e.g.
+        # pry(main)> Ingest::AuthorityHelper.s_get_place_object_ids(['Yarm, North Riding of Yorkshire, England'])
+        # => ["1c18df984"]
+        def self.s_get_place_object_ids(places)
+            places_ids = []
+            places.each do |place|
+                response = SolrQuery.new.solr_query('has_model_ssim:"ConceptScheme" AND preflabel_tesim:"places"', 'id')
+                # first, query ConceptSchema for languages
+                response['response']['docs'].map do |l|
+                    resp = SolrQuery.new.solr_query('inScheme_ssim:"' + l['id'] + '" AND preflabel_tesim:"' + place.downcase + '"', 'id')
+                    resp['response']['docs'].map do |p|
+                        places_ids += [p['id']]
+                    end
+                end
+            end
+            places_ids
+        end
 
     end
 end
