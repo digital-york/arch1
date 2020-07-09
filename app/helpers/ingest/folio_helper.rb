@@ -18,5 +18,21 @@ module Ingest
                 ids = r['id']
             end
         end
+
+        # get archbishop register folio id
+        # input: register, folio, side
+        def self.s_get_ar_folio_id(register_name, folio_id, folio_side)
+            prefix = 'Abp'
+            id = nil
+            # Convert folio info from:
+            #   Register 7	132	(verso)
+            # to:
+            #   Abp Reg 7 f.132 (recto)
+            folio_label = "#{prefix} #{register_name.gsub('Register', 'Reg')} f.#{folio_id} #{folio_side}"
+            SolrQuery.new.solr_query("preflabel_tesim:\"#{folio_label}\"")['response']['docs'].map do |r|
+                id = r['id']
+            end
+            id
+        end
     end
 end
