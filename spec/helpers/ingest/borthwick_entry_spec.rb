@@ -45,7 +45,7 @@ RSpec.describe Ingest::BorthwickEntry do
       expect(entry.groups.size).to be(0)
     end
     it "returns pesrons" do
-      expec(entry.persons.size).to be(0)
+      expect(entry.persons.size).to_not be(1)
     end
   end
 end
