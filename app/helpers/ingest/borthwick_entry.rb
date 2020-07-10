@@ -97,7 +97,7 @@ module Ingest
         @groups << group
       end
 
-      persons = []
+      @persons = []
       unless data[:person_as_written_1].nil?
         person = Person.new
         person.as_written = data[:person_as_written_1]
