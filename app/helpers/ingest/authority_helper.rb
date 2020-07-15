@@ -50,6 +50,18 @@ module Ingest
             section_type_ids
         end
 
+        # Find subject ids by its texts
+        # [2] pry(main)> Ingest::AuthorityHelper.s_get_subject_object_ids(['Prioresses'])
+        # => ["zs25xc64x"]
+        def self.s_get_subject_object_ids(subject_texts)
+            subject_ids = []
+            subject_texts.each do |subject_text|
+                subject_id = s_get_subject_object_id(subject_text)
+                subject_ids << subject_id unless subject_id.nil?
+            end
+            subject_ids
+        end
+
         # Find subject id by its text
         # [2] pry(main)> Ingest::AuthorityHelper.s_get_subject_object_id('Prioresses')
         # => "zs25xc64x"
