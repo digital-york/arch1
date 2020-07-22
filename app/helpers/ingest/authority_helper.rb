@@ -41,13 +41,36 @@ module Ingest
             section_types.each do |sect|
                 response = SolrQuery.new.solr_query('has_model_ssim:"ConceptScheme" AND preflabel_tesim:"section_types"', 'id')
                 response['response']['docs'].map do |s|
-                    resp = SolrQuery.new.solr_query('inScheme_ssim:"' + s['id'] + '" AND preflabel_tesim:"' + sect.downcase + '"', 'id')
+                    resp = SolrQuery.new.solr_query('inScheme_ssim:"' + s['id'] + '" AND preflabel_tesim:"' + sect.to_s.downcase + '"', 'id')
                     resp['response']['docs'].map do |se|
                         section_type_ids += [se['id']]
                     end
                 end
             end
             section_type_ids
+        end
+
+        # find entry_types object ids from label
+        # input: entry_types as array, e.g. ["Deputation", "Commission"]
+        # output: entry type object ids, e.g. ['xxxxxx']
+        # e.g.
+        # [1] pry(main)> Ingest::AuthorityHelper.s_get_entry_type_object_ids(["Deputation")
+        # => ["j6731378s"]
+        def self.s_get_entry_type_object_ids(entry_types)
+            entry_type_ids = []
+            entry_types.each do |entry_type|
+                response = SolrQuery.new.solr_query('has_model_ssim:"ConceptScheme" AND preflabel_tesim:"entry_types"', 'id')
+                response['response']['docs'].map do |s|
+                    resp = SolrQuery.new.solr_query('inScheme_ssim:"' + s['id'] + '" AND preflabel_tesim:"' + entry_type.to_s.downcase + '"', 'id,preflabel_tesim')
+                    resp['response']['docs'].map do |se|
+                        # doing an exact match of the search term
+                        if se['preflabel_tesim'][0].to_s.downcase == entry_type.downcase
+                            entry_type_ids += [se['id']]
+                        end
+                    end
+                end
+            end
+            entry_type_ids
         end
 
         # Find subject ids by its texts
