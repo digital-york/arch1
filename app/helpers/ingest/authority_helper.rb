@@ -41,9 +41,12 @@ module Ingest
             section_types.each do |sect|
                 response = SolrQuery.new.solr_query('has_model_ssim:"ConceptScheme" AND preflabel_tesim:"section_types"', 'id')
                 response['response']['docs'].map do |s|
-                    resp = SolrQuery.new.solr_query('inScheme_ssim:"' + s['id'] + '" AND preflabel_tesim:"' + sect.to_s.downcase + '"', 'id')
+                    resp = SolrQuery.new.solr_query('inScheme_ssim:"' + s['id'] + '" AND preflabel_tesim:"' + sect.to_s.downcase + '"', 'id,preflabel_tesim')
                     resp['response']['docs'].map do |se|
-                        section_type_ids += [se['id']]
+                        # doing an exact match of the search term
+                        if se['preflabel_tesim'][0].to_s.downcase == sect.to_s.downcase
+                            section_type_ids += [se['id']]
+                        end
                     end
                 end
             end
