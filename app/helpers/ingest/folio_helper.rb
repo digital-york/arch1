@@ -35,5 +35,17 @@ module Ingest
             end
             id
         end
+
+        # Ingest::FolioHelper.create_folio('Test Folio', 'ks65hc48h')
+        def self.create_folio(pref_label, register_id)
+            f = Folio.new
+            f.rdftype               = f.add_rdf_types
+            f.preflabel             = pref_label
+            f.register              = Register.find(register_id)
+
+            f.save
+
+            f
+        end
     end
 end
