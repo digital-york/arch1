@@ -19,14 +19,21 @@ module Ingest
                               former_id,
                               languages,
                               section_type,
+                              summary,
                               subjects,
                               referenced_by,
                               note,
                               continues_folio_no,
                               continues_folio_side
                               )
+            # CHANGE ME HERE
+            # #################
+            # # #################
+            # # #################
             #e = Entry.new
             e = Entry.find('2b88qc56f')
+            # #################
+            # # #################
 
             # add entry rdf types
             e.rdftype = e.add_rdf_types
@@ -49,6 +56,9 @@ module Ingest
             # section type
             e.section_type = section_type
 
+            # summary
+            e.summary = summary
+
             # subject
             e.subject = subjects unless subjects.blank?
 
@@ -57,7 +67,7 @@ module Ingest
             #e.is_referenced_by = [referenced_by] unless referenced_by.blank?
 
             # note
-            e.note = [note] unless note.blank?
+            # e.note = [note] unless note.blank?
 
             # editorial_note
             # no editorial_note field?
