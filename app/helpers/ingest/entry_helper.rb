@@ -66,6 +66,9 @@ module Ingest
             # Find the authority object by the referenced_by text
             #e.is_referenced_by = [referenced_by] unless referenced_by.blank?
 
+            # date
+            e.date = date
+
             # note
             # e.note = [note] unless note.blank?
 
