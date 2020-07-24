@@ -1,42 +1,37 @@
+# frozen_string_literal: true
+
 class LoginController < ApplicationController
-
   def login_submit
+    # Proper authorisation will be added later on
+    username = params[:username]
+    password = params[:password]
 
-    begin
+    if ((username == ENV['USER_1']) || (username == ENV['USER_2']) || (username == ENV['USER_3']) || (username == ENV['USER_4']) || (username == ENV['USER_5'])) && password == ENV['PASSWORD']
 
-      # Proper authorisation will be added later on
-      username = params[:username]
-      password = params[:password]
+      # Reset all the session variables at this point
+      reset_session_variables
 
-      if (username == ENV["USER_1"] or username == ENV["USER_2"] or username == ENV["USER_3"] or username == ENV["USER_4"] or username == ENV["USER_5"]) && password == ENV["PASSWORD"]
+      # This is the session login token which we can test in the 'before_action' method at the top of the entries controller
+      session[:login] = 'true'
 
-        # Reset all the session variables at this point
-        reset_session_variables
+      redirect_to controller: 'landing_page', action: 'index'
 
-        # This is the session login token which we can test in the 'before_filter' method at the top of the entries controller
-        session[:login] = 'true'
-
-        redirect_to :controller => 'landing_page', :action => 'index'
-
-      # Else request has come from the session timeout page so do this...
-      else
-        @invalid_login = 'true'
-        render 'index'
-      end
-
-    rescue => error
-      log_error(__method__, __FILE__, error)
-      raise
+    # Else request has come from the session timeout page so do this...
+    else
+      @invalid_login = 'true'
+      render 'index'
     end
-
+  rescue StandardError => e
+    log_error(__method__, __FILE__, e)
+    raise
   end
 
   # Temporary code to bypass the login page
-  #def login_temp
+  # def login_temp
   #  reset_session_variables
   #  session[:login] = 'true'
   #  redirect_to :controller => 'landing_page', :action => 'index'
-  #end
+  # end
 
   def reset_session_variables
     session[:login] = ''
@@ -52,20 +47,12 @@ class LoginController < ApplicationController
 
   # Make sure the session variables are all reset and then redirect to the login page
   def logout
-
-    begin
-
-      reset_session_variables
-      redirect_to root_path, :layout => 'login'
-
-    rescue => error
-      log_error(__method__, __FILE__, error)
-      raise
-    end
-
+    reset_session_variables
+    redirect_to root_path, layout: 'login'
+  rescue StandardError => e
+    log_error(__method__, __FILE__, e)
+    raise
   end
 
-  def timed_out
-  end
-
+  def timed_out; end
 end

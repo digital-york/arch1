@@ -2,18 +2,18 @@
 
 source 'https://rubygems.org'
 
-gem 'active-fedora', '10.3.0'
+gem 'active-fedora', '~> 13.2.0'
 gem 'active-triples'
 gem 'active_fedora-noid'
 gem 'blacklight'
-gem 'hydra-head'
+gem 'hydra-head', '~> 11.0.0'
 gem 'nom-xml'
 gem 'om', '~> 3.1.0'
-gem 'qa', '~> 5.0'
+gem 'qa', '~> 5.4.0'
 gem 'rsolr'
 gem 'solrizer'
 
-gem 'rails', '~> 5.0'
+gem 'rails', '~> 5.2.0'
 gem 'sprockets', '~> 3.7.2'
 # Use sqlite3 as the database for Active Record
 gem 'sqlite3', '~> 1.3.13'
@@ -46,7 +46,7 @@ gem 'websocket-extensions', '>= 0.1.5'
 group :development do
   # Access an IRB console on exception pages or by using <%= console %> in views
   gem 'brakeman'
-  gem 'web-console', '~> 2.0'
+  gem 'web-console'
   gem 'xray-rails'
 end
 

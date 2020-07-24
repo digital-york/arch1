@@ -1,4 +1,6 @@
-require File.expand_path('../boot', __FILE__)
+# frozen_string_literal: true
+
+require File.expand_path('boot', __dir__)
 
 require 'rails/all'
 
@@ -11,11 +13,9 @@ Bundler.require(*Rails.groups)
 
 module Arch1
   class Application < Rails::Application
-    
     config.generators do |g|
-      g.test_framework :rspec, :spec => true
+      g.test_framework :rspec, spec: true
     end
-
 
     # Settings in config/environments/* take precedence over those specified here.
     # Application configuration should go into files in config/initializers
@@ -30,13 +30,12 @@ module Arch1
     # config.i18n.default_locale = :de
 
     # Do not swallow errors in after_commit/after_rollback callbacks.
-    config.active_record.raise_in_transactional_callbacks = true
+    # config.active_record.raise_in_transactional_callbacks = true
 
-    #Load sub-directories of app/models
+    # Load sub-directories of app/models
     config.autoload_paths += Dir[Rails.root.join('models', '{**/}')]
 
     # Allows you to use your own error routes (py)
-    #config.exceptions_app = self.routes
-
+    # config.exceptions_app = self.routes
   end
 end
