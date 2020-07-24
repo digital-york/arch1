@@ -45,6 +45,30 @@ module Ingest
             # is_referenced_by
             referenced_by = [borthwick_entry_row.referenced_by] unless borthwick_entry_row.referenced_by.blank?
 
+            # Entry dates
+            entry_dates = []
+            entry_date1  = Ingest::EntryDateHelper.create_entry_date(borthwick_entry_row.entry_date1_date_role,
+                                                                     borthwick_entry_row.entry_date1_note) unless borthwick_entry_row.entry_date1_date_role.blank? or borthwick_entry_row.entry_date1_note.blank?
+            unless entry_date1.blank?
+                single_date1 = Ingest::EntryDateHelper.create_single_date(
+                                       entry_date1,
+                                       borthwick_entry_row.entry_date1_date,
+                                       borthwick_entry_row.entry_date1_certainty,
+                                       borthwick_entry_row.entry_date1_type) unless borthwick_entry_row.entry_date1_date.blank? and borthwick_entry_row.entry_date1_certainty.blank? and borthwick_entry_row.entry_date1_type.blank?
+                entry_dates << entry_date1 unless entry_date1.blank?
+            end
+
+            entry_date2  = Ingest::EntryDateHelper.create_entry_date(borthwick_entry_row.entry_date2_date_role,
+                                                                     borthwick_entry_row.entry_date2_note) unless borthwick_entry_row.entry_date2_date_role.blank? or borthwick_entry_row.entry_date2_note.blank?
+            unless entry_date2.blank?
+                single_date2 = Ingest::EntryDateHelper.create_single_date(
+                        entry_date2,
+                        borthwick_entry_row.entry_date2_date,
+                        borthwick_entry_row.entry_date2_certainty,
+                        borthwick_entry_row.entry_date2_type) unless borthwick_entry_row.entry_date2_date.blank? and borthwick_entry_row.entry_date2_certainty.blank? and borthwick_entry_row.entry_date2_type.blank?
+                entry_dates << entry_date2 unless entry_date2.blank?
+            end
+
             # note
             note = [borthwick_entry_row.note] unless borthwick_entry_row.note.blank?
 
@@ -62,6 +86,7 @@ module Ingest
                 borthwick_entry_row.summary,
                 Ingest::AuthorityHelper.s_get_subject_object_ids(subjects),
                 referenced_by,
+                entry_dates,
                 note,
                 borthwick_entry_row.continues_folio_no,
                 borthwick_entry_row.continues_folio_side

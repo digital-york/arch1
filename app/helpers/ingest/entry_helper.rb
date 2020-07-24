@@ -22,6 +22,7 @@ module Ingest
                               summary,
                               subjects,
                               referenced_by,
+                              entry_dates,
                               note,
                               continues_folio_no,
                               continues_folio_side
@@ -66,8 +67,11 @@ module Ingest
             # Find the authority object by the referenced_by text
             #e.is_referenced_by = [referenced_by] unless referenced_by.blank?
 
+            # Entry dates
+            e.entry_dates = entry_dates
+
             # date
-            e.date = date
+            # e.date = date
 
             # note
             # e.note = [note] unless note.blank?

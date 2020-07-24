@@ -18,20 +18,33 @@ module Ingest
         end
 
         # Ingest::EntryDateHelper.create_single_date
-        def self.create_single_date(entry_date_id, date, certainties, date_type)
+        def self.create_single_date(entry_date, date, certainties, date_type)
             sd = SingleDate.new
 
-            sd.rdftype    = sd.add_rdf_types
-            sd.date       = date
-            sd.certainty  = certainties
-            sd.date_type  = date_type
-            entry_date    = EntryDate.find(entry_date_id)
-            sd.entry_date = entry_date
+            sd.rdftype        = sd.add_rdf_types
+            sd.date           = date
+            sd.date_certainty = [certainties]
+            sd.date_type      = date_type
+            sd.entry_date     = entry_date
             sd.save
             entry_date.single_dates += sd
             entry_date.save
 
             sd
+        end
+
+        # Ingest::EntryDateHelper.create_entry_date
+        def self.create_entry_date(date_roles, note)
+            ed = EntryDate.new
+
+            ed.rdftype      = sd.add_rdf_types
+            entry           = Entry.find(entry_id)
+            ed.entry        = entry
+            ed.date_role    = self.s_get_date_role_ids(date_roles)
+            ed.date_note    = note
+            ed.save
+
+            ed
         end
     end
 end
