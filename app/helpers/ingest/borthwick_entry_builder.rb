@@ -94,7 +94,7 @@ module Ingest
                 borthwick_entry_row.continues_folio_no,
                 borthwick_entry_row.continues_folio_side
             )
-            puts "Created Entry: #{e.id}"
+            puts "Created/updated Entry: #{e.id}"
         end
 
     end
