@@ -138,6 +138,30 @@ module Ingest
             places_role_ids
         end
 
+        # find place type ids from label
+        # input: place types as array, e.g. ['none given']
+        # output: place object ids, e.g. ['xxxxxx']
+        # e.g.
+        # pry(main)> Ingest::AuthorityHelper.s_get_place_type_ids(['none given'])
+        # => [""]
+        def self.s_get_place_type_ids(place_types)
+            places_type_ids = []
+            place_types.each do |place_type|
+                # first, query ConceptSchema for place_types
+                response = SolrQuery.new.solr_query('has_model_ssim:"ConceptScheme" AND preflabel_tesim:"place_types"', 'id')
+
+                response['response']['docs'].map do |l|
+                    resp = SolrQuery.new.solr_query('inScheme_ssim:"' + l['id'] + '" AND preflabel_tesim:"' + place_type.downcase + '"', 'id,preflabel_tesim')
+                    resp['response']['docs'].map do |p|
+                        if p['preflabel_tesim'][0].to_s.downcase == place_type.downcase
+                            places_type_ids += [p['id']]
+                        end
+                    end
+                end
+            end
+            places_type_ids
+        end
+
         # find people object ids from label
         # input: people name as array, e.g. ['Normavell, Eleanor, fl 1539-1540, Prioress of Nun Appleton']
         # output: people object ids, e.g. ['xxxxxx']
