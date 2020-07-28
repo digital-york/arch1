@@ -23,6 +23,7 @@ module Ingest
                               subjects,
                               referenced_by,
                               entry_dates,
+                              related_places,
                               note,
                               continues_folio_no,
                               continues_folio_side
@@ -69,6 +70,9 @@ module Ingest
 
             # Entry dates
             e.entry_dates = entry_dates
+
+            # place
+            e.related_places = related_places
 
             # date
             # e.date = date

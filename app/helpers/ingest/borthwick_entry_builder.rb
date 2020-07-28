@@ -67,9 +67,24 @@ module Ingest
                         borthwick_entry_row.entry_date2_date,
                         borthwick_entry_row.entry_date2_certainty,
                         borthwick_entry_row.entry_date2_type) unless borthwick_entry_row.entry_date2_date.blank? and borthwick_entry_row.entry_date2_certainty.blank? and borthwick_entry_row.entry_date2_type.blank?
-                puts "single_date2" + single_date2.id
-                puts "Entry_date2" + entry_date2.id
                 entry_dates << entry_date2 unless entry_date2.blank?
+            end
+
+            # related_places
+            related_places = []
+            unless borthwick_entry_row.place_as.blank? and
+                   borthwick_entry_row.place_name.blank? and
+                   borthwick_entry_row.place_role.blank? and
+                   borthwick_entry_row.place_type.blank? and
+                   borthwick_entry_row.place_note.blank?
+                related_place = Ingest::RelatedPlaceHelper.create_related_place(
+                    Ingest::AuthorityHelper.s_get_place_object_id(borthwick_entry_row.place_as),
+                    [borthwick_entry_row.place_name],
+                    Ingest::AuthorityHelper.s_get_place_role_ids([borthwick_entry_row.place_role]),
+                    Ingest::AuthorityHelper.s_get_place_type_ids([borthwick_entry_row.place_type]),
+                    [borthwick_entry_row.place_note]
+                )
+                related_places << related_place unless related_places.nil?
             end
 
             # note
@@ -90,6 +105,7 @@ module Ingest
                 Ingest::AuthorityHelper.s_get_subject_object_ids(subjects),
                 referenced_by,
                 entry_dates,
+                related_places,
                 note,
                 borthwick_entry_row.continues_folio_no,
                 borthwick_entry_row.continues_folio_side
