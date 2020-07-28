@@ -107,13 +107,35 @@ module Ingest
                 response = SolrQuery.new.solr_query('has_model_ssim:"ConceptScheme" AND preflabel_tesim:"places"', 'id')
                 # first, query ConceptSchema for places
                 response['response']['docs'].map do |l|
-                    resp = SolrQuery.new.solr_query('inScheme_ssim:"' + l['id'] + '" AND preflabel_tesim:"' + place.downcase + '"', 'id')
+                    resp = SolrQuery.new.solr_query('inScheme_ssim:"' + l['id'] + '" AND preflabel_tesim:"' + place.downcase + '"', 'id,preflabel_tesim')
                     resp['response']['docs'].map do |p|
-                        places_ids += [p['id']]
+                        if p['preflabel_tesim'][0].to_s.downcase == place.downcase
+                            places_ids += [p['id']]
+                        end
                     end
                 end
             end
             places_ids
+        end
+
+        # find place role ids from label
+        # input: place roles as array, e.g. ['place of dating']
+        # output: place role object ids, e.g. ['xxxxxx']
+        # e.g.
+        # pry(main)> Ingest::AuthorityHelper.s_get_place_role_object_ids(['place of dating'])
+        # => [""]
+        def self.s_get_place_role_object_ids(place_roles)
+            places_role_ids = []
+            place_roles.each do |place_role|
+                response = SolrQuery.new.solr_query('has_model_ssim:"Concept" AND preflabel_tesim:"'+place_role+'"', 'id,preflabel_tesim')
+                # first, query ConceptSchema for places
+                response['response']['docs'].map do |l|
+                    if l['preflabel_tesim'][0].downcase == place_role.downcase
+                        places_role_ids += [l['id']]
+                    end
+                end
+            end
+            places_role_ids
         end
 
         # find people object ids from label
