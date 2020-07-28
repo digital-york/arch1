@@ -48,7 +48,7 @@ module Ingest
             # Entry dates
             entry_dates = []
             entry_date1  = Ingest::EntryDateHelper.create_entry_date(borthwick_entry_row.entry_date1_date_role,
-                                                                     borthwick_entry_row.entry_date1_note) unless borthwick_entry_row.entry_date1_date_role.blank? or borthwick_entry_row.entry_date1_note.blank?
+                                                                     borthwick_entry_row.entry_date1_note) unless borthwick_entry_row.entry_date1_date_role.blank? and borthwick_entry_row.entry_date1_note.blank?
             unless entry_date1.blank?
                 single_date1 = Ingest::EntryDateHelper.create_single_date(
                                        entry_date1,
@@ -58,14 +58,17 @@ module Ingest
                 entry_dates << entry_date1 unless entry_date1.blank?
             end
 
+
             entry_date2  = Ingest::EntryDateHelper.create_entry_date(borthwick_entry_row.entry_date2_date_role,
-                                                                     borthwick_entry_row.entry_date2_note) unless borthwick_entry_row.entry_date2_date_role.blank? or borthwick_entry_row.entry_date2_note.blank?
+                                                                     borthwick_entry_row.entry_date2_note) unless borthwick_entry_row.entry_date2_date_role.blank? and borthwick_entry_row.entry_date2_note.blank?
             unless entry_date2.blank?
                 single_date2 = Ingest::EntryDateHelper.create_single_date(
                         entry_date2,
                         borthwick_entry_row.entry_date2_date,
                         borthwick_entry_row.entry_date2_certainty,
                         borthwick_entry_row.entry_date2_type) unless borthwick_entry_row.entry_date2_date.blank? and borthwick_entry_row.entry_date2_certainty.blank? and borthwick_entry_row.entry_date2_type.blank?
+                puts "single_date2" + single_date2.id
+                puts "Entry_date2" + entry_date2.id
                 entry_dates << entry_date2 unless entry_date2.blank?
             end
 

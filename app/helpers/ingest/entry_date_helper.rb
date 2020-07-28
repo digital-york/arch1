@@ -3,18 +3,18 @@ module Ingest
         # search date type id by the given label
         # The prefix 's_' is the convention here, means retrieving data from Solr
         # e.g.
-        # pry(main)> Ingest::EntryDateHelper.s_get_date_role_ids(['birth date'])
-        # => ["db78tf37d"]
-        def self.s_get_date_role_ids(date_role_labels)
-            date_role_ids = []
-            date_role_labels.each do |dr|
-                response = SolrQuery.new.solr_query('has_model_ssim:"Concept" AND preflabel_tesim:"'+dr+'"', 'id')
+        # pry(main)> Ingest::EntryDateHelper.s_get_date_role_id('birth date')
+        # => "db78tf37d"
+        def self.s_get_date_role_id(date_role_label)
+            date_role_id = nil
 
-                response['response']['docs'].map do |pobj|
-                    date_role_ids += [pobj['id']]
-                end
+            response = SolrQuery.new.solr_query('has_model_ssim:"Concept" AND preflabel_tesim:"' + date_role_label + '"', 'id')
+
+            response['response']['docs'].map do |pobj|
+                date_role_id = pobj['id']
             end
-            date_role_ids
+
+            date_role_id
         end
 
         # Ingest::EntryDateHelper.create_single_date
@@ -27,20 +27,18 @@ module Ingest
             sd.date_type      = date_type
             sd.entry_date     = entry_date
             sd.save
-            entry_date.single_dates += sd
+            entry_date.single_dates << sd
             entry_date.save
 
             sd
         end
 
         # Ingest::EntryDateHelper.create_entry_date
-        def self.create_entry_date(date_roles, note)
+        def self.create_entry_date(date_role, note)
             ed = EntryDate.new
 
-            ed.rdftype      = sd.add_rdf_types
-            entry           = Entry.find(entry_id)
-            ed.entry        = entry
-            ed.date_role    = self.s_get_date_role_ids(date_roles)
+            ed.rdftype      = ed.add_rdf_types
+            ed.date_role    = self.s_get_date_role_id(date_role)
             ed.date_note    = note
             ed.save
 
