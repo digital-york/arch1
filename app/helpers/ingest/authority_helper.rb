@@ -23,7 +23,7 @@ module Ingest
                 response['response']['docs'].map do |l|
                     resp = SolrQuery.new.solr_query('inScheme_ssim:"' + l['id'] + '" AND preflabel_tesim:"' + lang.downcase + '"', 'id')
                     resp['response']['docs'].map do |la|
-                        language_ids += [la['id']]
+                        language_ids << la['id']
                     end
                 end
             end
@@ -45,7 +45,7 @@ module Ingest
                     resp['response']['docs'].map do |se|
                         # doing an exact match of the search term
                         if se['preflabel_tesim'][0].to_s.downcase == sect.to_s.downcase
-                            section_type_ids += [se['id']]
+                            section_type_ids << se['id']
                         end
                     end
                 end
@@ -68,7 +68,7 @@ module Ingest
                     resp['response']['docs'].map do |se|
                         # doing an exact match of the search term
                         if se['preflabel_tesim'][0].to_s.downcase == entry_type.downcase
-                            entry_type_ids += [se['id']]
+                            entry_type_ids << se['id']
                         end
                     end
                 end
@@ -99,39 +99,43 @@ module Ingest
         # input: places as array, e.g. ['Yarm, North Riding of Yorkshire, England']
         # output: place object ids, e.g. ['xxxxxx']
         # e.g.
-        # pry(main)> Ingest::AuthorityHelper.s_get_place_object_ids(['Yarm, North Riding of Yorkshire, England'])
-        # => ["1c18df984"]
-        def self.s_get_place_object_ids(places)
-            places_ids = []
-            places.each do |place|
-                response = SolrQuery.new.solr_query('has_model_ssim:"ConceptScheme" AND preflabel_tesim:"places"', 'id')
-                # first, query ConceptSchema for places
-                response['response']['docs'].map do |l|
-                    resp = SolrQuery.new.solr_query('inScheme_ssim:"' + l['id'] + '" AND preflabel_tesim:"' + place.downcase + '"', 'id,preflabel_tesim')
-                    resp['response']['docs'].map do |p|
-                        if p['preflabel_tesim'][0].to_s.downcase == place.downcase
-                            places_ids += [p['id']]
-                        end
+        # pry(main)> Ingest::AuthorityHelper.s_get_place_object_id('Yarm, North Riding of Yorkshire, England')
+        # => "1c18df984"
+        def self.s_get_place_object_id(place)
+            places_id = nil
+
+            response = SolrQuery.new.solr_query('has_model_ssim:"ConceptScheme" AND preflabel_tesim:"places"', 'id')
+            # first, query ConceptSchema for places
+            response['response']['docs'].map do |l|
+                resp = SolrQuery.new.solr_query('inScheme_ssim:"' + l['id'] + '" AND preflabel_tesim:"' + place.downcase + '"', 'id,preflabel_tesim')
+                resp['response']['docs'].map do |p|
+                    if p['preflabel_tesim'][0].to_s.downcase == place.downcase
+                        places_id = p['id']
                     end
                 end
             end
-            places_ids
+
+            places_id
         end
 
         # find place role ids from label
         # input: place roles as array, e.g. ['place of dating']
         # output: place role object ids, e.g. ['xxxxxx']
         # e.g.
-        # pry(main)> Ingest::AuthorityHelper.s_get_place_role_object_ids(['place of dating'])
+        # pry(main)> Ingest::AuthorityHelper.s_get_place_role_ids(['place of dating'])
         # => [""]
-        def self.s_get_place_role_object_ids(place_roles)
+        def self.s_get_place_role_ids(place_roles)
             places_role_ids = []
             place_roles.each do |place_role|
-                response = SolrQuery.new.solr_query('has_model_ssim:"Concept" AND preflabel_tesim:"'+place_role+'"', 'id,preflabel_tesim')
-                # first, query ConceptSchema for places
+                # first, query ConceptSchema for place_types
+                response = SolrQuery.new.solr_query('has_model_ssim:"ConceptScheme" AND preflabel_tesim:"place_roles"', 'id')
+
                 response['response']['docs'].map do |l|
-                    if l['preflabel_tesim'][0].downcase == place_role.downcase
-                        places_role_ids += [l['id']]
+                    resp = SolrQuery.new.solr_query('inScheme_ssim:"' + l['id'] + '" AND preflabel_tesim:"' + place_role.downcase + '"', 'id,preflabel_tesim')
+                    resp['response']['docs'].map do |p|
+                        if p['preflabel_tesim'][0].to_s.downcase == place_role.downcase
+                            places_role_ids << p['id']
+                        end
                     end
                 end
             end
@@ -143,7 +147,7 @@ module Ingest
         # output: place object ids, e.g. ['xxxxxx']
         # e.g.
         # pry(main)> Ingest::AuthorityHelper.s_get_place_type_ids(['none given'])
-        # => [""]
+        # => ["02870z61f"]
         def self.s_get_place_type_ids(place_types)
             places_type_ids = []
             place_types.each do |place_type|
@@ -154,7 +158,7 @@ module Ingest
                     resp = SolrQuery.new.solr_query('inScheme_ssim:"' + l['id'] + '" AND preflabel_tesim:"' + place_type.downcase + '"', 'id,preflabel_tesim')
                     resp['response']['docs'].map do |p|
                         if p['preflabel_tesim'][0].to_s.downcase == place_type.downcase
-                            places_type_ids += [p['id']]
+                            places_type_ids << p['id']
                         end
                     end
                 end
@@ -176,7 +180,7 @@ module Ingest
                 response['response']['docs'].map do |l|
                     resp = SolrQuery.new.solr_query('inScheme_ssim:"' + l['id'] + '" AND preflabel_tesim:"' + p.downcase + '"', 'id')
                     resp['response']['docs'].map do |pobj|
-                        people_ids += [pobj['id']]
+                        people_ids << pobj['id']
                     end
                 end
             end
