@@ -43,7 +43,7 @@ module Ingest
             subjects << borthwick_entry_row.subject4 unless borthwick_entry_row.subject4.blank?
 
             # is_referenced_by
-            referenced_by = [borthwick_entry_row.referenced_by] unless borthwick_entry_row.referenced_by.blank?
+            referenced_by = borthwick_entry_row.referenced_by unless borthwick_entry_row.referenced_by.blank?
 
             # Entry dates
             entry_dates = []
@@ -92,7 +92,7 @@ module Ingest
             # leave per
 
             # note
-            note = [borthwick_entry_row.note] unless borthwick_entry_row.note.blank?
+            note = borthwick_entry_row.note unless borthwick_entry_row.note.blank?
 
             # editorial_note
             # no editorial_note field?

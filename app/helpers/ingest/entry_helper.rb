@@ -64,9 +64,8 @@ module Ingest
             # subject
             e.subject = subjects unless subjects.blank?
 
-            # is_referenced_by
-            # Find the authority object by the referenced_by text
-            #e.is_referenced_by = [referenced_by] unless referenced_by.blank?
+            # is_referenced_by (text field)
+            e.is_referenced_by = [referenced_by] unless referenced_by.blank?
 
             # Entry dates
             e.entry_dates = entry_dates
@@ -77,8 +76,8 @@ module Ingest
             # date
             # e.date = date
 
-            # note
-            # e.note = [note] unless note.blank?
+            # note (text field)
+            e.note = [note] unless note.blank?
 
             # editorial_note
             # no editorial_note field?
