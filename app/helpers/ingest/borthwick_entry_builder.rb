@@ -87,6 +87,10 @@ module Ingest
                 related_places << related_place unless related_places.nil?
             end
 
+            # leave group(1/2) for now
+
+            # leave per
+
             # note
             note = [borthwick_entry_row.note] unless borthwick_entry_row.note.blank?
 
