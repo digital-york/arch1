@@ -82,7 +82,7 @@ module Ingest
                     Ingest::AuthorityHelper.s_get_place_object_id(borthwick_entry_row.place_name),
                     Ingest::AuthorityHelper.s_get_place_role_ids([borthwick_entry_row.place_role]),
                     Ingest::AuthorityHelper.s_get_place_type_ids([borthwick_entry_row.place_type]),
-                    [borthwick_entry_row.place_note]
+                    [borthwick_entry_row.place_note || '']
                 )
                 related_places << related_place unless related_places.nil?
             end
