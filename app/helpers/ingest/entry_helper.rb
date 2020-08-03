@@ -48,10 +48,9 @@ module Ingest
 
             if entry_id.nil?
                 e = Entry.new
-                puts 'created new entry'
             else
                 e = Entry.find(entry_id)
-                puts 'found entry ' + entry_id
+                puts '  found entry ' + entry_id
             end
 
             # add entry rdf types

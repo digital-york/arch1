@@ -114,7 +114,7 @@ module Ingest
                 borthwick_entry_row.continues_folio_no,
                 borthwick_entry_row.continues_folio_side
             )
-            puts "Created/updated Entry: #{e.id}" unless e.nil?
+            puts "  Created/updated Entry: #{e.id}" unless e.nil?
         end
 
     end
