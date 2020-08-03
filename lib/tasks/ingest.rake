@@ -14,37 +14,25 @@ namespace :ingest do
     desc "Ingest entries from excel."
     task :excel, [:filename_xsl] => [:environment] do |t, args|
         # Parse entry from Excel
-        entry_rows = Ingest::ExcelHelper.parse_borthwick_spreadsheet(args[:filename_xsl])
+        entry_rows   = Ingest::ExcelHelper.parse_borthwick_spreadsheet(args[:filename_xsl])
+        entry_errors = []
         entry_rows.each_with_index { |entry_row, index|
-            # For test purpose, only print first 2 entry rows
-            if index < 4
-                if index == 2
-                  puts entry_row.to_s
-                  Ingest::BorthwickEntryBuilder.build_entry(entry_row)
+            begin
+                # For test purpose, only print first 2 entry rows
+                if index < 4
+                    #if index == 2
+                      puts entry_row.to_s
+                      Ingest::BorthwickEntryBuilder.build_entry(entry_row)
+                    #end
+                else
+                    break
                 end
-            else
-                break
+            rescue
+                entry_errors << "#{entry_row.register} / #{entry_row.folio_no} / #{entry_row.folio_side} / #{entry_row.entry_no}"
+                puts "  Error"
             end
-            # Search Register from Solr
-            #
-            # If not found, log error
-            #
-            # Otherwise, get Register ID
-            #
-
-            # Search Folio from Solr, based on entry_row.folio_no and entry_row.folio_side
-            # If not found, log error
-            #
-            # Else, get Folio id
-
-            # Check entries.rake -> build_entry method,
-            # Get attributes for an entry: language, section_type, note, reference, editorial_note
-            # Build notes field from subject, check entries.rake, from line 216
-
-            # Create Entry object and save all attributes
-            # entry.save
-            # folio.entries += [entry]
-            # folio.save
         }
+        puts "==========errors=========="
+        puts entry_errors
     end
 end
