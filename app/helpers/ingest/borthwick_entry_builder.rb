@@ -2,7 +2,7 @@ module Ingest
     # This class build an Entry from BorthwichEntryRow object
     class BorthwickEntryBuilder
 
-        def self.build_entry(borthwick_entry_row)
+        def self.build_entry(borthwick_entry_row, allow_edit=false)
             # register_name
             register_name = borthwick_entry_row.register
 
@@ -98,6 +98,7 @@ module Ingest
             # no editorial_note field?
 
             e = Ingest::EntryHelper.create_or_update_entry(
+                allow_edit,
                 register_name,
                 folio_id,
                 entry_no,
@@ -114,7 +115,6 @@ module Ingest
                 borthwick_entry_row.continues_folio_no,
                 borthwick_entry_row.continues_folio_side
             )
-            puts "  Created/updated Entry: #{e.id}" unless e.nil?
         end
 
     end

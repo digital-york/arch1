@@ -10,24 +10,30 @@ namespace :ingest do
         end
     end
 
-    # bundle exec rake ingest:ingest_from_excel[EXCEL_FILE_NAME]
+    # bundle exec rake ingest:ingest_from_excel[EXCEL_FILE_NAME,ALLOW_EDIT]
+    # The first parameter is the full path of Excel file
+    # The second parameter allow_edit: allow edit of entries or not
+    # e.g.
+    # bundle exec rake ingest:ingest_from_excel[/var/tmp/test.xlsx,false]
     desc "Ingest entries from excel."
-    task :excel, [:filename_xsl] => [:environment] do |t, args|
+    task :excel, [:filename_xsl,:allow_edit] => [:environment] do |t, args|
         # Parse entry from Excel
         entry_rows   = Ingest::ExcelHelper.parse_borthwick_spreadsheet(args[:filename_xsl])
+        allow_edit   = args[:allow_edit].to_s.downcase == 'true'
         entry_errors = []
         entry_rows.each_with_index { |entry_row, index|
             begin
                 # For test purpose, only print first 2 entry rows
                 if index < 4
                     #if index == 2
-                      puts entry_row.to_s
-                      Ingest::BorthwickEntryBuilder.build_entry(entry_row)
+                      puts "[#{index} / #{entry_rows.length}] #{entry_row.to_s}"
+                      Ingest::BorthwickEntryBuilder.build_entry(entry_row, allow_edit)
                     #end
                 else
                     break
                 end
-            rescue
+            rescue => exception
+                puts exception.backtrace
                 entry_errors << "#{entry_row.register} / #{entry_row.folio_no} / #{entry_row.folio_side} / #{entry_row.entry_no}"
                 puts "  Error"
             end

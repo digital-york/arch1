@@ -28,7 +28,8 @@ module Ingest
         end
 
         # Ingest::EntryHelper.create_entry
-        def self.create_or_update_entry(register_name,
+        def self.create_or_update_entry(allow_edit,
+                              register_name,
                               folio_id,
                               entry_no,
                               entry_types,
@@ -51,6 +52,9 @@ module Ingest
             else
                 e = Entry.find(entry_id)
                 puts '  found entry ' + entry_id
+                if allow_edit==false
+                    return e
+                end
             end
 
             # add entry rdf types
@@ -109,8 +113,7 @@ module Ingest
             end
 
             e.save
-#            e.folio.entries += [e]
-#            e.folio.save
+            puts "  Created/updated Entry: #{e.id}" unless e.nil?
 
             e
         end
