@@ -11,8 +11,24 @@ module Ingest
             end
         end
 
-        # Ingest::FolioHelper.create_entry
-        def self.create_entry(register_name,
+        # find Entry by Register No, Folio No, Folio side, and Entry No.
+        # pry(main)> Ingest::EntryHelper.s_find_entry('zs25xb49m', '1')
+        # => "2b88qc56f"
+        def self.s_find_entry(folio_id, entry_no)
+            entry_id = nil
+
+            unless folio_id.nil?
+                query = 'has_model_ssim:"Entry" AND folio_ssim:"'+folio_id+'" AND entry_no_tesim:"'+entry_no.to_s+'"'
+                SolrQuery.new.solr_query(query)['response']['docs'].map do |r|
+                    entry_id = r['id']
+                end
+            end
+
+            entry_id
+        end
+
+        # Ingest::EntryHelper.create_entry
+        def self.create_or_update_entry(register_name,
                               folio_id,
                               entry_no,
                               entry_types,
@@ -28,14 +44,24 @@ module Ingest
                               continues_folio_no,
                               continues_folio_side
                               )
-            # CHANGE ME HERE
-            # #################
-            # # #################
-            # # #################
-            #e = Entry.new
-            e = Entry.find('2b88qc56f')
-            # #################
-            # # #################
+            entry_id = s_find_entry(folio_id, entry_no)
+            puts 'folio_id'
+            puts folio_id
+            puts 'entry_no'
+            puts entry_no
+            puts 'entry_id'
+            puts entry_id
+            if entry_id.nil?
+                e = Entry.find(entry_id)
+                puts 'found entry ' + entry_id
+            else
+                e = Entry.new
+                puts 'created new entry'
+            end
+
+            if 1<2
+                return
+            end
 
             # add entry rdf types
             e.rdftype = e.add_rdf_types
