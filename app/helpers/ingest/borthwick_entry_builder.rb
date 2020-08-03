@@ -97,7 +97,7 @@ module Ingest
             # editorial_note
             # no editorial_note field?
 
-            e = Ingest::EntryHelper.create_entry(
+            e = Ingest::EntryHelper.create_or_update_entry(
                 register_name,
                 folio_id,
                 entry_no,
@@ -114,7 +114,7 @@ module Ingest
                 borthwick_entry_row.continues_folio_no,
                 borthwick_entry_row.continues_folio_side
             )
-            puts "Created/updated Entry: #{e.id}"
+            puts "Created/updated Entry: #{e.id}" unless e.nil?
         end
 
     end

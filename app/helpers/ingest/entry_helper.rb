@@ -45,22 +45,13 @@ module Ingest
                               continues_folio_side
                               )
             entry_id = s_find_entry(folio_id, entry_no)
-            puts 'folio_id'
-            puts folio_id
-            puts 'entry_no'
-            puts entry_no
-            puts 'entry_id'
-            puts entry_id
+
             if entry_id.nil?
-                e = Entry.find(entry_id)
-                puts 'found entry ' + entry_id
-            else
                 e = Entry.new
                 puts 'created new entry'
-            end
-
-            if 1<2
-                return
+            else
+                e = Entry.find(entry_id)
+                puts 'found entry ' + entry_id
             end
 
             # add entry rdf types
