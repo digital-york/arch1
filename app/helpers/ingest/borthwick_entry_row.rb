@@ -31,8 +31,8 @@ module Ingest
                     :entry_date2_type,
                     :entry_date2_date_role,
                     :entry_date2_note,
-                    :place_as,
-                    :place_name,
+                    :place_as,        # place as written, string
+                    :place_name,      # place name, which will be used to search place authority id
                     :place_role,
                     :place_type,
                     :place_note,

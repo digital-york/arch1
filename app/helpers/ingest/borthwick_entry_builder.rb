@@ -78,8 +78,8 @@ module Ingest
                    borthwick_entry_row.place_type.blank? and
                    borthwick_entry_row.place_note.blank?
                 related_place = Ingest::RelatedPlaceHelper.create_related_place(
-                    Ingest::AuthorityHelper.s_get_place_object_id(borthwick_entry_row.place_as),
-                    [borthwick_entry_row.place_name],
+                    borthwick_entry_row.place_as,
+                    Ingest::AuthorityHelper.s_get_place_object_id(borthwick_entry_row.place_name),
                     Ingest::AuthorityHelper.s_get_place_role_ids([borthwick_entry_row.place_role]),
                     Ingest::AuthorityHelper.s_get_place_type_ids([borthwick_entry_row.place_type]),
                     [borthwick_entry_row.place_note]
@@ -89,7 +89,7 @@ module Ingest
 
             # leave group(1/2) for now
 
-            # leave per
+            # leave person(1/2/3) for now
 
             # note
             note = borthwick_entry_row.note unless borthwick_entry_row.note.blank?
