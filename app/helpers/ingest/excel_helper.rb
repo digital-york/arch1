@@ -15,9 +15,9 @@ module Ingest
                 entry_row = Ingest::BorthwickEntryRow.new
 
                 entry_row.register              = entry[0]
-                entry_row.folio_no              = entry[1]
+                entry_row.folio_no              = entry[1].to_i.to_s
                 entry_row.folio_side            = entry[2]
-                entry_row.entry_no              = entry[3]
+                entry_row.entry_no              = entry[3].to_i.to_s
                 entry_row.entry_type1           = entry[4]
                 entry_row.entry_type2           = entry[5]
                 entry_row.entry_type3           = entry[6]
