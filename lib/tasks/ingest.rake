@@ -27,12 +27,13 @@ namespace :ingest do
         entry_rows.each_with_index { |entry_row, index|
             begin
                 # For test purpose, only print selected entry rows
-                if index >= 1 and index < 4
+                # if index >= 1 and index < 4
+                if index >= 1
                     #if index == 2
                       puts "[#{index} / #{entry_rows.length}] #{entry_row.to_s}"
                       Ingest::BorthwickEntryBuilder.build_entry(entry_row, allow_edit)
                     #end
-                elsif index >= 0
+                elsif index >= 0  # the first line seems not a complete data (in Reg 9B 608)
                     next
                 else
                     break
