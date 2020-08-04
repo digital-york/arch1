@@ -15,20 +15,25 @@ namespace :ingest do
     # The second parameter allow_edit: allow edit of entries or not
     # e.g.
     # bundle exec rake ingest:ingest_from_excel[/var/tmp/test.xlsx,false]
+    # To disable warning messages:
+    # RUBYOPT=-W0 bundle exec rake ingest:excel[/var/tmp/test.xlsx,false]
     desc "Ingest entries from excel."
     task :excel, [:filename_xsl,:allow_edit] => [:environment] do |t, args|
         # Parse entry from Excel
         entry_rows   = Ingest::ExcelHelper.parse_borthwick_spreadsheet(args[:filename_xsl])
         allow_edit   = args[:allow_edit].to_s.downcase == 'true'
         entry_errors = []
+
         entry_rows.each_with_index { |entry_row, index|
             begin
-                # For test purpose, only print first 2 entry rows
-                if index < 4
+                # For test purpose, only print selected entry rows
+                if index >= 1 and index < 4
                     #if index == 2
                       puts "[#{index} / #{entry_rows.length}] #{entry_row.to_s}"
                       Ingest::BorthwickEntryBuilder.build_entry(entry_row, allow_edit)
                     #end
+                elsif index >= 0
+                    next
                 else
                     break
                 end
