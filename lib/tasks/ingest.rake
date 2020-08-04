@@ -1,3 +1,5 @@
+require 'logger'
+
 namespace :ingest do
 
     desc "Ingest TNW Registers CSV spredsheet"
@@ -19,6 +21,8 @@ namespace :ingest do
     # RUBYOPT=-W0 bundle exec rake ingest:excel[/var/tmp/test.xlsx,false]
     desc "Ingest entries from excel."
     task :excel, [:filename_xsl,:allow_edit] => [:environment] do |t, args|
+        log = Logger.new "log/excel.log"
+
         # Parse entry from Excel
         entry_rows   = Ingest::ExcelHelper.parse_borthwick_spreadsheet(args[:filename_xsl])
         allow_edit   = args[:allow_edit].to_s.downcase == 'true'
@@ -31,6 +35,7 @@ namespace :ingest do
                 if index >= 1
                     #if index == 2
                       puts "[#{index} / #{entry_rows.length}] #{entry_row.to_s}"
+                      log.info "[#{index} / #{entry_rows.length}] #{entry_row.to_s}"
                       Ingest::BorthwickEntryBuilder.build_entry(entry_row, allow_edit)
                     #end
                 elsif index >= 0  # the first line seems not a complete data (in Reg 9B 608)
@@ -39,12 +44,12 @@ namespace :ingest do
                     break
                 end
             rescue => exception
-                puts exception.backtrace
+                log.error exception.backtrace
                 entry_errors << "#{entry_row.register} / #{entry_row.folio_no} / #{entry_row.folio_side} / #{entry_row.entry_no}"
                 puts "  Error"
             end
         }
-        puts "==========errors=========="
-        puts entry_errors
+        log.error "==========errors=========="
+        log.error entry_errors
     end
 end

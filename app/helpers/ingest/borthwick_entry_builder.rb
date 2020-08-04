@@ -1,8 +1,12 @@
+require 'logger'
+
 module Ingest
     # This class build an Entry from BorthwichEntryRow object
     class BorthwickEntryBuilder
 
         def self.build_entry(borthwick_entry_row, allow_edit=false)
+            log = Logger.new "log/borthwick_entry_builder.log"
+
             # register_name
             register_name = borthwick_entry_row.register
 
@@ -12,6 +16,7 @@ module Ingest
                                                              borthwick_entry_row.folio_side)
             if folio_id.nil?
                 puts 'cannot find folio via id: ' + folio_id
+                log.info 'cannot find folio via id: ' + folio_id
                 return nil
             end
 

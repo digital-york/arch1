@@ -1,3 +1,5 @@
+require 'logger'
+
 module Ingest
     module EntryHelper
         # search folio's id by the given label
@@ -45,6 +47,8 @@ module Ingest
                               continues_folio_no,
                               continues_folio_side
                               )
+            log = Logger.new "log/entry_helper.log"
+
             entry_id = s_find_entry(folio_id, entry_no)
 
             if entry_id.nil?
@@ -52,6 +56,7 @@ module Ingest
             else
                 e = Entry.find(entry_id)
                 puts '  found entry ' + entry_id
+                log.info '  found entry ' + entry_id
                 if allow_edit==false
                     return e
                 end
@@ -114,7 +119,7 @@ module Ingest
 
             e.save
             puts "  Created/updated Entry: #{e.id}" unless e.nil?
-
+            log.info "  Created/updated Entry: #{e.id}" unless e.nil?
             e
         end
     end
