@@ -49,7 +49,7 @@ namespace :ingest do
                 puts "  Error"
             end
         }
-        log.error "==========errors=========="
+        log.error "==========errors [#{entry_errors.length}]=========="
         log.error entry_errors
     end
 end
