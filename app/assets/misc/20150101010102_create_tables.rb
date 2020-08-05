@@ -1,7 +1,5 @@
-class CreateTables < ActiveRecord::Migration
-
+class CreateTables < ActiveRecord::Migration[4.2]
   def change
-
     create_table :db_entries do |t|
       t.string :entry_no
       t.string :entry_type
@@ -154,7 +152,7 @@ class CreateTables < ActiveRecord::Migration
     add_foreign_key :db_person_descriptor_as_writtens, :db_related_agents
 
     # Note that 'index' = false in the above table because the index created has a name which is too long (> 62 characters) - therefore, I'm creating my own index name...
-    add_index "db_person_descriptor_as_writtens", ["db_related_agent_id"], name: "index_db_per_desc_as_writtens_on_db_related_agent_id"
+    add_index 'db_person_descriptor_as_writtens', ['db_related_agent_id'], name: 'index_db_per_desc_as_writtens_on_db_related_agent_id'
 
     create_table :db_person_notes do |t|
       t.string :name
