@@ -2,7 +2,7 @@ class EntriesController < ApplicationController
 
   include PlacesHelper
 
-  before_filter :session_timed_out
+  before_action :session_timed_out
 
   # INDEX
   def index
