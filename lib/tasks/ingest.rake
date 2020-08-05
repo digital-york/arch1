@@ -33,7 +33,9 @@ namespace :ingest do
                 # For test purpose, only print selected entry rows
                 # if index >= 1 and index < 4
                 if index >= 1
-                    #if index == 2
+                    #if entry_row.folio_no == '619' and
+                    #   entry_row.folio_side == '(verso)' and
+                    #   entry_row.entry_no == '3'
                       puts "[#{index} / #{entry_rows.length}] #{entry_row.to_s}"
                       log.info "[#{index} / #{entry_rows.length}] #{entry_row.to_s}"
                       Ingest::BorthwickEntryBuilder.build_entry(entry_row, allow_edit)
@@ -45,6 +47,7 @@ namespace :ingest do
                 end
             rescue => exception
                 log.error exception.backtrace
+                puts exception.backtrace
                 entry_errors << "#{entry_row.register} / #{entry_row.folio_no} / #{entry_row.folio_side} / #{entry_row.entry_no}"
                 puts "  Error"
             end
