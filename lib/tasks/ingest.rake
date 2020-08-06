@@ -33,13 +33,13 @@ namespace :ingest do
                 # For test purpose, only print selected entry rows
                 # if index >= 1 and index < 4
                 if index >= 1
-                    #if entry_row.folio_no == '619' and
-                    #   entry_row.folio_side == '(verso)' and
-                    #   entry_row.entry_no == '3'
+                    # if entry_row.folio_no == '608' and
+                    #    entry_row.folio_side == '(recto)' and
+                    #    entry_row.entry_no == '1'
                       puts "[#{index} / #{entry_rows.length}] #{entry_row.to_s}"
                       log.info "[#{index} / #{entry_rows.length}] #{entry_row.to_s}"
                       Ingest::BorthwickEntryBuilder.build_entry(entry_row, allow_edit)
-                    #end
+                    # end
                 elsif index >= 0  # the first line seems not a complete data (in Reg 9B 608)
                     next
                 else

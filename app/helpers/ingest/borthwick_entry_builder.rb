@@ -97,7 +97,7 @@ module Ingest
                     place_type_ids,
                     [borthwick_entry_row.place_note || '']
                 )
-                related_places << related_place unless related_places.nil?
+                related_places << related_place unless related_place.nil?
             end
 
             # leave group(1/2) for now
