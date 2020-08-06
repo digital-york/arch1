@@ -30,8 +30,10 @@ module Ingest
             # to:
             #   Abp Reg 7 f.132 (recto)
             folio_label = "#{prefix} #{register_name.gsub('Register', 'Reg')} f.#{folio_number} #{folio_side}"
-            SolrQuery.new.solr_query("preflabel_tesim:\"#{folio_label}\"")['response']['docs'].map do |r|
-                id = r['id']
+            SolrQuery.new.solr_query("preflabel_tesim:\"#{folio_label}\"",'id,preflabel_tesim')['response']['docs'].map do |r|
+                if r['preflabel_tesim'][0].downcase == folio_label.downcase
+                    id = r['id']
+                end
             end
             id
         end
