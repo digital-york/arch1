@@ -8,10 +8,12 @@ module Ingest
         def self.s_get_date_role_id(date_role_label)
             date_role_id = nil
 
-            response = SolrQuery.new.solr_query('has_model_ssim:"Concept" AND preflabel_tesim:"' + date_role_label + '"', 'id')
+            response = SolrQuery.new.solr_query('has_model_ssim:"Concept" AND preflabel_tesim:"' + date_role_label + '"', 'id,preflabel_tesim')
 
             response['response']['docs'].map do |pobj|
-                date_role_id = pobj['id']
+                if pobj['preflabel_tesim'][0].to_s.downcase == date_role_label.downcase
+                    date_role_id = pobj['id']
+                end
             end
 
             date_role_id
