@@ -82,14 +82,12 @@ module Ingest
                    borthwick_entry_row.place_role.blank? and
                    borthwick_entry_row.place_type.blank? and
                    borthwick_entry_row.place_note.blank?
-
                 place_object_id = ''
                 place_object_id = Ingest::AuthorityHelper.s_get_place_object_id(borthwick_entry_row.place_name) unless borthwick_entry_row.place_name.blank?
                 place_role_ids = []
-                place_role_ids = Ingest::AuthorityHelper.s_get_place_role_ids([borthwick_entry_row.place_role]) unless place_role_ids.blank?
+                place_role_ids = Ingest::AuthorityHelper.s_get_place_role_ids([borthwick_entry_row.place_role]) unless borthwick_entry_row.place_role.blank?
                 place_type_ids = []
                 place_type_ids = Ingest::AuthorityHelper.s_get_place_type_ids([borthwick_entry_row.place_type]) unless borthwick_entry_row.place_type.blank?
-
                 related_place = Ingest::RelatedPlaceHelper.create_related_place(
                     borthwick_entry_row.place_as || '',
                     place_object_id,
