@@ -107,9 +107,22 @@ module Ingest
             response = SolrQuery.new.solr_query('has_model_ssim:"ConceptScheme" AND preflabel_tesim:"places"', 'id')
             # first, query ConceptSchema for places
             response['response']['docs'].map do |l|
+                # Due to the mismatches of the authority being used in spreadsheet and
+                # the editing tool, e.g.
+                # 'Cawood' in spreadsheet and
+                # 'Cawood, West Riding of Yorkshire, England' in editing tool
+                #
+                # firstly, do a exact search
                 resp = SolrQuery.new.solr_query('inScheme_ssim:"' + l['id'] + '" AND preflabel_tesim:"' + place.downcase + '"', 'id,preflabel_tesim')
                 resp['response']['docs'].map do |p|
                     if p['preflabel_tesim'][0].to_s.downcase == place.downcase
+                        places_id = p['id']
+                    end
+                end
+                # Then, if places_id is not found, do a substring search
+                if places_id.nil?
+                    resp = SolrQuery.new.solr_query('inScheme_ssim:"' + l['id'] + '" AND preflabel_tesim:' + place.downcase, 'id,preflabel_tesim')
+                    resp['response']['docs'].map do |p|
                         places_id = p['id']
                     end
                 end
