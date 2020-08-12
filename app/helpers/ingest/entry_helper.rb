@@ -29,6 +29,20 @@ module Ingest
             entry_id
         end
 
+        # return Entry json from solr
+        def self.s_get_entry_json(folio_id, entry_no)
+            entry_json = nil
+            unless folio_id.nil?
+                query = 'has_model_ssim:"Entry" AND folio_ssim:"'+folio_id+'" AND entry_no_tesim:"'+entry_no.to_s+'"'
+                fl = '*'
+                SolrQuery.new.solr_query(query, fl)['response']['docs'].map do |r|
+                    entry_json = r
+                end
+            end
+
+            entry_json
+        end
+
         # Ingest::EntryHelper.create_entry
         def self.create_or_update_entry(allow_edit,
                               register_name,
