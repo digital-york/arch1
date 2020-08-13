@@ -49,10 +49,12 @@ module Validator
             languages << borthwick_entry_row.language2 unless borthwick_entry_row.language2.blank?
 
             # Validate: compare languages from spreadsheet and from Solr
-            return 'languages' if languages != Ingest::AuthorityHelper.s_get_language_labels(entry_json['language_tesim'])
+            unless languages.length == 0
+                return 'languages' if languages != Ingest::AuthorityHelper.s_get_language_labels(entry_json['language_tesim'])
+            end
 
-            # section type
-            section_type = Ingest::AuthorityHelper.s_get_section_type_object_ids([borthwick_entry_row.section_type])
+            # Validate: compare section type from spreadsheet and from Solr
+            return 'section type' if [borthwick_entry_row.section_type] != Ingest::AuthorityHelper.s_get_section_type_labels(entry_json['section_type_tesim'])
 
             # subject
             subjects = []
