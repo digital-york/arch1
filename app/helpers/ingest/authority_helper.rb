@@ -70,6 +70,23 @@ module Ingest
             section_type_ids
         end
 
+        # find section_types labels from ids
+        # input: section_type ids as array
+        # output: section type labels
+        # e.g.
+        # pry(main)> Ingest::AuthorityHelper.s_get_section_type_labels(['sb397b875'])
+        # => ["Diverse jurisdictions"]
+        def self.s_get_section_type_labels(section_type_ids)
+            section_type_labels = []
+            section_type_ids.each do |section_type_id|
+                resp = SolrQuery.new.solr_query('id:' + section_type_id, 'id,preflabel_tesim')
+                resp['response']['docs'].map do |se|
+                    section_type_labels << se['preflabel_tesim'][0]
+                end
+            end
+            section_type_labels
+        end
+
         # find entry_types object ids from label
         # input: entry_types as array, e.g. ["Deputation", "Commission"]
         # output: entry type object ids, e.g. ['xxxxxx']
