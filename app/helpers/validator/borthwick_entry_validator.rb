@@ -27,6 +27,7 @@ module Validator
             # entry_id = Ingest::EntryHelper.s_find_entry(folio_id, borthwick_entry_row.entry_no)
             entry_json = Ingest::EntryHelper.s_get_entry_json(folio_id, entry_no)
 
+            # Validate: compare entry_no from spreadsheet and entry_json from Solr
             return 'entry_no' if entry_no != entry_json['entry_no_tesim'][0]
 
             # store entry_no into former_id as well
@@ -37,6 +38,9 @@ module Validator
             entry_types << borthwick_entry_row.entry_type1 unless borthwick_entry_row.entry_type1.blank?
             entry_types << borthwick_entry_row.entry_type2 unless borthwick_entry_row.entry_type2.blank?
             entry_types << borthwick_entry_row.entry_type3 unless borthwick_entry_row.entry_type3.blank?
+
+            # Validate: compare entry_types from spreadsheet and from Solr
+            return 'entry_types' if entry_types != Ingest::AuthorityHelper.s_get_entry_type_labels(entry_json['entry_type_tesim'])
 
             # language
             # Q: NO language column in Reg7132v-entry-6-155-York-EHW.xlsx
