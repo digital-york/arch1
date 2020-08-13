@@ -30,6 +30,23 @@ module Ingest
             language_ids
         end
 
+        # find language object labels from ids
+        # input: language ids as array, e.g. ['xxxxxx']
+        # output: language object labels, e.g. ['English']
+        # e.g.
+        # pry(main)> Ingest::AuthorityHelper.s_get_language_labels(['pz50gw105'])
+        # => ["Latin"]
+        def self.s_get_language_labels(language_ids)
+            language_labels = []
+            language_ids.each do |l_id|
+                resp = SolrQuery.new.solr_query('id:' + l_id, 'id,preflabel_tesim')
+                resp['response']['docs'].map do |la|
+                    language_labels << la['preflabel_tesim'][0]
+                end
+            end
+            language_labels
+        end
+
         # find section_types object ids from label
         # input: section_types as array, e.g. ["diverse letters"]
         # output: section type object ids, e.g. ['xxxxxx']
