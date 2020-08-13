@@ -76,6 +76,23 @@ module Ingest
             entry_type_ids
         end
 
+        # find entry_type labels from ids
+        # input: entry_type ids as array, e.g. ["s1784k73d","1j92g746t"]
+        # output: entry type labels, e.g. ['Mandate','Induction']
+        # e.g.
+        # [1] pry(main)> Ingest::AuthorityHelper.s_get_entry_type_labels(["s1784k73d","1j92g746t"])
+        # => ["j6731378s"]
+        def self.s_get_entry_type_labels(entry_type_ids)
+            entry_type_labels = []
+            entry_type_ids.each do |entry_type_id|
+                resp = SolrQuery.new.solr_query('id:' + entry_type_id, 'id,preflabel_tesim')
+                resp['response']['docs'].map do |et|
+                    entry_type_labels << et['preflabel_tesim'][0]
+                end
+            end
+            entry_type_labels
+        end
+
         # Find subject ids by its texts
         # [2] pry(main)> Ingest::AuthorityHelper.s_get_subject_object_ids(['Prioresses'])
         # => ["zs25xc64x"]
