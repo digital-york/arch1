@@ -56,6 +56,9 @@ module Validator
             # Validate: compare section type from spreadsheet and from Solr
             return 'section type' if [borthwick_entry_row.section_type] != Ingest::AuthorityHelper.s_get_section_type_labels(entry_json['section_type_tesim'])
 
+            # Validate: summary
+            return 'summary' if borthwick_entry_row.summary != entry_json['summary_tesim'][0]
+
             # subject
             subjects = []
             subjects << borthwick_entry_row.subject1 unless borthwick_entry_row.subject1.blank?
