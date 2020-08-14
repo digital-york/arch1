@@ -3,8 +3,8 @@
 source 'https://rubygems.org'
 
 gem 'active-fedora', '~> 13.2.0'
-gem 'active-triples'
 gem 'active_fedora-noid'
+gem 'active-triples'
 gem 'blacklight'
 gem 'hydra-head', '~> 11.0.0'
 gem 'nom-xml'
@@ -38,7 +38,6 @@ gem 'dotenv-rails', groups: %i[development test production]
 gem 'kaminari', '>= 1.2.1'
 gem 'loofah', '>= 2.3.1'
 gem 'nokogiri', '>= 1.10.8'
-gem 'sdoc', '~> 0.4.0', group: :doc
 gem 'websocket-extensions', '>= 0.1.5'
 # Use ActiveModel has_secure_password
 # gem 'bcrypt', '~> 3.1.7'
@@ -51,7 +50,6 @@ group :development do
 end
 
 group :development, :test do
-  gem 'jettywrapper'
   gem 'pry-byebug'
   gem 'pry-rails'
   gem 'rspec-rails'
@@ -59,4 +57,7 @@ group :development, :test do
   gem 'thin'
 end
 
-gem 'swagger-docs'
+group :doc do
+  gem 'sdoc'
+  gem 'swagger-docs'
+end
