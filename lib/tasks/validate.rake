@@ -32,12 +32,13 @@ namespace :validate do
                           print '  match'
                       else
                           print '  mismatch: ' + first_mismatched_field
-                          mismatched_entries << entry_row.to_s
+                          mismatched_entries << entry_row.to_s + " => #{first_mismatched_field}"
                       end
+                    break
                 end
             rescue => exception
                 log.error exception.backtrace
-                #puts exception.backtrace
+                puts exception.backtrace
                 errors << "#{entry_row.register} / #{entry_row.folio_no} / #{entry_row.folio_side} / #{entry_row.entry_no}"
                 puts "  Error"
             end
