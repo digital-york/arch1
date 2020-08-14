@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require 'active_fedora/noid'
+# require 'active_fedora/noid'
 
 class Folio < ActiveFedora::Base
   include AssignRdfTypes

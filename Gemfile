@@ -3,10 +3,10 @@
 source 'https://rubygems.org'
 
 gem 'active-fedora', '~> 13.2.0'
-gem 'active_fedora-noid'
 gem 'active-triples'
 gem 'blacklight'
 gem 'hydra-head', '~> 11.0.0'
+gem 'noid-rails', '~> 3.0.2'
 gem 'nom-xml'
 gem 'om', '~> 3.1.0'
 gem 'qa', '~> 5.4.0'
