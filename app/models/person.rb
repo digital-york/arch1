@@ -1,8 +1,17 @@
+# frozen_string_literal: true
+
 class Person < ActiveFedora::Base
+  include AssignRdfTypes
+  include Generic
+  include DCTerms
+  include RdfsSeealso
+  include MadsRelauth
+  include SkosLabels
+  include SameAs
+  include AssignId
+  include RdfType
 
-  include RdfType, AssignId, SameAs, SkosLabels, MadsRelauth, RdfsSeealso, DCTerms,Generic,AssignRdfTypes
-
-  belongs_to :concept_scheme, predicate: ::RDF::SKOS.inScheme
+  belongs_to :concept_scheme, predicate: ::RDF::Vocab::SKOS.inScheme
 
   # eg. NCA Rules 2.4
   property :family, predicate: ::RDF::Vocab::FOAF.familyName, multiple: false do |index|
@@ -15,7 +24,7 @@ class Person < ActiveFedora::Base
   end
 
   # eg. NCA Rules 2.3
-  property :given_name, predicate: ::RDF::FOAF.givenName, multiple: false do |index|
+  property :given_name, predicate: ::RDF::Vocab::FOAF.givenName, multiple: false do |index|
     index.as :stored_searchable
   end
 
@@ -41,5 +50,4 @@ class Person < ActiveFedora::Base
   property :note, predicate: ::RDF::URI.new('http://dlib.york.ac.uk/ontologies/borthwick-registers#note'), multiple: true do |index|
     index.as :stored_searchable
   end
-
 end

@@ -56,7 +56,7 @@ module RemoveEmptyFields
 
       # Remove empty multi-value fields (place)
       if entry_params[:related_places_attributes] != nil
-        entry_params[:related_places_attributes].each_with_index do |related_place, index|
+        entry_params[:related_places_attributes].to_enum.each_with_index do |related_place, index|
           entry_params[:related_places_attributes][index.to_s][:place_as_written] = remove_empty_array_fields2(entry_params[:related_places_attributes][index.to_s][:place_as_written])
           entry_params[:related_places_attributes][index.to_s][:place_role] = remove_empty_array_fields2(entry_params[:related_places_attributes][index.to_s][:place_role])
           entry_params[:related_places_attributes][index.to_s][:place_type] = remove_empty_array_fields2(entry_params[:related_places_attributes][index.to_s][:place_type])
@@ -66,7 +66,7 @@ module RemoveEmptyFields
 
       # Remove empty multi-value fields (person)
       if entry_params[:related_agents_attributes] != nil
-        entry_params[:related_agents_attributes].each_with_index do |related_person, index|
+        entry_params[:related_agents_attributes].to_enum.each_with_index do |related_person, index|
           entry_params[:related_agents_attributes][index.to_s][:person_as_written] = remove_empty_array_fields2(entry_params[:related_agents_attributes][index.to_s][:person_as_written])
           entry_params[:related_agents_attributes][index.to_s][:person_role] = remove_empty_array_fields2(entry_params[:related_agents_attributes][index.to_s][:person_role])
           entry_params[:related_agents_attributes][index.to_s][:person_descriptor] = remove_empty_array_fields2(entry_params[:related_agents_attributes][index.to_s][:person_descriptor])
@@ -92,14 +92,14 @@ module RemoveEmptyFields
 
       unless entry_params[:entry_dates_attributes].nil?
 
-        entry_params[:entry_dates_attributes].each_with_index do |related_agent, index|
+        entry_params[:entry_dates_attributes].to_enum.each_with_index do |related_agent, index|
 
           single_date_exists = false
 
           # First remove single dates
           unless entry_params[:entry_dates_attributes][index.to_s][:single_dates_attributes].nil?
 
-            entry_params[:entry_dates_attributes][index.to_s][:single_dates_attributes].each_with_index do |single_date, index2|
+            entry_params[:entry_dates_attributes][index.to_s][:single_dates_attributes].to_enum.each_with_index do |single_date, index2|
 
               remove_single_date = true
 
@@ -192,7 +192,7 @@ module RemoveEmptyFields
 
       unless entry_params[:related_places_attributes].nil?
 
-        entry_params[:related_places_attributes].each_with_index do |related_place, index|
+        entry_params[:related_places_attributes].to_enum.each_with_index do |related_place, index|
 
           remove_place = true
 
@@ -244,7 +244,7 @@ module RemoveEmptyFields
 
       unless entry_params[:related_agents_attributes].nil?
 
-        entry_params[:related_agents_attributes].each_with_index do |related_agent, index|
+        entry_params[:related_agents_attributes].to_enum.each_with_index do |related_agent, index|
 
           remove_agent = true
 

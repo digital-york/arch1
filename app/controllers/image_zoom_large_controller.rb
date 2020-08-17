@@ -1,17 +1,13 @@
-class ImageZoomLargeController < ApplicationController
+# frozen_string_literal: true
 
+class ImageZoomLargeController < ApplicationController
   require 'net/http'
 
   layout 'image_zoom_large'
 
-  before_filter :session_timed_out_small
+  before_action :session_timed_out_small
 
-  def index
+  def index; end
 
-  end
-
-  def alt
-
-  end
-
+  def alt; end
 end

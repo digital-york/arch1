@@ -1,4 +1,4 @@
-require 'active_fedora/noid'
+# require 'active_fedora/noid'
 
 class Manifest < ActiveFedora::File
   include ActiveFedora::WithMetadata,AssignId

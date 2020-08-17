@@ -1,8 +1,17 @@
+# frozen_string_literal: true
+
 class Place < ActiveFedora::Base
+  include AssignRdfTypes
+  include Generic
+  include RdfsSeealso
+  include DCTerms
+  include MadsRelauth
+  include SkosLabels
+  include SameAs
+  include AssignId
+  include RdfType
 
-  include RdfType, AssignId, SameAs, SkosLabels, MadsRelauth, DCTerms, RdfsSeealso,Generic,AssignRdfTypes
-
-  belongs_to :concept_scheme, predicate: ::RDF::SKOS.inScheme
+  belongs_to :concept_scheme, predicate: ::RDF::Vocab::SKOS.inScheme
 
   # eg. NCARules name.
   property :place_name, predicate: ::RDF::URI.new('http://www.geonames.org/ontology#name'), multiple: false do |index|
@@ -41,5 +50,4 @@ class Place < ActiveFedora::Base
   property :note, predicate: ::RDF::URI.new('http://dlib.york.ac.uk/ontologies/borthwick-registers#note'), multiple: true do |index|
     index.as :stored_searchable
   end
-
 end

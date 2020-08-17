@@ -1,4 +1,4 @@
-class DropTables < ActiveRecord::Migration
+class DropTables < ActiveRecord::Migration[4.2]
   def change
     drop_table :db_entries
     drop_table :db_section_types
@@ -25,4 +25,3 @@ class DropTables < ActiveRecord::Migration
     drop_table :db_person_related_places
   end
 end
-
