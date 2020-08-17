@@ -40,9 +40,6 @@ GEM
       activesupport (>= 3.0.0)
       rdf (>= 2.0.2, < 4.0)
       rdf-vocab (>= 2.0, < 4.0)
-    active_fedora-noid (0.1.0)
-      active-fedora
-      noid
     activejob (5.2.4.3)
       activesupport (= 5.2.4.3)
       globalid (>= 0.3.6)
@@ -89,10 +86,8 @@ GEM
     builder (3.2.4)
     byebug (11.0.1)
     cancancan (1.17.0)
-    childprocess (1.0.1)
-      rake (< 13.0)
     coderay (1.1.2)
-    concurrent-ruby (1.1.6)
+    concurrent-ruby (1.1.7)
     crass (1.0.6)
     daemons (1.3.1)
     deprecation (1.0.0)
@@ -110,7 +105,8 @@ GEM
     dotenv-rails (2.7.2)
       dotenv (= 2.7.2)
       railties (>= 3.2, < 6.1)
-    ebnf (2.1.0)
+    ebnf (2.1.1)
+      htmlentities (~> 4.3)
       rdf (~> 3.1)
       scanf (~> 1.0)
       sxp (~> 1.1)
@@ -147,11 +143,6 @@ GEM
       concurrent-ruby (~> 1.0)
     jbuilder (2.10.0)
       activesupport (>= 5.0.0)
-    jettywrapper (2.0.5)
-      activesupport (>= 3.0.0)
-      childprocess
-      i18n
-      rubyzip (~> 1.0)
     jquery-rails (4.4.0)
       rails-dom-testing (>= 1, < 3)
       railties (>= 4.2.0)
@@ -161,7 +152,6 @@ GEM
       turbolinks
     jquery-ui-rails (6.0.1)
       railties (>= 3.2.16)
-    json (1.8.6)
     json-canonicalization (0.2.0)
     json-ld (3.1.4)
       htmlentities (~> 4.3)
@@ -214,6 +204,9 @@ GEM
     multipart-post (2.1.1)
     nio4r (2.5.2)
     noid (0.9.0)
+    noid-rails (3.0.2)
+      actionpack (>= 5.0.0, < 7)
+      noid (~> 0.9)
     nokogiri (1.10.10)
       mini_portile2 (~> 2.4.0)
     nom-xml (1.1.0)
@@ -275,7 +268,7 @@ GEM
     rb-fsevent (0.10.3)
     rb-inotify (0.10.0)
       ffi (~> 1.0)
-    rdf (3.1.4)
+    rdf (3.1.5)
       hamster (~> 3.0)
       link_header (~> 0.0, >= 0.0.8)
     rdf-isomorphic (3.1.0)
@@ -285,7 +278,7 @@ GEM
       rdf (~> 3.1, >= 3.1.2)
     rdf-vocab (3.1.4)
       rdf (~> 3.1)
-    rdoc (4.3.0)
+    rdoc (6.2.1)
     ref (2.0.0)
     responders (3.0.0)
       actionpack (>= 5.0)
@@ -311,7 +304,6 @@ GEM
       rspec-support (~> 3.8.0)
     rspec-support (3.8.0)
     ruby-progressbar (1.10.1)
-    rubyzip (1.2.2)
     sass (3.7.3)
       sass-listen (~> 4.0.0)
     sass-listen (4.0.0)
@@ -326,9 +318,8 @@ GEM
     sassc (2.4.0)
       ffi (~> 1.9)
     scanf (1.0.0)
-    sdoc (0.4.2)
-      json (~> 1.7, >= 1.7.7)
-      rdoc (~> 4.0)
+    sdoc (1.1.0)
+      rdoc (>= 5.0)
     slop (4.8.2)
     solrizer (3.4.1)
       activesupport
@@ -393,7 +384,6 @@ PLATFORMS
 DEPENDENCIES
   active-fedora (~> 13.2.0)
   active-triples
-  active_fedora-noid
   blacklight
   brakeman
   devise (>= 4.7.1)
@@ -401,12 +391,12 @@ DEPENDENCIES
   dotenv-rails
   hydra-head (~> 11.0.0)
   jbuilder (~> 2.0)
-  jettywrapper
   jquery-rails
   jquery-turbolinks
   jquery-ui-rails
   kaminari (>= 1.2.1)
   loofah (>= 2.3.1)
+  noid-rails (~> 3.0.2)
   nokogiri (>= 1.10.8)
   nom-xml
   om (~> 3.1.0)
@@ -417,7 +407,7 @@ DEPENDENCIES
   rsolr
   rspec-rails
   sass-rails (~> 5.0)
-  sdoc (~> 0.4.0)
+  sdoc
   solrizer
   spring
   sprockets (~> 3.7.2)
