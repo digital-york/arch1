@@ -61,3 +61,7 @@ group :doc do
   gem 'sdoc'
   gem 'swagger-docs'
 end
+
+# TNW ingest
+gem 'roo'
+gem 'smarter_csv'
