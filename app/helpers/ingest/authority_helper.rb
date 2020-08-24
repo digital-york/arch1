@@ -153,7 +153,9 @@ module Ingest
         # pry(main)> Ingest::AuthorityHelper.s_get_place_object_id('Yarm, North Riding of Yorkshire, England')
         # => "1c18df984"
         def self.s_get_place_object_id(place)
-            places_id = nil
+            return '' if place.blank?
+
+            places_id = ''
 
             response = SolrQuery.new.solr_query('has_model_ssim:"ConceptScheme" AND preflabel_tesim:"places"', 'id')
             # first, query ConceptSchema for places
@@ -171,7 +173,7 @@ module Ingest
                     end
                 end
                 # Then, if places_id is not found, do a substring search
-                if places_id.nil?
+                if places_id.blank?
                     resp = SolrQuery.new.solr_query('inScheme_ssim:"' + l['id'] + '" AND place_name_tesim:' + place.downcase, 'id,place_name_tesim,preflabel_tesim')
                     resp['response']['docs'].map do |p|
                         places_id = p['id']
