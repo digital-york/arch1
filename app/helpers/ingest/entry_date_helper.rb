@@ -25,7 +25,7 @@ module Ingest
 
             sd.rdftype        = sd.add_rdf_types
             sd.date           = date
-            sd.date_certainty = [certainties]
+            sd.date_certainty = [certainties] unless certainties.blank?
             sd.date_type      = date_type
             sd.entry_date     = entry_date
             sd.save
