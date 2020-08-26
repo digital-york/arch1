@@ -26,8 +26,8 @@ module Validator
 
             # entry_id = Ingest::EntryHelper.s_find_entry(folio_id, borthwick_entry_row.entry_no)
             entry_json = Ingest::EntryHelper.s_get_entry_json(folio_id, entry_no)
-
-            puts '  Entry ID: ' + entry_json['id']
+            entry_id = entry_json['id']
+            puts '  Entry ID: ' + entry_id
 
             # Validate: compare entry_no from spreadsheet and entry_json from Solr
             return 'entry_no' if entry_no != entry_json['entry_no_tesim'][0]
@@ -74,14 +74,30 @@ module Validator
             end
 
             # validate note field
-            return 'note' if borthwick_entry_row.note != entry_json['note_tesim'][0]
+            unless borthwick_entry_row.note.blank?
+                return 'note' if entry_json['note_tesim'].blank? or (borthwick_entry_row.note != entry_json['note_tesim'][0])
+            end
 
             # validate is_referenced_by field
             return 'is_referenced_by' if borthwick_entry_row.referenced_by != entry_json['is_referenced_by_tesim'][0]
 
+            # Validate entry dates
+            # 1) Find linked entry date1 and validate date role and note fields
+            entry_date1_id = ''
+            unless borthwick_entry_row.entry_date1_date_role.blank? and borthwick_entry_row.entry_date1_note.blank?
+                entry_date1_id = Ingest::EntryDateHelper.s_get_entry_date_id(entry_id, borthwick_entry_row.entry_date1_date_role, borthwick_entry_row.entry_date1_note)
+                return 'entry_date1' if entry_date1_id.blank?
+            end
 
-            # is_referenced_by
-            referenced_by = borthwick_entry_row.referenced_by unless borthwick_entry_row.referenced_by.blank?
+            # 2) Based on entry date1, find linked single date and validate date, certainty, and type fields
+
+            # 3) Find linked entry date2 and validate date role and note fields
+            unless borthwick_entry_row.entry_date2_date_role.blank? and borthwick_entry_row.entry_date2_note.blank?
+                entry_date2_id = Ingest::EntryDateHelper.s_get_entry_date_id(entry_id, borthwick_entry_row.entry_date2_date_role, borthwick_entry_row.entry_date2_note)
+                return 'entry_date2' if entry_date2_id.blank?
+            end
+
+            # 4) Based on entry date2, find linked single date and validate date, certainty, and type fields
 
             # Entry dates
             entry_dates = []
