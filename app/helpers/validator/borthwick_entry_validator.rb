@@ -27,6 +27,8 @@ module Validator
             # entry_id = Ingest::EntryHelper.s_find_entry(folio_id, borthwick_entry_row.entry_no)
             entry_json = Ingest::EntryHelper.s_get_entry_json(folio_id, entry_no)
 
+            puts '  Entry ID: ' + entry_json['id']
+
             # Validate: compare entry_no from spreadsheet and entry_json from Solr
             return 'entry_no' if entry_no != entry_json['entry_no_tesim'][0]
 
@@ -65,6 +67,11 @@ module Validator
             subjects << borthwick_entry_row.subject2 unless borthwick_entry_row.subject2.blank?
             subjects << borthwick_entry_row.subject3 unless borthwick_entry_row.subject3.blank?
             subjects << borthwick_entry_row.subject4 unless borthwick_entry_row.subject4.blank?
+
+            # validate subjects
+            unless subjects.length == 0
+                return 'subject' if subjects != Ingest::AuthorityHelper.s_get_subject_labels(entry_json['subject_tesim'])
+            end
 
             # is_referenced_by
             referenced_by = borthwick_entry_row.referenced_by unless borthwick_entry_row.referenced_by.blank?
