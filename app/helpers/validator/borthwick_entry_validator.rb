@@ -76,7 +76,8 @@ module Validator
             # validate note field
             return 'note' if borthwick_entry_row.note != entry_json['note_tesim'][0]
 
-
+            # validate is_referenced_by field
+            return 'is_referenced_by' if borthwick_entry_row.referenced_by != entry_json['is_referenced_by_tesim'][0]
 
 
             # is_referenced_by
