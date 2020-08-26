@@ -146,6 +146,19 @@ module Ingest
             Terms::SubjectTerms.new('subauthority').find_id_with_alts(subject_text)
         end
 
+        # Find subject texts by its ids
+        # Ingest::AuthorityHelper.s_get_subject_labels(['zs25xc64x'])
+        def self.s_get_subject_labels(subject_ids)
+            subject_labels = []
+            subject_ids.each do |subject_id|
+                resp = SolrQuery.new.solr_query('id:' + subject_id, 'id,preflabel_tesim')
+                resp['response']['docs'].map do |sj|
+                    subject_labels << sj['preflabel_tesim'][0]
+                end
+            end
+            subject_labels
+        end
+
         # find place object ids from label
         # input: places as array, e.g. ['Yarm, North Riding of Yorkshire, England']
         # output: place object ids, e.g. ['xxxxxx']
