@@ -73,6 +73,12 @@ module Validator
                 return 'subject' if subjects != Ingest::AuthorityHelper.s_get_subject_labels(entry_json['subject_tesim'])
             end
 
+            # validate note field
+            return 'note' if borthwick_entry_row.note != entry_json['note_tesim'][0]
+
+
+
+
             # is_referenced_by
             referenced_by = borthwick_entry_row.referenced_by unless borthwick_entry_row.referenced_by.blank?
 
