@@ -90,6 +90,14 @@ module Validator
             end
 
             # 2) Based on entry date1, find linked single date and validate date, certainty, and type fields
+            unless borthwick_entry_row.entry_date1_date.blank? and borthwick_entry_row.entry_date1_certainty.blank? and borthwick_entry_row.entry_date1_type.blank?
+                single_date1_id = Ingest::EntryDateHelper.s_get_single_date_id(entry_date1_id,
+                                                                               borthwick_entry_row.entry_date1_date,
+                                                                               borthwick_entry_row.entry_date1_certainty,
+                                                                               borthwick_entry_row.entry_date1_type
+                                                                               )
+                return "entry_date1_single_date1" if single_date1_id.blank?
+            end
 
             # 3) Find linked entry date2 and validate date role and note fields
             unless borthwick_entry_row.entry_date2_date_role.blank? and borthwick_entry_row.entry_date2_note.blank?
@@ -98,31 +106,17 @@ module Validator
             end
 
             # 4) Based on entry date2, find linked single date and validate date, certainty, and type fields
-
-            # Entry dates
-            entry_dates = []
-            entry_date1  = Ingest::EntryDateHelper.create_entry_date(borthwick_entry_row.entry_date1_date_role,
-                                                                     borthwick_entry_row.entry_date1_note) unless borthwick_entry_row.entry_date1_date_role.blank? and borthwick_entry_row.entry_date1_note.blank?
-            unless entry_date1.blank?
-                single_date1 = Ingest::EntryDateHelper.create_single_date(
-                                       entry_date1,
-                                       borthwick_entry_row.entry_date1_date,
-                                       borthwick_entry_row.entry_date1_certainty,
-                                       borthwick_entry_row.entry_date1_type) unless borthwick_entry_row.entry_date1_date.blank? and borthwick_entry_row.entry_date1_certainty.blank? and borthwick_entry_row.entry_date1_type.blank?
-                entry_dates << entry_date1 unless entry_date1.blank?
+            unless borthwick_entry_row.entry_date2_date.blank? and
+                   borthwick_entry_row.entry_date2_certainty.blank? and
+                   borthwick_entry_row.entry_date2_type.blank?
+                single_date2_id = Ingest::EntryDateHelper.s_get_single_date_id(entry_date2_id,
+                                                                               borthwick_entry_row.entry_date2_date,
+                                                                               borthwick_entry_row.entry_date2_certainty,
+                                                                               borthwick_entry_row.entry_date2_type
+                )
+                return "entry_date1_single_date2" if single_date2_id.blank?
             end
 
-
-            entry_date2  = Ingest::EntryDateHelper.create_entry_date(borthwick_entry_row.entry_date2_date_role,
-                                                                     borthwick_entry_row.entry_date2_note) unless borthwick_entry_row.entry_date2_date_role.blank? and borthwick_entry_row.entry_date2_note.blank?
-            unless entry_date2.blank?
-                single_date2 = Ingest::EntryDateHelper.create_single_date(
-                        entry_date2,
-                        borthwick_entry_row.entry_date2_date,
-                        borthwick_entry_row.entry_date2_certainty,
-                        borthwick_entry_row.entry_date2_type) unless borthwick_entry_row.entry_date2_date.blank? and borthwick_entry_row.entry_date2_certainty.blank? and borthwick_entry_row.entry_date2_type.blank?
-                entry_dates << entry_date2 unless entry_date2.blank?
-            end
 
             # related_places
             related_places = []
