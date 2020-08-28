@@ -142,19 +142,10 @@ module Validator
                 return "related_place.place_role" if Ingest::AuthorityHelper.s_get_place_role_name(place_role_ids[0]) != [borthwick_entry_row.place_role]
 
                 # Step 4: from place_type_ids, get solr object, then compare preflabel_tesim with borthwick_entry_row.place_type
-                puts place_type_ids
+                return "related_place.place_type" if Ingest::AuthorityHelper.s_get_place_type_name(place_type_ids[0]) != [borthwick_entry_row.place_type]
 
-                # related_place = Ingest::RelatedPlaceHelper.create_related_place(
-                #     borthwick_entry_row.place_as || '',
-                #     place_object_id,
-                #     place_role_ids,
-                #     place_type_ids,
-                #     [borthwick_entry_row.place_note || '']
-                # )
-                # related_places << related_place unless related_place.nil?
                 ""
             end
-
 
         end
 
