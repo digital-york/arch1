@@ -209,6 +209,18 @@ module Ingest
             place_name
         end
 
+        # get place role object label from place_role_id
+        # pry(main)> Ingest::AuthorityHelper.s_get_place_role_name('37720c723')
+        # => ["place of dating"]
+        def self.s_get_place_role_name(place_role_id)
+            place_role_name = ''
+            resp = SolrQuery.new.solr_query('id:' + place_role_id, 'id,preflabel_tesim')
+            resp['response']['docs'].map do |p|
+                place_role_name = p['preflabel_tesim']
+            end
+            place_role_name
+        end
+
         # find place role ids from label
         # input: place roles as array, e.g. ['place of dating']
         # output: place role object ids, e.g. ['xxxxxx']

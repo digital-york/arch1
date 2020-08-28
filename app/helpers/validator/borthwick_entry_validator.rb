@@ -139,7 +139,7 @@ module Validator
                 return "related_place.place_name" if Ingest::AuthorityHelper.s_get_place_name(place_object_id) != [borthwick_entry_row.place_name]
 
                 # Step 3: from place_role_ids, get solr object, then compare the preflabel_tesim with borthwick_entry_row.place_role
-                puts place_role_ids
+                return "related_place.place_role" if Ingest::AuthorityHelper.s_get_place_role_name(place_role_ids[0]) != [borthwick_entry_row.place_role]
 
                 # Step 4: from place_type_ids, get solr object, then compare preflabel_tesim with borthwick_entry_row.place_type
                 puts place_type_ids
