@@ -131,24 +131,32 @@ module Validator
                 place_role_ids = Ingest::AuthorityHelper.s_get_place_role_ids([borthwick_entry_row.place_role]) unless borthwick_entry_row.place_role.blank?
                 place_type_ids = []
                 place_type_ids = Ingest::AuthorityHelper.s_get_place_type_ids([borthwick_entry_row.place_type]) unless borthwick_entry_row.place_type.blank?
-                related_place = Ingest::RelatedPlaceHelper.create_related_place(
-                    borthwick_entry_row.place_as || '',
-                    place_object_id,
-                    place_role_ids,
-                    place_type_ids,
-                    [borthwick_entry_row.place_note || '']
-                )
-                related_places << related_place unless related_place.nil?
+
+                # Step 1: get related_place object, then check it against borthwick_entry_row.place_as
+                return "related_place.place_as_written" if Ingest::RelatedPlaceHelper.get_related_place_id(entry_id, borthwick_entry_row.place_as).blank?
+
+                # Step 2: from place_object_id get Solr object, then compare the place_name_tesim with borthwick_entry_row.place_name
+                puts '---------place---------'
+                puts place_object_id
+
+                # Step 3: from place_role_ids, get solr object, then compare the preflabel_tesim with borthwick_entry_row.place_role
+                puts place_role_ids
+
+                # Step 4: from place_type_ids, get solr object, then compare preflabel_tesim with borthwick_entry_row.place_type
+                puts place_type_ids
+
+                # related_place = Ingest::RelatedPlaceHelper.create_related_place(
+                #     borthwick_entry_row.place_as || '',
+                #     place_object_id,
+                #     place_role_ids,
+                #     place_type_ids,
+                #     [borthwick_entry_row.place_note || '']
+                # )
+                # related_places << related_place unless related_place.nil?
+                ""
             end
 
-            # leave group(1/2) for now
 
-            # leave person(1/2/3) for now
-
-            # note
-            note = borthwick_entry_row.note unless borthwick_entry_row.note.blank?
-
-            ''
         end
 
     end
