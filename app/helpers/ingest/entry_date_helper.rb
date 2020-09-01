@@ -53,7 +53,14 @@ module Ingest
         # => "8g84mn23z"
         def self.s_get_entry_date_id(entry_id, date_role, note)
             entry_date_id = nil
-            query = 'has_model_ssim:"EntryDate" AND entryDateFor_ssim:"'+entry_id+'" AND date_role_search:"' + date_role + '" AND date_note_tesim:"'+note+'"'
+            query = 'has_model_ssim:"EntryDate" AND entryDateFor_ssim:"'+entry_id+'"'
+            unless date_role.blank?
+                query += ' AND date_role_search:"' + date_role + '"'
+            end
+            unless note.blank?
+                query += ' AND date_note_tesim:"'+note+'"'
+            end
+puts query
             response = SolrQuery.new.solr_query(query, 'id')
             response['response']['docs'].map do |pobj|
                 entry_date_id = pobj['id']
