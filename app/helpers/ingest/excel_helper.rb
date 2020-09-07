@@ -15,14 +15,28 @@ module Ingest
                 entry_row = Ingest::BorthwickEntryRow.new
 
                 entry_row.register              = entry[0]
-                entry_row.folio_no              = entry[1].to_i.to_s
+                # some folios end with 'a', 'b' etc
+                if entry[1].to_s.ends_with? '.0'
+                    entry_row.folio_no          = entry[1].to_i.to_s
+                else
+                    entry_row.folio_no          = entry[1].to_s
+                end
                 entry_row.folio_side            = entry[2]
-                entry_row.entry_no              = entry[3].to_i.to_s
+                # for entries with multiple images, the entry no ends with letters ,e.g. 'a', 'b' etc
+                if entry[3].to_s.ends_with? '.0'
+                    entry_row.entry_no          = entry[3].to_i.to_s
+                else
+                    entry_row.entry_no          = entry[3].to_s
+                end
                 entry_row.entry_type1           = entry[4]
                 entry_row.entry_type2           = entry[5]
                 entry_row.entry_type3           = entry[6]
                 entry_row.section_type          = entry[7]
-                entry_row.continues_folio_no    = entry[8].to_i.to_s
+                if entry[8].to_s.ends_with? '.0'
+                    entry_row.continues_folio_no = entry[8].to_i.to_s
+                else
+                    entry_row.continues_folio_no = entry[8].to_s
+                end
                 entry_row.continues_folio_side  = entry[9]
                 entry_row.summary               = entry[10]
                 entry_row.marginalia            = entry[11]
