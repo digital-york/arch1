@@ -23,8 +23,8 @@ module Ingest
             # entry number
             entry_no = borthwick_entry_row.entry_no.to_s
             # store entry_no into former_id as well
-            # former_id = [borthwick_entry_row.entry_no.to_s]
-            former_id = []
+            former_id = [borthwick_entry_row.image_id.to_s] unless borthwick_entry_row.image_id.blank?
+            # former_id = []
 
             # entry types
             entry_types = []
