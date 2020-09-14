@@ -146,7 +146,7 @@ module Ingest
                     :person3_note
 
         def to_s
-            register + ' / ' + folio_no.to_s + ' / ' +folio_side + ' / ' + entry_no.to_s
+            register + ' / ' + folio_no.to_s + ' / ' +folio_side + ' / ' + entry_no.to_s + ' / ' + image_id
         end
     end
 end

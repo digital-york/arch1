@@ -13,7 +13,9 @@ module Ingest
             # Link entry to folio
             folio_id = Ingest::FolioHelper.s_get_ar_folio_id(borthwick_entry_row.register,
                                                              borthwick_entry_row.folio_no,
-                                                             borthwick_entry_row.folio_side)
+                                                             borthwick_entry_row.folio_side,
+                                                             borthwick_entry_row.image_id)
+
             if folio_id.nil?
                 puts 'cannot find folio via id: ' + folio_id
                 log.info 'cannot find folio via id: ' + folio_id
