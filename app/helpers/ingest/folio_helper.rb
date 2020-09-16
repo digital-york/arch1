@@ -31,7 +31,7 @@ module Ingest
             #   Abp Reg 7 f.132 (recto)
             folio_label = "#{prefix} #{register_name.gsub('Register', 'Reg')} f.#{folio_number} #{folio_side}"
             solr_query = SolrQuery.new.solr_query("preflabel_tesim:\"#{folio_label}\"",'id,preflabel_tesim')
-            if solr_query['response']['numFound'].to_i > 1
+            if solr_query['response']['numFound'].to_i > 1 and (not image_id.blank?)
                 # Perform second query to identify the folio id
                 # has_model_ssim:Image and hasTarget_ssim:z316q346z and
                 # file_path_tesim:Abp_Reg_07_0315

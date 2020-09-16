@@ -126,7 +126,8 @@ module Ingest
                 continuted_folio_id = Ingest::FolioHelper.s_get_ar_folio_id(
                                             register_name,
                                             continues_folio_no,
-                                            continues_folio_side)
+                                            continues_folio_side,
+                                            nil)
                 continuted_folio = Folio.find(continuted_folio_id)
                 e.continues_on = continuted_folio unless continuted_folio.nil?
             end
