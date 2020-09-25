@@ -59,7 +59,8 @@ module Ingest
                               related_places,
                               note,
                               continues_folio_no,
-                              continues_folio_side
+                              continues_folio_side,
+                              continues_image_id
                               )
             log = Logger.new "log/entry_helper.log"
 
@@ -127,7 +128,7 @@ module Ingest
                                             register_name,
                                             continues_folio_no,
                                             continues_folio_side,
-                                            nil)
+                                            continues_image_id)
                 continuted_folio = Folio.find(continuted_folio_id)
                 e.continues_on = continuted_folio unless continuted_folio.nil?
             end

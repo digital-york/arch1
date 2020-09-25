@@ -127,7 +127,8 @@ module Ingest
                 related_places,
                 note,
                 borthwick_entry_row.continues_folio_no,
-                borthwick_entry_row.continues_folio_side
+                borthwick_entry_row.continues_folio_side,
+                borthwick_entry_row.continues_image_id
             )
         end
 
