@@ -17,8 +17,8 @@ module Ingest
                                                              borthwick_entry_row.image_id)
 
             if folio_id.nil?
-                puts 'cannot find folio via id: ' + folio_id
-                log.info 'cannot find folio via id: ' + folio_id
+                puts 'cannot find folio: ' + borthwick_entry_row.folio_no + '/' + borthwick_entry_row.folio_side
+                log.info 'cannot find folio via id: ' + borthwick_entry_row.folio_no + '/' + borthwick_entry_row.folio_side
                 return nil
             end
 
@@ -128,9 +128,18 @@ module Ingest
                 note,
                 borthwick_entry_row.continues_folio_no,
                 borthwick_entry_row.continues_folio_side,
-                borthwick_entry_row.continues_image_id
+                get_image_id(borthwick_entry_row.continues_image_id)
             )
         end
 
+        # get the last image_id if multiple image ids are provided and seperated by ';'
+        def self.get_image_id(image_ids)
+            return image_ids if image_ids.blank?
+            if image_ids.include? ";"
+                image_ids.split(';').last
+            else
+                image_ids
+            end
+        end
     end
 end
