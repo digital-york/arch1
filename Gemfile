@@ -72,7 +72,8 @@ group :development, :test do
   gem 'spring'
   gem 'rspec-rails'
   gem 'jettywrapper'
-  gem 'thin'
+  #gem 'thin'
+  gem 'puma'
   gem 'xray-rails'
 end
 
