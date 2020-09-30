@@ -103,7 +103,7 @@ module Ingest
             e.summary = summary
 
             # marginalia
-            e.marginalia = [marginalia]
+            e.marginalia = [marginalia] unless marginalia.blank?
 
             # subject
             e.subject = subjects unless subjects.blank?
