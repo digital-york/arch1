@@ -53,6 +53,7 @@ module Ingest
                               languages,
                               section_type,
                               summary,
+                              marginalia,
                               subjects,
                               referenced_by,
                               entry_dates,
@@ -100,6 +101,9 @@ module Ingest
 
             # summary
             e.summary = summary
+
+            # marginalia
+            e.marginalia = [marginalia]
 
             # subject
             e.subject = subjects unless subjects.blank?

@@ -121,6 +121,7 @@ module Ingest
                 languages,
                 section_type,
                 borthwick_entry_row.summary,
+                borthwick_entry_row.marginalia,
                 Ingest::AuthorityHelper.s_get_subject_object_ids(subjects),
                 referenced_by,
                 entry_dates,
