@@ -129,8 +129,9 @@ module Ingest
                                             continues_folio_no,
                                             continues_folio_side,
                                             continues_image_id)
-                continuted_folio = Folio.find(continuted_folio_id)
-                e.continues_on = continuted_folio unless continuted_folio.nil?
+                # continuted_folio = Folio.find(continuted_folio_id)
+                # e.continues_on = continuted_folio unless continuted_folio.nil?
+                e.continues_on = continuted_folio_id unless continuted_folio_id.blank?
             end
 
             e.save
