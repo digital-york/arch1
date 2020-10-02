@@ -41,7 +41,7 @@ module Ingest
             ed = EntryDate.new
 
             ed.rdftype      = ed.add_rdf_types
-            ed.date_role    = self.s_get_date_role_id(date_role)
+            ed.date_role    = self.s_get_date_role_id(date_role) unless date_role.blank?
             ed.date_note    = note
             ed.save
 
