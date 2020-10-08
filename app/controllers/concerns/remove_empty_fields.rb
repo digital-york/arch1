@@ -253,8 +253,13 @@ module RemoveEmptyFields
       next unless (entry_params[:related_agents_attributes][index.to_s][:_destroy] == '1') || (remove_agent == true)
 
       entry_params[:related_agents_attributes][index.to_s].each do |param|
-        entry_params[:related_agents_attributes][index.to_s][param[0]] = '' unless param[0] == 'id'
+        entry_params[:related_agents_attributes][index.to_s][param[0]] = [] unless param[0] == 'id'
       end
+      # Correct some properties to expected scallar values
+      entry_params[:related_agents_attributes][index.to_s][:person_same_as] = ''
+      entry_params[:related_agents_attributes][index.to_s][:person_group] = ''
+      entry_params[:related_agents_attributes][index.to_s][:person_gender] = ''
+
       entry_params[:related_agents_attributes][index.to_s].delete(:rdftype)
 
       if entry_params[:related_agents_attributes][index.to_s][:id].nil?
