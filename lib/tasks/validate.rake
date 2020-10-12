@@ -26,11 +26,7 @@ namespace :validate do
                       puts "[#{index} / #{entry_rows.length}] #{entry_row.to_s}"
                       log.info "[#{index} / #{entry_rows.length}] #{entry_row.to_s}"
                       first_mismatched_field = Validator::BorthwickEntryValidator.validate_entry(entry_row)
-                      if first_mismatched_field.nil?
-                          puts '  ERROR'
-                      elsif first_mismatched_field == ''
-                          puts '  match'
-                      else
+                      unless first_mismatched_field.blank?
                           puts '  mismatch: ' + first_mismatched_field
                           mismatched_entries << entry_row.to_s + " => #{first_mismatched_field}"
                       end
