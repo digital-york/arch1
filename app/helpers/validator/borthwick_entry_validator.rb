@@ -71,7 +71,7 @@ module Validator
 
             # validate subjects
             unless subjects.length == 0
-                return 'subject' if subjects != Ingest::AuthorityHelper.s_get_subject_labels(entry_json['subject_tesim'])
+                return 'subject' if subjects.sort != Ingest::AuthorityHelper.s_get_subject_labels(entry_json['subject_tesim']).sort
             end
 
             # validate note field
