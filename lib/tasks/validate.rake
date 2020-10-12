@@ -34,7 +34,7 @@ namespace :validate do
                           puts '  mismatch: ' + first_mismatched_field
                           mismatched_entries << entry_row.to_s + " => #{first_mismatched_field}"
                       end
-                    break
+                    # break
                 #end
             rescue => exception
                 log.error exception.backtrace
