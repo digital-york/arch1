@@ -141,13 +141,19 @@ module Validator
                 end
 
                 # Step 2: from place_object_id get Solr object, then compare the place_name_tesim with borthwick_entry_row.place_name
-                return "related_place.place_name" if Ingest::AuthorityHelper.s_get_place_name(place_object_id) != [borthwick_entry_row.place_name]
+                unless borthwick_entry_row.place_name.blank?
+                    return "related_place.place_name" if Ingest::AuthorityHelper.s_get_place_name(place_object_id) != [borthwick_entry_row.place_name]
+                end
 
                 # Step 3: from place_role_ids, get solr object, then compare the preflabel_tesim with borthwick_entry_row.place_role
-                return "related_place.place_role" if Ingest::AuthorityHelper.s_get_place_role_name(place_role_ids[0]) != [borthwick_entry_row.place_role]
+                unless borthwick_entry_row.place_role.blank?
+                    return "related_place.place_role" if Ingest::AuthorityHelper.s_get_place_role_name(place_role_ids[0]) != [borthwick_entry_row.place_role]
+                end
 
                 # Step 4: from place_type_ids, get solr object, then compare preflabel_tesim with borthwick_entry_row.place_type
-                return "related_place.place_type" if Ingest::AuthorityHelper.s_get_place_type_name(place_type_ids[0]) != [borthwick_entry_row.place_type]
+                unless borthwick_entry_row.place_type.blank?
+                    return "related_place.place_type" if Ingest::AuthorityHelper.s_get_place_type_name(place_type_ids[0]) != [borthwick_entry_row.place_type]
+                end
 
                 ""
             end
