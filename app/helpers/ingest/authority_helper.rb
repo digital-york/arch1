@@ -118,6 +118,8 @@ module Ingest
         # => ["j6731378s"]
         def self.s_get_entry_type_labels(entry_type_ids)
             entry_type_labels = []
+            return entry_type_labels if entry_type_ids.blank?
+
             entry_type_ids.each do |entry_type_id|
                 resp = SolrQuery.new.solr_query('id:' + entry_type_id, 'id,preflabel_tesim')
                 resp['response']['docs'].map do |et|
