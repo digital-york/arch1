@@ -60,7 +60,6 @@ module Ingest
             unless note.blank?
                 query += ' AND date_note_tesim:"'+note+'"'
             end
-puts query
             response = SolrQuery.new.solr_query(query, 'id')
             response['response']['docs'].map do |pobj|
                 entry_date_id = pobj['id']
