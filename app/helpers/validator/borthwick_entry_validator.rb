@@ -43,7 +43,7 @@ module Validator
             entry_types << borthwick_entry_row.entry_type3 unless borthwick_entry_row.entry_type3.blank?
 
             # Validate: compare entry_types from spreadsheet and from Solr
-            return 'entry_types' if entry_types != Ingest::AuthorityHelper.s_get_entry_type_labels(entry_json['entry_type_tesim'])
+            return 'entry_types' if entry_types.sort != Ingest::AuthorityHelper.s_get_entry_type_labels(entry_json['entry_type_tesim']).sort
 
             # language
             # Q: NO language column in Reg7132v-entry-6-155-York-EHW.xlsx
@@ -139,7 +139,7 @@ module Validator
                 unless borthwick_entry_row.place_as.blank?
                     return "related_place.place_as_written" if Ingest::RelatedPlaceHelper.get_related_place_id(entry_id, borthwick_entry_row.place_as).blank?
                 end
-                
+
                 # Step 2: from place_object_id get Solr object, then compare the place_name_tesim with borthwick_entry_row.place_name
                 return "related_place.place_name" if Ingest::AuthorityHelper.s_get_place_name(place_object_id) != [borthwick_entry_row.place_name]
 
