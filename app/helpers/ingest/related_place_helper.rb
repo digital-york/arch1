@@ -24,6 +24,8 @@ module Ingest
         # pry(main)> Ingest::RelatedPlaceHelper.get_related_place_id('0v838095w','Kirkeham')
         # => "gq67js019"
         def self.get_related_place_id(entry_id, place_as_written)
+            return '' if entry_id.blank? or place_as_written.blank?
+
             related_place_id = ''
             query = 'has_model_ssim:"RelatedPlace" AND relatedPlaceFor_ssim:"' + entry_id + '" AND place_as_written_tesim:"'+place_as_written+'"'
             resp = SolrQuery.new.solr_query(query, 'id')
