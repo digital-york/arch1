@@ -15,7 +15,8 @@ module Validator
             # Link entry to folio
             folio_id = Ingest::FolioHelper.s_get_ar_folio_id(borthwick_entry_row.register,
                                                              borthwick_entry_row.folio_no,
-                                                             borthwick_entry_row.folio_side)
+                                                             borthwick_entry_row.folio_side,
+                                                             borthwick_entry_row.image_id)
             if folio_id.nil?
                 puts 'cannot find folio: ' + borthwick_entry_row.to_s
                 log.info 'cannot find folio: ' + borthwick_entry_row.to_s
@@ -79,7 +80,9 @@ module Validator
             end
 
             # validate is_referenced_by field
-            return 'is_referenced_by' if borthwick_entry_row.referenced_by != entry_json['is_referenced_by_tesim'][0]
+            unless borthwick_entry_row.referenced_by.blank?
+                return 'is_referenced_by' if borthwick_entry_row.referenced_by != entry_json['is_referenced_by_tesim'][0]
+            end
 
             # Validate entry dates
             # 1) Find linked entry date1 and validate date role and note fields
@@ -133,8 +136,10 @@ module Validator
                 place_type_ids = Ingest::AuthorityHelper.s_get_place_type_ids([borthwick_entry_row.place_type]) unless borthwick_entry_row.place_type.blank?
 
                 # Step 1: get related_place object, then check it against borthwick_entry_row.place_as
-                return "related_place.place_as_written" if Ingest::RelatedPlaceHelper.get_related_place_id(entry_id, borthwick_entry_row.place_as).blank?
-
+                unless borthwick_entry_row.place_as.blank?
+                    return "related_place.place_as_written" if Ingest::RelatedPlaceHelper.get_related_place_id(entry_id, borthwick_entry_row.place_as).blank?
+                end
+                
                 # Step 2: from place_object_id get Solr object, then compare the place_name_tesim with borthwick_entry_row.place_name
                 return "related_place.place_name" if Ingest::AuthorityHelper.s_get_place_name(place_object_id) != [borthwick_entry_row.place_name]
 
