@@ -116,7 +116,7 @@ module RemoveEmptyFields
         end
         # Delete if field is marked to destroy (by clicking the 'x') OR there is no data
         if (entry_params[:entry_dates_attributes][index.to_s][:single_dates_attributes][index2.to_s][:_destroy] == '1') || (remove_single_date == true)
-          entry_params[:entry_dates_attributes][index.to_s][:single_dates_attributes][index2.to_s].each do |param|
+          entry_params[:entry_dates_attributes][index.to_s][:single_dates_attributes][index2.to_s].dup.each do |param|
             unless param[0] == 'id'
               entry_params[:entry_dates_attributes][index.to_s][:single_dates_attributes][index2.to_s][param[0]] = ''
             end
@@ -155,7 +155,7 @@ module RemoveEmptyFields
       next unless ((entry_params[:entry_dates_attributes][index.to_s][:_destroy] == '1') || (remove_date == true)) &&
                   (single_date_exists == false)
 
-      entry_params[:entry_dates_attributes][index.to_s].each do |param|
+      entry_params[:entry_dates_attributes][index.to_s].dup.each do |param|
         unless (param[0] == 'id') || (param[0] == 'single_dates_attributes')
           entry_params[:entry_dates_attributes][index.to_s][param[0]] = ''
         end
@@ -205,7 +205,7 @@ module RemoveEmptyFields
       # Delete if field is marked to destroy (by clicking the 'x') OR there is no data
       next unless (entry_params[:related_places_attributes][index.to_s][:_destroy] == '1') || (remove_place == true)
 
-      entry_params[:related_places_attributes][index.to_s].each do |param|
+      entry_params[:related_places_attributes][index.to_s].dup.each do |param|
         entry_params[:related_places_attributes][index.to_s][param[0]] = '' unless param[0] == 'id'
       end
       entry_params[:related_places_attributes][index.to_s].delete(:rdftype)
@@ -252,7 +252,7 @@ module RemoveEmptyFields
       # Delete if field is marked to destroy (by clicking the 'x') OR there is no data
       next unless (entry_params[:related_agents_attributes][index.to_s][:_destroy] == '1') || (remove_agent == true)
 
-      entry_params[:related_agents_attributes][index.to_s].each do |param|
+      entry_params[:related_agents_attributes][index.to_s].dup.each do |param|
         entry_params[:related_agents_attributes][index.to_s][param[0]] = [] unless param[0] == 'id'
       end
       # Correct some properties to expected scallar values
