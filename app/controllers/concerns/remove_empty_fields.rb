@@ -120,6 +120,8 @@ module RemoveEmptyFields
             unless param[0] == 'id'
               entry_params[:entry_dates_attributes][index.to_s][:single_dates_attributes][index2.to_s][param[0]] = ''
             end
+            # :date_certainty is multi-value property
+            entry_params[:entry_dates_attributes][index.to_s][:single_dates_attributes][index2.to_s][:date_certainty] = []
           end
           entry_params[:entry_dates_attributes][index.to_s][:single_dates_attributes][index2.to_s].delete(:rdftype)
 
@@ -206,8 +208,10 @@ module RemoveEmptyFields
       next unless (entry_params[:related_places_attributes][index.to_s][:_destroy] == '1') || (remove_place == true)
 
       entry_params[:related_places_attributes][index.to_s].dup.each do |param|
-        entry_params[:related_places_attributes][index.to_s][param[0]] = '' unless param[0] == 'id'
+        entry_params[:related_places_attributes][index.to_s][param[0]] = [] unless param[0] == 'id'
       end
+      # At relate_place model :place_same_as property is declared as singular value
+      entry_params[:related_places_attributes][index.to_s][:place_same_as] = ''
       entry_params[:related_places_attributes][index.to_s].delete(:rdftype)
 
       if entry_params[:related_places_attributes][index.to_s][:id].nil?
@@ -255,7 +259,7 @@ module RemoveEmptyFields
       entry_params[:related_agents_attributes][index.to_s].dup.each do |param|
         entry_params[:related_agents_attributes][index.to_s][param[0]] = [] unless param[0] == 'id'
       end
-      # Correct some properties to expected scallar values
+      # At relate agent model some properties are declare as singular
       entry_params[:related_agents_attributes][index.to_s][:person_same_as] = ''
       entry_params[:related_agents_attributes][index.to_s][:person_group] = ''
       entry_params[:related_agents_attributes][index.to_s][:person_gender] = ''
