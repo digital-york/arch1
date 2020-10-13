@@ -53,6 +53,7 @@ group :development, :test do
   gem 'pry-byebug'
   gem 'pry-rails'
   gem 'rspec-rails'
+  gem 'rails-controller-testing'
   gem 'spring'
   gem 'puma'
 end
