@@ -71,9 +71,13 @@ module Ingest
         #
         def self.s_get_single_date_id(entry_date_id, date, certainty, date_type)
             single_date_id = nil
-            return single_date_id if entry_date_id.blank? or date.blank? or certainty.blank? or date_type.blank?
+            return single_date_id if entry_date_id.blank?
 
-            query = 'has_model_ssim:"SingleDate" AND dateFor_ssim:"'+entry_date_id+'" AND date_tesim:"' + date + '" AND date_certainty_tesim:"'+certainty+'" AND date_type_tesim:"'+date_type+'"'
+            query = 'has_model_ssim:"SingleDate" AND dateFor_ssim:"'+entry_date_id+'"'
+            query = query + ' AND date_tesim:"' + date + '"' unless date.blank?
+            query = query + ' AND date_certainty_tesim:"' + certainty + '"' unless certainty.blank?
+            query = query + ' AND date_type_tesim:"' + date_type + '"' unless date_type.blank?
+
             response = SolrQuery.new.solr_query(query, 'id')
             response['response']['docs'].map do |pobj|
                 single_date_id = pobj['id']
