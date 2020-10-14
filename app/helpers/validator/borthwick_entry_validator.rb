@@ -53,7 +53,7 @@ module Validator
 
             # Validate: compare languages from spreadsheet and from Solr
             unless languages.length == 0
-                return 'languages' if languages != Ingest::AuthorityHelper.s_get_language_labels(entry_json['language_tesim'])
+                return 'languages' if languages.sort != Ingest::AuthorityHelper.s_get_language_labels(entry_json['language_tesim']).sort
             end
 
             # Validate: compare section type from spreadsheet and from Solr
