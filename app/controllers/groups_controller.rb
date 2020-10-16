@@ -19,14 +19,24 @@ class GroupsController < ApplicationController
     @search_array = []
 
     # Get Concepts for the group ConceptScheme and filter according to search_term
-    num = SolrQuery.new.solr_query(q = 'has_model_ssim:Group', fl = 'id', rows = 0)['response']['numFound']
-    SolrQuery.new.solr_query(q = 'has_model_ssim:Group', fl = 'id, preflabel_tesim', rows = num, sort = 'id asc')['response']['docs'].map.each do |result|
+    # solr_query(q, fl, rows, sort) expected parameters
+    num = SolrQuery.new.solr_query('has_model_ssim:Group', 'id', 0)['response']['numFound']
+    search_response = SolrQuery.new.solr_query(
+      'has_model_ssim:Group',
+      'id, preflabel_tesim, altlabel_tesim',
+      num,
+      'preflabel_si asc'
+    )
+    search_response['response']['docs'].map.each do |result|
       id = result['id']
       preflabel = result['preflabel_tesim'].join
+      # Some groups do not have variant name
+      altlabel = ''
+      altlabel = result['altlabel_tesim'].join unless result['altlabel_tesim'].nil?
 
       tt = []
-
-      next unless preflabel.match(/#{@search_term}/i)
+      # Select results that match group name or group variant name
+      next unless preflabel.match(/#{@search_term}/i) || altlabel.match(/#{@search_term}/i)
 
       tt << id
       tt << preflabel
