@@ -58,24 +58,26 @@ module Ingest
             entry_date1  = Ingest::EntryDateHelper.create_entry_date(borthwick_entry_row.entry_date1_date_role,
                                                                      borthwick_entry_row.entry_date1_note) unless borthwick_entry_row.entry_date1_date_role.blank? and borthwick_entry_row.entry_date1_note.blank?
             unless entry_date1.blank?
+                entry_dates << entry_date1
                 single_date1 = Ingest::EntryDateHelper.create_single_date(
                                        entry_date1,
                                        borthwick_entry_row.entry_date1_date,
                                        borthwick_entry_row.entry_date1_certainty,
                                        borthwick_entry_row.entry_date1_type) unless borthwick_entry_row.entry_date1_date.blank? and borthwick_entry_row.entry_date1_certainty.blank? and borthwick_entry_row.entry_date1_type.blank?
-                entry_dates << entry_date1 unless entry_date1.blank?
+                entry_date1.single_dates << single_date1 unless single_date1.blank?
             end
-
 
             entry_date2  = Ingest::EntryDateHelper.create_entry_date(borthwick_entry_row.entry_date2_date_role,
                                                                      borthwick_entry_row.entry_date2_note) unless borthwick_entry_row.entry_date2_date_role.blank? and borthwick_entry_row.entry_date2_note.blank?
+
             unless entry_date2.blank?
+                entry_dates << entry_date2
                 single_date2 = Ingest::EntryDateHelper.create_single_date(
                         entry_date2,
                         borthwick_entry_row.entry_date2_date,
                         borthwick_entry_row.entry_date2_certainty,
                         borthwick_entry_row.entry_date2_type) unless borthwick_entry_row.entry_date2_date.blank? and borthwick_entry_row.entry_date2_certainty.blank? and borthwick_entry_row.entry_date2_type.blank?
-                entry_dates << entry_date2 unless entry_date2.blank?
+                entry_date2.single_dates << single_date2 unless single_date2.blank?
             end
 
             # related_places
