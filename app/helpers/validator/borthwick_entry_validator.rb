@@ -72,6 +72,9 @@ module Validator
 
             # validate subjects
             unless subjects.length == 0
+puts subjects.sort
+puts '---------'
+puts Ingest::AuthorityHelper.s_get_subject_labels(entry_json['subject_tesim']).sort
                 return 'subject' if subjects.sort != Ingest::AuthorityHelper.s_get_subject_labels(entry_json['subject_tesim']).sort
             end
 
@@ -122,7 +125,7 @@ module Validator
                                                                                borthwick_entry_row.entry_date2_certainty,
                                                                                borthwick_entry_row.entry_date2_type
                 )
-                return "entry_date1_single_date2" if single_date2_id.blank?
+                return "entry_date2_single_date2" if single_date2_id.blank?
             end
 
 
