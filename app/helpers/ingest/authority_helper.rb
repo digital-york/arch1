@@ -135,17 +135,18 @@ module Ingest
         def self.s_get_subject_object_ids(subject_texts)
             subject_ids = []
             subject_texts.each do |subject_text|
-                subject_id = s_get_subject_object_id(subject_text)
-                subject_ids << subject_id unless subject_id.nil?
+                response = SolrQuery.new.solr_query('has_model_ssim:"ConceptScheme" AND preflabel_tesim:"Borthwick Institute for Archives Subject Headings for the Archbishops\' Registers"', 'id')
+                response['response']['docs'].map do |s|
+                    resp = SolrQuery.new.solr_query('inScheme_ssim:"' + s['id'] + '" AND preflabel_tesim:"' + subject_text.to_s.downcase + '"', 'id,preflabel_tesim')
+                    resp['response']['docs'].map do |se|
+                        # doing an exact match of the search term
+                        if se['preflabel_tesim'][0].to_s == subject_text
+                            subject_ids << se['id']
+                        end
+                    end
+                end
             end
             subject_ids
-        end
-
-        # Find subject id by its text
-        # [2] pry(main)> Ingest::AuthorityHelper.s_get_subject_object_id('Prioresses')
-        # => "zs25xc64x"
-        def self.s_get_subject_object_id(subject_text)
-            Terms::SubjectTerms.new('subauthority').find_id_with_alts(subject_text)
         end
 
         # Find subject texts by its ids
