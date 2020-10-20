@@ -72,9 +72,6 @@ module Validator
 
             # validate subjects
             unless subjects.length == 0
-puts subjects.sort
-puts '---------'
-puts Ingest::AuthorityHelper.s_get_subject_labels(entry_json['subject_tesim']).sort
                 return 'subject' if subjects.sort != Ingest::AuthorityHelper.s_get_subject_labels(entry_json['subject_tesim']).sort
             end
 
@@ -150,12 +147,12 @@ puts Ingest::AuthorityHelper.s_get_subject_labels(entry_json['subject_tesim']).s
 
                 # Step 2: from place_object_id get Solr object, then compare the place_name_tesim with borthwick_entry_row.place_name
                 unless borthwick_entry_row.place_name.blank?
-                    return "related_place.place_name" if Ingest::AuthorityHelper.s_get_place_name(place_object_id) != [borthwick_entry_row.place_name]
+                    return "related_place.place_name" if Ingest::AuthorityHelper.s_get_place_name(place_object_id).sort != [borthwick_entry_row.place_name].sort
                 end
 
                 # Step 3: from place_role_ids, get solr object, then compare the preflabel_tesim with borthwick_entry_row.place_role
                 unless borthwick_entry_row.place_role.blank?
-                    return "related_place.place_role" if Ingest::AuthorityHelper.s_get_place_role_name(place_role_ids[0]) != [borthwick_entry_row.place_role]
+                    return "related_place.place_role" if Ingest::AuthorityHelper.s_get_place_role_name(place_role_ids[0]).sort != [borthwick_entry_row.place_role].sort
                 end
 
                 # Step 4: from place_type_ids, get solr object, then compare preflabel_tesim with borthwick_entry_row.place_type
