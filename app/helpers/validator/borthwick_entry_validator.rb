@@ -73,7 +73,7 @@ module Validator
             subjects << borthwick_entry_row.subject4 unless borthwick_entry_row.subject4.blank?
 
             # validate subjects
-            unless subjects.length == 0
+            unless subjects.blank?
                 return 'subject' if subjects.sort != Ingest::AuthorityHelper.s_get_subject_labels(entry_json['subject_tesim']).sort
             end
 
