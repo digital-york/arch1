@@ -20,18 +20,21 @@ namespace :validate do
         entry_rows.each_with_index { |entry_row, index|
             begin
                 # For test purpose, only print selected entry rows
-                #if entry_row.folio_no == '134' and
+                # if entry_row.folio_no == '7' and
                 #   entry_row.folio_side == '(verso)' and
-                #   entry_row.entry_no == '5'
-                      puts "[#{index} / #{entry_rows.length}] #{entry_row.to_s}"
-                      log.info "[#{index} / #{entry_rows.length}] #{entry_row.to_s}"
+                #   entry_row.entry_no == '1'
+                      # puts "[#{index} / #{entry_rows.length}] #{entry_row.to_s}"
+                      # log.info "[#{index} / #{entry_rows.length}] #{entry_row.to_s}"
                       first_mismatched_field = Validator::BorthwickEntryValidator.validate_entry(entry_row)
                       unless first_mismatched_field.blank?
+                          puts "[#{index} / #{entry_rows.length}] #{entry_row.to_s}"
+                          log.info "[#{index} / #{entry_rows.length}] #{entry_row.to_s}"
                           puts '  mismatch: ' + first_mismatched_field
+                          log.info '  mismatch: ' + first_mismatched_field
                           mismatched_entries << entry_row.to_s + " => #{first_mismatched_field}"
                       end
                     # break
-                #end
+                # end
             rescue => exception
                 log.error exception.backtrace
                 puts exception.backtrace
