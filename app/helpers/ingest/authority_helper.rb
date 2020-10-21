@@ -78,6 +78,7 @@ module Ingest
         # => ["Diverse jurisdictions"]
         def self.s_get_section_type_labels(section_type_ids)
             section_type_labels = []
+            return section_type_labels if section_type_ids.blank?
             section_type_ids.each do |section_type_id|
                 resp = SolrQuery.new.solr_query('id:' + section_type_id, 'id,preflabel_tesim')
                 resp['response']['docs'].map do |se|
