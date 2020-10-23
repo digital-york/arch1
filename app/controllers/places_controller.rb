@@ -20,66 +20,36 @@ class PlacesController < ApplicationController
 
     @search_array = []
 
-    if params[:unlock].nil? # or params[:unlock][:auth] != 'deep' or params[:unlock][:auth] != 'os'
-      @deep_checked = false
+    # Get Concepts for the Place ConceptScheme and filter according to search_term
+    # solr_query(q, fl, rows, sort) expected parameters
+    num = SolrQuery.new.solr_query('has_model_ssim:Place', 'id', 0)['response']['numFound']
+    search_response = SolrQuery.new.solr_query(
+      'has_model_ssim:Place',
+      'id, place_name_tesim, altlabel_tesim, parent_ADM4_tesim, parent_ADM3_tesim, parent_ADM2_tesim, parent_ADM1_tesim',
+      num,
+      'id asc'
+    )
 
-      # Get Concepts for the Place ConceptScheme and filter according to search_term
-      num = SolrQuery.new.solr_query(q = 'has_model_ssim:Place', fl = 'id', rows = 0)['response']['numFound']
-      SolrQuery.new.solr_query(q = 'has_model_ssim:Place', fl = 'id, place_name_tesim, parent_ADM4_tesim, parent_ADM3_tesim, parent_ADM2_tesim, parent_ADM1_tesim', rows = num, sort = 'id asc')['response']['docs'].map.each do |result|
-        id = result['id']
-        place_name = result['place_name_tesim']
-        parent_ADM4 = result['parent_ADM4_tesim']
-        parent_ADM3 = result['parent_ADM3_tesim']
-        parent_ADM2 = result['parent_ADM2_tesim']
-        parent_ADM1 = result['parent_ADM1_tesim']
+    search_response['response']['docs'].map.each do |result|
+      id = result['id']
+      place_name = result['place_name_tesim']
+      parent_ADM4 = result['parent_ADM4_tesim']
+      parent_ADM3 = result['parent_ADM3_tesim']
+      parent_ADM2 = result['parent_ADM2_tesim']
+      parent_ADM1 = result['parent_ADM1_tesim']
+      # Some places do not have variant name
+      altlabel = ''
+      altlabel = result['altlabel_tesim'].join unless result['altlabel_tesim'].nil?
 
-        tt = []
-        name = get_label(true, place_name, parent_ADM4, parent_ADM3, parent_ADM2, parent_ADM1)
+      tt = []
+      name = get_label(true, place_name, parent_ADM4, parent_ADM3, parent_ADM2, parent_ADM1)
 
-        next unless name.match(/#{@search_term}/i)
+      # Select results that match place name or place variant name
+      next unless name.match(/#{@search_term}/i) || altlabel.match(/#{@search_term}/i)
 
-        tt << id
-        tt << name
-        @search_array << tt
-      end
-    elsif (params[:unlock][:auth] == 'deep') || (params[:unlock][:auth] == 'os')
-
-      # Search DEEP or OS
-      if @search_term != ''
-        if params[:unlock][:auth] == 'deep'
-          @deep_checked = 'deep'
-          deep = Deep.new('subauthority')
-        elsif params[:unlock][:auth] == 'os'
-          @deep_checked = 'os'
-          deep = OrdnanceSurvey.new('subauthority')
-        end
-
-        search = deep.search(@search_term)
-
-        if search.nil?
-          @error = 'The DEEP Service returned an invalid response. We are unable to get results for this search term from DEEP.'
-        else
-          search.each do |result|
-            id = result['id']
-            place_name = result['name']
-            parent_ADM4 = result['adminlevel4']
-            parent_ADM3 = result['adminlevel3']
-            parent_ADM2 = result['adminlevel2']
-            parent_ADM1 = result['adminlevel1']
-            feature_type = result['featuretype']
-            url = nil
-            url = result['uricdda'] unless result['uricdda'].nil?
-            tt = []
-            name = get_label(false, place_name, parent_ADM4, parent_ADM3, parent_ADM2, parent_ADM1, feature_type, url)
-            tt << 'deep_' + id
-            tt << name
-            @search_array << tt
-          end
-        end
-        params.delete(:auth)
-      else
-        @error = 'Please enter a search term for DEEP or Ordnance Survey'
-      end
+      tt << id
+      tt << name
+      @search_array << tt
     end
 
     # Sort the array by place_name
@@ -104,15 +74,9 @@ class PlacesController < ApplicationController
 
   # EDIT
   def edit
-    # If this is DEEP/OS item, check if the place is in the local places list (using sameas)
-    # If not, create a new local place with the DEEP/OS data
-    if params[:is_deep_checked] != 'false'
-      redirect_to controller: 'places', action: 'index', id: check_id(params[:id], params[:is_deep_checked]), search_term: params[:search_term], place_field: params[:place_field]
-    else
-      @place = Place.find(params[:id])
-      @search_term = params[:search_term]
-      @place_field = params[:place_field]
-    end
+    @place = Place.find(params[:id])
+    @search_term = params[:search_term]
+    @place_field = params[:place_field]
   rescue StandardError => e
     log_error(__method__, __FILE__, e)
     raise
