@@ -53,13 +53,15 @@ module Ingest
                               languages,
                               section_type,
                               summary,
+                              marginalia,
                               subjects,
                               referenced_by,
                               entry_dates,
                               related_places,
                               note,
                               continues_folio_no,
-                              continues_folio_side
+                              continues_folio_side,
+                              continues_image_id
                               )
             log = Logger.new "log/entry_helper.log"
 
@@ -100,6 +102,9 @@ module Ingest
             # summary
             e.summary = summary
 
+            # marginalia
+            e.marginalia = [marginalia] unless marginalia.blank?
+
             # subject
             e.subject = subjects unless subjects.blank?
 
@@ -126,9 +131,11 @@ module Ingest
                 continuted_folio_id = Ingest::FolioHelper.s_get_ar_folio_id(
                                             register_name,
                                             continues_folio_no,
-                                            continues_folio_side)
-                continuted_folio = Folio.find(continuted_folio_id)
-                e.continues_on = continuted_folio unless continuted_folio.nil?
+                                            continues_folio_side,
+                                            continues_image_id)
+                # continuted_folio = Folio.find(continuted_folio_id)
+                # e.continues_on = continuted_folio unless continuted_folio.nil?
+                e.continues_on = continuted_folio_id unless continuted_folio_id.blank?
             end
 
             e.save

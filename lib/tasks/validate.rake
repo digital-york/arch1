@@ -20,27 +20,25 @@ namespace :validate do
         entry_rows.each_with_index { |entry_row, index|
             begin
                 # For test purpose, only print selected entry rows
-                if entry_row.folio_no == '613' and
-                   entry_row.folio_side == '(recto)' and
-                   entry_row.entry_no == '1'
-                      puts "[#{index} / #{entry_rows.length}] #{entry_row.to_s}"
-                      log.info "[#{index} / #{entry_rows.length}] #{entry_row.to_s}"
+                # if entry_row.folio_no == '7' and
+                #   entry_row.folio_side == '(verso)' and
+                #   entry_row.entry_no == '1'
+                      # puts "[#{index} / #{entry_rows.length}] #{entry_row.to_s}"
+                      # log.info "[#{index} / #{entry_rows.length}] #{entry_row.to_s}"
                       first_mismatched_field = Validator::BorthwickEntryValidator.validate_entry(entry_row)
-                      if first_mismatched_field.nil?
-                          print '  ERROR'
-                      elsif first_mismatched_field == ''
-                          print '  match'
-                      else
-                          print '  mismatch: ' + first_mismatched_field
+                      unless first_mismatched_field.blank?
+                          puts "[#{index} / #{entry_rows.length}] #{entry_row.to_s}"
+                          log.info "[#{index} / #{entry_rows.length}] #{entry_row.to_s}"
+                          puts '  mismatch: ' + first_mismatched_field
+                          log.info '  mismatch: ' + first_mismatched_field
                           mismatched_entries << entry_row.to_s + " => #{first_mismatched_field}"
                       end
-                    break
-                end
+                    # break
+                # end
             rescue => exception
                 log.error exception.backtrace
                 puts exception.backtrace
                 errors << "#{entry_row.register} / #{entry_row.folio_no} / #{entry_row.folio_side} / #{entry_row.entry_no}"
-                puts "  Error"
             end
         }
         if errors.length > 0
@@ -48,7 +46,7 @@ namespace :validate do
             log.error errors
         end
         if mismatched_entries.length > 0
-            log.error "==========errors [#{mismatched_entries.length}]=========="
+            log.error "==========mismatches [#{mismatched_entries.length}]=========="
             log.error mismatched_entries
         end
     end

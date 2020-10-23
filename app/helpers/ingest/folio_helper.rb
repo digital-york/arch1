@@ -20,9 +20,9 @@ module Ingest
         end
 
         # get archbishop register folio id
-        # input: register, folio, side
+        # input: register, folio, side, image_id
         # returns folio id
-        def self.s_get_ar_folio_id(register_name, folio_number, folio_side)
+        def self.s_get_ar_folio_id(register_name, folio_number, folio_side, image_id)
             prefix = 'Abp'
             id = nil
             # Convert folio info from:
@@ -30,9 +30,25 @@ module Ingest
             # to:
             #   Abp Reg 7 f.132 (recto)
             folio_label = "#{prefix} #{register_name.gsub('Register', 'Reg')} f.#{folio_number} #{folio_side}"
-            SolrQuery.new.solr_query("preflabel_tesim:\"#{folio_label}\"",'id,preflabel_tesim')['response']['docs'].map do |r|
-                if r['preflabel_tesim'][0].downcase == folio_label.downcase
-                    id = r['id']
+            solr_query = SolrQuery.new.solr_query("preflabel_tesim:\"#{folio_label}\"",'id,preflabel_tesim')
+            if solr_query['response']['numFound'].to_i > 1 and (not image_id.blank?)
+                # Perform second query to identify the folio id
+                # has_model_ssim:Image and hasTarget_ssim:z316q346z and
+                # file_path_tesim:Abp_Reg_07_0315
+                solr_query['response']['docs'].map do |r|
+                    folio_id = r['id']
+                    second_query = "has_model_ssim:Image and hasTarget_ssim:#{folio_id} and file_path_tesim:#{image_id}"
+                    solr_query2 = SolrQuery.new.solr_query(second_query,'id,preflabel_tesim')
+                    # If the matched Image object can be found, return the folio_id
+                    if solr_query2['response']['numFound'].to_i >= 1
+                        id = folio_id
+                    end
+                end
+            else
+                solr_query['response']['docs'].map do |r|
+                    if r['preflabel_tesim'][0].downcase == folio_label.downcase
+                        id = r['id']
+                    end
                 end
             end
             id

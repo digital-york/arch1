@@ -25,7 +25,7 @@ module Ingest
 
             sd.rdftype        = sd.add_rdf_types
             sd.date           = date
-            sd.date_certainty = [certainties]
+            sd.date_certainty = [certainties] unless certainties.blank?
             sd.date_type      = date_type
             sd.entry_date     = entry_date
             sd.save
@@ -36,15 +36,53 @@ module Ingest
         end
 
         # Ingest::EntryDateHelper.create_entry_date
+        #
         def self.create_entry_date(date_role, note)
             ed = EntryDate.new
 
             ed.rdftype      = ed.add_rdf_types
-            ed.date_role    = self.s_get_date_role_id(date_role)
+            ed.date_role    = self.s_get_date_role_id(date_role) unless date_role.blank?
             ed.date_note    = note
             ed.save
 
             ed
+        end
+
+        # get entry_date_id from entry_id, date_role, and note
+        # pry(main)> Ingest::EntryDateHelper.s_get_entry_date_id('0v838095w', 'document date', 'Date in memorandum given as 3 Kal Maii (29 April), but in commission, as 3 Id Maii (13 May).')
+        # => "8g84mn23z"
+        def self.s_get_entry_date_id(entry_id, date_role, note)
+            entry_date_id = nil
+            query = 'has_model_ssim:"EntryDate" AND entryDateFor_ssim:"'+entry_id+'"'
+            unless date_role.blank?
+                query += ' AND date_role_search:"' + date_role + '"'
+            end
+            unless note.blank?
+                query += ' AND date_note_tesim:"'+note+'"'
+            end
+            response = SolrQuery.new.solr_query(query, 'id')
+            response['response']['docs'].map do |pobj|
+                entry_date_id = pobj['id']
+            end
+            entry_date_id
+        end
+
+        # get single_date_id from entry_date_id, date, certainty, date_type
+        #
+        def self.s_get_single_date_id(entry_date_id, date, certainty, date_type)
+            single_date_id = nil
+            return single_date_id if entry_date_id.blank?
+
+            query = 'has_model_ssim:"SingleDate" AND dateFor_ssim:"'+entry_date_id+'"'
+            query = query + ' AND date_tesim:"' + date + '"' unless date.blank?
+            query = query + ' AND date_certainty_tesim:"' + certainty + '"' unless certainty.blank?
+            query = query + ' AND date_type_tesim:"' + date_type + '"' unless date_type.blank?
+
+            response = SolrQuery.new.solr_query(query, 'id')
+            response['response']['docs'].map do |pobj|
+                single_date_id = pobj['id']
+            end
+            single_date_id
         end
     end
 end

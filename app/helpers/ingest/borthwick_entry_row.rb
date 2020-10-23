@@ -11,6 +11,7 @@ module Ingest
                     :section_type,
                     :continues_folio_no,
                     :continues_folio_side,
+                    :continues_image_id,
                     :summary,
                     :marginalia,
                     :language1,
@@ -36,6 +37,7 @@ module Ingest
                     :place_role,
                     :place_type,
                     :place_note,
+                    :image_id,
                     :group1_as_written,
                     :group1_person_or,
                     :group1_group,
@@ -82,6 +84,7 @@ module Ingest
                     :section_type,
                     :continues_folio_no,
                     :continues_folio_side,
+                    :continues_image_id,
                     :summary,
                     :marginalia,
                     :language1,
@@ -107,6 +110,7 @@ module Ingest
                     :place_role,
                     :place_type,
                     :place_note,
+                    :image_id,
                     :group1_as_written,
                     :group1_person_or,
                     :group1_group,
@@ -144,7 +148,11 @@ module Ingest
                     :person3_note
 
         def to_s
-            register + ' / ' + folio_no.to_s + ' / ' +folio_side + ' / ' + entry_no.to_s
+            if image_id.blank?
+                register + ' / ' + folio_no.to_s + ' / ' +folio_side + ' / ' + entry_no.to_s
+            else
+                register + ' / ' + folio_no.to_s + ' / ' +folio_side + ' / ' + entry_no.to_s + ' / ' + image_id
+            end
         end
     end
 end

@@ -78,6 +78,7 @@ module Ingest
         # => ["Diverse jurisdictions"]
         def self.s_get_section_type_labels(section_type_ids)
             section_type_labels = []
+            return section_type_labels if section_type_ids.blank?
             section_type_ids.each do |section_type_id|
                 resp = SolrQuery.new.solr_query('id:' + section_type_id, 'id,preflabel_tesim')
                 resp['response']['docs'].map do |se|
@@ -118,6 +119,8 @@ module Ingest
         # => ["j6731378s"]
         def self.s_get_entry_type_labels(entry_type_ids)
             entry_type_labels = []
+            return entry_type_labels if entry_type_ids.blank?
+
             entry_type_ids.each do |entry_type_id|
                 resp = SolrQuery.new.solr_query('id:' + entry_type_id, 'id,preflabel_tesim')
                 resp['response']['docs'].map do |et|
@@ -133,17 +136,31 @@ module Ingest
         def self.s_get_subject_object_ids(subject_texts)
             subject_ids = []
             subject_texts.each do |subject_text|
-                subject_id = s_get_subject_object_id(subject_text)
-                subject_ids << subject_id unless subject_id.nil?
+                response = SolrQuery.new.solr_query('has_model_ssim:"ConceptScheme" AND preflabel_tesim:"Borthwick Institute for Archives Subject Headings for the Archbishops\' Registers"', 'id')
+                response['response']['docs'].map do |s|
+                    resp = SolrQuery.new.solr_query('inScheme_ssim:"' + s['id'] + '" AND preflabel_tesim:"' + subject_text.to_s.downcase + '"', 'id,preflabel_tesim')
+                    resp['response']['docs'].map do |se|
+                        # doing an exact match of the search term
+                        if se['preflabel_tesim'][0].to_s == subject_text
+                            subject_ids << se['id']
+                        end
+                    end
+                end
             end
             subject_ids
         end
 
-        # Find subject id by its text
-        # [2] pry(main)> Ingest::AuthorityHelper.s_get_subject_object_id('Prioresses')
-        # => "zs25xc64x"
-        def self.s_get_subject_object_id(subject_text)
-            Terms::SubjectTerms.new('subauthority').find_id_with_alts(subject_text)
+        # Find subject texts by its ids
+        # Ingest::AuthorityHelper.s_get_subject_labels(['zs25xc64x'])
+        def self.s_get_subject_labels(subject_ids)
+            subject_labels = []
+            subject_ids.each do |subject_id|
+                resp = SolrQuery.new.solr_query('id:' + subject_id, 'id,preflabel_tesim')
+                resp['response']['docs'].map do |sj|
+                    subject_labels << sj['preflabel_tesim'][0]
+                end
+            end
+            subject_labels
         end
 
         # find place object ids from label
@@ -153,7 +170,9 @@ module Ingest
         # pry(main)> Ingest::AuthorityHelper.s_get_place_object_id('Yarm, North Riding of Yorkshire, England')
         # => "1c18df984"
         def self.s_get_place_object_id(place)
-            places_id = nil
+            return '' if place.blank?
+
+            places_id = ''
 
             response = SolrQuery.new.solr_query('has_model_ssim:"ConceptScheme" AND preflabel_tesim:"places"', 'id')
             # first, query ConceptSchema for places
@@ -171,7 +190,7 @@ module Ingest
                     end
                 end
                 # Then, if places_id is not found, do a substring search
-                if places_id.nil?
+                if places_id.blank?
                     resp = SolrQuery.new.solr_query('inScheme_ssim:"' + l['id'] + '" AND place_name_tesim:' + place.downcase, 'id,place_name_tesim,preflabel_tesim')
                     resp['response']['docs'].map do |p|
                         places_id = p['id']
@@ -180,6 +199,42 @@ module Ingest
             end
 
             places_id
+        end
+
+        # get place object name from object_id
+        # pry(main)> Ingest::AuthorityHelper.s_get_place_name('9s1616342')
+        # => ["Kirkham"]
+        def self.s_get_place_name(place_object_id)
+            place_name = ''
+            resp = SolrQuery.new.solr_query('id:' + place_object_id, 'id,place_name_tesim')
+            resp['response']['docs'].map do |p|
+                place_name = p['place_name_tesim']
+            end
+            place_name
+        end
+
+        # get place role object label from place_role_id
+        # pry(main)> Ingest::AuthorityHelper.s_get_place_role_name('37720c723')
+        # => ["place of dating"]
+        def self.s_get_place_role_name(place_role_id)
+            place_role_name = ''
+            resp = SolrQuery.new.solr_query('id:' + place_role_id, 'id,preflabel_tesim')
+            resp['response']['docs'].map do |p|
+                place_role_name = p['preflabel_tesim']
+            end
+            place_role_name
+        end
+
+        # get place type name from place_type object id
+        # pry(main)> Ingest::AuthorityHelper.s_get_place_type_name('02870z61f')
+        # => ["none given"]
+        def self.s_get_place_type_name(place_type_id)
+            place_type_name = ''
+            resp = SolrQuery.new.solr_query('id:' + place_type_id, 'id,preflabel_tesim')
+            resp['response']['docs'].map do |p|
+                place_type_name = p['preflabel_tesim']
+            end
+            place_type_name
         end
 
         # find place role ids from label
