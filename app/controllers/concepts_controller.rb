@@ -17,7 +17,7 @@ class ConceptsController < ApplicationController
                    else
                      params[:search_term]
                    end
-
+    @safe_search_term = Regexp.escape(@search_term) unless @search_term.nil?
     @search_array = []
 
     # Get Concepts for the ConceptScheme and list type according to search_term
@@ -25,7 +25,7 @@ class ConceptsController < ApplicationController
       concept_id = result['id']
       preflabel = result['preflabel_tesim'].join
 
-      next unless preflabel.match(/#{@search_term}/i)
+      next unless preflabel.match(/#{@safe_search_term}/i)
 
       tt = []
       tt << concept_id
