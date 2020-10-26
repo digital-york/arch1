@@ -55,7 +55,6 @@ group :development, :test do
   gem 'rspec-rails'
   gem 'rails-controller-testing'
   gem 'spring'
-  gem 'jettywrapper'
   gem 'puma'
   gem 'xray-rails'
 end

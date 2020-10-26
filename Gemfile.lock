@@ -86,7 +86,6 @@ GEM
     builder (3.2.4)
     byebug (11.1.3)
     cancancan (1.17.0)
-    childprocess (4.0.0)
     coderay (1.1.3)
     concurrent-ruby (1.1.7)
     crass (1.0.6)
@@ -143,11 +142,6 @@ GEM
       concurrent-ruby (~> 1.0)
     jbuilder (2.10.1)
       activesupport (>= 5.0.0)
-    jettywrapper (2.0.5)
-      activesupport (>= 3.0.0)
-      childprocess
-      i18n
-      rubyzip (~> 1.0)
     jquery-rails (4.4.0)
       rails-dom-testing (>= 1, < 3)
       railties (>= 4.2.0)
@@ -402,7 +396,6 @@ DEPENDENCIES
   dotenv-rails
   hydra-head (~> 11.0.0)
   jbuilder (~> 2.0)
-  jettywrapper
   jquery-rails
   jquery-turbolinks
   jquery-ui-rails
