@@ -17,7 +17,7 @@ class PlacesController < ApplicationController
     elsif !params[:search_term].nil?
       @search_term = params[:search_term]
     end
-
+    @safe_search_term = Regexp.escape(@search_term) unless @search_term.nil?
     @search_array = []
 
     # Get Concepts for the Place ConceptScheme and filter according to search_term
@@ -45,7 +45,7 @@ class PlacesController < ApplicationController
       name = get_label(true, place_name, parent_ADM4, parent_ADM3, parent_ADM2, parent_ADM1)
 
       # Select results that match place name or place variant name
-      next unless name.match(/#{@search_term}/i) || altlabel.match(/#{@search_term}/i)
+      next unless name.match(/#{@safe_search_term}/i) || altlabel.match(/#{@safe_search_term}/i)
 
       tt << id
       tt << name

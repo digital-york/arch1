@@ -15,7 +15,7 @@ class GroupsController < ApplicationController
                    else
                      params[:search_term]
                    end
-
+    @safe_search_term = Regexp.escape(@search_term) unless @search_term.nil?
     @search_array = []
 
     # Get Concepts for the group ConceptScheme and filter according to search_term
@@ -36,7 +36,7 @@ class GroupsController < ApplicationController
 
       tt = []
       # Select results that match group name or group variant name
-      next unless preflabel.match(/#{@search_term}/i) || altlabel.match(/#{@search_term}/i)
+      next unless preflabel.match(/#{@safe_search_term}/i) || altlabel.match(/#{@safe_search_term}/i)
 
       tt << id
       tt << preflabel
