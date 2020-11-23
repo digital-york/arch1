@@ -35,14 +35,13 @@ module RemoveEmptyFields
   # Note that for the multi-value fields in Place and Person, I've used the full entry_params values rather than using the index variables, e.g. 'related_place'
   # because the index variable is class Array rather than ActionController::Parameters (please see the Rails section of the wiki for more info on form parameters)
   def remove_empty_array_fields(entry_params)
-    # Doesn't seem to be necessary now - fixed by the new activefedora release (9.0.6)??
-    # entry_params[:section_type] = remove_empty_array_fields2(entry_params[:section_type])
-    # entry_params[:marginalia] = remove_empty_array_fields2(entry_params[:marginalia])
-    # entry_params[:language] = remove_empty_array_fields2(entry_params[:language])
-    # entry_params[:subject] = remove_empty_array_fields2(entry_params[:subject])
-    # entry_params[:note] = remove_empty_array_fields2(entry_params[:note])
-    # entry_params[:editorial_note] = remove_empty_array_fields2(entry_params[:editorial_note])
-    # entry_params[:is_referenced_by] = remove_empty_array_fields2(entry_params[:is_referenced_by])
+    entry_params[:section_type] = remove_empty_array_fields2(entry_params[:section_type])
+    entry_params[:marginalia] = remove_empty_array_fields2(entry_params[:marginalia])
+    entry_params[:language] = remove_empty_array_fields2(entry_params[:language])
+    entry_params[:subject] = remove_empty_array_fields2(entry_params[:subject])
+    entry_params[:note] = remove_empty_array_fields2(entry_params[:note])
+    entry_params[:editorial_note] = remove_empty_array_fields2(entry_params[:editorial_note])
+    entry_params[:is_referenced_by] = remove_empty_array_fields2(entry_params[:is_referenced_by])
 
     # Remove empty multi-value fields (place)
     entry_params[:related_places_attributes]&.to_enum&.each_with_index do |_related_place, index|
