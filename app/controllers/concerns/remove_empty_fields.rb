@@ -35,6 +35,7 @@ module RemoveEmptyFields
   # Note that for the multi-value fields in Place and Person, I've used the full entry_params values rather than using the index variables, e.g. 'related_place'
   # because the index variable is class Array rather than ActionController::Parameters (please see the Rails section of the wiki for more info on form parameters)
   def remove_empty_array_fields(entry_params)
+    entry_params[:entry_type] = remove_empty_array_fields2(entry_params[:entry_type])
     entry_params[:section_type] = remove_empty_array_fields2(entry_params[:section_type])
     entry_params[:marginalia] = remove_empty_array_fields2(entry_params[:marginalia])
     entry_params[:language] = remove_empty_array_fields2(entry_params[:language])
