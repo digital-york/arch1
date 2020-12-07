@@ -223,8 +223,7 @@ module RegisterFolio
     q.solr_query('folio_ssim:"' + session[:folio_id] + '"', "id", 100)["response"]["docs"].each do |result|
       entry_id = result["id"]
       q.solr_query('id:"' + entry_id + '"', "continues_on_tesim,entry_no_tesim", 1)["response"]["docs"].each do |result|
-        unless result["continues_on_tesim"].nil?
-          binding.pry
+        unless result["continues_on_tesim"].nil? || result["continues_on_tesim"] != ""
           @folio_continues_id = result["entry_no_tesim"].join
         end
       end
@@ -251,8 +250,6 @@ module RegisterFolio
     if @is_entry_on_next_folio == false
       new_entry = Entry.new
       new_entry.entry_no = "1"
-      new_entry.entry_type = ""
-      new_entry.continues_on = ""
       new_entry.folio_id = next_folio_id
       new_entry.save
     end
