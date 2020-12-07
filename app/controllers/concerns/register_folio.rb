@@ -223,7 +223,7 @@ module RegisterFolio
     q.solr_query('folio_ssim:"' + session[:folio_id] + '"', "id", 100)["response"]["docs"].each do |result|
       entry_id = result["id"]
       q.solr_query('id:"' + entry_id + '"', "continues_on_tesim,entry_no_tesim", 1)["response"]["docs"].each do |result|
-        unless result["continues_on_tesim"].nil? || result["continues_on_tesim"] != ""
+        unless result["continues_on_tesim"].nil? || result["continues_on_tesim"].join.empty?
           @folio_continues_id = result["entry_no_tesim"].join
         end
       end
@@ -486,7 +486,7 @@ module RegisterFolio
     q = SolrQuery.new
     query = 'relatedAgentFor_ssim:"' + @entry.id + '"'
     q.solr_query(query, "person_same_as_tesim", 50)["response"]["docs"].each do |result|
-      unless result["person_same_as_tesim"].nil?
+      unless result["person_same_as_tesim"].nil? || result["person_same_as_tesim"].join.empty? 
         begin
           person = Person.find(result["person_same_as_tesim"].join)
         rescue
