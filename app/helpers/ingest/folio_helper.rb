@@ -65,5 +65,12 @@ module Ingest
 
             f
         end
+
+        # Return folio's label
+        # Ingest::FolioHelper.get_folio_label('1c18df88w')
+        def self.get_folio_label(folio_id)
+            folio_query_result = SolrQuery.new.solr_query("id:\"#{folio_id}\"",'id,preflabel_tesim,isPartOf_ssim')['response']['docs'][0]
+            folio_query_result['preflabel_tesim'][0]
+        end
     end
 end
