@@ -1,7 +1,7 @@
 # Place description class, mainly for sorting place names
 module Report
     class PlaceDesc
-        attr_accessor :place_id, :place_label, :place_name_tesim, :country_code, :parent_adm1_tesim, :parent_adm2_tesim, :parent_adm3_tesim, :parent_adm4_tesim
+        attr_accessor :place_id, :place_label, :place_name_tesim, :country_code, :parent_adm1_tesim, :parent_adm2_tesim, :parent_adm3_tesim, :parent_adm4_tesim, :feature_code_tesim
 
         def initialize(place_id,
                        place_label,
@@ -10,7 +10,8 @@ module Report
                        parent_adm1_tesim,
                        parent_adm2_tesim,
                        parent_adm3_tesim,
-                       parent_adm4_tesim)
+                       parent_adm4_tesim,
+                       feature_code_tesim)
             @place_id = place_id
             @place_label = place_label
             @place_name_tesim = place_name_tesim
@@ -19,6 +20,7 @@ module Report
             @parent_adm2_tesim = parent_adm2_tesim
             @parent_adm3_tesim = parent_adm3_tesim
             @parent_adm4_tesim = parent_adm4_tesim
+            @feature_code_tesim = feature_code_tesim
         end
 
         def <=>(other)
