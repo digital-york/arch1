@@ -20,6 +20,7 @@ namespace :duplicateplaces do
         duplicate_places_entries = []
         errors = []
 
+        puts args[:filename_xsl].split('/')[-1]
         entry_rows.each_with_index { |entry_row, index|
             begin
                 if duplicate_places.keys.include? entry_row.place_name
@@ -37,9 +38,14 @@ namespace :duplicateplaces do
             log.error "==========errors [#{errors.length}]=========="
             log.error errors
         end
+
         if duplicate_places_entries.length > 0
-            log.error "==========mismatches [#{duplicate_places_entries.length}]=========="
+            puts "  ----"
+            puts "  total: #{duplicate_places_entries.length}\n\n"
             # log.error duplicate_places_entries
+        else
+            puts "  ----"
+            puts "  No duplicate place name used\n\n"
         end
     end
 end
