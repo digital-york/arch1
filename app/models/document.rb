@@ -33,10 +33,19 @@ class Document < ActiveFedora::Base
     index.as :stored_searchable
   end
 
+  property :language, predicate: ::RDF::URI.new('http://purl.org/dc/terms/language'), multiple: true do |index|
+    index.as :stored_searchable
+  end
+
+  property :subject, predicate: ::RDF::URI.new('http://purl.org/dc/terms/subject'), multiple: true do |index|
+    index.as :stored_searchable
+  end
+
+
   has_many :document_dates, :dependent => :destroy
   accepts_nested_attributes_for :document_dates, :allow_destroy => true, :reject_if => :all_blank
 
-  
+
   # has_many :related_agents, :dependent => :destroy
   # has_many :related_places, :dependent => :destroy
 
