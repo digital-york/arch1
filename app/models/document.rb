@@ -33,12 +33,16 @@ class Document < ActiveFedora::Base
     index.as :stored_searchable
   end
 
+  has_many :document_dates, :dependent => :destroy
+  accepts_nested_attributes_for :document_dates, :allow_destroy => true, :reject_if => :all_blank
+
+  
   # has_many :related_agents, :dependent => :destroy
   # has_many :related_places, :dependent => :destroy
-  # has_many :entry_dates, :dependent => :destroy
+
   #
   # accepts_nested_attributes_for :related_agents, :allow_destroy => true, :reject_if => :all_blank
   # accepts_nested_attributes_for :related_places, :allow_destroy => true, :reject_if => :all_blank
-  # accepts_nested_attributes_for :entry_dates, :allow_destroy => true, :reject_if => :all_blank
+
 
 end
