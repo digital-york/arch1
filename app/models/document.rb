@@ -55,9 +55,10 @@ class Document < ActiveFedora::Base
   has_many :tna_persons, :dependent => :destroy
   accepts_nested_attributes_for :tna_persons, :allow_destroy => true, :reject_if => :all_blank
 
-  # has_many :related_agents, :dependent => :destroy
-  # has_many :related_places, :dependent => :destroy
-  # accepts_nested_attributes_for :related_agents, :allow_destroy => true, :reject_if => :all_blank
-  # accepts_nested_attributes_for :related_places, :allow_destroy => true, :reject_if => :all_blank
+  has_many :place_of_datings, :dependent => :destroy
+  accepts_nested_attributes_for :place_of_datings, :allow_destroy => true, :reject_if => :all_blank
+
+  has_many :tna_places, :dependent => :destroy
+  accepts_nested_attributes_for :tna_places, :allow_destroy => true, :reject_if => :all_blank
 
 end
