@@ -35,6 +35,12 @@ module AssignRdfTypes
         ['http://schema.org/Place', 'http://pcdm.org/models#Object']
       when 'Group'
         ['https://schema.org/Organization', 'http://vocab.getty.edu/ontology#GroupConcept', 'http://pcdm.org/models#Object']
+      when 'Department'
+        %w(http://dlib.york.ac.uk/ontologies/tna#Department http://pcdm.org/models#Object http://www.shared-canvas.org/ns/Collection http://dlib.york.ac.uk/ontologies/tna#All)
+      when 'Series'
+        %w(http://dlib.york.ac.uk/ontologies/tna#Series http://pcdm.org/models#Object http://www.shared-canvas.org/ns/Canvas http://purl.org/vra/Work http://dlib.york.ac.uk/ontologies/tna#All)
+      when 'Document'
+        %w(http://dlib.york.ac.uk/ontologies/tna#Document http://www.shared-canvas.org/ns/Zone http://pcdm.org/models#Object http://dlib.york.ac.uk/ontologies/tna#All)
       else
         ['http://pcdm.org/models#Object','http://dlib.york.ac.uk/ontologies/borthwick-registers#All']
     end
