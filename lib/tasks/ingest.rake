@@ -1,4 +1,5 @@
 require 'logger'
+require 'json'
 
 namespace :ingest do
 
@@ -54,5 +55,15 @@ namespace :ingest do
         }
         log.error "==========errors [#{entry_errors.length}]=========="
         log.error entry_errors
+    end
+
+    desc "Ingest TNA Departments from json file"
+    # bundle exec rake ingest:tna_departments
+    task tna_departments: :environment do
+        json_file = File.read(Rails.root + 'lib/assets/departments/departments.json')
+        json = JSON.parse(json_file)
+        json.each do |k, v|
+            Ingest::DepartmentHelper.create_department(k, v)
+        end
     end
 end
