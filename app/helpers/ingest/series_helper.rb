@@ -28,7 +28,6 @@ module Ingest
             s.department = Department.find(department_id)
 
             s.save
-
             s
         end
     end
