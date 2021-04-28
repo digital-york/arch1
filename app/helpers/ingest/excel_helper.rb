@@ -106,5 +106,46 @@ module Ingest
 
             entry_rows
         end
+
+        # parse a row from TNA spreadsheet
+        def self.parse_tna_spreadsheet(filename)
+            document_rows = []
+            rows = Roo::Spreadsheet.open(filename)
+            rows.each_with_index { |row, index|
+                # Ignore the first tow rows (header)
+                if index < 2
+                    next
+                end
+
+                document_row = Ingest::TnaDocumentRow.new
+
+                document_row.repository = row[0]
+                document_row.reference = row[1]
+                document_row.document_type = row[2]
+                document_row.date_of_document = row[3]
+                document_row.place_of_dating = row[4]
+                document_row.language = row[5]
+                document_row.subject = row[6]
+                document_row.addressee = row[7]
+                document_row.sender = row[8]
+                document_row.person = row[9]
+                document_row.place = row[10]
+                document_row.summary = row[11]
+
+                # As agreed, the endorsement will be deleted,
+                # so double check the spreadsheet before running the script!
+                document_row.publication = row[12]
+
+                document_row.note = row[13]
+                document_row.entry_date_note = row[14]
+
+                # document_row.person_note no person_note in the agreed mode,
+                # but there is a column in the 'TNA document indexing C81 test file'
+
+                document_rows << document_row
+            }
+
+            document_rows
+        end
     end
 end
