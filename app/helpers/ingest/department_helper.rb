@@ -20,6 +20,7 @@ module Ingest
 
             existing_department_id = Ingest::DepartmentHelper.s_get_department_id(department_label)
             unless existing_department_id.blank?
+                puts '  Found department: ' + existing_department_id
                 return Department.find(existing_department_id)
             end
 
@@ -29,6 +30,7 @@ module Ingest
             d.description = department_desc
 
             d.save
+            puts '  Created department: ' + d.id
 
             d
         end
