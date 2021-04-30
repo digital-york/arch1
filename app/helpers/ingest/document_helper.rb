@@ -14,13 +14,13 @@ module Ingest
         end
 
         # find Document by series id and reference.
-        # pry(main)> Ingest::EntryHelper.s_find_document('1257b485h', 'C 81/1786/43')
+        # pry(main)> Ingest::DocumentHelper.s_find_document('1257b485h', 'C 81/1786/43')
         # => "2b88qc56f"
         def self.s_find_document(series_id, reference)
             document_id = nil
 
             unless series_id.nil? or reference.nil?
-                query = "has_model_ssim:Document AND series_ssim:#{series_id} AND reference_tesim:#{reference}"
+                query = "has_model_ssim:Document AND series_ssim:#{series_id} AND reference_tesim:\"#{reference}\""
                 SolrQuery.new.solr_query(query)['response']['docs'].map do |r|
                     document_id = r['id']
                 end
