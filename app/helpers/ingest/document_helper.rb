@@ -32,6 +32,7 @@ module Ingest
         # Ingest::DocumentHelper.create_document
         def self.create_or_update_document(
             allow_edit,
+            repository,
             series_id,
             reference,
             publication,
@@ -62,6 +63,7 @@ module Ingest
                 end
             end
 
+            d.repository = repository
             # add document rdf types
             d.rdftype = d.add_rdf_types
             # link document to Series

@@ -7,6 +7,8 @@ module Ingest
         def self.build_document(tna_document_row, allow_edit=false)
             log = Logger.new "log/tna_document_builder.log"
 
+            repository = tna_document_row.repository
+
             # document reference
             reference = tna_document_row.reference
 
@@ -75,6 +77,7 @@ module Ingest
 
             d = Ingest::DocumentHelper.create_or_update_document(
                 allow_edit,
+                repository,
                 series_id,
                 reference,
                 publications,
