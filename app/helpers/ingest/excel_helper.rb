@@ -211,7 +211,7 @@ module Ingest
             county = (place_parts[1] || '').gsub(';','')
             country = place_parts[2] || ''
 
-            row.insert(6, place_as_written.strip!)
+            row.insert(6, place_as_written)
             row[7] = place_name.strip!
             row.insert(8, county.strip!)
             row.insert(9, country.strip!)
