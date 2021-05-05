@@ -41,6 +41,10 @@ module AssignRdfTypes
         %w(http://dlib.york.ac.uk/ontologies/tna#Series http://pcdm.org/models#Object http://www.shared-canvas.org/ns/Canvas http://purl.org/vra/Work http://dlib.york.ac.uk/ontologies/tna#All)
       when 'Document'
         %w(http://dlib.york.ac.uk/ontologies/tna#Document http://www.shared-canvas.org/ns/Zone http://pcdm.org/models#Object http://dlib.york.ac.uk/ontologies/tna#All)
+      when 'PlaceOfDating'
+        %w(http://dlib.york.ac.uk/ontologies/tna#PlaceOfDating http://schema.org/Place http://dlib.york.ac.uk/ontologies/tna#All)
+      when 'TnaPlace'
+        %w(http://dlib.york.ac.uk/ontologies/tna#Place http://schema.org/Place http://dlib.york.ac.uk/ontologies/tna#All)
       else
         ['http://pcdm.org/models#Object','http://dlib.york.ac.uk/ontologies/borthwick-registers#All']
     end
