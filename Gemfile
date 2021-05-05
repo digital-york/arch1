@@ -66,4 +66,5 @@ end
 
 # TNW ingest
 gem 'roo'
+gem 'caxlsx'
 gem 'smarter_csv'
