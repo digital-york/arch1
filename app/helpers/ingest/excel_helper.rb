@@ -1,4 +1,5 @@
 require 'roo'
+require 'caxlsx'
 
 module Ingest
     module ExcelHelper
@@ -146,6 +147,79 @@ module Ingest
             }
 
             document_rows
+        end
+
+        # normalize TNA spreadsheet
+        # e.g. Ingest::ExcelHelper.normalize_tna_spreadsheet('/home/frank/dlib/nw_data/tna_c81.xlsx')
+        def self.normalize_tna_spreadsheet(src_file, tgt_file)
+            src_rows = Roo::Spreadsheet.open(src_file)
+            p = Axlsx::Package.new
+            wb = p.workbook
+            wb.add_worksheet do |sheet|
+                src_rows.each_with_index { |src_row, index|
+                    sheet.add_row transform_tna_rows(src_row, index)
+                }
+            end
+
+            p.serialize tgt_file
+        end
+
+        # transform TNA row
+        def self.transform_tna_rows(row, index)
+            if index == 0
+                process_tna_heading(row)
+            elsif index == 1
+                process_tna_sub_heading(row)
+            else
+                process_tna_row(row)
+            end
+        end
+
+        # process TNA spreadsheet heading, e.g. add additional columns
+        def self.process_tna_heading(row)
+            row.insert(6, 'Place as written')
+            row.insert(8, 'County')
+            row.insert(9, 'Country')
+            row
+        end
+
+        # process TNA spreadsheet sub heading, e.g. add additional columns
+        def self.process_tna_sub_heading(row)
+            row.insert(6, '')
+            row.insert(8, '')
+            row.insert(9, '')
+            row
+        end
+
+        # process TNA spreadsheet row, e.g. add additional columns for place_of_dating and place column
+        def self.process_tna_row(row)
+            ###################################
+            # process column 6, place_of_dating
+            place_cell = row[6]
+            place_parts = place_cell.split(',')
+            place_name_and_written_as = place_parts[0]
+
+            # first part is the place name if place as written is not provided
+            place_name = place_name_and_written_as
+            place_as_written = ''
+            if place_name_and_written_as.include? '(' and place_name_and_written_as.include? ')'
+                place_as_written = place_name_and_written_as.split('(')[1].split(')')[0]
+                place_name = place_name_and_written_as.gsub(place_as_written,'')
+                                                      .gsub('(','')
+                                                      .gsub(')','')
+            end
+            county = (place_parts[1] || '').gsub(';','')
+            country = place_parts[2] || ''
+
+            row.insert(6, place_as_written.strip!)
+            row[7] = place_name.strip!
+            row.insert(8, county.strip!)
+            row.insert(9, country.strip!)
+
+            ##################################
+            # process column 12, Place(s)
+
+            row
         end
     end
 end
