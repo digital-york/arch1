@@ -201,6 +201,34 @@ module Ingest
             places_id
         end
 
+        # find place object ids from Place name, county, and country
+        # input: place name, county, country, e.g.
+        # 'Yarm, 'North Riding of Yorkshire', 'England'
+        # output: place object ids, e.g. ['xxxxxx']
+        # For example
+        # pry(main)> Ingest::AuthorityHelper.s_get_exact_match_place_object_id('Yarm', 'North Riding of Yorkshire', 'England')
+        # => "1c18df984"
+        def self.s_get_exact_match_place_object_id(place_name, county, country)
+            return '' if place_name.blank? or county.blank?
+
+            place_ids = []
+
+            response = SolrQuery.new.solr_query('has_model_ssim:"ConceptScheme" AND preflabel_tesim:"places"', 'id')
+            # first, query ConceptSchema for places
+            response['response']['docs'].map do |l|
+                q = "inScheme_ssim:#{l['id']}"     # place authority
+                q += " AND place_name_tesim:\"#{place_name.downcase}\""  # place name
+                q += " AND parent_ADM2_tesim:\"#{county}\"" # county
+                q += " AND parent_ADM1_tesim:\"#{country}\"" unless country.blank? # country
+                resp = SolrQuery.new.solr_query(q, 'id,place_name_tesim,preflabel_tesim')
+                resp['response']['docs'].map do |p|
+                    place_ids << p['id']
+                end
+            end
+
+            place_ids
+        end
+
         # get place object name from object_id
         # pry(main)> Ingest::AuthorityHelper.s_get_place_name('9s1616342')
         # => ["Kirkham"]
