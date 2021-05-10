@@ -221,5 +221,50 @@ module Ingest
 
             row
         end
+
+        # extract place info from a single string, e.g.
+        # From: Kirkstall (Kyrkestall) abbey, West Riding of Yorkshire
+        # to a PlaceDesc object
+        # Usage: Ingest::ExcelHelper.extract_place_info('Kirkstall (Kyrkestall) abbey, West Riding of Yorkshire', 'place of dating', '')
+        def self.extract_place_info(place_string, place_role, place_type)
+            place_parts = place_string.split(',')
+            place_name_and_written_as = place_parts[0]
+
+            place_as_written = ''
+            place_name = ''
+            if place_name_and_written_as.include? '(' and place_name_and_written_as.include? ')'
+                place_as_written = place_name_and_written_as.split('(')[1].split(')')[0]
+                place_name = place_name_and_written_as.gsub(place_as_written,'')
+                                 .gsub('(','')
+                                 .gsub(')','')
+            else
+                place_name = place_name_and_written_as
+            end
+            county = (place_parts[1] || '').gsub(';','')
+            country = place_parts[2] || ''
+            place_as_written.strip!
+            place_name.strip!
+            county.strip!
+            country.strip!
+            tna_place_desc = Ingest::TnaPlaceDesc.new(place_as_written,
+                                  place_name,
+                                  place_role,
+                                  place_type,
+                                  county,
+                                  country)
+
+            tna_place_desc
+        end
+
+        # extract a group of place_strings(seperated by ';') into a TnaPlaceDesc array
+        # e.g.
+        # Ingest::ExcelHelper.extract_places_info('Malton priory, North Riding of Yorkshire; Watton priory, East Riding of Yorkshire; Haverholme priory, Lincolnshire;','','')
+        def self.extract_places_info(place_strings, place_role, place_type)
+            tna_place_desc_array = []
+            place_strings.split(';').each do |place_string|
+                tna_place_desc_array << extract_place_info(place_string, place_role, place_type) unless place_string.blank?
+            end
+            tna_place_desc_array
+        end
     end
 end
