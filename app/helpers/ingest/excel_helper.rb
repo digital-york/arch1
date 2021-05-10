@@ -196,25 +196,16 @@ module Ingest
             ###################################
             # process column 6, place_of_dating
             place_cell = row[6]
-            place_parts = place_cell.split(',')
-            place_name_and_written_as = place_parts[0]
-
-            # first part is the place name if place as written is not provided
-            place_name = place_name_and_written_as
-            place_as_written = ''
-            if place_name_and_written_as.include? '(' and place_name_and_written_as.include? ')'
-                place_as_written = place_name_and_written_as.split('(')[1].split(')')[0]
-                place_name = place_name_and_written_as.gsub(place_as_written,'')
-                                                      .gsub('(','')
-                                                      .gsub(')','')
-            end
-            county = (place_parts[1] || '').gsub(';','')
-            country = place_parts[2] || ''
+            place_desc = extract_place_info(place_cell, 'place of dating', '')
+            place_name = place_desc.place_name
+            place_as_written = place_desc.place_as_written
+            county = place_desc.county
+            country = place_desc.country
 
             row.insert(6, place_as_written)
-            row[7] = place_name.strip!
-            row.insert(8, county.strip!)
-            row.insert(9, country.strip!)
+            row[7] = place_name
+            row.insert(8, county)
+            row.insert(9, country)
 
             ##################################
             # process column 12, Place(s)
