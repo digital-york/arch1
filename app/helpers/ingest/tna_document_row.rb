@@ -2,6 +2,8 @@ module Ingest
     # This class defines all fields loaded from TNA spreadsheet
     class TnaDocumentRow
         attr_reader :repository,
+                    :department,
+                    :series,
                     :reference,
                     :publication,
                     :summary,
@@ -18,6 +20,8 @@ module Ingest
                     :place
 
         attr_writer :repository,
+                    :department,
+                    :series,
                     :reference,
                     :publication,
                     :summary,
@@ -34,7 +38,7 @@ module Ingest
                     :place
 
         def to_s
-            repository + ' / ' + reference
+            repository + ' / ' + department + ' / ' + reference
         end
     end
 end

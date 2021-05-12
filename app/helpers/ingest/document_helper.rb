@@ -79,13 +79,15 @@ module Ingest
 
             d.language = Ingest::AuthorityHelper.s_get_language_object_ids(language) unless language.blank?
             d.subject = subject unless subject.blank?
+            puts place_of_dating
+            puts place
             # d.place_of_dating = place_of_dating
             # d.addressee = addressee
             # d.sender = sender
             # d.person = person
             # d.place = place
 
-            d.save
+            #d.save
             puts "  Created/updated Document: #{d.id}" unless d.nil?
             log.info "  Created/updated Document: #{d.id}" unless d.nil?
             d

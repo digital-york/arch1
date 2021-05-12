@@ -121,24 +121,22 @@ module Ingest
                 document_row = Ingest::TnaDocumentRow.new
 
                 document_row.repository = row[0]
-                document_row.reference = row[1]
-                document_row.document_type = row[2]
-                document_row.date_of_document = row[3]
-                document_row.place_of_dating = row[4]
-                document_row.language = row[5]
-                document_row.subject = row[6]
-                document_row.addressee = row[7]
-                document_row.sender = row[8]
-                document_row.person = row[9]
-                document_row.place = row[10]
-                document_row.summary = row[11]
-
-                # As agreed, the endorsement will be deleted,
-                # so double check the spreadsheet before running the script!
-                document_row.publication = row[12]
-
-                document_row.note = row[13]
-                document_row.entry_date_note = row[14]
+                document_row.department = row[1]
+                document_row.series = row[2]
+                document_row.reference = row[3]
+                document_row.document_type = row[4]
+                document_row.date_of_document = row[5]
+                document_row.place_of_dating = row[6]
+                document_row.language = row[7]
+                document_row.subject = row[8]
+                document_row.addressee = row[9]
+                document_row.sender = row[10]
+                document_row.person = row[11]
+                document_row.place = row[12]
+                document_row.summary = row[13]
+                document_row.publication = row[14]
+                document_row.note = row[15]
+                document_row.entry_date_note = row[16]
 
                 # document_row.person_note no person_note in the agreed mode,
                 # but there is a column in the 'TNA document indexing C81 test file'
@@ -206,7 +204,7 @@ module Ingest
 
         # process TNA spreadsheet row, e.g. add additional columns for place_of_dating and place column
         def self.process_tna_row(row, max_number_of_place_of_dating, total_number_of_place)
-            # process column 6, Place of dating
+            # process column 6, Place of dating(s)
             process_place_string(row, 6, max_number_of_place_of_dating)
 
             ##################################
