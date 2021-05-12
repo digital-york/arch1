@@ -197,72 +197,62 @@ module Ingest
 
         # transform TNA row
         def self.transform_tna_rows(row, index, total_number_of_place_of_dating, total_number_of_place)
-            if index == 0
-                process_tna_heading(row, total_number_of_place_of_dating, total_number_of_place)
-            elsif index == 1
-                process_tna_sub_heading(row, total_number_of_place_of_dating, total_number_of_place)
-            else
+            # ignore title (index=0) and sub title (index=1)
+            if index > 1
                 process_tna_row(row, total_number_of_place_of_dating, total_number_of_place)
-            end
-        end
-
-        # process TNA spreadsheet heading, e.g. add additional columns
-        def self.process_tna_heading(row, max_number_of_place_of_dating, total_number_of_place)
-            (0..max_number_of_place_of_dating-1).each do |n|
-                row.insert(6+4*n, "Place as written_#{n+1}")
-                row[7+4*n] = "Place of dating_#{n+1}"
-                row.insert(8+4*n, "County_#{n+1}")
-                row.insert(9+4*n, "Country_#{n+1}")
-            end
-            row
-        end
-
-        # process TNA spreadsheet sub heading, e.g. add additional columns
-        def self.process_tna_sub_heading(row, max_number_of_place_of_dating, total_number_of_place)
-            (0..max_number_of_place_of_dating-1).each do |n|
-                row.insert(6+4*n, "")
-                row.insert(8+4*n, "")
-                row.insert(9+4*n, "")
             end
             row
         end
 
         # process TNA spreadsheet row, e.g. add additional columns for place_of_dating and place column
         def self.process_tna_row(row, max_number_of_place_of_dating, total_number_of_place)
-            ###################################
-            # process column 6, place_of_dating
-            place_cell = row[6]
+            # process column 6, Place of dating
+            process_place_string(row, 6, max_number_of_place_of_dating)
+
+            ##################################
+            # process column 12, Place(s)
+            process_place_string(row, 12, total_number_of_place)
+
+            row
+        end
+
+        # process place cell string and update cell with reorganized string
+        def self.process_place_string(row, index, max_number_of_place)
+            place_cell = row[index]
 
             place_descs = extract_places_info(place_cell, 'place of dating', '')
 
+            updated_place_of_dating = ""
             place_descs.each_with_index do |place_desc, n|
                 place_name = place_desc.place_name
                 place_as_written = place_desc.place_as_written
                 county = place_desc.county
                 country = place_desc.country
 
-                row.insert(6+4*n, place_as_written)
-                row[7+4*n] = place_name
-                row.insert(8+4*n, county)
-                row.insert(9+4*n, country)
-            end
-
-            # If the number of place of dating in current cell < max_number_of_place_of_dating,
-            # add some empty columns
-            if place_descs.length() < max_number_of_place_of_dating
-                (place_descs.length()..max_number_of_place_of_dating).each do |n|
-                    row.insert(6+4*n, "")
-                    row.insert(7+4*n, "")
-                    row.insert(8+4*n, "")
-                    row.insert(9+4*n, "")
+                unless place_name.blank?
+                    updated_place_of_dating += place_name
+                end
+                unless place_as_written.blank?
+                    updated_place_of_dating += " [#{place_as_written}], "
+                else
+                    updated_place_of_dating += ","
+                end
+                unless county.blank?
+                    updated_place_of_dating += county + ","
+                end
+                unless country.blank?
+                    updated_place_of_dating += country + ","
+                end
+                if updated_place_of_dating.ends_with? ","
+                    updated_place_of_dating = updated_place_of_dating.delete_suffix(",")
+                end
+                if n < max_number_of_place-1
+                    updated_place_of_dating += " / "
                 end
             end
-
-            ##################################
-            # process column 12, Place(s)
-
-            row
+            row[index] = updated_place_of_dating
         end
+
 
         # extract place info from a single string, e.g.
         # From: Kirkstall (Kyrkestall) abbey, West Riding of Yorkshire
@@ -278,6 +268,7 @@ module Ingest
                 place_as_written = place_name_and_written_as.split('(')[1].split(')')[0]
                 place_name = place_name_and_written_as.gsub(place_as_written,'')
                                  .gsub('(','')
+                                 .gsub(') ','')
                                  .gsub(')','')
             else
                 place_name = place_name_and_written_as
@@ -303,6 +294,8 @@ module Ingest
         # Ingest::ExcelHelper.extract_places_info('Malton priory, North Riding of Yorkshire; Watton priory, East Riding of Yorkshire; Haverholme priory, Lincolnshire;','','')
         def self.extract_places_info(place_strings, place_role, place_type)
             tna_place_desc_array = []
+            return tna_place_desc_array if place_strings.blank?
+
             place_strings.split(';').each do |place_string|
                 tna_place_desc_array << extract_place_info(place_string, place_role, place_type) unless place_string.blank?
             end
