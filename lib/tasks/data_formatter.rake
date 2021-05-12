@@ -8,6 +8,6 @@ namespace :data_formatter do
     task :tna, [:src_file, :tgt_file] => [:environment] do |t, args|
         src_file = args[:src_file]
         tgt_file = args[:tgt_file]
-        Ingest::ExcelHelper.normalize_tna_spreadsheet(src_file, tgt_file)
+        Ingest::ExcelHelper.preprocess_tna_spreadsheet(src_file, tgt_file)
     end
 end

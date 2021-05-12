@@ -150,62 +150,113 @@ module Ingest
         end
 
         # normalize TNA spreadsheet
-        # e.g. Ingest::ExcelHelper.normalize_tna_spreadsheet('/home/frank/dlib/nw_data/tna_c81.xlsx')
-        def self.normalize_tna_spreadsheet(src_file, tgt_file)
+        # e.g. Ingest::ExcelHelper.preprocess_tna_spreadsheet('/home/frank/dlib/nw_data/tna_c81.xlsx', '/home/frank/dlib/nw_data/tna_c81_new.xlsx')
+        def self.preprocess_tna_spreadsheet(src_file, tgt_file)
             src_rows = Roo::Spreadsheet.open(src_file)
+            total_number_of_place_of_dating = get_max_number_of_place_of_dating(src_rows)
+            total_number_of_place = get_number_of_place(src_rows)
             p = Axlsx::Package.new
             wb = p.workbook
             wb.add_worksheet do |sheet|
                 src_rows.each_with_index { |src_row, index|
-                    sheet.add_row transform_tna_rows(src_row, index)
+                    sheet.add_row transform_tna_rows(src_row,
+                                                     index,
+                                                     total_number_of_place_of_dating,
+                                                     total_number_of_place)
                 }
             end
 
             p.serialize tgt_file
         end
 
+        # return number of place of datings in the single 'place of dating' column from TNA spreadsheet
+        def self.get_max_number_of_place_of_dating(src_rows)
+            max_number_of_place_of_dating = 0
+            src_rows.each do |row|
+                unless row[6].blank?
+                    if row[6].split(';').length() > max_number_of_place_of_dating
+                        max_number_of_place_of_dating = row[6].split(';').length()
+                    end
+                end
+            end
+            max_number_of_place_of_dating
+        end
+
+        # return number of places in the single 'Place(s)' column from TNA spreadsheet
+        def self.get_number_of_place(src_rows)
+            max_number_of_place = 0
+            src_rows.each do |row|
+                unless row[12].blank?  # check Place(s) column in TNA spreadsheet
+                    if row[12].split(';').length() > max_number_of_place
+                        max_number_of_place = row[12].split(';').length()
+                    end
+                end
+            end
+            max_number_of_place
+        end
+
         # transform TNA row
-        def self.transform_tna_rows(row, index)
+        def self.transform_tna_rows(row, index, total_number_of_place_of_dating, total_number_of_place)
             if index == 0
-                process_tna_heading(row)
+                process_tna_heading(row, total_number_of_place_of_dating, total_number_of_place)
             elsif index == 1
-                process_tna_sub_heading(row)
+                process_tna_sub_heading(row, total_number_of_place_of_dating, total_number_of_place)
             else
-                process_tna_row(row)
+                process_tna_row(row, total_number_of_place_of_dating, total_number_of_place)
             end
         end
 
         # process TNA spreadsheet heading, e.g. add additional columns
-        def self.process_tna_heading(row)
-            row.insert(6, 'Place as written')
-            row.insert(8, 'County')
-            row.insert(9, 'Country')
+        def self.process_tna_heading(row, max_number_of_place_of_dating, total_number_of_place)
+            (0..max_number_of_place_of_dating-1).each do |n|
+                row.insert(6+4*n, "Place as written_#{n+1}")
+                row[7+4*n] = "Place of dating_#{n+1}"
+                row.insert(8+4*n, "County_#{n+1}")
+                row.insert(9+4*n, "Country_#{n+1}")
+            end
             row
         end
 
         # process TNA spreadsheet sub heading, e.g. add additional columns
-        def self.process_tna_sub_heading(row)
-            row.insert(6, '')
-            row.insert(8, '')
-            row.insert(9, '')
+        def self.process_tna_sub_heading(row, max_number_of_place_of_dating, total_number_of_place)
+            (0..max_number_of_place_of_dating-1).each do |n|
+                row.insert(6+4*n, "")
+                row.insert(8+4*n, "")
+                row.insert(9+4*n, "")
+            end
             row
         end
 
         # process TNA spreadsheet row, e.g. add additional columns for place_of_dating and place column
-        def self.process_tna_row(row)
+        def self.process_tna_row(row, max_number_of_place_of_dating, total_number_of_place)
             ###################################
             # process column 6, place_of_dating
             place_cell = row[6]
-            place_desc = extract_place_info(place_cell, 'place of dating', '')
-            place_name = place_desc.place_name
-            place_as_written = place_desc.place_as_written
-            county = place_desc.county
-            country = place_desc.country
 
-            row.insert(6, place_as_written)
-            row[7] = place_name
-            row.insert(8, county)
-            row.insert(9, country)
+            place_descs = extract_places_info(place_cell, 'place of dating', '')
+
+            place_descs.each_with_index do |place_desc, n|
+                place_name = place_desc.place_name
+                place_as_written = place_desc.place_as_written
+                county = place_desc.county
+                country = place_desc.country
+
+                row.insert(6+4*n, place_as_written)
+                row[7+4*n] = place_name
+                row.insert(8+4*n, county)
+                row.insert(9+4*n, country)
+            end
+
+            # If the number of place of dating in current cell < max_number_of_place_of_dating,
+            # add some empty columns
+            if place_descs.length() < max_number_of_place_of_dating
+                (place_descs.length()..max_number_of_place_of_dating).each do |n|
+                    row.insert(6+4*n, "")
+                    row.insert(7+4*n, "")
+                    row.insert(8+4*n, "")
+                    row.insert(9+4*n, "")
+                end
+            end
 
             ##################################
             # process column 12, Place(s)
