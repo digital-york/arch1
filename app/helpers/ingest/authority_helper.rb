@@ -183,6 +183,9 @@ module Ingest
                 # 'Cawood, West Riding of Yorkshire, England' in editing tool
                 #
                 # firstly, do a exact search
+                #
+                # TODO: use inScheme_ssim to find Place is NOT always working, e.g. Place: 5q47rn940 doesn't have this field
+                # to refactor later: use has_model_ssim:Place
                 resp = SolrQuery.new.solr_query('inScheme_ssim:"' + l['id'] + '" AND place_name_tesim:"' + place.downcase + '"', 'id,place_name_tesim,preflabel_tesim')
                 resp['response']['docs'].map do |p|
                     if p['place_name_tesim'][0].to_s.downcase == place.downcase
@@ -213,17 +216,13 @@ module Ingest
 
             place_ids = []
 
-            response = SolrQuery.new.solr_query('has_model_ssim:"ConceptScheme" AND preflabel_tesim:"places"', 'id')
-            # first, query ConceptSchema for places
-            response['response']['docs'].map do |l|
-                q = "inScheme_ssim:#{l['id']}"     # place authority
-                q += " AND place_name_tesim:\"#{place_name.downcase}\""  # place name
-                q += " AND parent_ADM2_tesim:\"#{county}\"" # county
-                q += " AND parent_ADM1_tesim:\"#{country}\"" unless country.blank? # country
-                resp = SolrQuery.new.solr_query(q, 'id,place_name_tesim,preflabel_tesim')
-                resp['response']['docs'].map do |p|
-                    place_ids << p['id']
-                end
+            q = "has_model_ssim:Place"     # place authority
+            q += " AND place_name_tesim:\"#{place_name.downcase}\""  # place name
+            q += " AND parent_ADM2_tesim:\"#{county.downcase}\"" # county
+            q += " AND parent_ADM1_tesim:\"#{country.downcase}\"" unless country.blank? # country
+            resp = SolrQuery.new.solr_query(q, 'id,place_name_tesim,preflabel_tesim')
+            resp['response']['docs'].map do |p|
+                place_ids << p['id']
             end
 
             place_ids
