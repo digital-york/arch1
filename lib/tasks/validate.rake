@@ -50,4 +50,43 @@ namespace :validate do
             log.error mismatched_entries
         end
     end
+
+    # bundle exec rake validate:tna_place[EXCEL_FILE_NAME]
+    # The parameter is the full path of Excel file
+    # e.g.
+    # bundle exec rake validate:tna_place[/home/frank/dlib/nw_data/tna_c81.xlsx]
+    # To disable warning messages:
+    # RUBYOPT=-W0 bundle exec rake validate:tna_place[/home/frank/dlib/nw_data/tna_c81.xlsx]
+    desc "Validate TNA places from excel against solr and report missing ones."
+    task :tna_place, [:filename_xsl] => [:environment] do |t, args|
+        log = Logger.new "log/validate_tna_places.log"
+
+        # Parse TNA documents from Excel
+        document_rows   = Ingest::ExcelHelper.parse_tna_spreadsheet(args[:filename_xsl])
+        document_with_missing_places = []
+        errors = []
+
+        document_rows.each_with_index { |document_row, index|
+            begin
+                missing_places = Validator::TnaValidator.validate_place(document_row)
+                unless missing_places.blank?
+                    missing_places.each do |missing_place|
+                        document_with_missing_places << missing_place
+                    end
+                end
+            rescue => exception
+                log.error exception.backtrace
+                puts exception.backtrace
+                errors << "#{document_row}"
+            end
+        }
+        if errors.length > 0
+            log.error "==========errors [#{errors.length}]=========="
+            log.error errors
+        end
+        if document_with_missing_places.length > 0
+            log.info "==========document with missing places [#{document_with_missing_places.length}]=========="
+            puts document_with_missing_places
+        end
+    end
 end

@@ -148,6 +148,7 @@ module Ingest
         end
 
         # normalize TNA spreadsheet
+        # This method is ONLY used for data preprocess and testing
         # e.g. Ingest::ExcelHelper.preprocess_tna_spreadsheet('/home/frank/dlib/nw_data/tna_c81.xlsx', '/home/frank/dlib/nw_data/tna_c81_new.xlsx')
         def self.preprocess_tna_spreadsheet(src_file, tgt_file)
             src_rows = Roo::Spreadsheet.open(src_file)

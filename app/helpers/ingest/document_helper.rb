@@ -79,12 +79,24 @@ module Ingest
 
             d.language = Ingest::AuthorityHelper.s_get_language_object_ids(language) unless language.blank?
             d.subject = subject unless subject.blank?
-            puts place_of_dating
-            puts place
-            # d.place_of_dating = place_of_dating
+
+            place_of_datings = []
+            place_of_dating_descs = Ingest::ExcelHelper.extract_places_info(place_of_dating, 'place of dating', '')
+            place_of_dating_descs.each do |place_of_dating_desc|
+                place_of_dating = Ingest::PlaceOfDatingHelper.create_place_of_dating(place_of_dating_desc.place_as_written,
+                                                                   place_of_dating_desc.place_name,
+                                                                   'place of dating')
+                place_of_datings << place_of_dating
+            end
+            d.place_of_dating = place_of_datings
+
             # d.addressee = addressee
             # d.sender = sender
             # d.person = person
+            place_descs = extract_places_info(place, '', '')
+            place_descs.each do |place_desc|
+
+            end
             # d.place = place
 
             #d.save
