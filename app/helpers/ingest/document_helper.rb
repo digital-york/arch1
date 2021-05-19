@@ -89,11 +89,11 @@ module Ingest
                     place_of_dating_desc.country)
                 if place_authority_ids.blank?
                     puts 'Place of dating Error: cannot find place_authority id'
-                    puts '>>> STOP...'
+                    puts ">>> #{reference}..."
                     return
                 elsif place_authority_ids.length()!=1
                     puts 'Place of dating Error: returns more than 1 places.'
-                    puts '>>> STOP...'
+                    puts ">>> #{reference}..."
                     puts place_authority_ids
                     return
                 end
@@ -117,11 +117,11 @@ module Ingest
                         place_desc.country)
                     if place_ids.blank?
                         puts 'Place(s) Error: cannot find place_authority id'
-                        puts '>>> STOP...'
+                        puts ">>> #{reference}..."
                         return
                     elsif place_ids.length()!=1
                         puts 'Place(s) Error: returns more than 1 places.'
-                        puts '>>> STOP...'
+                        puts ">>> #{reference}..."
                         return
                     end
 
