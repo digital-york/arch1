@@ -222,7 +222,9 @@ module Ingest
             q += " AND parent_ADM1_tesim:\"#{country.downcase}\"" unless country.blank? # country
             resp = SolrQuery.new.solr_query(q, 'id,place_name_tesim,preflabel_tesim')
             resp['response']['docs'].map do |p|
-                place_ids << p['id']
+                if p['place_name_tesim'][0].downcase == place_name.downcase
+                    place_ids << p['id']
+                end
             end
 
             place_ids
