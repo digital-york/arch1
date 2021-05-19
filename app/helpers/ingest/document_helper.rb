@@ -83,23 +83,58 @@ module Ingest
             place_of_datings = []
             place_of_dating_descs = Ingest::ExcelHelper.extract_places_info(place_of_dating, 'place of dating', '')
             place_of_dating_descs.each do |place_of_dating_desc|
+                place_authority_ids = Ingest::AuthorityHelper.s_get_exact_match_place_object_id(
+                    place_of_dating_desc.place_name,
+                    place_of_dating_desc.county,
+                    place_of_dating_desc.country)
+                if place_authority_ids.blank?
+                    puts 'Place of dating Error: cannot find place_authority id'
+                    puts '>>> STOP...'
+                    return
+                elsif place_authority_ids.length()!=1
+                    puts 'Place of dating Error: returns more than 1 places.'
+                    puts '>>> STOP...'
+                    puts place_authority_ids
+                    return
+                end
                 place_of_dating = Ingest::PlaceOfDatingHelper.create_place_of_dating(place_of_dating_desc.place_as_written,
-                                                                   place_of_dating_desc.place_name,
-                                                                   'place of dating')
+                                                                                     place_authority_ids[0],
+                                                                                     ['place of dating'])
                 place_of_datings << place_of_dating
             end
-            d.place_of_dating = place_of_datings
+            d.place_of_datings = place_of_datings
 
             # d.addressee = addressee
             # d.sender = sender
             # d.person = person
-            place_descs = extract_places_info(place, '', '')
-            place_descs.each do |place_desc|
+            unless place.blank?
+                tna_place_authority_ids = []
+                place_descs = extract_places_info(place, '', '')
+                place_descs.each do |place_desc|
+                    place_ids = Ingest::AuthorityHelper.s_get_exact_match_place_object_id(
+                        place_desc.place_name,
+                        place_desc.county,
+                        place_desc.country)
+                    if place_ids.blank?
+                        puts 'Place(s) Error: cannot find place_authority id'
+                        puts '>>> STOP...'
+                        return
+                    elsif place_ids.length()!=1
+                        puts 'Place(s) Error: returns more than 1 places.'
+                        puts '>>> STOP...'
+                        return
+                    end
 
+                    tna_place_authority_id = Ingest::TnaPlaceHelper.create_tna_place(
+                        place_desc.place_as_written,
+                        place_desc.place_ids[0],
+                        [])
+                    tna_place_authority_ids << tna_place_authority_id
+                end
+                d.place = tna_place_authority_ids
             end
-            # d.place = place
 
-            #d.save
+            d.save
             puts "  Created/updated Document: #{d.id}" unless d.nil?
             log.info "  Created/updated Document: #{d.id}" unless d.nil?
             d
