@@ -3,6 +3,11 @@ require 'caxlsx'
 
 module Ingest
     module ExcelHelper
+        # define default counties for TNA spreadsheet process
+        DEFAULT_COUNTY = {
+            "City of London" => "London",
+        }.freeze
+
         # parse a row from Borthwick spreadsheet
         def self.parse_borthwick_spreadsheet(filename)
             entry_rows = []
@@ -232,7 +237,7 @@ module Ingest
                     updated_place_of_dating += place_name
                 end
                 unless place_as_written.blank?
-                    updated_place_of_dating += " [#{place_as_written}], "
+                    updated_place_of_dating += " (#{place_as_written}), "
                 else
                     updated_place_of_dating += ","
                 end
@@ -273,6 +278,9 @@ module Ingest
                 place_name = place_name_and_written_as
             end
             county = (place_parts[1] || '').gsub(';','')
+            if county.blank?
+                county = get_default_county(place_name)
+            end
             country = place_parts[2] || ''
             place_as_written.strip!
             place_name.strip!
@@ -299,6 +307,13 @@ module Ingest
                 tna_place_desc_array << extract_place_info(place_string, place_role, place_type) unless place_string.blank?
             end
             tna_place_desc_array
+        end
+
+        def self.get_default_county(city)
+            DEFAULT_COUNTY.each do |current_city, current_county|
+                return current_county if city.downcase == current_city.downcase
+            end
+            return ""
         end
     end
 end
