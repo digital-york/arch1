@@ -212,13 +212,26 @@ module Ingest
         # pry(main)> Ingest::AuthorityHelper.s_get_exact_match_place_object_id('Yarm', 'North Riding of Yorkshire', 'England')
         # => "1c18df984"
         def self.s_get_exact_match_place_object_id(place_name, county, country)
+            # From Jonathans's email on 21 May:
+            # Many are in the system, but counties haven't been assigned consistently
+            # (prebends were often associated with places in different counties to the one
+            # where the cathedral or minster church lay, and some currently have the
+            # county of the place and others have the county of the cathedral),
+            # so I will need to agree a standard with Helen and go from there.
+            # I will make sure they all match the main name given in the tool ('X Cathedral, Y prebend'),
+            # and there shouldn't be any duplicates, so perhaps,
+            # if you can tell your code not to look for a county if the word 'prebend' appears within a name,
+            # that might cover everything?
             return '' if place_name.blank? or county.blank?
 
             place_ids = []
 
             q = "has_model_ssim:Place"     # place authority
             q += " AND place_name_tesim:\"#{place_name.downcase}\""  # place name
-            q += " AND parent_ADM2_tesim:\"#{county.downcase}\"" # county
+            # ignore county if ' prebend' is include as it won't return duplicates
+            unless county.downcase.include? ' prebend'
+                q += " AND parent_ADM2_tesim:\"#{county.downcase}\"" # county
+            end
             q += " AND parent_ADM1_tesim:\"#{country.downcase}\"" unless country.blank? # country
             resp = SolrQuery.new.solr_query(q, 'id,place_name_tesim,preflabel_tesim')
             resp['response']['docs'].map do |p|
