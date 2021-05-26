@@ -265,17 +265,31 @@ module Ingest
         # to a PlaceDesc object
         # Usage: Ingest::ExcelHelper.extract_place_info('Kirkstall (Kyrkestall) abbey, West Riding of Yorkshire', 'place of dating', '')
         def self.extract_place_info(place_string, place_role, place_type)
+            # remove spaces from both sides
+            place_string.strip!
+
             place_parts = place_string.split(',')
             place_name_and_written_as = place_parts[0]
 
             place_as_written = ''
             place_name = ''
+            place_note = ''
             if place_name_and_written_as.include? '(' and place_name_and_written_as.include? ')'
-                place_as_written = place_name_and_written_as.split('(')[1].split(')')[0]
-                place_name = place_name_and_written_as.gsub(place_as_written,'')
-                                 .gsub('(','')
-                                 .gsub(') ','')
-                                 .gsub(')','')
+                # with completely unidentified placenames,
+                # I've simply put them in (round brackets),
+                # so that the name goes into the 'As written' field,
+                # but without any other info - there won't be an authority.
+                if place_name_and_written_as.starts_with? '(' place_name_and_written_as.ends_with? ')'
+                    place_name = ''
+                    place_as_written = place_name_and_written_as[1..place_name_and_written_as.length-2]
+                    place_note = 'place unidentified'
+                else
+                    place_as_written = place_name_and_written_as.split('(')[1].split(')')[0]
+                    place_name = place_name_and_written_as.gsub(place_as_written,'')
+                                     .gsub('(','')
+                                     .gsub(') ','')
+                                     .gsub(')','')
+                end
             else
                 place_name = place_name_and_written_as
             end
@@ -293,7 +307,8 @@ module Ingest
                                   place_role,
                                   place_type,
                                   county,
-                                  country)
+                                  country,
+                                  place_note)
             tna_place_desc
         end
 

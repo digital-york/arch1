@@ -83,15 +83,16 @@ module Ingest
             place_of_datings = []
             place_of_dating_descs = Ingest::ExcelHelper.extract_places_info(place_of_dating, 'place of dating', '')
             place_of_dating_descs.each do |place_of_dating_desc|
+                place_authority_ids = []
                 place_authority_ids = Ingest::AuthorityHelper.s_get_exact_match_place_object_id(
                     place_of_dating_desc.place_name,
                     place_of_dating_desc.county,
-                    place_of_dating_desc.country)
-                if place_authority_ids.blank?
-                    puts 'Place of dating Error: cannot find place_authority id'
+                    place_of_dating_desc.country) unless place_of_dating_desc.place_name.blank?
+                # allow empty place names, so possibly we could have empty place_authority_ids
+                if place_authority_ids.blank? or place_authority_ids.length()==0
+                    puts 'Place of dating warning: cannot find place_authority id'
                     puts ">>> #{reference}..."
-                    return
-                elsif place_authority_ids.length()!=1
+                elsif place_authority_ids.length() > 1
                     puts 'Place of dating Error: returns more than 1 places.'
                     puts ">>> #{reference}..."
                     puts place_authority_ids
@@ -112,14 +113,18 @@ module Ingest
                 tna_place_authority_ids = []
                 place_descs = Ingest::ExcelHelper.extract_places_info(place, '', '')
                 place_descs.each do |place_desc|
-                    place_ids = Ingest::AuthorityHelper.s_get_exact_match_place_object_id(
-                        place_desc.place_name,
-                        place_desc.county,
-                        place_desc.country)
+                    place_ids = []
+                    # allow place_name to be empty
+                    unless place_desc.place_name.blank?
+                        place_ids = Ingest::AuthorityHelper.s_get_exact_match_place_object_id(
+                            place_desc.place_name,
+                            place_desc.county,
+                            place_desc.country)
+                    end
+
                     if place_ids.blank?
-                        puts 'Place(s) Error: cannot find place_authority id'
+                        puts 'Place(s) Warn: cannot find place_authority id'
                         puts ">>> #{reference}..."
-                        return
                     elsif place_ids.length()!=1
                         puts 'Place(s) Error: returns more than 1 places.'
                         puts ">>> #{reference}..."

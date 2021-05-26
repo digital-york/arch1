@@ -7,7 +7,11 @@ module Ingest
                        place_role,
                        place_type,
                        county,
-                       country)
+                       country,
+                       place_note='')
+            # use the passed parameter as default value
+            @place_note = place_note
+
             @place_as_written    = place_as_written
             # add 'Identification uncertain' to place note field if the place name starting with '?'
             if place_name.starts_with? '? '
