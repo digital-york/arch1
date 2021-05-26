@@ -279,7 +279,7 @@ module Ingest
                 # I've simply put them in (round brackets),
                 # so that the name goes into the 'As written' field,
                 # but without any other info - there won't be an authority.
-                if place_name_and_written_as.starts_with? '(' place_name_and_written_as.ends_with? ')'
+                if place_name_and_written_as.starts_with? '(' and place_name_and_written_as.ends_with? ')'
                     place_name = ''
                     place_as_written = place_name_and_written_as[1..place_name_and_written_as.length-2]
                     place_note = 'place unidentified'
