@@ -72,8 +72,8 @@ module Ingest
             persons << tna_document_row.person unless tna_document_row.person.blank?
 
             # place
-            places = []
-            places << tna_document_row.place unless tna_document_row.place.blank?
+            place_string = ''
+            place_string = tna_document_row.place unless tna_document_row.place.blank?
 
             d = Ingest::DocumentHelper.create_or_update_document(
                 allow_edit,
@@ -92,7 +92,7 @@ module Ingest
                 addressees,
                 senders,
                 persons,
-                places
+                place_string
             )
         end
 
