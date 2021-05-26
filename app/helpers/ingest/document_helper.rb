@@ -84,20 +84,29 @@ module Ingest
             place_of_dating_descs = Ingest::ExcelHelper.extract_places_info(place_of_dating, 'place of dating', '')
             place_of_dating_descs.each do |place_of_dating_desc|
                 place_authority_ids = []
-                place_authority_ids = Ingest::AuthorityHelper.s_get_exact_match_place_object_id(
-                    place_of_dating_desc.place_name,
-                    place_of_dating_desc.county,
-                    place_of_dating_desc.country) unless place_of_dating_desc.place_name.blank?
-                # allow empty place names, so possibly we could have empty place_authority_ids
-                if place_authority_ids.blank? or place_authority_ids.length()==0
-                    puts 'Place of dating warning: cannot find place_authority id'
-                    puts ">>> #{reference}..."
-                elsif place_authority_ids.length() > 1
-                    puts 'Place of dating Error: returns more than 1 places.'
-                    puts ">>> #{reference}..."
-                    puts place_authority_ids
-                    return
+
+                # Place name could be empty
+                # if it's the case, then only add place_written_as and
+                # add place_note with text: "place unidentified"
+                # See implementation in excel_helper.extract_place_info
+                unless place_of_dating_desc.place_name.blank?
+                    place_authority_ids = Ingest::AuthorityHelper.s_get_exact_match_place_object_id(
+                        place_of_dating_desc.place_name,
+                        place_of_dating_desc.county,
+                        place_of_dating_desc.country) unless place_of_dating_desc.place_name.blank?
+                    # allow empty place names, so possibly we could have empty place_authority_ids
+                    if place_authority_ids.blank? or place_authority_ids.length()==0
+                        puts 'Place of dating warning: cannot find place_authority id'
+                        puts ">>> #{reference}..."
+                        return
+                    elsif place_authority_ids.length() > 1
+                        puts 'Place of dating Error: returns more than 1 places.'
+                        puts ">>> #{reference}..."
+                        puts place_authority_ids
+                        return
+                    end
                 end
+
                 place_of_dating = Ingest::PlaceOfDatingHelper.create_place_of_dating(place_of_dating_desc.place_as_written,
                                                                                      place_authority_ids[0],
                                                                                      ['place of dating'],
@@ -120,19 +129,21 @@ module Ingest
                             place_desc.place_name,
                             place_desc.county,
                             place_desc.country)
+
+                        if place_ids.blank?
+                            puts 'Place(s) Warn: cannot find place_authority id'
+                            puts ">>> #{reference}..."
+                            return
+                        elsif place_ids.length()!=1
+                            puts 'Place(s) Error: returns more than 1 places.'
+                            puts ">>> #{reference}..."
+                            return
+                        end
                     end
 
-                    if place_ids.blank?
-                        puts 'Place(s) Warn: cannot find place_authority id'
-                        puts ">>> #{reference}..."
-                    elsif place_ids.length()!=1
-                        puts 'Place(s) Error: returns more than 1 places.'
-                        puts ">>> #{reference}..."
-                        return
-                    end
                     tna_place_authority_id = Ingest::TnaPlaceHelper.create_tna_place(
                         place_desc.place_as_written,
-                        place_ids[0],
+                        place_ids,
                         place_desc.place_role,
                         place_desc.place_note)
                     tna_place_authority_ids << tna_place_authority_id
