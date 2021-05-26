@@ -99,7 +99,8 @@ module Ingest
                 end
                 place_of_dating = Ingest::PlaceOfDatingHelper.create_place_of_dating(place_of_dating_desc.place_as_written,
                                                                                      place_authority_ids[0],
-                                                                                     ['place of dating'])
+                                                                                     ['place of dating'],
+                                                                                     place_of_dating_desc.place_note)
                 place_of_datings << place_of_dating
             end
             d.place_of_datings = place_of_datings
@@ -109,7 +110,7 @@ module Ingest
             # d.person = person
             unless place.blank?
                 tna_place_authority_ids = []
-                place_descs = extract_places_info(place, '', '')
+                place_descs = Ingest::ExcelHelper.extract_places_info(place, '', '')
                 place_descs.each do |place_desc|
                     place_ids = Ingest::AuthorityHelper.s_get_exact_match_place_object_id(
                         place_desc.place_name,
@@ -124,14 +125,14 @@ module Ingest
                         puts ">>> #{reference}..."
                         return
                     end
-
                     tna_place_authority_id = Ingest::TnaPlaceHelper.create_tna_place(
                         place_desc.place_as_written,
-                        place_desc.place_ids[0],
-                        [])
+                        place_ids[0],
+                        place_desc.place_role,
+                        place_desc.place_note)
                     tna_place_authority_ids << tna_place_authority_id
                 end
-                d.place = tna_place_authority_ids
+                d.tna_places = tna_place_authority_ids
             end
 
             d.save
