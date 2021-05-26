@@ -6,6 +6,8 @@ module Ingest
         # define default counties for TNA spreadsheet process
         DEFAULT_COUNTY = {
             "City of London" => "London",
+            "City of York" => "York",
+            "Westminster" => "Middlesex"
         }.freeze
 
         # parse a row from Borthwick spreadsheet
@@ -292,7 +294,6 @@ module Ingest
                                   place_type,
                                   county,
                                   country)
-
             tna_place_desc
         end
 
@@ -302,9 +303,9 @@ module Ingest
         def self.extract_places_info(place_strings, place_role, place_type)
             tna_place_desc_array = []
             return tna_place_desc_array if place_strings.blank?
-
             place_strings.split(';').each do |place_string|
-                tna_place_desc_array << extract_place_info(place_string, place_role, place_type) unless place_string.blank?
+                place_info = Ingest::ExcelHelper.extract_place_info(place_string, place_role, place_type) unless place_string.blank?
+                tna_place_desc_array << place_info
             end
             tna_place_desc_array
         end
