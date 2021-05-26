@@ -3,14 +3,15 @@ module Ingest
         # Ingest::PlaceOfDatingHelper.create_place_of_dating
         def self.create_place_of_dating(place_as_written,
             place_authority_id,
-            place_roles)
+            place_roles,
+            place_note)
             place_of_dating = PlaceOfDating.new
 
             place_of_dating.rdftype = place_of_dating.add_rdf_types
             place_of_dating.place_as_written = [place_as_written] unless place_as_written.blank? # string
             place_of_dating.place_same_as = place_authority_id unless place_authority_id.blank? # reference
             place_of_dating.place_role = place_roles unless place_roles.blank? # reference
-
+            place_of_dating.place_note = place_note unless place_note.blank?
 
             place_of_dating.save
 
