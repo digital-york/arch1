@@ -11,6 +11,11 @@ class NewSolrFieldsController < ApplicationController
   # For 'search' and new_tesim, altlabels from related objects have been merged into the array
   def modify_sdoc(sdoc)
 
+# puts '###################'
+# puts 'modify_sdoc '
+# puts get_preflabel_array(sdoc['has_model_ssim'])
+# puts '@@@@@@@@@@@@@@@@@@@'
+
     begin
 
       # entries

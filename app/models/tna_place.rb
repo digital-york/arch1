@@ -2,7 +2,7 @@ class TnaPlace < ActiveFedora::Base
 
   include AssignId,RdfType,AssignRdfTypes
 
-  belongs_to :document, predicate: ::RDF::URI.new('http://dlib.york.ac.uk/ontologies/borthwick-registers#relatedPlaceFor')
+  belongs_to :document, predicate: ::RDF::URI.new('http://dlib.york.ac.uk/ontologies/tnw#tnaPlaceFor')
 
   # This is a reference field, stores Place authority id
   property :place_same_as, predicate: ::RDF::URI.new('http://www.w3.org/2002/07/owl#sameAs'), multiple: false do |index|
