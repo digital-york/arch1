@@ -78,7 +78,7 @@ module Ingest
             d.summary = summary
             d.entry_date_note = entry_date_note
             d.note = note
-            d.document_type = document_type
+            d.document_type = Ingest::AuthorityHelper.s_get_entry_type_object_ids(document_type) unless document_type.blank?
 
             # d.date_of_document = date_of_document
 
