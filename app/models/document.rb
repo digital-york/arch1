@@ -21,7 +21,7 @@ class Document < ActiveFedora::Base
     index.as :stored_searchable
   end
 
-  property :entry_date_note, predicate: ::RDF::URI.new('http://purl.org/dc/terms/language'), multiple: true do |index|
+  property :entry_date_note, predicate: ::RDF::URI.new('http://dlib.york.ac.uk/ontologies/tna#entry_date_note'), multiple: true do |index|
     index.as :stored_searchable
   end
 
