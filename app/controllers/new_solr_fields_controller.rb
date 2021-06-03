@@ -1,4 +1,110 @@
+require 'tnw_common/solr/solr_query'
+
 class NewSolrFieldsController < ApplicationController
+
+  # define shared solr connection
+  def initialize()
+    @solr_server = TnwCommon::Solr::SolrQuery.new(SOLR[Rails.env]['url'])
+  end
+
+  # Add customized solr fields if the model is Document
+  def modify_tna_document(solr_doc)
+    # document type (Text field)
+    solr_doc['document_type_search'] = array_to_lowercase(solr_doc['document_type_tesim'])
+
+    # document type facet
+    solr_doc['document_type_facet_ssim'] = solr_doc['document_type_tesim']
+
+    # summary (Text field)
+    solr_doc['summary_search'] = array_to_lowercase(solr_doc['summary_tesim'])
+
+    # Language (linked field to language authority)
+    language_new,unused = get_preflabel_array(solr_doc['language_tesim'])
+    solr_doc['language_new_tesim'] = language_new
+    solr_doc['language_facet_ssim'] = language_new
+    solr_doc['language_search'] = array_to_lowercase(language_new)
+
+    # subject (Linked field)
+    subject_new, subject_alt = get_preflabel_array(solr_doc['subject_tesim'])
+    solr_doc['subject_facet_ssim'] = subject_new
+    unless subject_alt.empty? then subject_new += subject_alt.compact end
+    solr_doc['subject_new_tesim'] = subject_new
+    solr_doc['subject_search'] = array_to_lowercase(subject_new)
+
+    # Note (Text field)
+    solr_doc['note_search'] = array_to_lowercase(solr_doc['note_tesim'])
+
+    # Entry date note (text field)
+    solr_doc['entry_date_note_search'] = array_to_lowercase(solr_doc['entry_date_note_tesim'])
+    place_same_as_array,
+    place_same_as_facet_array,
+    place_same_as_search_array,
+    place_as_written_array = get_place_array(solr_doc[:id])
+    solr_doc['place_same_as_tesim'] = place_same_as_array
+    solr_doc['place_same_as_facet_ssim'] = place_same_as_facet_array
+    solr_doc['place_same_as_search'] = place_same_as_search_array
+    solr_doc['place_as_written_tesim'] = place_as_written_array
+
+
+    solr_doc['person_as_written_search'] = array_to_lowercase(solr_doc['person_as_written_tesim'])
+
+    # related agents
+    person_name_authority_new,person_name_authority_alt = get_preflabel_array(solr_doc['person_same_as_tesim'])
+    solr_doc['person_same_as_facet_ssim'] = person_name_authority_new
+    unless person_name_authority_alt.empty? then person_name_authority_new += person_name_authority_alt.compact end
+    solr_doc['person_same_as_new_tesim'] = person_name_authority_new
+    solr_doc['person_same_as_search'] = array_to_lowercase(person_name_authority_new)
+
+    person_role_new,person_role_alt = get_preflabel_array(solr_doc['person_role_tesim'])
+    solr_doc['person_role_facet_ssim'] = person_role_new
+    unless person_role_alt.empty? then person_role_new += person_role_alt.compact end
+    solr_doc['person_role_new_tesim'] = person_role_new
+    solr_doc['person_role_search'] = array_to_lowercase(person_role_new)
+
+    person_descriptor_new,person_descriptor_alt = get_preflabel_array(solr_doc['person_descriptor_tesim'])
+    solr_doc['person_descriptor_facet_ssim'] = person_descriptor_new
+    unless person_descriptor_alt.empty? then person_descriptor_new += person_descriptor_alt.compact end
+    solr_doc['person_descriptor_new_tesim'] = person_descriptor_new
+    solr_doc['person_descriptor_search'] = array_to_lowercase(person_descriptor_new)
+
+    solr_doc['person_descriptor_as_written_search'] = array_to_lowercase(solr_doc['person_descriptor_tesim'])
+
+    solr_doc['person_note_search'] = array_to_lowercase(solr_doc['person_note_tesim'])
+
+    solr_doc['person_related_place_search'] = array_to_lowercase(solr_doc['person_related_place_tesim'])
+
+    solr_doc['person_related_person_search'] = array_to_lowercase(solr_doc['person_related_person_tesim'])
+
+    # dates
+    date_role_new,date_role_alt = get_preflabel_array(solr_doc['date_role_tesim'])
+    solr_doc['date_role_facet_ssim'] = date_role_new
+    unless date_role_alt.empty? then date_role_new += date_role_alt.compact end
+    solr_doc['date_role_new_tesim'] = date_role_new
+    solr_doc['date_role_search'] = array_to_lowercase(date_role_new)
+
+    solr_doc['date_note_search'] = array_to_lowercase(solr_doc['date_note_tesim'])
+
+    date_facet = get_date_array(get_id(solr_doc[:id]))
+    solr_doc['date_facet_ssim'] = date_facet
+
+    # add the register name and folio label to the entries
+    # register_new,folio_new = get_entry_register_array(solr_doc['folio_ssim'])
+    # solr_doc['entry_register_facet_ssim'] = register_new
+    # solr_doc['entry_folio_facet_ssim'] = folio_new
+
+    # facets from dates, related places/agents and folio/register added to entries
+    # these runs on everything because it uses id, the only other field that ALL entries have is entry_no, but that is not unique
+    # entry_place_name_authority_new = get_entry_place_array(get_id(solr_doc[:id]))
+    # solr_doc['entry_place_same_as_facet_ssim'] = entry_place_name_authority_new
+
+    entry_person_name_authority_new = get_entry_agent_array(get_id(solr_doc[:id]))
+    solr_doc['entry_person_same_as_facet_ssim'] = entry_person_name_authority_new
+
+    entry_date_new = get_entry_date_array(get_id(solr_doc[:id]))
+    solr_doc['entry_date_facet_ssim'] = entry_date_new
+
+    return solr_doc
+  end
 
   # This code adds new solr fields which are required for the search application
   # Note that this code is called from initializers/active_fedora.rb and overrides the to_solr active_fedora method
@@ -10,11 +116,9 @@ class NewSolrFieldsController < ApplicationController
   # 'facet_ssim' already exists as fieldType 'ssim' in schema.xml
   # For 'search' and new_tesim, altlabels from related objects have been merged into the array
   def modify_sdoc(sdoc)
-
-# puts '###################'
-# puts 'modify_sdoc '
-# puts get_preflabel_array(sdoc['has_model_ssim'])
-# puts '@@@@@@@@@@@@@@@@@@@'
+    if 'Document' == sdoc['has_model_ssim'][0]
+      return modify_tna_document(sdoc)
+    end
 
     begin
 
@@ -364,5 +468,62 @@ class NewSolrFieldsController < ApplicationController
   def get_id(o)
     id = (o.include? '/') ? o.rpartition('/').last : o
   end
+
+  # From RelatedPlace(AR), TnaPlace(TNA), PlaceOfDating(TNA)
+  # Get place_same_as(string) and place_written_as(string)
+  # input_array: array of linked object ids
+  # return [place_same_as],[place_as_written]
+  def get_place_array(document_id)
+    begin
+      place_same_as_array = []
+      place_same_as_facet_array = []
+      place_same_as_search_array = []
+      place_as_written_array = []
+
+      fields_to_query = ['placeOfDatingFor_ssim','tnaPlaceFor_ssim']
+      unless document_id.blank?
+        fields_to_query.each do |query_field|
+          @solr_server.query("#{query_field}:#{document_id}", 'place_same_as_tesim,place_same_as_facet_ssim,place_same_as_search,place_as_written_tesim', 65535)['response']['docs'].map do |result|
+            unless result['place_as_written_tesim'].nil?
+              place_as_written = result['place_as_written_tesim']
+
+              place_as_written.each do |paw|
+                place_as_written_array << paw
+              end
+            end
+
+            unless result['place_same_as_tesim'].nil?
+              place_same_as = result['place_same_as_tesim']
+              place_same_as.each do |psa|
+                place_same_as_array << psa
+              end
+            end
+
+            unless result['place_same_as_facet_ssim'].nil?
+              place_same_as_facets = result['place_same_as_facet_ssim']
+              place_same_as_facets.each do |psaf|
+                place_same_as_facet_array << psaf
+              end
+            end
+
+            unless result['place_same_as_search'].nil?
+              place_same_as_search = result['place_same_as_search']
+              place_same_as_search.each do |psas|
+                place_same_as_search_array << psas
+              end
+            end
+          end
+        end
+      end
+
+      return place_same_as_array, place_same_as_facet_array, place_same_as_search_array, place_as_written_array
+
+    rescue => error
+      log_error(__method__, __FILE__, error)
+      raise
+    end
+
+  end
+
 
 end
