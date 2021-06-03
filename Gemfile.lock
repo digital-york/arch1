@@ -1,3 +1,11 @@
+GIT
+  remote: https://github.com/digital-york/tnw_common
+  revision: 0417afd5b1ec8d391d4e3cbd021832a96fb2cd54
+  branch: main
+  specs:
+    tnw_common (0.1.0)
+      rsolr
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -429,6 +437,7 @@ DEPENDENCIES
   sqlite3 (~> 1.3.13)
   swagger-docs
   therubyracer
+  tnw_common!
   turbolinks
   uglifier (>= 1.3.0)
   web-console
