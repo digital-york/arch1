@@ -80,9 +80,27 @@ module Ingest
             d.note = note
             d.document_type = Ingest::AuthorityHelper.s_get_entry_type_object_ids(document_type) unless document_type.blank?
 
-            # d.date_of_document = date_of_document
+            # Date of document
+            document_dates = []
+            document_date_role = ''
+            document_date_note = entry_date_note || ''
+            document_date  = Ingest::DocumentDateHelper.create_document_date(document_date_role,
+                                                                             document_date_note)
+            unless document_date.blank?
+                document_dates << document_date
+                single_date = Ingest::DocumentDateHelper.create_single_date(
+                    document_date,
+                    date_of_document || '',
+                    '',
+                    '')
+                document_date.single_date_ids << single_date.id unless single_date.blank?
+            end
+            d.document_dates = document_dates
 
+            # Language
             d.language = Ingest::AuthorityHelper.s_get_language_object_ids(language) unless language.blank?
+
+            # Subject
             d.subject = subject unless subject.blank?
 
             place_of_datings = []

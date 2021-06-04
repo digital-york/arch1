@@ -6,11 +6,11 @@ class DocumentDate < ActiveFedora::Base
   has_many :single_dates, :dependent => :destroy
   accepts_nested_attributes_for :single_dates, :allow_destroy => true, :reject_if => :all_blank
 
-  property :date_role, predicate: ::RDF::URI.new('http://dlib.york.ac.uk/ontologies/borthwick-registers#role'), multiple: false do |index|
+  property :date_role, predicate: ::RDF::URI.new('http://dlib.york.ac.uk/ontologies/tna#role'), multiple: false do |index|
     index.as :stored_searchable
   end
 
-  property :date_note, predicate: ::RDF::URI.new('http://dlib.york.ac.uk/ontologies/borthwick-registers#note'), multiple: false do |index|
+  property :date_note, predicate: ::RDF::URI.new('http://dlib.york.ac.uk/ontologies/tna#note'), multiple: false do |index|
     index.as :stored_searchable
   end
 
