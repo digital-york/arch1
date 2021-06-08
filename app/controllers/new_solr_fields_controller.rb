@@ -9,14 +9,57 @@ class NewSolrFieldsController < ApplicationController
 
   # Add customized solr fields if the model is Document
   def modify_tna_document(solr_doc)
+    # Repository is already indexed as repository_tesim by Active Fedora
+
+    # Reference is already indexed as reference_tesim
+
+    # Publication should already be indexed as publication_tesim
+
+    # Summary is already indexed as summary_tesim
+    # summary (Text field)
+    solr_doc['summary_search'] = array_to_lowercase(solr_doc['summary_tesim'])
+
     # document type (Text field)
     solr_doc['document_type_search'] = array_to_lowercase(solr_doc['document_type_tesim'])
 
     # document type facet
     solr_doc['document_type_facet_ssim'] = solr_doc['document_type_tesim']
 
-    # summary (Text field)
-    solr_doc['summary_search'] = array_to_lowercase(solr_doc['summary_tesim'])
+    # Entry date note (text field)
+    solr_doc['entry_date_note_search'] = array_to_lowercase(solr_doc['entry_date_note_tesim'])
+
+    # Note (Text field)
+    solr_doc['note_search'] = array_to_lowercase(solr_doc['note_tesim'])
+
+    # Document type (Linked to entry type authority in AR)
+    document_type_ids = Ingest::AuthorityHelper.s_get_entry_type_object_ids(solr_doc['document_type_tesim'])
+    solr_doc['document_type_tesim'] = document_type_ids
+
+    # Date of document
+    document_date_ids = Ingest::DocumentDateHelper.s_get_document_date_ids(solr_doc[:id], nil, solr_doc['entry_date_note_tesim'][0])
+    document_date_ids.each do |document_date_id|
+      single_date_ids = Ingest::DocumentDateHelper.s_get_single_date_ids(document_date_id)
+      solr_doc['entry_date_facet_ssim'] = []  # Use this field for facet
+      solr_doc['first_date_full_ssim'] = ''   # use this field for ordering
+      single_date_ids.each_with_index do |single_date_id, index|
+        @solr_server.query("id:#{single_date_id}", 'date_tesim,date_facet_ssim', 65535)['response']['docs'].map do |result|
+          solr_doc['entry_date_facet_ssim'] << result['date_facet_ssim'][0]
+          if index==0
+            solr_doc['first_date_full_ssim'] = result['date_tesim'][0]
+          end
+        end
+      end
+    end
+
+    # Pull out place info from TNA_Place and Place of Dating fields (linked to Place authority)
+    place_same_as_array,
+        place_same_as_facet_array,
+        place_same_as_search_array,
+        place_as_written_array = get_place_array(solr_doc[:id])
+    solr_doc['place_same_as_tesim'] = place_same_as_array
+    solr_doc['place_same_as_facet_ssim'] = place_same_as_facet_array
+    solr_doc['place_same_as_search'] = place_same_as_search_array
+    solr_doc['place_as_written_tesim'] = place_as_written_array
 
     # Language (linked field to language authority)
     language_new,unused = get_preflabel_array(solr_doc['language_tesim'])
@@ -31,20 +74,13 @@ class NewSolrFieldsController < ApplicationController
     solr_doc['subject_new_tesim'] = subject_new
     solr_doc['subject_search'] = array_to_lowercase(subject_new)
 
-    # Note (Text field)
-    solr_doc['note_search'] = array_to_lowercase(solr_doc['note_tesim'])
+    # Addressee
+    #
 
-    # Entry date note (text field)
-    solr_doc['entry_date_note_search'] = array_to_lowercase(solr_doc['entry_date_note_tesim'])
-    place_same_as_array,
-    place_same_as_facet_array,
-    place_same_as_search_array,
-    place_as_written_array = get_place_array(solr_doc[:id])
-    solr_doc['place_same_as_tesim'] = place_same_as_array
-    solr_doc['place_same_as_facet_ssim'] = place_same_as_facet_array
-    solr_doc['place_same_as_search'] = place_same_as_search_array
-    solr_doc['place_as_written_tesim'] = place_as_written_array
+    # Sender
 
+
+    # Person
 
     solr_doc['person_as_written_search'] = array_to_lowercase(solr_doc['person_as_written_tesim'])
 
@@ -75,17 +111,6 @@ class NewSolrFieldsController < ApplicationController
 
     solr_doc['person_related_person_search'] = array_to_lowercase(solr_doc['person_related_person_tesim'])
 
-    # dates
-    date_role_new,date_role_alt = get_preflabel_array(solr_doc['date_role_tesim'])
-    solr_doc['date_role_facet_ssim'] = date_role_new
-    unless date_role_alt.empty? then date_role_new += date_role_alt.compact end
-    solr_doc['date_role_new_tesim'] = date_role_new
-    solr_doc['date_role_search'] = array_to_lowercase(date_role_new)
-
-    solr_doc['date_note_search'] = array_to_lowercase(solr_doc['date_note_tesim'])
-
-    date_facet = get_date_array(get_id(solr_doc[:id]))
-    solr_doc['date_facet_ssim'] = date_facet
 
     # add the register name and folio label to the entries
     # register_new,folio_new = get_entry_register_array(solr_doc['folio_ssim'])
@@ -100,8 +125,6 @@ class NewSolrFieldsController < ApplicationController
     entry_person_name_authority_new = get_entry_agent_array(get_id(solr_doc[:id]))
     solr_doc['entry_person_same_as_facet_ssim'] = entry_person_name_authority_new
 
-    entry_date_new = get_entry_date_array(get_id(solr_doc[:id]))
-    solr_doc['entry_date_facet_ssim'] = entry_date_new
 
     return solr_doc
   end

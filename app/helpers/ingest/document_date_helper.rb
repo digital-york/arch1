@@ -32,7 +32,7 @@ module Ingest
         end
 
         # get document_date_id from entry_id, date_role, and note
-        # pry(main)> Ingest::DocumentDateHelper.s_get_document_date_id('0v838095w', 'document date', 'Date in memorandum given as 3 Kal Maii (29 April), but in commission, as 3 Id Maii (13 May).')
+        # pry(main)> Ingest::DocumentDateHelper.s_get_document_date_ids('j098zp686', nil, 'Entry date note test')
         # => ["8g84mn23z"]
         def self.s_get_document_date_ids(document_id, date_role, note)
             document_date_ids = []
@@ -51,10 +51,10 @@ module Ingest
         end
 
         # get single_date_id from document_date_id, date, certainty, date_type
-        #
-        def self.s_get_single_date_ids(document_date_id, date, certainty, date_type)
+        # Ingest::DocumentDateHelper.s_get_single_date_ids('5999ng12x')
+        def self.s_get_single_date_ids(document_date_id, date=nil, certainty=nil, date_type=nil)
             single_date_ids = []
-            return single_date_id if entry_date_id.blank?
+            return single_date_ids if document_date_id.blank?
 
             query = 'has_model_ssim:"SingleDate" AND dateFor_ssim:"'+document_date_id+'"'
             query = query + ' AND date_tesim:"' + date + '"' unless date.blank?
