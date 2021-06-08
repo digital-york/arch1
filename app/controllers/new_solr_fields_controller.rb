@@ -74,7 +74,9 @@ class NewSolrFieldsController < ApplicationController
 
       # related agents
       person_name_authority_new,person_name_authority_alt = get_preflabel_array(sdoc['person_same_as_tesim'])
-      sdoc['person_same_as_facet_ssim'] = person_name_authority_new
+      #sdoc['person_same_as_facet_ssim'] = person_name_authority_new
+      sdoc['person_same_as_facet_ssim'] = Indexer::PersonFacetHelper.s_get_person_facets_from_entry(get_id(sdoc[:id]))
+
       unless person_name_authority_alt.empty? then person_name_authority_new += person_name_authority_alt.compact end
       sdoc['person_same_as_new_tesim'] = person_name_authority_new
       sdoc['person_same_as_search'] = array_to_lowercase(person_name_authority_new)
@@ -108,7 +110,9 @@ class NewSolrFieldsController < ApplicationController
 
       sdoc['date_note_search'] = array_to_lowercase(sdoc['date_note_tesim'])
 
-      date_facet = get_date_array(get_id(sdoc[:id]))
+      # date_facet = get_date_array(get_id(sdoc[:id]))
+      date_facet = Indexer::DateFacetHelper.s_get_date_facets_from_entry(get_id(sdoc[:id]))
+
       sdoc['date_facet_ssim'] = date_facet
 
       # add the register name and folio label to the entries
