@@ -42,6 +42,12 @@ module AssignRdfTypes
         %w(http://dlib.york.ac.uk/ontologies/tna#PlaceOfDating http://schema.org/Place http://dlib.york.ac.uk/ontologies/tna#All)
       when 'TnaPlace'
         %w(http://dlib.york.ac.uk/ontologies/tna#Place http://schema.org/Place http://dlib.york.ac.uk/ontologies/tna#All)
+      when 'TnaAddressee'
+        %w(http://dlib.york.ac.uk/ontologies/tna#Addressee http://schema.org/Person http://dlib.york.ac.uk/ontologies/tna#All)
+      when 'TnaSender'
+        %w(http://dlib.york.ac.uk/ontologies/tna#Sender http://schema.org/Person http://dlib.york.ac.uk/ontologies/tna#All)
+      when 'TnaPerson'
+        %w(http://dlib.york.ac.uk/ontologies/tna#Person http://schema.org/Person http://dlib.york.ac.uk/ontologies/tna#All)
       when 'DocumentDate'
         %w(http://dlib.york.ac.uk/ontologies/tna#DocumentDate http://dlib.york.ac.uk/ontologies/tna#All)
       else

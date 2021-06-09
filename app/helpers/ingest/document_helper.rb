@@ -233,6 +233,18 @@ module Ingest
                 end
             end
 
+            # addressee
+            # search if any existing tna address existing
+            tna_addressee = Ingest::TnaPersonHelper.create_tna_addressee(d.id, addressee)
+
+
+            # sender
+
+
+            # person
+
+
+
             d.save
             puts "  Created/updated Document: #{d.id}" unless d.nil?
             log.info "  Created/updated Document: #{d.id}" unless d.nil?

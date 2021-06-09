@@ -2,7 +2,7 @@ class TnaSender < ActiveFedora::Base
   include RdfType
   include AssignId
 
-  belongs_to :document, predicate: ::RDF::URI.new('http://dlib.york.ac.uk/ontologies/tna#addresseeFor')
+  belongs_to :document, predicate: ::RDF::URI.new('http://dlib.york.ac.uk/ontologies/tna#senderFor')
 
   def add_rdf_types_p
     ['http://dlib.york.ac.uk/ontologies/tna#Sender', 'http://xmlns.com/foaf/0.1/Person', 'http://dlib.york.ac.uk/ontologies/tna#All']
