@@ -61,15 +61,39 @@ module Ingest
 
             # addressees
             addressees = []
-            addressees << tna_document_row.addressee unless tna_document_row.addressee.blank?
+            unless tna_document_row.addressee.blank?
+                if tna_document_row.addressee.include? ";"
+                    tna_document_row.addressee.split(";").each do |a|
+                        addressees << a
+                    end
+                else
+                    addressees << tna_document_row.addressee
+                end
+            end
 
             # senders
             senders = []
-            senders << tna_document_row.sender unless tna_document_row.sender.blank?
+            unless tna_document_row.sender.blank?
+                if tna_document_row.sender.include? ";"
+                    tna_document_row.sender.split(";").each do |s|
+                        senders << s
+                    end
+                else
+                    senders << tna_document_row.sender
+                end
+            end
 
             # person
             persons = []
-            persons << tna_document_row.person unless tna_document_row.person.blank?
+            unless tna_document_row.person.blank?
+                if tna_document_row.person.include? ";"
+                    tna_document_row.person.split(";").each do |p|
+                        persons << p
+                    end
+                else
+                    persons << tna_document_row.person
+                end
+            end
 
             # place
             place_string = ''

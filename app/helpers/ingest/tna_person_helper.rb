@@ -12,20 +12,20 @@ module Ingest
         def self.create_tna_addressee(
             document_id,
             addressees)
-            tna_addressees = []
+            tna_addressee_ids = []
 
             addressees.each do |addressee|
                 tna_addressee = TnaAddressee.new
 
                 tna_addressee.rdftype = tna_addressee.add_rdf_types
-                tna_addressee.person_as_written = addressee unless addressee.blank?
+                tna_addressee.person_as_written = [addressee] unless addressee.blank?
                 tna_addressee.document_id = document_id unless document_id.blank?
 
                 tna_addressee.save
-                tna_addressees << tna_addressee
+                tna_addressee_ids << tna_addressee.id
             end
 
-            tna_addressees
+            tna_addressee_ids
         end
 
         # pry(main)> Ingest::TnaPersonHelper.s_get_tna_addressee_ids(d.id,['Edward I, king of England'])
@@ -50,16 +50,20 @@ module Ingest
         def self.create_tna_sender(
                 document_id,
                 senders)
+            sender_ids = []
 
-            tna_sender = TnaSender.new
+            senders.each do |sender|
+                tna_sender = TnaSender.new
 
-            tna_sender.rdftype = tna_sender.add_rdf_types
-            tna_sender.person_as_written = senders unless senders.blank?
-            tna_sender.document_id = document_id unless document_id.blank?
+                tna_sender.rdftype = tna_sender.add_rdf_types
+                tna_sender.person_as_written = senders unless senders.blank?
+                tna_sender.document_id = document_id unless document_id.blank?
 
-            tna_sender.save
+                tna_sender.save
+                sender_ids << tna_sender.id
+            end
 
-            tna_sender
+            sender_ids
         end
 
         # get tna sender object id array from an array of sender names
@@ -82,16 +86,20 @@ module Ingest
         def self.create_tna_person(
                 document_id,
                 persons)
+            person_ids = []
 
-            tna_person = TnaPerson.new
+            persons.each do |person|
+                tna_person = TnaPerson.new
 
-            tna_person.rdftype = tna_person.add_rdf_types
-            tna_person.person_as_written = persons unless persons.blank?
-            tna_person.document_id = document_id unless document_id.blank?
+                tna_person.rdftype = tna_person.add_rdf_types
+                tna_person.person_as_written = persons unless persons.blank?
+                tna_person.document_id = document_id unless document_id.blank?
 
-            tna_person.save
+                tna_person.save
+                person_ids << tna_person.id
+            end
 
-            tna_person
+            person_ids
         end
 
         # get tna person object id array from an array of persons' name
@@ -100,11 +108,13 @@ module Ingest
 
             person_ids = []
             persons.each do |person|
-                q = 'has_model_ssim:TnaPerson AND person_as_written_tesim:"' + person.downcase + '"'
-                q+= ' personFor_ssim:' + document_id unless document_id.blank?
-                resp = @solr_server.solr_query(q, 'id')
-                resp['response']['docs'].map do |pobj|
-                    person_ids << pobj['id']
+                unless person.blank?
+                    q = 'has_model_ssim:TnaPerson AND person_as_written_tesim:"' + person.downcase + '"'
+                    q+= ' personFor_ssim:' + document_id unless document_id.blank?
+                    resp = @solr_server.solr_query(q, 'id')
+                    resp['response']['docs'].map do |pobj|
+                        person_ids << pobj['id']
+                    end
                 end
             end
             person_ids

@@ -1,6 +1,6 @@
 class TnaAddressee < ActiveFedora::Base
-  include RdfType
-  include AssignId
+
+  include AssignId,RdfType,AssignRdfTypes
 
   belongs_to :document, predicate: ::RDF::URI.new('http://dlib.york.ac.uk/ontologies/tna#addresseeFor')
 

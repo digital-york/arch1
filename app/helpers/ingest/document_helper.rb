@@ -44,9 +44,9 @@ module Ingest
             place_of_dating,
             language,
             subject,
-            addressee,
-            sender,
-            person,
+            addressees,
+            senders,
+            persons,
             place)
             log = Logger.new "log/document_helper.log"
 
@@ -225,8 +225,8 @@ module Ingest
                                 place_desc.place_note)
                             tna_place_id = tna_place.id
                             # puts '2. created tna place: ' + tna_place.id
-                        else # if found, use existing Tna Place
-                            puts '3. found tna place: ' + tna_place_id
+                        # else # if found, use existing Tna Place
+                        #     puts '3. found tna place: ' + tna_place_id
                         end
                     end
                     d.tna_place_ids << tna_place_id
@@ -234,16 +234,73 @@ module Ingest
             end
 
             # addressee
-            # search if any existing tna address existing
-            tna_addressee = Ingest::TnaPersonHelper.create_tna_addressee(d.id, addressee)
-
+            tna_addressee_ids = []
+            if d.id.blank? # if a new document, definitely need to create a new tna addressee
+                tna_addressee_ids += Ingest::TnaPersonHelper.create_tna_addressee(nil, addressees)
+                # puts '1. No doc id, creating tna addressee'
+            else
+                # try to find existing tna addressee object
+                existing_addressee_ids = Ingest::TnaPersonHelper.s_get_tna_addressee_ids(d.id, addressees)
+                if existing_addressee_ids.blank?
+                    # puts '2. cannot find tna address, creating new one'
+                    new_addressee_ids = Ingest::TnaPersonHelper.create_tna_addressee(d.id, addressees)
+                    new_addressee_ids.each do |id|
+                        tna_addressee_ids << id
+                    end
+                else
+                    # puts '3. found tna addressee ids: '
+                    # puts existing_addressee_ids
+                    existing_addressee_ids.each do |id|
+                        tna_addressee_ids << id
+                    end
+                end
+            end
 
             # sender
-
+            tna_sender_ids = []
+            if d.id.blank? # if a new document, definitely need to create a new tna sender
+                tna_sender_ids += Ingest::TnaPersonHelper.create_tna_sender(nil, senders)
+                # puts '1. No doc id, creating tna sender'
+            else
+                # try to find existing tna sender object
+                existing_sender_ids = Ingest::TnaPersonHelper.s_get_tna_sender_ids(d.id, senders)
+                if existing_sender_ids.blank?
+                    # puts '2. cannot find tna sender, creating new one'
+                    new_sender_ids = Ingest::TnaPersonHelper.create_tna_sender(d.id, senders)
+                    new_sender_ids.each do |id|
+                        tna_sender_ids << id
+                    end
+                else
+                    # puts '3. found tna sender ids: '
+                    # puts existing_sender_ids
+                    existing_sender_ids.each do |id|
+                        tna_sender_ids << id
+                    end
+                end
+            end
 
             # person
-
-
+            tna_person_ids = []
+            if d.id.blank? # if a new document, definitely need to create a new tna person
+                tna_person_ids += Ingest::TnaPersonHelper.create_tna_person(nil, persons)
+                # puts '1. No doc id, creating tna person'
+            else
+                # try to find existing tna person object
+                existing_person_ids = Ingest::TnaPersonHelper.s_get_tna_person_ids(d.id, persons)
+                if existing_person_ids.blank?
+                    # puts '2. cannot find tna person, creating new one'
+                    new_person_ids = Ingest::TnaPersonHelper.create_tna_person(d.id, persons)
+                    new_person_ids.each do |id|
+                        tna_person_ids << id
+                    end
+                else
+                    # puts '3. found tna person ids: '
+                    # puts existing_person_ids
+                    existing_person_ids.each do |id|
+                        tna_person_ids << id
+                    end
+                end
+            end
 
             d.save
             puts "  Created/updated Document: #{d.id}" unless d.nil?
@@ -264,6 +321,27 @@ module Ingest
                     tp.document_id = d.id
                     # puts 'updated tna_places: ' + tp.id
                     tp.save
+                end
+
+                # update TNA addressee
+                tna_addressee_ids.each do |addressee_id|
+                    tna_addressee = TnaAddressee.find(addressee_id)
+                    tna_addressee.document_id = d.id
+                    tna_addressee.save
+                end
+
+                # update TNA sender
+                tna_sender_ids.each do |sender_id|
+                    tna_sender = TnaSender.find(sender_id)
+                    tna_sender.document_id = d.id
+                    tna_sender.save
+                end
+
+                # update TNA person
+                tna_person_ids.each do |person_id|
+                    tna_person = TnaPerson.find(person_id)
+                    tna_person.document_id = d.id
+                    tna_person.save
                 end
             end
             d
