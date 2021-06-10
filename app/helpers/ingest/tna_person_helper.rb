@@ -45,6 +45,22 @@ module Ingest
             addressee_ids
         end
 
+        # pry(main)> Ingest::TnaPersonHelper.s_get_linked_addressee_as_written_labels(d.id)
+        def self.s_get_linked_addressee_as_written_labels(document_id)
+            return nil if document_id.blank?
+
+            addressee_labels = []
+
+            q = 'has_model_ssim:TnaAddressee AND addresseeFor_ssim:' + document_id
+            resp = @solr_server.solr_query(q, 'id,person_as_written_tesim')
+            resp['response']['docs'].map do |pobj|
+                pobj['person_as_written_tesim'].each do |p|
+                    addressee_labels << p unless p.blank?
+                end
+            end
+
+            addressee_labels
+        end
 
         # Ingest::TnaPersonHelper.create_tna_sender
         def self.create_tna_sender(
@@ -80,6 +96,23 @@ module Ingest
                 end
             end
             sender_ids
+        end
+
+        # pry(main)> Ingest::TnaPersonHelper.s_get_linked_sender_as_written_labels(d.id)
+        def self.s_get_linked_sender_as_written_labels(document_id)
+            return nil if document_id.blank?
+
+            sender_labels = []
+
+            q = 'has_model_ssim:TnaSender AND senderFor_ssim:' + document_id
+            resp = @solr_server.solr_query(q, 'id,person_as_written_tesim')
+            resp['response']['docs'].map do |pobj|
+                pobj['person_as_written_tesim'].each do |p|
+                    sender_labels << p unless p.blank?
+                end
+            end
+
+            sender_labels
         end
 
         # Ingest::TnaPersonHelper.create_tna_person
@@ -118,6 +151,23 @@ module Ingest
                 end
             end
             person_ids
+        end
+
+        # pry(main)> Ingest::TnaPersonHelper.s_get_linked_person_as_written_labels(d.id)
+        def self.s_get_linked_person_as_written_labels(document_id)
+            return nil if document_id.blank?
+
+            person_labels = []
+
+            q = 'has_model_ssim:TnaPerson AND personFor_ssim:' + document_id
+            resp = @solr_server.solr_query(q, 'id,person_as_written_tesim')
+            resp['response']['docs'].map do |pobj|
+                pobj['person_as_written_tesim'].each do |p|
+                    person_labels << p unless p.blank?
+                end
+            end
+
+            person_labels
         end
     end
 end
