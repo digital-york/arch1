@@ -64,10 +64,25 @@ module Validator
 
             # Place of dating
             place_of_dating = tna_document_row.place_of_dating
-
+            unless place_of_dating.blank?
+                place_of_dating_descs = Ingest::ExcelHelper.extract_places_info(place_of_dating, 'place of dating', '')
+                place_of_dating_descs.each do |place_of_dating_desc|
+                    place_of_dating_desc.country = 'England' if place_of_dating_desc.country.blank?
+                    return 'place_of_dating.place' unless document_json['place_same_as_facet_ssim'].include? "#{place_of_dating_desc.place_name}, #{place_of_dating_desc.county}, #{place_of_dating_desc.country}"
+                    return 'place_of_dating.place_as_written' unless document_json['place_as_written_tesim'].include? "#{place_of_dating_desc.place_as_written}"
+                end
+            end
 
             # Place
-
+            place = tna_document_row.place
+            unless place.blank?
+                place_descs = Ingest::ExcelHelper.extract_places_info(place, '', '')
+                place_descs.each do |place_desc|
+                    place_desc.country = 'England' if place_desc.country.blank?
+                    return 'place.place' unless document_json['place_same_as_facet_ssim'].include? "#{place_desc.place_name}, #{place_desc.county}, #{place_desc.country}"
+                    return 'place.place_as_written' unless document_json['place_as_written_tesim'].include? "#{place_desc.place_as_written}"
+                end
+            end
 
             # Language
             language = tna_document_row.language
