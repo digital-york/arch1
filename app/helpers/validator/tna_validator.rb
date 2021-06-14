@@ -23,10 +23,56 @@ module Validator
             series_id = Ingest::SeriesHelper.s_get_series_id_from_desc(department_id, series)
             return 'series' if series_id.blank?
 
-            # reference
+            # get document_json
             reference = tna_document_row.reference
             document_json = Ingest::DocumentHelper.s_get_document_json(series_id, reference)
-            return 'reference' if document_json.blank?
+            return 'document_json' if document_json.blank?
+
+            # reference
+            return 'reference' if (not reference.nil?) and reference != document_json['reference_tesim'][0]
+
+            # publication
+            publication = tna_document_row.publication
+            return 'publication' if (not publication.nil?) and publication != document_json['publication_tesim'][0]
+
+            # Summary
+            summary = tna_document_row.summary
+            return 'summary' if (not summary.nil?) and summary != document_json['summary_tesim'][0]
+
+            # Entry date note
+            entry_date_note = tna_document_row.entry_date_note
+            return 'entry_date_note' if (not entry_date_note.nil?) and entry_date_note != document_json['entry_date_note_tesim'][0]
+
+            # Note
+            note = tna_document_row.note
+            return 'note' if (not note.nil?) and note != document_json['note_tesim'][0]
+
+            # Document type
+
+
+            # Date of document
+
+
+            # Place of dating
+
+
+            # Place
+
+
+            # Language
+
+
+            # Subject
+
+
+            # Addressee
+
+
+            # Sender
+
+
+            # Person
+
 
             # # Validate: compare entry_no from spreadsheet and entry_json from Solr
             # return 'entry_no' if entry_no != entry_json['entry_no_tesim'][0]
