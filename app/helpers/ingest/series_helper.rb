@@ -14,6 +14,21 @@ module Ingest
             id
         end
 
+        # Nb: the second params is the full series string, e.g. C85 - Significations of Excommunication
+        def self.s_get_series_id_from_desc(department_id, series_string)
+            id = ''
+            series_label = series_string.split('-')[0].gsub(/\s+/, "")
+            series_desc = series_string.split('-')[1].strip
+            begin
+                query = "has_model_ssim:\"Series\" AND preflabel_tesim:\"#{series_label}\" description_tesim:\"#{series_desc}\" AND isPartOf_ssim:\"#{department_id}\""
+                SolrQuery.new.solr_query(query)['response']['docs'].map do |r|
+                    id = r['id']
+                end
+            rescue
+            end
+            id
+        end
+
         # Ingest::SeriesHelper.create_series('C1', 'Early Chancery Proceedings', '6108vp64c')
         def self.create_series(series_label, series_desc, department_id)
             # trying to find if the series has been created first

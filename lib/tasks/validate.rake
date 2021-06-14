@@ -51,6 +51,50 @@ namespace :validate do
         end
     end
 
+    # bundle exec rake validate:tna_excel[EXCEL_FILE_NAME]
+    # The parameter is the full path of Excel file
+    # e.g.
+    # bundle exec rake validate:tna_excel[/var/tmp/test2.xlsx]
+    desc "Validate documents from excel against solr."
+    task :tna_excel, [:filename_xsl] => [:environment] do |t, args|
+        log = Logger.new "log/tna_validate.log"
+
+        # Parse documents from Excel
+        document_rows   = Ingest::ExcelHelper.parse_tna_spreadsheet(args[:filename_xsl])
+        mismatched_documents = []
+        errors = []
+
+        document_rows.each_with_index { |document_row, index|
+            begin
+                # For test purpose, only print selected document rows
+                if document_row.reference == 'C 81/1786/45'
+                    first_mismatched_field = Validator::TnaValidator.validate_document(document_row)
+                    unless first_mismatched_field.blank?
+                        puts "[#{index} / #{document_rows.length}] #{document_row.to_s}"
+                        log.info "[#{index} / #{document_rows.length}] #{document_row.to_s}"
+                        puts '  mismatch: ' + first_mismatched_field
+                        log.info '  mismatch: ' + first_mismatched_field
+                        mismatched_documents << document_row.to_s + " => #{first_mismatched_field}"
+                    end
+
+                    break
+                end
+            rescue => exception
+                log.error exception.backtrace
+                puts exception.backtrace
+                errors << "#{document_row.reference}"
+            end
+        }
+        if errors.length > 0
+            log.error "==========errors [#{errors.length}]=========="
+            log.error errors
+        end
+        if mismatched_documents.length > 0
+            log.error "==========mismatches [#{mismatched_documents.length}]=========="
+            log.error mismatched_documents
+        end
+    end
+
     # bundle exec rake validate:tna_place[EXCEL_FILE_NAME]
     # The parameter is the full path of Excel file
     # e.g.

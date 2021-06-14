@@ -15,6 +15,18 @@ module Ingest
             id
         end
 
+        def self.s_get_department_id_from_desc(department_desc)
+            id = ''
+            begin
+                query = "has_model_ssim:\"Department\" AND description_tesim:\"#{department_desc}\""
+                SolrQuery.new.solr_query(query)['response']['docs'].map do |r|
+                    id = r['id']
+                end
+            rescue
+            end
+            id
+        end
+
         # Ingest::DepartmentHelper.create_department('C','Chancery')
         def self.create_department(department_label, department_desc)
 

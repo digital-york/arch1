@@ -14,19 +14,19 @@ module Ingest
         end
 
         # find Document by series id and reference.
-        # pry(main)> Ingest::DocumentHelper.s_find_document('1257b485h', 'C 81/1786/43')
+        # pry(main)> Ingest::DocumentHelper.s_get_document_json('1257b485h', 'C 81/1786/43')
         # => "2b88qc56f"
-        def self.s_find_document(series_id, reference)
-            document_id = nil
+        def self.s_get_document_json(series_id, reference)
+            document_json = nil
 
             unless series_id.nil? or reference.nil?
                 query = "has_model_ssim:Document AND series_ssim:#{series_id} AND reference_tesim:\"#{reference}\""
-                SolrQuery.new.solr_query(query)['response']['docs'].map do |r|
-                    document_id = r['id']
+                SolrQuery.new.solr_query(query, '')['response']['docs'].map do |r|
+                    document_json = r
                 end
             end
 
-            document_id
+            document_json
         end
 
         # Ingest::DocumentHelper.create_document
