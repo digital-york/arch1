@@ -63,16 +63,26 @@ module Validator
             end
 
             # Place of dating
+            place_of_dating = tna_document_row.place_of_dating
 
 
             # Place
 
 
             # Language
-
+            language = tna_document_row.language
+            unless language.blank?
+                return 'language' if language != document_json['language_facet_ssim'][0]
+            end
 
             # Subject
-
+            subjects_from_spreadsheet = [tna_document_row.subject]
+            unless subjects_from_spreadsheet.blank?
+                subjects_from_spreadsheet = subjects_from_spreadsheet.map(&:capitalize)
+                subjects_from_solr = document_json['subject_facet_ssim']
+                # compare subjects and ignoring the order
+                return "subject" if (subjects_from_spreadsheet & subjects_from_solr) != subjects_from_spreadsheet
+            end
 
             # Addressee
 
