@@ -48,10 +48,19 @@ module Validator
             return 'note' if (not note.nil?) and note != document_json['note_tesim'][0]
 
             # Document type
-
+            document_types_from_spreadsheet = [tna_document_row.document_type]
+            unless document_types_from_spreadsheet.blank?
+                document_types_from_spreadsheet = document_types_from_spreadsheet.map(&:capitalize)
+                document_types_from_solr = Ingest::AuthorityHelper.s_get_entry_type_labels(document_json['document_type_search'])
+                # compare document types and ignoring the order
+                return "document_type" if (document_types_from_spreadsheet & document_types_from_solr) != document_types_from_spreadsheet
+            end
 
             # Date of document
-
+            date_of_document = tna_document_row.date_of_document
+            unless date_of_document.blank?
+                return 'date of document' if date_of_document != document_json['first_date_full_ssim'][0]
+            end
 
             # Place of dating
 
