@@ -44,7 +44,7 @@ module Validator
             entry_types << borthwick_entry_row.entry_type3 unless borthwick_entry_row.entry_type3.blank?
 
             # Validate: compare entry_types from spreadsheet and from Solr
-            return "#{entry_id}/entry_types" if entry_types.sort != Ingest::AuthorityHelper.s_get_entry_type_labels(entry_json['entry_type_tesim']).sort
+            return "#{entry_id}/entry_types" if entry_types.uniq.sort != Ingest::AuthorityHelper.s_get_entry_type_labels(entry_json['entry_type_tesim']).sort
 
             # language
             # Q: NO language column in Reg7132v-entry-6-155-York-EHW.xlsx
