@@ -184,9 +184,9 @@ module Ingest
                 #
                 # firstly, do a exact search
                 #
-                # TODO: use inScheme_ssim to find Place is NOT always working, e.g. Place: 5q47rn940 doesn't have this field
+                # DONOT use inScheme_ssim to find Place is NOT always working, e.g. Place: 5q47rn940 doesn't have this field
                 # to refactor later: use has_model_ssim:Place
-                resp = SolrQuery.new.solr_query('inScheme_ssim:"' + l['id'] + '" AND place_name_tesim:"' + place.downcase + '"', 'id,place_name_tesim,preflabel_tesim')
+                resp = SolrQuery.new.solr_query('has_model_ssim:Place AND place_name_tesim:"' + place.downcase + '"', 'id,place_name_tesim,preflabel_tesim')
                 resp['response']['docs'].map do |p|
                     if p['place_name_tesim'][0].to_s.downcase == place.downcase
                         places_id = p['id']
@@ -194,7 +194,7 @@ module Ingest
                 end
                 # Then, if places_id is not found, do a substring search
                 if places_id.blank?
-                    resp = SolrQuery.new.solr_query('inScheme_ssim:"' + l['id'] + '" AND place_name_tesim:' + place.downcase, 'id,place_name_tesim,preflabel_tesim')
+                    resp = SolrQuery.new.solr_query('has_model_ssim:Place AND place_name_tesim:' + place.downcase, 'id,place_name_tesim,preflabel_tesim')
                     resp['response']['docs'].map do |p|
                         places_id = p['id']
                     end
