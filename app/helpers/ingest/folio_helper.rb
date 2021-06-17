@@ -12,11 +12,26 @@ module Ingest
         end
 
         # get all Entry ids for a Folio
-        def self.s_get_entry_ids(folio_id)
-            ids = nil
-            SolrQuery.new.solr_query("has_model_ssim:\"Entry\" AND folio_ssim:\"#{folio_id}\"")['response']['docs'].map do |r|
-                ids = r['id']
+        # def self.s_get_entry_ids(folio_id)
+        #     ids = nil
+        #     SolrQuery.new.solr_query("has_model_ssim:\"Entry\" AND folio_ssim:\"#{folio_id}\"")['response']['docs'].map do |r|
+        #         ids = r['id']
+        #     end
+        #     ids
+        # end
+
+        # return all containing entry ids for a folio
+        def self.s_get_all_entry_ids(folio_id)
+            entry_ids = []
+
+            unless folio_id.nil?
+                query = "has_model_ssim:Entry AND folio_ssim:#{folio_id}"
+                SolrQuery.new.solr_query(query)['response']['docs'].map do |r|
+                    entry_ids << r['id']
+                end
             end
+
+            entry_ids
         end
 
         # get archbishop register folio id

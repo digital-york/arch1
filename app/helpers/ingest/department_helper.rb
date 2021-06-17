@@ -15,6 +15,16 @@ module Ingest
             id
         end
 
+        # get all Series ids for a Department
+        # Ingest::DepartmentHelper.s_get_series_ids(department_id)
+        def self.s_get_series_ids(department_id)
+            series_ids = []
+            SolrQuery.new.solr_query("has_model_ssim:\"Series\" AND isPartOf_ssim:\"#{department_id}\"")['response']['docs'].map do |r|
+                series_ids << r['id']
+            end
+            series_ids
+        end
+
         def self.s_get_department_id_from_desc(department_desc)
             id = ''
             begin
