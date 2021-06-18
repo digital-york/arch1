@@ -46,6 +46,8 @@ group :development do
   # Access an IRB console on exception pages or by using <%= console %> in views
   gem 'brakeman'
   gem 'web-console'
+  gem "standardrb"
+  gem "solargraph"
   gem 'xray-rails'
 end
 
@@ -56,7 +58,6 @@ group :development, :test do
   gem 'rails-controller-testing'
   gem 'spring'
   gem 'puma'
-  gem 'xray-rails'
 end
 
 group :doc do
