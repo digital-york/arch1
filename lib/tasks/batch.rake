@@ -47,9 +47,9 @@ namespace :batch do
         log = Logger.new "log/batch_delete_entries_range.log"
         start_folio_label = args[:start_folio_label]
         end_folio_label = args[:end_folio_label]
-        # print "  Are you sure to continue? type YES to confirm. "
-        # answer = STDIN.gets.chomp
-        # if answer == 'YES'
+        print "  Are you sure to continue? type YES to confirm. "
+        answer = STDIN.gets.chomp
+        if answer == 'YES'
             finished = false
             current_folio_label = start_folio_label
             while not finished
@@ -63,9 +63,9 @@ namespace :batch do
                 end
                 current_folio_label = Ingest::FolioHelper.get_next_folio_label(current_folio_label)
             end
-        # else
-        #     puts 'Canceled.'
-        # end
+        else
+            puts 'Canceled.'
+        end
     end
 
     # If Series label is provided, will delete all documents within that Series, e.g.
