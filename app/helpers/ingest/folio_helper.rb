@@ -80,5 +80,13 @@ module Ingest
 
             f
         end
+
+        # Get next folio label
+        def self.get_next_folio_label(folio_label)
+            if folio_label.include? "recto"
+                return folio_label.gsub('recto', 'verso')
+            end
+            folio_label.split('.')[0] + '.' + (folio_label.split('.')[1].gsub(/[^0-9]/, '').to_i+1).to_s + ' (recto)'
+        end
     end
 end

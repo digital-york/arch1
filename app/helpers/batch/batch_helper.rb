@@ -10,8 +10,9 @@ module Batch
             entry_count = entry_ids.length
             if entry_count > 0
                 entry_ids.each_with_index do |entry_id, index|
-                    print "#{output_spaces}  Deleting #{index+1}/#{entry_count} #{entry_id} ... "
-                    #Entry.find(entry_id).delete
+                    e = Entry.find(entry_id)
+                    print "#{output_spaces}  Deleting #{index+1}/#{entry_count} #{entry_id} / Entry #{e.entry_no}... "
+                    e.delete
                     puts "Done."
                 end
             else
@@ -29,7 +30,7 @@ module Batch
             if document_count > 0
                 document_ids.each_with_index do |document_id, index|
                     print "#{output_spaces}  Deleting #{index+1}/#{document_count} #{document_id} ... "
-                    #Document.find(document_id).delete
+                    Document.find(document_id).delete
                     puts "Done."
                 end
             else
