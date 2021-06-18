@@ -115,6 +115,10 @@ class NewSolrFieldsController < ApplicationController
 
       sdoc['date_facet_ssim'] = date_facet
 
+      # Store SingleDate in single Solr dynamic field e.g. *_ssi (Note *_dttsi requieres dates in ISO format) 
+      # Downcase occassional dates with comments 
+      sdoc['date_new_ssi'] = sdoc['date_tesim'][0].downcase unless sdoc['date_tesim'].blank?
+
       # add the register name and folio label to the entries
       register_new,folio_new = get_entry_register_array(sdoc['folio_ssim'])
       sdoc['entry_register_facet_ssim'] = register_new
