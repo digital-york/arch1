@@ -35,6 +35,20 @@ After ingestion, validate entries from excel against solr.
 
     bundle exec rake validate:excel[FULL_PATH_OF_xlsx]
 
+#### Batch deletion
+
+If a range of folios is know, run:
+
+    bundle exec rake batch:delete_entries_range['Abp Reg 12 f.1 (recto)','Abp Reg 12 f.12 (verso)']
+
+If delete entries within a folio:
+
+    bundle exec rake batch:delete_entries['','Abp Reg 12 f.1 (recto)']
+    
+If all entries within a Register need to be deleted:
+
+    bundle exec rake batch:delete_entries['Reg 9A']    
+
 ### TNA
 
 #### Before ingest
