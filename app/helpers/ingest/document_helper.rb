@@ -50,7 +50,7 @@ module Ingest
             place)
             log = Logger.new "log/document_helper.log"
 
-            document_id = s_find_document(series_id, reference)
+            document_id = s_get_document_json(series_id, reference)['id']
 
             # if a new document, need to update linked object, e.g.
             # Place of Dating, TnaPlace back to the document id after the document being saved.
