@@ -81,13 +81,15 @@ module Ingest
             d.document_type = Ingest::AuthorityHelper.s_get_entry_type_object_ids(document_type) unless document_type.blank?
 
             # Date of document
-            document_dates = []
+            document_date_ids = []
             document_date_role = ''
             document_date_note = entry_date_note || ''
-            document_date  = Ingest::DocumentDateHelper.create_document_date(document_date_role,
+            document_date  = Ingest::DocumentDateHelper.create_document_date(document_id,
+                                                                             document_date_role,
                                                                              document_date_note)
             unless document_date.blank?
-                document_dates << document_date
+                document_date_ids << document_date.id
+                d.document_date_ids << document_date.id
                 single_date = Ingest::DocumentDateHelper.create_single_date(
                     document_date,
                     date_of_document || '',
@@ -95,7 +97,6 @@ module Ingest
                     '')
                 document_date.single_date_ids << single_date.id unless single_date.blank?
             end
-            d.document_dates = document_dates
 
             # Language
             d.language = Ingest::AuthorityHelper.s_get_language_object_ids(language) unless language.blank?
@@ -125,14 +126,14 @@ module Ingest
                         place_of_dating_desc.country) unless place_of_dating_desc.place_name.blank?
                     # allow empty place names, so possibly we could have empty place_authority_ids
                     if place_authority_ids.blank? or place_authority_ids.length()==0
-                        puts 'Place of dating warning: cannot find place_authority id'
-                        puts ">>> #{reference}..."
-                        return
+                        puts '  Place of dating warning: cannot find place_authority id'
+                        puts "  >>> #{reference}..."
+                        # return
                     elsif place_authority_ids.length() > 1
-                        puts 'Place of dating Error: returns more than 1 places.'
-                        puts ">>> #{reference}..."
+                        puts '  Place of dating Error: returns more than 1 places.'
+                        puts "  >>> #{reference}..."
                         puts place_authority_ids
-                        return
+                        # return
                     end
                 end
 
@@ -342,6 +343,13 @@ module Ingest
                     tna_person = TnaPerson.find(person_id)
                     tna_person.document_id = d.id
                     tna_person.save
+                end
+
+                # update document date
+                document_date_ids.each do |document_date_id|
+                    document_date = DocumentDate.find(document_date_id)
+                    document_date.document_id = d.id
+                    document_date.save
                 end
             end
             d

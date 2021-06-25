@@ -19,13 +19,14 @@ module Ingest
 
         # Ingest::DocumentDateHelper.create_document_date
         #
-        def self.create_document_date(date_role, note)
+        def self.create_document_date(document_id, date_role, note)
             dd = DocumentDate.new
 
             dd.rdftype = dd.add_rdf_types
             # the TNA spreadsheet doesn't have date_role
             # dd.date_role    = self.s_get_date_role_id(date_role) unless date_role.blank?
             dd.date_note = note.join unless note.blank?
+            dd.document_id = document_id unless document_id.blank?
             dd.save
 
             dd

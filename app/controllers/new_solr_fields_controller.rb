@@ -36,7 +36,11 @@ class NewSolrFieldsController < ApplicationController
     solr_doc['document_type_tesim'] = document_type_ids
 
     # Date of document
-    document_date_ids = Ingest::DocumentDateHelper.s_get_document_date_ids(solr_doc[:id], nil, solr_doc['entry_date_note_tesim'][0])
+    entry_date_note = ''
+    unless solr_doc['entry_date_note_tesim'].blank?
+      entry_date_note = solr_doc['entry_date_note_tesim'][0]
+    end
+    document_date_ids = Ingest::DocumentDateHelper.s_get_document_date_ids(solr_doc[:id], nil, entry_date_note)
     document_date_ids.each do |document_date_id|
       single_date_ids = Ingest::DocumentDateHelper.s_get_single_date_ids(document_date_id)
       solr_doc['entry_date_facet_ssim'] = []  # Use this field for facet
