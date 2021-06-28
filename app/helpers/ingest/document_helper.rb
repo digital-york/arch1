@@ -177,7 +177,7 @@ module Ingest
 
             unless place.blank?
                 tna_place_ids = []
-                place_descs = Ingest::ExcelHelper.extract_places_info(place, '', '')
+                place_descs = Ingest::ExcelHelper.extract_places_info(place, 'place mentioned', '')
                 place_descs.each do |place_desc|
                     place_authority_ids = []
                     # allow place_name to be empty
