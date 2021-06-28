@@ -1,3 +1,5 @@
+require 'tnw_common'
+require 'tnw_common/shared/Constants'
 require 'tnw_common/solr/solr_query'
 
 class NewSolrFieldsController < ApplicationController
@@ -43,12 +45,12 @@ class NewSolrFieldsController < ApplicationController
     document_date_ids = Ingest::DocumentDateHelper.s_get_document_date_ids(solr_doc[:id], nil, entry_date_note)
     document_date_ids.each do |document_date_id|
       single_date_ids = Ingest::DocumentDateHelper.s_get_single_date_ids(document_date_id)
-      solr_doc['entry_date_facet_ssim'] = []  # Use this field for facet
-      solr_doc['date_ssim'] = [] # Use this field to for date fields
+      solr_doc[TnwCommon::Shared::Constants::FACET_DATE] = []  # Use this field for facet
+      solr_doc['date_ssim'] = [] # Use this field for date fields
       solr_doc['date_full_ssim'] = ''   # use this field for ordering
       single_date_ids.each_with_index do |single_date_id, index|
         @solr_server.query("id:#{single_date_id}", 'date_tesim,date_facet_ssim', 65535)['response']['docs'].map do |result|
-          solr_doc['entry_date_facet_ssim'] << result['date_facet_ssim'][index]
+          solr_doc[TnwCommon::Shared::Constants::FACET_DATE] << result['date_facet_ssim'][index]
           solr_doc['date_ssim'] << result['date_tesim'][index]
           if index==0
             solr_doc['date_full_ssim'] = result['date_tesim'][0]
@@ -63,7 +65,7 @@ class NewSolrFieldsController < ApplicationController
         place_same_as_search_array,
         place_as_written_array = get_place_array(solr_doc[:id])
     solr_doc['place_same_as_tesim'] = place_same_as_array
-    solr_doc['place_same_as_facet_ssim'] = place_same_as_facet_array
+    solr_doc[TnwCommon::Shared::Constants::FACET_PLACE_SAME_AS] = place_same_as_facet_array
     solr_doc['place_same_as_search'] = place_same_as_search_array
     solr_doc['place_as_written_tesim'] = place_as_written_array
 
@@ -75,7 +77,7 @@ class NewSolrFieldsController < ApplicationController
 
     # subject (Linked field)
     subject_new, subject_alt = get_preflabel_array(solr_doc['subject_tesim'])
-    solr_doc['subject_facet_ssim'] = subject_new
+    solr_doc[TnwCommon::Shared::Constants::FACET_SUBJECT] = subject_new
     unless subject_alt.empty? then subject_new += subject_alt.compact end
     solr_doc['subject_new_tesim'] = subject_new
     solr_doc['subject_search'] = array_to_lowercase(subject_new)
@@ -140,7 +142,7 @@ class NewSolrFieldsController < ApplicationController
     # solr_doc['entry_place_same_as_facet_ssim'] = entry_place_name_authority_new
 
     entry_person_name_authority_new = get_entry_agent_array(get_id(solr_doc[:id]))
-    solr_doc['entry_person_same_as_facet_ssim'] = entry_person_name_authority_new
+    solr_doc[TnwCommon::Shared::Constants::FACET_PERSON_SAME_AS] = entry_person_name_authority_new
 
 
     return solr_doc
