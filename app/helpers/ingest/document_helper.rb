@@ -50,11 +50,13 @@ module Ingest
             place)
             log = Logger.new "log/document_helper.log"
 
-            document_id = s_get_document_json(series_id, reference)['id']
+            document_json = s_get_document_json(series_id, reference)
+            document_id = nil
+            document_id = document_json['id'] unless document_json.nil?
 
             # if a new document, need to update linked object, e.g.
             # Place of Dating, TnaPlace back to the document id after the document being saved.
-            is_new_document = false
+            is_new_document = document_id.nil?
 
             if document_id.nil?
                 d = Document.new
@@ -186,18 +188,14 @@ module Ingest
                             place_desc.place_name,
                             place_desc.county,
                             place_desc.country)
-
                         if place_authority_ids.blank?
                             puts 'Place(s) Warn: cannot find place_authority id'
                             puts ">>> #{reference}..."
-                            return
                         elsif place_authority_ids.length()!=1
                             puts 'Place(s) Error: returns more than 1 places.'
                             puts ">>> #{reference}..."
-                            return
                         end
                     end
-
                     # if document id is blank, means it is a new document,
                     # so definitely needs to create a new Tna Place
                     tna_place_id = ''
@@ -205,9 +203,9 @@ module Ingest
                         tna_place = Ingest::TnaPlaceHelper.create_tna_place(
                             d.id,
                             place_desc.place_as_written,
-                            place_ids,
-                            place_desc.place_role,
-                            place_desc.place_note)
+                            place_authority_ids,
+                            [place_desc.place_role],
+                            [place_desc.place_note])
                         tna_place_id = tna_place.id
                         # puts '1. created tna place: ' + tna_place.id
                     else
@@ -222,8 +220,8 @@ module Ingest
                                 d.id,
                                 place_desc.place_as_written,
                                 place_authority_ids,
-                                place_desc.place_role,
-                                place_desc.place_note)
+                                [place_desc.place_role],
+                                [place_desc.place_note])
                             tna_place_id = tna_place.id
                             # puts '2. created tna place: ' + tna_place.id
                         # else # if found, use existing Tna Place
