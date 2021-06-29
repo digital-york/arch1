@@ -1,17 +1,22 @@
 require 'tnw_common'
 require 'tnw_common/shared/Constants'
 require 'tnw_common/solr/solr_query'
+require 'tnw_common/tna/tna_search'
 
 class NewSolrFieldsController < ApplicationController
 
   # define shared solr connection
   def initialize()
     @solr_server = TnwCommon::Solr::SolrQuery.new(SOLR[Rails.env]['url'])
+    @tna_search = TnwCommon::Tna::TnaSearch.new(@solr_server)
   end
 
   # Add customized solr fields if the model is Document
   def modify_tna_document(solr_doc)
     # Repository is already indexed as repository_tesim by Active Fedora
+
+    # Find department info and store it to the facet
+    solr_doc[TnwCommon::Shared::Constants::FACET_REGISTER_OR_DEPARTMENT]=@tna_search.get_department_label(solr_doc[:id])
 
     # Reference is already indexed as reference_tesim
 
