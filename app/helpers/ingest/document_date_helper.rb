@@ -44,7 +44,9 @@ module Ingest
             unless note.blank?
                 query += ' AND date_note_tesim:"'+note+'"'
             end
-            response = SolrQuery.new.solr_query(query, 'id')
+
+            # Only return the latest DocumentDate
+            response = SolrQuery.new.solr_query(query, 'id', 1,'system_modified_dtsi desc')
             response['response']['docs'].map do |pobj|
                 document_date_ids << pobj['id']
             end
