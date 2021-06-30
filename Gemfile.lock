@@ -1,7 +1,7 @@
 GIT
   remote: https://github.com/digital-york/tnw_common
-  revision: 0417afd5b1ec8d391d4e3cbd021832a96fb2cd54
-  branch: main
+  revision: 36b04dfc65430e1752e341c8ea73fdfdeb8b37c7
+  branch: tna_ui
   specs:
     tnw_common (0.1.0)
       rsolr
@@ -125,7 +125,7 @@ GEM
       sxp (~> 1.1)
     erubi (1.9.0)
     execjs (2.7.0)
-    faraday (0.17.3)
+    faraday (0.17.4)
       multipart-post (>= 1.2, < 3)
     faraday-encoding (0.0.5)
       faraday
