@@ -90,12 +90,19 @@ module Ingest
                                                                              document_date_role,
                                                                              document_date_note)
             unless document_date.blank?
+                certainties = 'certain'
+                # for dates in format: [? 1408]/10/20
+                if date_of_document.include? '?'
+                    certainties = 'uncertain'
+                    date_array = date_of_document.split('/')
+                    date_of_document = date_array[0].tr('^0-9', '') + '/' + date_array[1] + '/' + date_array[2]
+                end
                 document_date_ids << document_date.id
                 d.document_date_ids << document_date.id
                 single_date = Ingest::DocumentDateHelper.create_single_date(
                     document_date,
                     date_of_document || '',
-                    '',
+                    certainties,
                     '')
                 document_date.single_date_ids << single_date.id unless single_date.blank?
             end

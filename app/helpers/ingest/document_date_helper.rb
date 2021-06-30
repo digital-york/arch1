@@ -6,7 +6,7 @@ module Ingest
             sd = SingleDate.new
 
             sd.rdftype        = sd.add_rdf_types
-            sd.date           = date.join unless date.blank?
+            sd.date           = date unless date.blank?
             sd.date_certainty = [certainties] unless certainties.blank?
             sd.date_type      = date_type
             sd.document_date  = document_date

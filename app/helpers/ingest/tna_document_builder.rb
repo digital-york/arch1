@@ -43,8 +43,8 @@ module Ingest
             document_types = []
             document_types = [tna_document_row.document_type] unless tna_document_row.document_type.blank?
 
-            date_of_documents = []
-            date_of_documents = [tna_document_row.date_of_document] unless tna_document_row.date_of_document.blank?
+            date_of_documents = ''
+            date_of_documents = tna_document_row.date_of_document unless tna_document_row.date_of_document.blank?
 
             place_of_dating = tna_document_row.place_of_dating unless tna_document_row.place_of_dating.blank?
 
