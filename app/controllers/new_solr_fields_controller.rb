@@ -54,9 +54,9 @@ class NewSolrFieldsController < ApplicationController
       solr_doc['date_ssim'] = [] # Use this field for date fields
       solr_doc['date_full_ssim'] = ''   # use this field for ordering
       single_date_ids.each_with_index do |single_date_id, index|
-        @solr_server.query("id:#{single_date_id}", 'date_tesim,date_facet_ssim', 65535)['response']['docs'].map do |result|
-          solr_doc[TnwCommon::Shared::Constants::FACET_DATE] << result['date_facet_ssim'][index]
-          solr_doc['date_ssim'] << result['date_tesim'][index]
+        @solr_server.query("id:#{single_date_id}", 'date_tesim', 65535)['response']['docs'].map do |result|
+          solr_doc[TnwCommon::Shared::Constants::FACET_DATE] << result['date_tesim'][0].split('/')[0]
+          solr_doc['date_ssim'] << result['date_tesim'][0]
           if index==0
             solr_doc['date_full_ssim'] = result['date_tesim'][0]
           end
