@@ -69,10 +69,10 @@ class NewSolrFieldsController < ApplicationController
         place_same_as_facet_array,
         place_same_as_search_array,
         place_as_written_array = get_place_array(solr_doc[:id])
-    solr_doc['place_same_as_tesim'] = place_same_as_array
-    solr_doc[TnwCommon::Shared::Constants::FACET_PLACE_SAME_AS] = place_same_as_facet_array
-    solr_doc['place_same_as_search'] = place_same_as_search_array
-    solr_doc['place_as_written_tesim'] = place_as_written_array
+    solr_doc['place_same_as_tesim'] = place_same_as_array.uniq
+    solr_doc[TnwCommon::Shared::Constants::FACET_PLACE_SAME_AS] = place_same_as_facet_array.uniq
+    solr_doc['place_same_as_search'] = place_same_as_search_array.uniq
+    solr_doc['place_as_written_tesim'] = place_as_written_array.uniq
 
     # Language (linked field to language authority)
     language_new,unused = get_preflabel_array(solr_doc['language_tesim'])
@@ -535,28 +535,28 @@ class NewSolrFieldsController < ApplicationController
               place_as_written = result['place_as_written_tesim']
 
               place_as_written.each do |paw|
-                place_as_written_array << paw
+                place_as_written_array << paw.squish
               end
             end
 
             unless result['place_same_as_tesim'].nil?
               place_same_as = result['place_same_as_tesim']
               place_same_as.each do |psa|
-                place_same_as_array << psa
+                place_same_as_array << psa.squish
               end
             end
 
             unless result['place_same_as_facet_ssim'].nil?
               place_same_as_facets = result['place_same_as_facet_ssim']
               place_same_as_facets.each do |psaf|
-                place_same_as_facet_array << psaf
+                place_same_as_facet_array << psaf.squish
               end
             end
 
             unless result['place_same_as_search'].nil?
               place_same_as_search = result['place_same_as_search']
               place_same_as_search.each do |psas|
-                place_same_as_search_array << psas
+                place_same_as_search_array << psas.squish
               end
             end
           end

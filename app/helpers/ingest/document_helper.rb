@@ -183,7 +183,8 @@ module Ingest
                 place_descs.each do |place_desc|
                     place_authority_ids = []
                     # allow place_name to be empty
-                    unless place_desc.place_name.blank?
+                    tna_place_id = ''
+                    unless place_desc.blank? or place_desc.place_name.blank?
                         place_authority_ids = Ingest::AuthorityHelper.s_get_exact_match_place_object_id(
                             place_desc.place_name,
                             place_desc.county,
@@ -196,26 +197,11 @@ module Ingest
                             puts ">>> #{reference}..."
                         end
                     end
+
                     # if document id is blank, means it is a new document,
                     # so definitely needs to create a new Tna Place
-                    tna_place_id = ''
-                    if d.id.blank?
-                        tna_place = Ingest::TnaPlaceHelper.create_tna_place(
-                            d.id,
-                            place_desc.place_as_written,
-                            place_authority_ids,
-                            [place_desc.place_role],
-                            [place_desc.place_note])
-                        tna_place_id = tna_place.id
-                        # puts '1. created tna place: ' + tna_place.id
-                    else
-                        # try to find existing tna place object
-                        tna_place_id = Ingest::TnaPlaceHelper.get_tna_place_id(
-                            d.id,
-                            place_authority_ids[0],
-                            place_desc.place_as_written) unless place_authority_ids.blank?
-                        # if NOT found tna_place, create a new one
-                        if tna_place_id.blank?
+                    unless place_desc.blank?
+                        if d.id.blank?
                             tna_place = Ingest::TnaPlaceHelper.create_tna_place(
                                 d.id,
                                 place_desc.place_as_written,
@@ -223,9 +209,26 @@ module Ingest
                                 [place_desc.place_role],
                                 [place_desc.place_note])
                             tna_place_id = tna_place.id
-                            # puts '2. created tna place: ' + tna_place.id
-                        # else # if found, use existing Tna Place
-                        #     puts '3. found tna place: ' + tna_place_id
+                            # puts '1. created tna place: ' + tna_place.id
+                        else
+                            # try to find existing tna place object
+                            tna_place_id = Ingest::TnaPlaceHelper.get_tna_place_id(
+                                d.id,
+                                place_authority_ids[0],
+                                place_desc.place_as_written) unless place_authority_ids.blank?
+                            # if NOT found tna_place, create a new one
+                            if tna_place_id.blank?
+                                tna_place = Ingest::TnaPlaceHelper.create_tna_place(
+                                    d.id,
+                                    place_desc.place_as_written,
+                                    place_authority_ids,
+                                    [place_desc.place_role],
+                                    [place_desc.place_note])
+                                tna_place_id = tna_place.id
+                                # puts '2. created tna place: ' + tna_place.id
+                                # else # if found, use existing Tna Place
+                                #     puts '3. found tna place: ' + tna_place_id
+                            end
                         end
                     end
                     d.tna_place_ids << tna_place_id

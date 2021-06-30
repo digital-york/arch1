@@ -55,11 +55,11 @@ module Ingest
             resp = @solr_server.solr_query(q, 'id,person_as_written_tesim')
             resp['response']['docs'].map do |pobj|
                 pobj['person_as_written_tesim'].each do |p|
-                    addressee_labels << p unless p.blank?
+                    addressee_labels << p.squish unless p.blank?
                 end
             end
 
-            addressee_labels
+            addressee_labels.uniq
         end
 
         # Ingest::TnaPersonHelper.create_tna_sender
@@ -108,11 +108,11 @@ module Ingest
             resp = @solr_server.solr_query(q, 'id,person_as_written_tesim')
             resp['response']['docs'].map do |pobj|
                 pobj['person_as_written_tesim'].each do |p|
-                    sender_labels << p unless p.blank?
+                    sender_labels << p.squish unless p.blank?
                 end
             end
 
-            sender_labels
+            sender_labels.uniq
         end
 
         # Ingest::TnaPersonHelper.create_tna_person
@@ -163,11 +163,11 @@ module Ingest
             resp = @solr_server.solr_query(q, 'id,person_as_written_tesim')
             resp['response']['docs'].map do |pobj|
                 pobj['person_as_written_tesim'].each do |p|
-                    person_labels << p unless p.blank?
+                    person_labels << p.squish unless p.blank?
                 end
             end
 
-            person_labels
+            person_labels.uniq
         end
     end
 end
