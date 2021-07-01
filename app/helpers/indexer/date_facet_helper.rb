@@ -17,7 +17,7 @@ module Indexer
         # => [["1398", "1398"], ["1398/08/24", "1398/09/05"]] 
         def self.s_get_date_facets_from_entry(entry_id)
             date_facets = []
-            full_date = []
+            date_full = []
 
             # Find linked EntryDates
             query = 'has_model_ssim:EntryDate AND entryDateFor_ssim:' + entry_id
@@ -32,7 +32,7 @@ module Indexer
                     if single_date.include? 'date_tesim'
                         single_date['date_tesim'].each do |dt|
                             date_facets << dt.split('/')[0]
-                            full_date << dt
+                            date_full << dt
                         end
                     end
                 end
