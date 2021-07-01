@@ -11,6 +11,16 @@ module Ingest
             end
         end
 
+        # get all Folio ids for a Register
+        # Ingest::RegisterHelper.s_get_folio_ids(Register ID)
+        def self.s_get_folio_ids(register_id)
+            folio_ids = []
+            SolrQuery.new.solr_query("has_model_ssim:\"Folio\" AND isPartOf_ssim:\"#{register_id}\"")['response']['docs'].map do |r|
+                folio_ids << r['id']
+            end
+            folio_ids
+        end
+
         # create a new register
         # return the newly created register
         # e.g.

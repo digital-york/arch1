@@ -138,10 +138,10 @@ module Ingest
             subject_texts.each do |subject_text|
                 response = SolrQuery.new.solr_query('has_model_ssim:"ConceptScheme" AND preflabel_tesim:"Borthwick Institute for Archives Subject Headings for the Archbishops\' Registers"', 'id')
                 response['response']['docs'].map do |s|
-                    resp = SolrQuery.new.solr_query('inScheme_ssim:"' + s['id'] + '" AND preflabel_tesim:"' + subject_text.to_s.downcase + '"', 'id,preflabel_tesim')
+                    resp = SolrQuery.new.solr_query('inScheme_ssim:"' + s['id'] + '" AND preflabel_tesim:"' + subject_text.join.to_s.downcase + '"', 'id,preflabel_tesim')
                     resp['response']['docs'].map do |se|
                         # doing an exact match of the search term
-                        if se['preflabel_tesim'][0].to_s == subject_text
+                        if se['preflabel_tesim'][0].to_s.downcase == subject_text.join.downcase
                             subject_ids << se['id']
                         end
                     end
@@ -183,7 +183,10 @@ module Ingest
                 # 'Cawood, West Riding of Yorkshire, England' in editing tool
                 #
                 # firstly, do a exact search
-                resp = SolrQuery.new.solr_query('inScheme_ssim:"' + l['id'] + '" AND place_name_tesim:"' + place.downcase + '"', 'id,place_name_tesim,preflabel_tesim')
+                #
+                # DONOT use inScheme_ssim to find Place is NOT always working, e.g. Place: 5q47rn940 doesn't have this field
+                # to refactor later: use has_model_ssim:Place
+                resp = SolrQuery.new.solr_query('has_model_ssim:Place AND place_name_tesim:"' + place.downcase + '"', 'id,place_name_tesim,preflabel_tesim')
                 resp['response']['docs'].map do |p|
                     if p['place_name_tesim'][0].to_s.downcase == place.downcase
                         places_id = p['id']
@@ -191,7 +194,7 @@ module Ingest
                 end
                 # Then, if places_id is not found, do a substring search
                 if places_id.blank?
-                    resp = SolrQuery.new.solr_query('inScheme_ssim:"' + l['id'] + '" AND place_name_tesim:' + place.downcase, 'id,place_name_tesim,preflabel_tesim')
+                    resp = SolrQuery.new.solr_query('has_model_ssim:Place AND place_name_tesim:' + place.downcase, 'id,place_name_tesim,preflabel_tesim')
                     resp['response']['docs'].map do |p|
                         places_id = p['id']
                     end
@@ -199,6 +202,45 @@ module Ingest
             end
 
             places_id
+        end
+
+        # find place object ids from Place name, county, and country
+        # input: place name, county, country, e.g.
+        # 'Yarm, 'North Riding of Yorkshire', 'England'
+        # output: place object ids, e.g. ['xxxxxx']
+        # For example
+        # pry(main)> Ingest::AuthorityHelper.s_get_exact_match_place_object_id('Yarm', 'North Riding of Yorkshire', 'England')
+        # => "1c18df984"
+        def self.s_get_exact_match_place_object_id(place_name, county, country)
+            # From Jonathans's email on 21 May:
+            # Many are in the system, but counties haven't been assigned consistently
+            # (prebends were often associated with places in different counties to the one
+            # where the cathedral or minster church lay, and some currently have the
+            # county of the place and others have the county of the cathedral),
+            # so I will need to agree a standard with Helen and go from there.
+            # I will make sure they all match the main name given in the tool ('X Cathedral, Y prebend'),
+            # and there shouldn't be any duplicates, so perhaps,
+            # if you can tell your code not to look for a county if the word 'prebend' appears within a name,
+            # that might cover everything?
+            return '' if place_name.blank? or county.blank?
+
+            place_ids = []
+
+            q = "has_model_ssim:Place"     # place authority
+            q += " AND place_name_tesim:\"#{place_name.downcase}\""  # place name
+            # ignore county if ' prebend' is include as it won't return duplicates
+            unless county.downcase.include? ' prebend'
+                q += " AND parent_ADM2_tesim:\"#{county.downcase}\"" # county
+            end
+            q += " AND parent_ADM1_tesim:\"#{country.downcase}\"" unless country.blank? # country
+            resp = SolrQuery.new.solr_query(q, 'id,place_name_tesim,preflabel_tesim')
+            resp['response']['docs'].map do |p|
+                if p['place_name_tesim'][0].downcase == place_name.downcase
+                    place_ids << p['id']
+                end
+            end
+
+            place_ids
         end
 
         # get place object name from object_id

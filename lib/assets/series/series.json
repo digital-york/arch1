@@ -1,0 +1,45 @@
+{
+  "C": {
+    "C1": "Early Chancery Proceedings",
+    "C47": "Chancery Miscellanea",
+    "C49": "Parliamentary and Council Proceedings",
+    "C54": "Close Rolls",
+    "C60": "Fine Rolls",
+    "C66": "Patent Rolls",
+    "C81": "Warrants for the Great Seal",
+    "C84": "Ecclesiastical Petitions",
+    "C85": "Significations of Excommunication",
+    "C88": "Records upon Outlawries",
+    "C131": "Extents for Debts",
+    "C143": "Inquisitions Ad Quod Damnum",
+    "C241": "Certificates of Statute Merchant and Statute Staple",
+    "C254": "Dedimus Potestatem",
+    "C260": "Recorda",
+    "C269": "Certiorari Ecclesiastical",
+    "C270": "Ecclesiastical Miscellanea"
+  },
+  "DL": {
+    "DL25": "Deeds, Series L"
+  },
+  "E": {
+    "E40": "Ancient Deeds, Series A",
+    "E43": "Ancient Deeds, Series WS",
+    "E101": "Accounts Various",
+    "E135": "Miscellaneous Ecclesiastical Documents",
+    "E163": "Miscellanea of the Exchequer",
+    "E175": "Parliament and Council Proceedings, Series II",
+    "E179": "Particulars of Account and other records relating to Lay and Clerical Taxation",
+    "E199": "Sheriffs' Accounts",
+    "E326": "Ancient Deeds, Series B",
+    "E328": "Ancient Deeds, Series BB"
+  },
+  "SC": {
+    "SC1": "Ancient Correspondence",
+    "SC6": "Ministers' and Receivers' Accounts",
+    "SC7": "Papal Bulls",
+    "SC8": "Ancient Petitions"
+  },
+  "WARD": {
+    "WARD2": "Deeds and Evidences"
+  }
+}
