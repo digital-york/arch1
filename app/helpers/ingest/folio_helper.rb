@@ -9,6 +9,7 @@ module Ingest
             SolrQuery.new.solr_query("has_model_ssim:\"Folio\" AND preflabel_tesim:\"#{folio_label}\"")['response']['docs'].map do |r|
                 ids = r['id']
             end
+            ids
         end
 
         # get all Entry ids for a Folio
