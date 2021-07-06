@@ -3,10 +3,10 @@ require 'logger'
 namespace :batch do
 
     # If Folio label is provided, will delete all entries within that Folio, e.g.
-    #     bundle exec rake batch:delete_entries['Reg 9A']
+    #     bundle exec rake batch:delete_entries['','Abp Reg 12 f.1 (recto)']
     # If Folio label is not provided, will find all folios under the provided register
     #     then find entries and delete them under each folio, e.g.
-    #     bundle exec rake batch:delete_entries['','Abp Reg 12 f.1 (recto)']
+    #     bundle exec rake batch:delete_entries['Reg 9A']
     desc "Batch delete entries within the provided Register/Folio."
     task :delete_entries, [:register_label, :folio_label] => [:environment] do |t, args|
         log = Logger.new "log/batch_delete_entries.log"
