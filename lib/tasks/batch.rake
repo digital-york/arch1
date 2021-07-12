@@ -57,10 +57,10 @@ namespace :batch do
                     finished = true  # exit when finished the current loop
                 end
                 puts "Processing #{current_folio_label}"
-                folio_ids = Ingest::FolioHelper.s_get_folio_ids(current_folio_label)
-                folio_ids.each do |folio_id|
-                    Batch::BatchHelper.delete_entries_in_folio(folio_id)
-                end
+                folio_id = Ingest::FolioHelper.s_get_folio_id(current_folio_label)
+                # folio_ids.each do |folio_id|
+                Batch::BatchHelper.delete_entries_in_folio(folio_id)
+                # end
                 current_folio_label = Ingest::FolioHelper.get_next_folio_label(current_folio_label)
             end
         else

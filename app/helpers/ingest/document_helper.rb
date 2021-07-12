@@ -90,21 +90,46 @@ module Ingest
                                                                              document_date_role,
                                                                              document_date_note)
             unless document_date.blank?
-                certainties = 'certain'
-                # for dates in format: [? 1408]/10/20
-                if date_of_document.include? '?'
-                    certainties = 'uncertain'
-                    date_array = date_of_document.split('/')
-                    date_of_document = date_array[0].tr('^0-9', '') + '/' + date_array[1] + '/' + date_array[2]
+                multi_date_seperator = '-'
+                if date_of_document.include? 'x'
+                    multi_date_seperator = 'x'
                 end
-                document_date_ids << document_date.id
-                d.document_date_ids << document_date.id
-                single_date = Ingest::DocumentDateHelper.create_single_date(
-                    document_date,
-                    date_of_document || '',
-                    certainties,
-                    '')
-                document_date.single_date_ids << single_date.id unless single_date.blank?
+                number_of_single_dates = date_of_document.split(multi_date_seperator).length()
+                date_of_document.split(multi_date_seperator).each_with_index do |date_string,index|
+                    # default certainty field is 'certain'
+                    certainties = []
+
+                    # default date type is 'single'
+                    date_type = 'single'
+                    if number_of_single_dates > 1
+                        date_type = index==0? 'start':'end'
+                    end
+
+                    # for dates in format: [? 1408]/10/20
+                    if date_string.include? '?'
+                        certainties << 'uncertain'
+                    end
+                    if date_string.include? '[' or date_string.include? ']'
+                        certainties << 'inferred'
+                    end
+
+                    # remove other characters from Year, Month, and Day
+                    date_array = date_string.split('/')
+                    date_string = date_array[0].tr('^0-9', '') + '/' + date_array[1].tr('^0-9', '') + '/' + date_array[2].tr('^0-9', '')
+
+                    document_date_ids << document_date.id
+                    d.document_date_ids << document_date.id
+
+                    if certainties.blank?
+                        certainties = ['certain']
+                    end
+                    single_date = Ingest::DocumentDateHelper.create_single_date(
+                        document_date,
+                        date_string || '',
+                        certainties,
+                        date_type)
+                    document_date.single_date_ids << single_date.id unless single_date.blank?
+                end
             end
 
             # Language
@@ -175,7 +200,7 @@ module Ingest
                         place_of_dating_id = place_of_dating.id
                         puts '2. create Place of dating: ' + place_of_dating.id
                     else # if found, use existing Place of Dating
-                        # puts '3. Found Place of dating ' + place_of_dating_id
+                        puts '3. Found Place of dating ' + place_of_dating_id
                         place_of_dating = PlaceOfDating.find(place_of_dating_id)
                     end
                 end
