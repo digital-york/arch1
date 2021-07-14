@@ -81,6 +81,10 @@ After ingestion, validate documents from excel against solr.
 
     bundle exec rake validate:tna_excel[FULL_PATH_OF_xlsx]
 
+#### Clear data
 
+Delete all TNA objects:
+
+    RUBYOPT=-W0 bundle exec rake batch:clear_tna
 
     
