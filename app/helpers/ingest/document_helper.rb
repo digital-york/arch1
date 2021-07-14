@@ -50,13 +50,21 @@ module Ingest
             place)
             log = Logger.new "log/document_helper.log"
 
+            # store sub object ids and use them to link sub objects to document later
+            place_of_dating_ids = []
+            tna_place_ids = []
+            tna_addressee_ids = []
+            tna_sender_ids = []
+            tna_person_ids = []
+            document_date_ids = []
+
             document_json = s_get_document_json(series_id, reference)
             document_id = nil
             document_id = document_json['id'] unless document_json.nil?
 
             # if a new document, need to update linked object, e.g.
             # Place of Dating, TnaPlace back to the document id after the document being saved.
-            is_new_document = document_id.nil?
+            is_new_document = false
 
             if document_id.nil?
                 d = Document.new
@@ -83,7 +91,6 @@ module Ingest
             d.document_type = Ingest::AuthorityHelper.s_get_entry_type_object_ids(document_type) unless document_type.blank?
 
             # Date of document
-            document_date_ids = []
             document_date_role = ''
             document_date_note = entry_date_note || ''
             document_date  = Ingest::DocumentDateHelper.create_document_date(document_id,
@@ -147,6 +154,7 @@ module Ingest
             place_of_datings = []
             place_of_dating_descs = Ingest::ExcelHelper.extract_places_info(place_of_dating, 'place of dating', '')
             place_of_dating_descs.each do |place_of_dating_desc|
+                place_of_dating_id = ''
                 place_authority_ids = []
 
                 # Place name could be empty
@@ -206,11 +214,10 @@ module Ingest
                 end
 
                 # place_of_datings << place_of_dating
-                d.place_of_dating_ids << place_of_dating_id
+                place_of_dating_ids << place_of_dating_id
             end
 
             unless place.blank?
-                tna_place_ids = []
                 place_descs = Ingest::ExcelHelper.extract_places_info(place, 'place mentioned', '')
                 place_descs.each do |place_desc|
                     place_authority_ids = []
@@ -263,14 +270,14 @@ module Ingest
                             end
                         end
                     end
-                    d.tna_place_ids << tna_place_id
+                    tna_place_ids << tna_place_id
                 end
             end
 
             # addressee
-            tna_addressee_ids = []
             if d.id.blank? # if a new document, definitely need to create a new tna addressee
-                tna_addressee_ids += Ingest::TnaPersonHelper.create_tna_addressee(nil, addressees)
+                addressee_ids = Ingest::TnaPersonHelper.create_tna_addressee(nil, addressees)
+                tna_addressee_ids += addressee_ids unless addressee_ids.nil?
                 # puts '1. No doc id, creating tna addressee'
             else
                 # try to find existing tna addressee object
@@ -291,7 +298,6 @@ module Ingest
             end
 
             # sender
-            tna_sender_ids = []
             if d.id.blank? # if a new document, definitely need to create a new tna sender
                 tna_sender_ids += Ingest::TnaPersonHelper.create_tna_sender(nil, senders)
                 # puts '1. No doc id, creating tna sender'
@@ -314,7 +320,6 @@ module Ingest
             end
 
             # person
-            tna_person_ids = []
             if d.id.blank? # if a new document, definitely need to create a new tna person
                 tna_person_ids += Ingest::TnaPersonHelper.create_tna_person(nil, persons)
                 # puts '1. No doc id, creating tna person'
@@ -335,14 +340,14 @@ module Ingest
                     end
                 end
             end
-
             d.save
             puts "  Created/updated Document: #{d.id}" unless d.nil?
             log.info "  Created/updated Document: #{d.id}" unless d.nil?
 
             if is_new_document
                 # update place_of_datings
-                d.place_of_dating_ids.each do |pd_id|
+                puts '  updating place_of_datings'
+                place_of_dating_ids.each do |pd_id|
                     pd = PlaceOfDating.find(pd_id)
                     pd.document_id = d.id
                     # puts 'updated place of dating: ' + pd.id
@@ -350,7 +355,8 @@ module Ingest
                 end
 
                 # update tna_place
-                d.tna_place_ids.each do |tp_id|
+                puts '  updating tna places'
+                tna_place_ids.each do |tp_id|
                     tp = TnaPlace.find(tp_id)
                     tp.document_id = d.id
                     # puts 'updated tna_places: ' + tp.id
@@ -358,6 +364,7 @@ module Ingest
                 end
 
                 # update TNA addressee
+                puts '  updating addressees'
                 tna_addressee_ids.each do |addressee_id|
                     tna_addressee = TnaAddressee.find(addressee_id)
                     tna_addressee.document_id = d.id
@@ -365,6 +372,7 @@ module Ingest
                 end
 
                 # update TNA sender
+                puts '  updating senders'
                 tna_sender_ids.each do |sender_id|
                     tna_sender = TnaSender.find(sender_id)
                     tna_sender.document_id = d.id
@@ -372,6 +380,7 @@ module Ingest
                 end
 
                 # update TNA person
+                puts '  updating persons'
                 tna_person_ids.each do |person_id|
                     tna_person = TnaPerson.find(person_id)
                     tna_person.document_id = d.id
@@ -379,6 +388,7 @@ module Ingest
                 end
 
                 # update document date
+                puts '  updating document dates'
                 document_date_ids.each do |document_date_id|
                     document_date = DocumentDate.find(document_date_id)
                     document_date.document_id = d.id

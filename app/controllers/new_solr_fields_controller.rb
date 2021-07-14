@@ -153,6 +153,145 @@ class NewSolrFieldsController < ApplicationController
     return solr_doc
   end
 
+  def modify_bia_entry(sdoc)
+    # entries
+    entry_type_new,entry_type_alt = get_preflabel_array(sdoc['entry_type_tesim'])
+    sdoc['entry_type_facet_ssim'] = entry_type_new
+    unless entry_type_alt.empty? then entry_type_new += entry_type_alt.compact end
+    sdoc['entry_type_new_tesim'] = entry_type_new
+    sdoc['entry_type_search'] = array_to_lowercase(entry_type_new)
+
+    section_type_new,section_type_alt = get_preflabel_array(sdoc['section_type_tesim'])
+    unless section_type_alt.empty? then section_type_new += section_type_alt.compact end
+    sdoc['section_type_facet_ssim'] = section_type_new
+    sdoc['section_type_new_tesim'] = section_type_new
+    sdoc['section_type_search'] = array_to_lowercase(section_type_new)
+
+    sdoc['summary_search'] = array_to_lowercase(sdoc['summary_tesim'])
+
+    sdoc['marginalia_search'] = array_to_lowercase(sdoc['marginalia_tesim'])
+
+    language_new,unused = get_preflabel_array(sdoc['language_tesim'])
+    sdoc['language_new_tesim'] = language_new
+    sdoc['language_facet_ssim'] = language_new
+    sdoc['language_search'] = array_to_lowercase(language_new)
+
+    subject_new, subject_alt = get_preflabel_array(sdoc['subject_tesim'])
+    sdoc['subject_facet_ssim'] = subject_new
+    unless subject_alt.empty? then subject_new += subject_alt.compact end
+    sdoc['subject_new_tesim'] = subject_new
+    sdoc['subject_search'] = array_to_lowercase(subject_new)
+
+    sdoc['note_search'] = array_to_lowercase(sdoc['note_tesim'])
+
+    sdoc['editorial_note_search'] = array_to_lowercase(sdoc['editorial_note_tesim'])
+
+    sdoc['is_referenced_by_search'] = array_to_lowercase(sdoc['is_referenced_by_tesim'])
+
+    sdoc['place_as_written_search'] = array_to_lowercase(sdoc['place_as_written_tesim'])
+
+    # add the register name and folio label to the entries
+    register_new,folio_new = get_entry_register_array(sdoc['folio_ssim'])
+    sdoc['entry_register_facet_ssim'] = register_new
+    sdoc['entry_folio_facet_ssim'] = folio_new
+
+    # facets from dates, related places/agents and folio/register added to entries
+    # these runs on everything because it uses id, the only other field that ALL entries have is entry_no, but that is not unique
+    entry_place_name_authority_new = get_entry_place_array(get_id(sdoc[:id]))
+    sdoc['entry_place_same_as_facet_ssim'] = entry_place_name_authority_new
+
+    entry_person_name_authority_new = get_entry_agent_array(get_id(sdoc[:id]))
+    sdoc['entry_person_same_as_facet_ssim'] = entry_person_name_authority_new
+
+    entry_date_new = get_entry_date_array(get_id(sdoc[:id]))
+    sdoc['entry_date_facet_ssim'] = entry_date_new
+
+    # related agents
+    person_name_authority_new,person_name_authority_alt = get_preflabel_array(sdoc['person_same_as_tesim'])
+    #sdoc['person_same_as_facet_ssim'] = person_name_authority_new
+    sdoc['person_same_as_facet_ssim'] = Indexer::PersonFacetHelper.s_get_person_facets_from_entry(get_id(sdoc[:id]))
+
+    unless person_name_authority_alt.empty? then person_name_authority_new += person_name_authority_alt.compact end
+    sdoc['person_same_as_new_tesim'] = person_name_authority_new
+    sdoc['person_same_as_search'] = array_to_lowercase(person_name_authority_new)
+
+    return sdoc
+  end
+
+  def modify_bia_related_place(sdoc)
+    # related places
+    place_name_authority_new,place_name_authority_alt = get_preflabel_array(sdoc['place_same_as_tesim'])
+    sdoc['place_same_as_facet_ssim'] = place_name_authority_new
+    unless place_name_authority_alt.empty? then place_name_authority_new += place_name_authority_alt.compact end
+    sdoc['place_same_as_new_tesim'] = place_name_authority_new
+    sdoc['place_same_as_search'] = array_to_lowercase(place_name_authority_new)
+
+    place_role_new,place_role_alt = get_preflabel_array(sdoc['place_role_tesim'])
+    sdoc['place_role_facet_ssim'] = place_role_new
+    unless place_role_alt.empty? then place_role_new += place_role_alt.compact end
+    sdoc['place_role_new_tesim'] = place_role_new
+    sdoc['place_role_search'] = array_to_lowercase(place_role_new)
+
+    place_type_new,place_type_alt = get_preflabel_array(sdoc['place_type_tesim'])
+    sdoc['place_type_facet_ssim'] = place_type_new
+    unless place_type_alt.empty? then place_type_new += place_type_alt.compact end
+    sdoc['place_type_new_tesim'] = place_type_new
+    sdoc['place_type_search'] = array_to_lowercase(place_type_new)
+
+    sdoc['place_note_search'] = array_to_lowercase(sdoc['place_note_tesim'])
+
+    return sdoc
+  end
+
+  def modify_bia_related_agent(sdoc)
+    sdoc['person_as_written_search'] = array_to_lowercase(sdoc['person_as_written_tesim'])
+
+    # related agents
+    person_name_authority_new,person_name_authority_alt = get_preflabel_array(sdoc['person_same_as_tesim'])
+    sdoc['person_same_as_facet_ssim'] = person_name_authority_new
+    unless person_name_authority_alt.empty? then person_name_authority_new += person_name_authority_alt.compact end
+    sdoc['person_same_as_new_tesim'] = person_name_authority_new
+    sdoc['person_same_as_search'] = array_to_lowercase(person_name_authority_new)
+
+    person_role_new,person_role_alt = get_preflabel_array(sdoc['person_role_tesim'])
+    sdoc['person_role_facet_ssim'] = person_role_new
+    unless person_role_alt.empty? then person_role_new += person_role_alt.compact end
+    sdoc['person_role_new_tesim'] = person_role_new
+    sdoc['person_role_search'] = array_to_lowercase(person_role_new)
+
+    person_descriptor_new,person_descriptor_alt = get_preflabel_array(sdoc['person_descriptor_tesim'])
+    sdoc['person_descriptor_facet_ssim'] = person_descriptor_new
+    unless person_descriptor_alt.empty? then person_descriptor_new += person_descriptor_alt.compact end
+    sdoc['person_descriptor_new_tesim'] = person_descriptor_new
+    sdoc['person_descriptor_search'] = array_to_lowercase(person_descriptor_new)
+
+    sdoc['person_descriptor_as_written_search'] = array_to_lowercase(sdoc['person_descriptor_tesim'])
+
+    sdoc['person_note_search'] = array_to_lowercase(sdoc['person_note_tesim'])
+
+    sdoc['person_related_place_search'] = array_to_lowercase(sdoc['person_related_place_tesim'])
+
+    sdoc['person_related_person_search'] = array_to_lowercase(sdoc['person_related_person_tesim'])
+
+    return sdoc
+  end
+
+  def modify_bia_entry_date(sdoc)
+    # dates
+    date_role_new,date_role_alt = get_preflabel_array(sdoc['date_role_tesim'])
+    sdoc['date_role_facet_ssim'] = date_role_new
+    unless date_role_alt.empty? then date_role_new += date_role_alt.compact end
+    sdoc['date_role_new_tesim'] = date_role_new
+    sdoc['date_role_search'] = array_to_lowercase(date_role_new)
+
+    sdoc['date_note_search'] = array_to_lowercase(sdoc['date_note_tesim'])
+
+    date_facet = get_date_array(get_id(sdoc[:id]))
+    sdoc['date_facet_ssim'] = date_facet
+
+    return sdoc
+  end
+
   # This code adds new solr fields which are required for the search application
   # Note that this code is called from initializers/active_fedora.rb and overrides the to_solr active_fedora method
   # '_search' fields are added for searching in the interface and are lowercase versions of the actual terms
@@ -163,137 +302,20 @@ class NewSolrFieldsController < ApplicationController
   # 'facet_ssim' already exists as fieldType 'ssim' in schema.xml
   # For 'search' and new_tesim, altlabels from related objects have been merged into the array
   def modify_sdoc(sdoc)
-    if 'Document' == sdoc['has_model_ssim'][0]
-      return modify_tna_document(sdoc)
-    end
-
     begin
-
-      # entries
-      entry_type_new,entry_type_alt = get_preflabel_array(sdoc['entry_type_tesim'])
-      sdoc['entry_type_facet_ssim'] = entry_type_new
-      unless entry_type_alt.empty? then entry_type_new += entry_type_alt.compact end
-      sdoc['entry_type_new_tesim'] = entry_type_new
-      sdoc['entry_type_search'] = array_to_lowercase(entry_type_new)
-
-      section_type_new,section_type_alt = get_preflabel_array(sdoc['section_type_tesim'])
-      unless section_type_alt.empty? then section_type_new += section_type_alt.compact end
-      sdoc['section_type_facet_ssim'] = section_type_new
-      sdoc['section_type_new_tesim'] = section_type_new
-      sdoc['section_type_search'] = array_to_lowercase(section_type_new)
-
-      sdoc['summary_search'] = array_to_lowercase(sdoc['summary_tesim'])
-
-      sdoc['marginalia_search'] = array_to_lowercase(sdoc['marginalia_tesim'])
-
-      language_new,unused = get_preflabel_array(sdoc['language_tesim'])
-      sdoc['language_new_tesim'] = language_new
-      sdoc['language_facet_ssim'] = language_new
-      sdoc['language_search'] = array_to_lowercase(language_new)
-
-      subject_new, subject_alt = get_preflabel_array(sdoc['subject_tesim'])
-      sdoc['subject_facet_ssim'] = subject_new
-      unless subject_alt.empty? then subject_new += subject_alt.compact end
-      sdoc['subject_new_tesim'] = subject_new
-      sdoc['subject_search'] = array_to_lowercase(subject_new)
-
-      sdoc['note_search'] = array_to_lowercase(sdoc['note_tesim'])
-
-      sdoc['editorial_note_search'] = array_to_lowercase(sdoc['editorial_note_tesim'])
-
-      sdoc['is_referenced_by_search'] = array_to_lowercase(sdoc['is_referenced_by_tesim'])
-
-      sdoc['place_as_written_search'] = array_to_lowercase(sdoc['place_as_written_tesim'])
-
-      # related places
-      place_name_authority_new,place_name_authority_alt = get_preflabel_array(sdoc['place_same_as_tesim'])
-      sdoc['place_same_as_facet_ssim'] = place_name_authority_new
-      unless place_name_authority_alt.empty? then place_name_authority_new += place_name_authority_alt.compact end
-      sdoc['place_same_as_new_tesim'] = place_name_authority_new
-      sdoc['place_same_as_search'] = array_to_lowercase(place_name_authority_new)
-
-      place_role_new,place_role_alt = get_preflabel_array(sdoc['place_role_tesim'])
-      sdoc['place_role_facet_ssim'] = place_role_new
-      unless place_role_alt.empty? then place_role_new += place_role_alt.compact end
-      sdoc['place_role_new_tesim'] = place_role_new
-      sdoc['place_role_search'] = array_to_lowercase(place_role_new)
-
-      place_type_new,place_type_alt = get_preflabel_array(sdoc['place_type_tesim'])
-      sdoc['place_type_facet_ssim'] = place_type_new
-      unless place_type_alt.empty? then place_type_new += place_type_alt.compact end
-      sdoc['place_type_new_tesim'] = place_type_new
-      sdoc['place_type_search'] = array_to_lowercase(place_type_new)
-
-      sdoc['place_note_search'] = array_to_lowercase(sdoc['place_note_tesim'])
-
-      sdoc['person_as_written_search'] = array_to_lowercase(sdoc['person_as_written_tesim'])
-
-      # related agents
-      person_name_authority_new,person_name_authority_alt = get_preflabel_array(sdoc['person_same_as_tesim'])
-      #sdoc['person_same_as_facet_ssim'] = person_name_authority_new
-      sdoc['person_same_as_facet_ssim'] = Indexer::PersonFacetHelper.s_get_person_facets_from_entry(get_id(sdoc[:id]))
-
-      unless person_name_authority_alt.empty? then person_name_authority_new += person_name_authority_alt.compact end
-      sdoc['person_same_as_new_tesim'] = person_name_authority_new
-      sdoc['person_same_as_search'] = array_to_lowercase(person_name_authority_new)
-
-      person_role_new,person_role_alt = get_preflabel_array(sdoc['person_role_tesim'])
-      sdoc['person_role_facet_ssim'] = person_role_new
-      unless person_role_alt.empty? then person_role_new += person_role_alt.compact end
-      sdoc['person_role_new_tesim'] = person_role_new
-      sdoc['person_role_search'] = array_to_lowercase(person_role_new)
-
-      person_descriptor_new,person_descriptor_alt = get_preflabel_array(sdoc['person_descriptor_tesim'])
-      sdoc['person_descriptor_facet_ssim'] = person_descriptor_new
-      unless person_descriptor_alt.empty? then person_descriptor_new += person_descriptor_alt.compact end
-      sdoc['person_descriptor_new_tesim'] = person_descriptor_new
-      sdoc['person_descriptor_search'] = array_to_lowercase(person_descriptor_new)
-
-      sdoc['person_descriptor_as_written_search'] = array_to_lowercase(sdoc['person_descriptor_tesim'])
-
-      sdoc['person_note_search'] = array_to_lowercase(sdoc['person_note_tesim'])
-
-      sdoc['person_related_place_search'] = array_to_lowercase(sdoc['person_related_place_tesim'])
-
-      sdoc['person_related_person_search'] = array_to_lowercase(sdoc['person_related_person_tesim'])
-
-      # dates
-      date_role_new,date_role_alt = get_preflabel_array(sdoc['date_role_tesim'])
-      sdoc['date_role_facet_ssim'] = date_role_new
-      unless date_role_alt.empty? then date_role_new += date_role_alt.compact end
-      sdoc['date_role_new_tesim'] = date_role_new
-      sdoc['date_role_search'] = array_to_lowercase(date_role_new)
-
-      sdoc['date_note_search'] = array_to_lowercase(sdoc['date_note_tesim'])
-
-      # date_facet = get_date_array(get_id(sdoc[:id]))
-      date_facet = Indexer::DateFacetHelper.s_get_date_facets_from_entry(get_id(sdoc[:id]))
-
-      sdoc['date_facet_ssim'] = date_facet[0] unless date_facet.blank?
-      sdoc['date_full_ssim'] = date_facet[1] unless date_facet.blank?
-
-      # Store SingleDate in single Solr dynamic field e.g. *_ssi (Note *_dttsi requieres dates in ISO format) 
-      # Downcase occassional dates with comments 
-      sdoc['date_new_ssi'] = sdoc['date_tesim'][0].downcase unless sdoc['date_tesim'].blank?
-
-      # add the register name and folio label to the entries
-      register_new,folio_new = get_entry_register_array(sdoc['folio_ssim'])
-      sdoc['entry_register_facet_ssim'] = register_new
-      sdoc['entry_folio_facet_ssim'] = folio_new
-
-      # facets from dates, related places/agents and folio/register added to entries
-      # these runs on everything because it uses id, the only other field that ALL entries have is entry_no, but that is not unique
-      entry_place_name_authority_new = get_entry_place_array(get_id(sdoc[:id]))
-      sdoc['entry_place_same_as_facet_ssim'] = entry_place_name_authority_new
-
-      entry_person_name_authority_new = get_entry_agent_array(get_id(sdoc[:id]))
-      sdoc['entry_person_same_as_facet_ssim'] = entry_person_name_authority_new
-
-      entry_date_new = get_entry_date_array(get_id(sdoc[:id]))
-      sdoc['entry_date_facet_ssim'] = entry_date_new
-
-      sdoc
-
+      if 'Document' == sdoc['has_model_ssim'][0]
+        return modify_tna_document(sdoc)
+      elsif 'Entry' == sdoc['has_model_ssim'][0]
+        return modify_bia_entry(sdoc)
+      elsif 'RelatedPlace' == sdoc['has_model_ssim'][0]
+        return modify_bia_related_place(sdoc)
+      elsif 'RelatedAgent' == sdoc['has_model_ssim'][0]
+        return modify_bia_related_agent(sdoc)
+      elsif 'EntryDate' == sdoc['has_model_ssim'][0]
+        return modify_bia_entry_date(sdoc)
+      else
+        return sdoc
+      end
     rescue => error
       log_error(__method__, __FILE__, error)
       raise
