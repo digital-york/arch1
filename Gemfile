@@ -68,4 +68,4 @@ end
 gem 'roo'
 gem 'caxlsx'
 gem 'smarter_csv'
-gem 'tnw_common', git: 'https://github.com/digital-york/tnw_common', branch: 'tna_ui'
+gem 'tnw_common', git: 'https://github.com/digital-york/tnw_common', branch: 'development'
