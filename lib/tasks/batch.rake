@@ -112,48 +112,54 @@ namespace :batch do
         if answer == 'YES'
             print 'Deleting documents ... '
             ds = Document.all
+            count = ds.count
             ds.each_with_index do |d, index|
-                puts "  [#{index+1}/#{ds.count}] deleting #{d.id}"
+                puts "  [#{index+1}/#{count}] deleting #{d.id}"
                 d.delete
             end
             puts ' done.'
 
             print 'Deleting series ... '
             ss = Series.all
+            count = ss.count
             ss.each_with_index do |s, index|
-                puts "  [#{index+1}/#{ss.count}] deleting #{s.id}"
+                puts "  [#{index+1}/#{count}] deleting #{s.id}"
                 s.delete
             end
             puts ' done.'
 
             print 'Deleting departments ... '
             deps = Department.all
+            count = deps.count
             deps.each_with_index do |dep, index|
-                puts "  [#{index+1}/#{deps.count}] deleting #{dep.id}"
+                puts "  [#{index+1}/#{count}] deleting #{dep.id}"
                 dep.delete
             end
             puts ' done.'
 
             print 'Deleting TNA places ... '
             tps = TnaPlace.all
+            count = tps.count
             tps.each_with_index do |tp, index|
-                puts "  [#{index+1}/#{tps.count}] deleting #{tp.id}"
+                puts "  [#{index+1}/#{count}] deleting #{tp.id}"
                 tp.delete
             end
             puts ' done.'
 
             print 'Deleting Place of Datings ... '
             pds = PlaceOfDating.all
+            count = pds.count
             pds.each_with_index do |pd, index|
-                puts "  [#{index+1}/#{pds.count}] deleting #{pd.id}"
+                puts "  [#{index+1}/#{count}] deleting #{pd.id}"
                 pd.delete
             end
             puts ' done.'
 
             print 'Deleting Tna Senders ... '
             tss = TnaSender.all
+            count = tss.count
             tss.each_with_index do |ts, index|
-                puts "  [#{index+1}/#{tss.count}] deleting #{ts.id}"
+                puts "  [#{index+1}/#{count}] deleting #{ts.id}"
                 ts.delete
             end
             puts ' done.'
@@ -161,8 +167,9 @@ namespace :batch do
 
             print 'Deleting addressees ... '
             tas = TnaAddressee.all
+            count = tas.count
             tas.each_with_index do |ta, index|
-                puts "  [#{index+1}/#{tas.count}] deleting #{ta.id}"
+                puts "  [#{index+1}/#{count}] deleting #{ta.id}"
                 ta.delete
             end
             puts ' done.'
@@ -170,16 +177,18 @@ namespace :batch do
 
             print 'Deleting persons ... '
             tps = TnaPerson.all
+            count = tps.count
             tps.each_with_index do |tp, index|
-                puts "  [#{index+1}/#{tps.count}] deleting #{tp.id}"
+                puts "  [#{index+1}/#{count}] deleting #{tp.id}"
                 tp.delete
             end
             puts ' done.'
 
             print 'Deleting DocumentDate ... '
             dds = DocumentDate.all
+            count = dds.count
             dds.each_with_index do |dd, index|
-                puts "  [#{index+1}/#{dds.count}] deleting #{dd.id}"
+                puts "  [#{index+1}/#{count}] deleting #{dd.id}"
                 dd.delete
             end
             puts ' done.'
