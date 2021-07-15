@@ -15,14 +15,16 @@ module Ingest
             tna_addressee_ids = []
 
             addressees.each do |addressee|
-                tna_addressee = TnaAddressee.new
+                unless addressee.strip.blank?
+                    tna_addressee = TnaAddressee.new
 
-                tna_addressee.rdftype = tna_addressee.add_rdf_types
-                tna_addressee.person_as_written = [addressee] unless addressee.blank?
-                tna_addressee.document_id = document_id unless document_id.blank?
+                    tna_addressee.rdftype = tna_addressee.add_rdf_types
+                    tna_addressee.person_as_written = [addressee] unless addressee.blank?
+                    tna_addressee.document_id = document_id unless document_id.blank?
 
-                tna_addressee.save
-                tna_addressee_ids << tna_addressee.id
+                    tna_addressee.save
+                    tna_addressee_ids << tna_addressee.id
+                end
             end
 
             tna_addressee_ids
@@ -69,14 +71,16 @@ module Ingest
             sender_ids = []
 
             senders.each do |sender|
-                tna_sender = TnaSender.new
+                unless sender.strip.blank?
+                    tna_sender = TnaSender.new
 
-                tna_sender.rdftype = tna_sender.add_rdf_types
-                tna_sender.person_as_written = senders unless senders.blank?
-                tna_sender.document_id = document_id unless document_id.blank?
+                    tna_sender.rdftype = tna_sender.add_rdf_types
+                    tna_sender.person_as_written = [sender] unless sender.blank?
+                    tna_sender.document_id = document_id unless document_id.blank?
 
-                tna_sender.save
-                sender_ids << tna_sender.id
+                    tna_sender.save
+                    sender_ids << tna_sender.id
+                end
             end
 
             sender_ids
@@ -122,14 +126,16 @@ module Ingest
             person_ids = []
 
             persons.each do |person|
-                tna_person = TnaPerson.new
+                unless person.strip.blank?
+                    tna_person = TnaPerson.new
 
-                tna_person.rdftype = tna_person.add_rdf_types
-                tna_person.person_as_written = persons unless persons.blank?
-                tna_person.document_id = document_id unless document_id.blank?
+                    tna_person.rdftype = tna_person.add_rdf_types
+                    tna_person.person_as_written = [person] unless person.blank?
+                    tna_person.document_id = document_id unless document_id.blank?
 
-                tna_person.save
-                person_ids << tna_person.id
+                    tna_person.save
+                    person_ids << tna_person.id
+                end
             end
 
             person_ids
