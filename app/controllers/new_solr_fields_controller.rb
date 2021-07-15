@@ -304,6 +304,10 @@ class NewSolrFieldsController < ApplicationController
         return modify_bia_related_agent(sdoc)
       elsif 'EntryDate' == sdoc['has_model_ssim'][0]
         return modify_bia_entry_date(sdoc)
+      elsif 'TnaPlace' == sdoc['has_model_ssim'][0]  # reuse related place indexing method
+        return modify_bia_related_place(sdoc)
+      elsif 'PlaceOfDating' == sdoc['has_model_ssim'][0]  # reuse related place indexing method
+        return modify_bia_related_place(sdoc)
       else
         return sdoc
       end
