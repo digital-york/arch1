@@ -110,33 +110,6 @@ namespace :batch do
         print "  Are you sure to continue? type YES to confirm. "
         answer = STDIN.gets.chomp
         if answer == 'YES'
-            print 'Deleting documents ... '
-            ds = Document.all
-            count = ds.count
-            ds.each_with_index do |d, index|
-                puts "  [#{index+1}/#{count}] deleting #{d.id}"
-                d.delete
-            end
-            puts ' done.'
-
-            print 'Deleting series ... '
-            ss = Series.all
-            count = ss.count
-            ss.each_with_index do |s, index|
-                puts "  [#{index+1}/#{count}] deleting #{s.id}"
-                s.delete
-            end
-            puts ' done.'
-
-            print 'Deleting departments ... '
-            deps = Department.all
-            count = deps.count
-            deps.each_with_index do |dep, index|
-                puts "  [#{index+1}/#{count}] deleting #{dep.id}"
-                dep.delete
-            end
-            puts ' done.'
-
             print 'Deleting TNA places ... '
             tps = TnaPlace.all
             count = tps.count
@@ -190,6 +163,33 @@ namespace :batch do
             dds.each_with_index do |dd, index|
                 puts "  [#{index+1}/#{count}] deleting #{dd.id}"
                 dd.delete
+            end
+            puts ' done.'
+
+            print 'Deleting documents ... '
+            ds = Document.all
+            count = ds.count
+            ds.each_with_index do |d, index|
+                puts "  [#{index+1}/#{count}] deleting #{d.id}"
+                d.delete
+            end
+            puts ' done.'
+
+            print 'Deleting series ... '
+            ss = Series.all
+            count = ss.count
+            ss.each_with_index do |s, index|
+                puts "  [#{index+1}/#{count}] deleting #{s.id}"
+                s.delete
+            end
+            puts ' done.'
+
+            print 'Deleting departments ... '
+            deps = Department.all
+            count = deps.count
+            deps.each_with_index do |dep, index|
+                puts "  [#{index+1}/#{count}] deleting #{dep.id}"
+                dep.delete
             end
             puts ' done.'
         else
