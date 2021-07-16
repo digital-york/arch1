@@ -168,6 +168,9 @@ class NewSolrFieldsController < ApplicationController
     end
 
     begin
+      if 'Entry' == sdoc['has_model_ssim'][0]
+        sdoc['repository_tesim'] = 'BIA'
+      end
 
       # entries
       entry_type_new,entry_type_alt = get_preflabel_array(sdoc['entry_type_tesim'])
