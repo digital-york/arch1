@@ -96,6 +96,8 @@ module Ingest
         # => ["j6731378s"]
         def self.s_get_entry_type_object_ids(entry_types)
             entry_type_ids = []
+            return entry_type_ids if entry_types.nil?
+
             entry_types.each do |entry_type|
                 response = SolrQuery.new.solr_query('has_model_ssim:"ConceptScheme" AND preflabel_tesim:"entry_types"', 'id')
                 response['response']['docs'].map do |s|
