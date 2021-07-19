@@ -41,7 +41,7 @@ module Ingest
             notes = [tna_document_row.note] unless tna_document_row.note.blank?
 
             document_types = []
-            document_types = [tna_document_row.document_type] unless tna_document_row.document_type.blank?
+            document_types = tna_document_row.document_type.split(';').map(&:strip) unless tna_document_row.document_type.blank?
 
             date_of_documents = ''
             date_of_documents = tna_document_row.date_of_document unless tna_document_row.date_of_document.blank?
