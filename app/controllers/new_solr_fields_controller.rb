@@ -35,7 +35,7 @@ class NewSolrFieldsController < ApplicationController
     solr_doc[TnwCommon::Shared::Constants::FACET_ENTRY_TYPE] = document_type_labels
 
     # Entry date note (text field)
-    solr_doc['entry_date_note_search'] = array_to_lowercase(solr_doc['entry_date_note_tesim'])
+    solr_doc[TnwCommon::Shared::Constants::SOLR_FIELD_COMMON_ENTRY_DATE_NOTE_SEARCH] = array_to_lowercase(solr_doc[TnwCommon::Shared::Constants::SOLR_FIELD_COMMON_ENTRY_DATE_NOTE_TESIM])
 
     # Note (Text field)
     solr_doc[TnwCommon::Shared::Constants::SOLR_FILED_COMMON_NOTE_SEARCH] = array_to_lowercase(solr_doc[TnwCommon::Shared::Constants::SOLR_FILED_COMMON_NOTE_TESIM])
