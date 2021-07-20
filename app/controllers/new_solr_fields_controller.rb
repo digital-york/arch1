@@ -71,15 +71,15 @@ class NewSolrFieldsController < ApplicationController
         place_same_as_search_array,
         place_as_written_array = get_place_array(solr_doc[:id])
     solr_doc[TnwCommon::Shared::Constants::SOLR_FILED_COMMON_PLACE_SAME_AS_TESIM] = place_same_as_array.uniq
-    solr_doc[TnwCommon::Shared::Constants::FACET_PLACE_SAME_AS] = place_same_as_facet_array.uniq
     solr_doc[TnwCommon::Shared::Constants::SOLR_FILED_COMMON_PLACE_SAME_AS_SEARCH] = place_same_as_search_array.uniq
     solr_doc[TnwCommon::Shared::Constants::SOLR_FILED_COMMON_PLACE_AS_WRITTEN_TESIM] = place_as_written_array.uniq
+    solr_doc[TnwCommon::Shared::Constants::FACET_PLACE_SAME_AS] = place_same_as_facet_array.uniq
 
     # Language (linked field to language authority)
     language_new,unused = get_preflabel_array(solr_doc['language_tesim'])
-    solr_doc['language_new_tesim'] = language_new
-    solr_doc['language_facet_ssim'] = language_new
-    solr_doc['language_search'] = array_to_lowercase(language_new)
+    solr_doc[TnwCommon::Shared::Constants::SOLR_FILED_COMMON_LANGUAGE_NEW] = language_new
+    solr_doc[TnwCommon::Shared::Constants::FACET_LANGUAGE] = language_new
+    solr_doc[TnwCommon::Shared::Constants::SOLR_FILED_COMMON_LANGUAGE_SEARCH] = array_to_lowercase(language_new)
 
     # subject (Linked field)
     subject_new, subject_alt = get_preflabel_array(solr_doc['subject_tesim'])
