@@ -24,23 +24,23 @@ class NewSolrFieldsController < ApplicationController
 
     # Summary is already indexed as summary_tesim
     # summary (Text field)
-    solr_doc['summary_search'] = array_to_lowercase(solr_doc['summary_tesim'])
+    solr_doc[TnwCommon::Shared::Constants::SOLR_FILED_COMMON_SUMMARY_SEARCH] = array_to_lowercase(solr_doc[TnwCommon::Shared::Constants::SOLR_FILED_COMMON_SUMMARY_TESIM])
 
     # document type (Text field)
-    solr_doc['document_type_search'] = array_to_lowercase(solr_doc['document_type_tesim'])
-
-    # document type facet
-    solr_doc['document_type_facet_ssim'] = solr_doc['document_type_tesim']
+    # map document_type_facet_ssim (authority id) to label
+    solr_doc[TnwCommon::Shared::Constants::SOLR_FIELD_COMMON_ENTRY_TYPE_SEARCH] = array_to_lowercase(solr_doc['document_type_tesim'])
+    # use the shared entry(document) type facet
+    solr_doc[TnwCommon::Shared::Constants::FACET_ENTRY_TYPE] = solr_doc['document_type_tesim']
 
     # Entry date note (text field)
     solr_doc['entry_date_note_search'] = array_to_lowercase(solr_doc['entry_date_note_tesim'])
 
     # Note (Text field)
-    solr_doc['note_search'] = array_to_lowercase(solr_doc['note_tesim'])
+    solr_doc[TnwCommon::Shared::Constants::SOLR_FILED_COMMON_NOTE_SEARCH] = array_to_lowercase(solr_doc[TnwCommon::Shared::Constants::SOLR_FILED_COMMON_NOTE_TESIM])
 
     # Document type (Linked to entry type authority in AR)
-    document_type_ids = Ingest::AuthorityHelper.s_get_entry_type_object_ids(solr_doc['document_type_tesim'])
-    solr_doc['document_type_tesim'] = document_type_ids
+    document_type_labels = Ingest::AuthorityHelper.s_get_entry_type_labels(solr_doc['document_type_tesim'])
+    solr_doc[TnwCommon::Shared::Constants::SOLR_FIELD_COMMON_ENTRY_TYPE_SEARCH] = document_type_labels
 
     # Date of document
     entry_date_note = ''
