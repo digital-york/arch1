@@ -77,7 +77,7 @@ class NewSolrFieldsController < ApplicationController
 
     # Language (linked field to language authority)
     language_new,unused = get_preflabel_array(solr_doc['language_tesim'])
-    solr_doc[TnwCommon::Shared::Constants::SOLR_FILED_COMMON_LANGUAGE_NEW] = language_new
+    solr_doc[TnwCommon::Shared::Constants::SOLR_FILED_COMMON_LANGUAGE_NEW_TESIM] = language_new
     solr_doc[TnwCommon::Shared::Constants::FACET_LANGUAGE] = language_new
     solr_doc[TnwCommon::Shared::Constants::SOLR_FILED_COMMON_LANGUAGE_SEARCH] = array_to_lowercase(language_new)
 
@@ -85,71 +85,30 @@ class NewSolrFieldsController < ApplicationController
     subject_new, subject_alt = get_preflabel_array(solr_doc['subject_tesim'])
     solr_doc[TnwCommon::Shared::Constants::FACET_SUBJECT] = subject_new
     unless subject_alt.empty? then subject_new += subject_alt.compact end
-    solr_doc['subject_new_tesim'] = subject_new
-    solr_doc['subject_search'] = array_to_lowercase(subject_new)
+    solr_doc[TnwCommon::Shared::Constants::SOLR_FILED_COMMON_SUBJECT_NEW_TESIM] = subject_new
+    solr_doc[TnwCommon::Shared::Constants::SOLR_FILED_COMMON_SUBJECT_SEARCH] = array_to_lowercase(subject_new)
 
     # Addressee
     addressees = Ingest::TnaPersonHelper.s_get_linked_addressee_as_written_labels(solr_doc[:id])
-    solr_doc['tna_addressees_tesim'] = addressees
-    solr_doc['person_as_written_search'] = array_to_lowercase(addressees)
+    solr_doc[TnwCommon::Shared::Constants::SOLR_FILED_TNA_ADDRESSEES_TESIM] = addressees
+    solr_doc[TnwCommon::Shared::Constants::SOLR_FILED_COMMON_PLACE_AS_WRITTEN_SEARCH] = array_to_lowercase(addressees)
 
     # Sender
     senders = Ingest::TnaPersonHelper.s_get_linked_sender_as_written_labels(solr_doc[:id])
-    solr_doc['tna_senders_tesim'] = senders
+    solr_doc[TnwCommon::Shared::Constants::SOLR_FILED_TNA_SENDERS_TESIM] = senders
     senders.each do |sender|
-      solr_doc['person_as_written_search'] << sender.downcase
+      solr_doc[TnwCommon::Shared::Constants::SOLR_FILED_COMMON_PLACE_AS_WRITTEN_SEARCH] << sender.downcase
     end
 
     # Person
     persons = Ingest::TnaPersonHelper.s_get_linked_person_as_written_labels(solr_doc[:id])
-    solr_doc['tna_persons_tesim'] = persons
+    solr_doc[TnwCommon::Shared::Constants::SOLR_FILED_TNA_PERSONS_TESIM] = persons
     persons.each do |person|
-      solr_doc['person_as_written_search'] << person.downcase
+      solr_doc[TnwCommon::Shared::Constants::SOLR_FILED_COMMON_PLACE_AS_WRITTEN_SEARCH] << person.downcase
     end
-
-    # solr_doc['person_as_written_search'] = array_to_lowercase(solr_doc['person_as_written_tesim'])
-    #
-    # # related agents
-    # person_name_authority_new,person_name_authority_alt = get_preflabel_array(solr_doc['person_same_as_tesim'])
-    # solr_doc['person_same_as_facet_ssim'] = person_name_authority_new
-    # unless person_name_authority_alt.empty? then person_name_authority_new += person_name_authority_alt.compact end
-    # solr_doc['person_same_as_new_tesim'] = person_name_authority_new
-    # solr_doc['person_same_as_search'] = array_to_lowercase(person_name_authority_new)
-    #
-    # person_role_new,person_role_alt = get_preflabel_array(solr_doc['person_role_tesim'])
-    # solr_doc['person_role_facet_ssim'] = person_role_new
-    # unless person_role_alt.empty? then person_role_new += person_role_alt.compact end
-    # solr_doc['person_role_new_tesim'] = person_role_new
-    # solr_doc['person_role_search'] = array_to_lowercase(person_role_new)
-    #
-    # person_descriptor_new,person_descriptor_alt = get_preflabel_array(solr_doc['person_descriptor_tesim'])
-    # solr_doc['person_descriptor_facet_ssim'] = person_descriptor_new
-    # unless person_descriptor_alt.empty? then person_descriptor_new += person_descriptor_alt.compact end
-    # solr_doc['person_descriptor_new_tesim'] = person_descriptor_new
-    # solr_doc['person_descriptor_search'] = array_to_lowercase(person_descriptor_new)
-    #
-    # solr_doc['person_descriptor_as_written_search'] = array_to_lowercase(solr_doc['person_descriptor_tesim'])
-    #
-    # solr_doc['person_note_search'] = array_to_lowercase(solr_doc['person_note_tesim'])
-    #
-    # solr_doc['person_related_place_search'] = array_to_lowercase(solr_doc['person_related_place_tesim'])
-    #
-    # solr_doc['person_related_person_search'] = array_to_lowercase(solr_doc['person_related_person_tesim'])
-
-
-    # add the register name and folio label to the entries
-    # register_new,folio_new = get_entry_register_array(solr_doc['folio_ssim'])
-    # solr_doc['entry_register_facet_ssim'] = register_new
-    # solr_doc['entry_folio_facet_ssim'] = folio_new
-
-    # facets from dates, related places/agents and folio/register added to entries
-    # these runs on everything because it uses id, the only other field that ALL entries have is entry_no, but that is not unique
-    # entry_place_name_authority_new = get_entry_place_array(get_id(solr_doc[:id]))
-    # solr_doc['entry_place_same_as_facet_ssim'] = entry_place_name_authority_new
 
     entry_person_name_authority_new = get_entry_agent_array(get_id(solr_doc[:id]))
     solr_doc[TnwCommon::Shared::Constants::FACET_PERSON_SAME_AS] = entry_person_name_authority_new
-
 
     return solr_doc
   end
