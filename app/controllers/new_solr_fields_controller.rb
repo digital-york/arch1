@@ -28,9 +28,11 @@ class NewSolrFieldsController < ApplicationController
 
     # document type (Text field)
     # map document_type_facet_ssim (authority id) to label
-    solr_doc[TnwCommon::Shared::Constants::SOLR_FIELD_COMMON_ENTRY_TYPE_SEARCH] = array_to_lowercase(solr_doc['document_type_tesim'])
+    # Document type (Linked to entry type authority in AR)
+    document_type_labels = Ingest::AuthorityHelper.s_get_entry_type_labels(solr_doc[TnwCommon::Shared::Constants::SOLR_FILED_TNA_DOCUMENT_TYPE_TESIM])
+    solr_doc[TnwCommon::Shared::Constants::SOLR_FIELD_COMMON_ENTRY_TYPE_SEARCH] = array_to_lowercase(document_type_labels)
     # use the shared entry(document) type facet
-    solr_doc[TnwCommon::Shared::Constants::FACET_ENTRY_TYPE] = solr_doc['document_type_tesim']
+    solr_doc[TnwCommon::Shared::Constants::FACET_ENTRY_TYPE] = document_type_labels
 
     # Entry date note (text field)
     solr_doc['entry_date_note_search'] = array_to_lowercase(solr_doc['entry_date_note_tesim'])
@@ -38,9 +40,6 @@ class NewSolrFieldsController < ApplicationController
     # Note (Text field)
     solr_doc[TnwCommon::Shared::Constants::SOLR_FILED_COMMON_NOTE_SEARCH] = array_to_lowercase(solr_doc[TnwCommon::Shared::Constants::SOLR_FILED_COMMON_NOTE_TESIM])
 
-    # Document type (Linked to entry type authority in AR)
-    document_type_labels = Ingest::AuthorityHelper.s_get_entry_type_labels(solr_doc['document_type_tesim'])
-    solr_doc[TnwCommon::Shared::Constants::SOLR_FIELD_COMMON_ENTRY_TYPE_SEARCH] = document_type_labels
 
     # Date of document
     entry_date_note = ''
