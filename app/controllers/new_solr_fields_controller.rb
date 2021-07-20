@@ -36,16 +36,14 @@ class NewSolrFieldsController < ApplicationController
 
     # Entry date note (text field)
     solr_doc[TnwCommon::Shared::Constants::SOLR_FIELD_COMMON_ENTRY_DATE_NOTE_SEARCH] = array_to_lowercase(solr_doc[TnwCommon::Shared::Constants::SOLR_FIELD_COMMON_ENTRY_DATE_NOTE_TESIM])
+    # Date of document
+    entry_date_note = ''
+    unless solr_doc[TnwCommon::Shared::Constants::SOLR_FIELD_COMMON_ENTRY_DATE_NOTE_TESIM].blank?
+      entry_date_note = solr_doc[TnwCommon::Shared::Constants::SOLR_FIELD_COMMON_ENTRY_DATE_NOTE_TESIM][0]
+    end
 
     # Note (Text field)
     solr_doc[TnwCommon::Shared::Constants::SOLR_FILED_COMMON_NOTE_SEARCH] = array_to_lowercase(solr_doc[TnwCommon::Shared::Constants::SOLR_FILED_COMMON_NOTE_TESIM])
-
-
-    # Date of document
-    entry_date_note = ''
-    unless solr_doc['entry_date_note_tesim'].blank?
-      entry_date_note = solr_doc['entry_date_note_tesim'][0]
-    end
 
     document_date_ids = Ingest::DocumentDateHelper.s_get_document_date_ids(solr_doc[:id], nil, entry_date_note)
     document_date_ids.each do |document_date_id|
@@ -72,10 +70,10 @@ class NewSolrFieldsController < ApplicationController
         place_same_as_facet_array,
         place_same_as_search_array,
         place_as_written_array = get_place_array(solr_doc[:id])
-    solr_doc['place_same_as_tesim'] = place_same_as_array.uniq
+    solr_doc[TnwCommon::Shared::Constants::SOLR_FILED_COMMON_PLACE_SAME_AS_TESIM] = place_same_as_array.uniq
     solr_doc[TnwCommon::Shared::Constants::FACET_PLACE_SAME_AS] = place_same_as_facet_array.uniq
-    solr_doc['place_same_as_search'] = place_same_as_search_array.uniq
-    solr_doc['place_as_written_tesim'] = place_as_written_array.uniq
+    solr_doc[TnwCommon::Shared::Constants::SOLR_FILED_COMMON_PLACE_SAME_AS_SEARCH] = place_same_as_search_array.uniq
+    solr_doc[TnwCommon::Shared::Constants::SOLR_FILED_COMMON_PLACE_AS_WRITTEN_TESIM] = place_as_written_array.uniq
 
     # Language (linked field to language authority)
     language_new,unused = get_preflabel_array(solr_doc['language_tesim'])
