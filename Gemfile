@@ -67,5 +67,6 @@ end
 
 # TNW ingest
 gem 'roo'
+gem 'caxlsx'
 gem 'smarter_csv'
-gem 'tnw_common', git: 'https://github.com/digital-york/tnw_common', branch: 'main'
+gem 'tnw_common', git: 'https://github.com/digital-york/tnw_common', branch: 'development'

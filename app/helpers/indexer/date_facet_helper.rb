@@ -14,8 +14,10 @@ module Indexer
         # The prefix 's_' is the convention here, means retrieving data from Solr
         # e.g.
         # pry(main)> Indexer::DateFacetHelper.s_get_date_facets_from_entry('7p88cm19w')
+        # => [["1398", "1398"], ["1398/08/24", "1398/09/05"]] 
         def self.s_get_date_facets_from_entry(entry_id)
             date_facets = []
+            date_full = []
 
             # Find linked EntryDates
             query = 'has_model_ssim:EntryDate AND entryDateFor_ssim:' + entry_id
@@ -30,12 +32,13 @@ module Indexer
                     if single_date.include? 'date_tesim'
                         single_date['date_tesim'].each do |dt|
                             date_facets << dt.split('/')[0]
+                            date_full << dt
                         end
                     end
                 end
             end
 
-            date_facets
+            [date_facets, date_full]
         end
 
     end

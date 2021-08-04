@@ -11,6 +11,7 @@ module Ingest
             SolrQuery.new.solr_query("preflabel_tesim:\"#{folio_label}\"")['response']['docs'].map do |r|
                 ids = r['id']
             end
+            ids
         end
 
         # find Entry by Register No, Folio No, Folio side, and Entry No.

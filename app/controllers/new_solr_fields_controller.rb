@@ -1,4 +1,117 @@
+require 'tnw_common'
+require 'tnw_common/shared/Constants'
+require 'tnw_common/solr/solr_query'
+require 'tnw_common/tna/tna_search'
+
 class NewSolrFieldsController < ApplicationController
+
+  # define shared solr connection
+  def initialize()
+    @solr_server = TnwCommon::Solr::SolrQuery.new(SOLR[Rails.env]['url'])
+    @tna_search = TnwCommon::Tna::TnaSearch.new(@solr_server)
+  end
+
+  # Add customized solr fields if the model is Document
+  def modify_tna_document(solr_doc)
+    # Repository is already indexed as repository_tesim by Active Fedora
+
+    # Find department info and store it to the facet
+    solr_doc[TnwCommon::Shared::Constants::FACET_REGISTER_OR_DEPARTMENT]=@tna_search.get_department_label(solr_doc[:id])
+
+    # Reference is already indexed as reference_tesim
+
+    # Publication should already be indexed as publication_tesim
+
+    # Summary is already indexed as summary_tesim
+    # summary (Text field)
+    solr_doc[TnwCommon::Shared::Constants::SOLR_FILED_COMMON_SUMMARY_SEARCH] = array_to_lowercase(solr_doc[TnwCommon::Shared::Constants::SOLR_FILED_COMMON_SUMMARY_TESIM])
+
+    # document type (Text field)
+    # map document_type_facet_ssim (authority id) to label
+    # Document type (Linked to entry type authority in AR)
+    document_type_labels = Ingest::AuthorityHelper.s_get_entry_type_labels(solr_doc[TnwCommon::Shared::Constants::SOLR_FILED_TNA_DOCUMENT_TYPE_TESIM])
+    solr_doc[TnwCommon::Shared::Constants::SOLR_FIELD_COMMON_ENTRY_TYPE_SEARCH] = array_to_lowercase(document_type_labels)
+    # use the shared entry(document) type facet
+    solr_doc[TnwCommon::Shared::Constants::FACET_ENTRY_TYPE] = document_type_labels
+
+    # Entry date note (text field)
+    solr_doc[TnwCommon::Shared::Constants::SOLR_FIELD_COMMON_ENTRY_DATE_NOTE_SEARCH] = array_to_lowercase(solr_doc[TnwCommon::Shared::Constants::SOLR_FIELD_COMMON_ENTRY_DATE_NOTE_TESIM])
+    # Date of document
+    entry_date_note = ''
+    unless solr_doc[TnwCommon::Shared::Constants::SOLR_FIELD_COMMON_ENTRY_DATE_NOTE_TESIM].blank?
+      entry_date_note = solr_doc[TnwCommon::Shared::Constants::SOLR_FIELD_COMMON_ENTRY_DATE_NOTE_TESIM][0]
+    end
+
+    # Note (Text field)
+    solr_doc[TnwCommon::Shared::Constants::SOLR_FILED_COMMON_NOTE_SEARCH] = array_to_lowercase(solr_doc[TnwCommon::Shared::Constants::SOLR_FILED_COMMON_NOTE_TESIM])
+
+    document_date_ids = Ingest::DocumentDateHelper.s_get_document_date_ids(solr_doc[:id], nil, entry_date_note)
+    document_date_ids.each do |document_date_id|
+      single_date_ids = Ingest::DocumentDateHelper.s_get_single_date_ids(document_date_id)
+      solr_doc[TnwCommon::Shared::Constants::FACET_DATE] = []  # Use this field for facet
+      solr_doc[TnwCommon::Shared::Constants::SOLR_FILED_COMMON_DATE_ALL_SSIM] = [] # Use this field for date fields
+      solr_doc[TnwCommon::Shared::Constants::SOLR_FILED_COMMON_DATE_FULL_SSIM] = ''   # use this field for ordering
+
+      single_date_ids.each_with_index do |single_date_id, index|
+        @solr_server.query("id:#{single_date_id}", 'date_tesim', 65535)['response']['docs'].map do |result|
+          date = result['date_tesim'][0]
+          year = date.split('/')[0]
+          solr_doc[TnwCommon::Shared::Constants::FACET_DATE] << year
+          solr_doc[TnwCommon::Shared::Constants::SOLR_FILED_COMMON_DATE_ALL_SSIM] << date
+          if index==0
+            solr_doc[TnwCommon::Shared::Constants::SOLR_FILED_COMMON_DATE_FULL_SSIM] = date
+          end
+        end
+      end
+    end
+
+    # Pull out place info from TNA_Place and Place of Dating fields (linked to Place authority)
+    place_same_as_array,
+        place_same_as_facet_array,
+        place_same_as_search_array,
+        place_as_written_array = get_place_array(solr_doc[:id])
+    solr_doc[TnwCommon::Shared::Constants::SOLR_FILED_COMMON_PLACE_SAME_AS_TESIM] = place_same_as_array.uniq
+    solr_doc[TnwCommon::Shared::Constants::SOLR_FILED_COMMON_PLACE_SAME_AS_SEARCH] = place_same_as_search_array.uniq
+    solr_doc[TnwCommon::Shared::Constants::SOLR_FILED_COMMON_PLACE_AS_WRITTEN_TESIM] = place_as_written_array.uniq
+    solr_doc[TnwCommon::Shared::Constants::FACET_PLACE_SAME_AS] = place_same_as_facet_array.uniq
+
+    # Language (linked field to language authority)
+    language_new,unused = get_preflabel_array(solr_doc['language_tesim'])
+    solr_doc[TnwCommon::Shared::Constants::SOLR_FILED_COMMON_LANGUAGE_NEW_TESIM] = language_new
+    solr_doc[TnwCommon::Shared::Constants::FACET_LANGUAGE] = language_new
+    solr_doc[TnwCommon::Shared::Constants::SOLR_FILED_COMMON_LANGUAGE_SEARCH] = array_to_lowercase(language_new)
+
+    # subject (Linked field)
+    subject_new, subject_alt = get_preflabel_array(solr_doc['subject_tesim'])
+    solr_doc[TnwCommon::Shared::Constants::FACET_SUBJECT] = subject_new
+    unless subject_alt.empty? then subject_new += subject_alt.compact end
+    solr_doc[TnwCommon::Shared::Constants::SOLR_FILED_COMMON_SUBJECT_NEW_TESIM] = subject_new
+    solr_doc[TnwCommon::Shared::Constants::SOLR_FILED_COMMON_SUBJECT_SEARCH] = array_to_lowercase(subject_new)
+
+    # Addressee
+    addressees = Ingest::TnaPersonHelper.s_get_linked_addressee_as_written_labels(solr_doc[:id])
+    solr_doc[TnwCommon::Shared::Constants::SOLR_FILED_TNA_ADDRESSEES_TESIM] = addressees
+    solr_doc[TnwCommon::Shared::Constants::SOLR_FILED_COMMON_PLACE_AS_WRITTEN_SEARCH] = array_to_lowercase(addressees)
+
+    # Sender
+    senders = Ingest::TnaPersonHelper.s_get_linked_sender_as_written_labels(solr_doc[:id])
+    solr_doc[TnwCommon::Shared::Constants::SOLR_FILED_TNA_SENDERS_TESIM] = senders
+    senders.each do |sender|
+      solr_doc[TnwCommon::Shared::Constants::SOLR_FILED_COMMON_PLACE_AS_WRITTEN_SEARCH] << sender.downcase
+    end
+
+    # Person
+    persons = Ingest::TnaPersonHelper.s_get_linked_person_as_written_labels(solr_doc[:id])
+    solr_doc[TnwCommon::Shared::Constants::SOLR_FILED_TNA_PERSONS_TESIM] = persons
+    persons.each do |person|
+      solr_doc[TnwCommon::Shared::Constants::SOLR_FILED_COMMON_PLACE_AS_WRITTEN_SEARCH] << person.downcase
+    end
+
+    entry_person_name_authority_new = get_entry_agent_array(get_id(solr_doc[:id]))
+    solr_doc[TnwCommon::Shared::Constants::FACET_PERSON_SAME_AS] = entry_person_name_authority_new
+
+    return solr_doc
+  end
 
   # This code adds new solr fields which are required for the search application
   # Note that this code is called from initializers/active_fedora.rb and overrides the to_solr active_fedora method
@@ -10,8 +123,14 @@ class NewSolrFieldsController < ApplicationController
   # 'facet_ssim' already exists as fieldType 'ssim' in schema.xml
   # For 'search' and new_tesim, altlabels from related objects have been merged into the array
   def modify_sdoc(sdoc)
+    if 'Document' == sdoc['has_model_ssim'][0]
+      return modify_tna_document(sdoc)
+    end
 
     begin
+      if 'Entry' == sdoc['has_model_ssim'][0]
+        sdoc['repository_tesim'] = 'BIA'
+      end
 
       # entries
       entry_type_new,entry_type_alt = get_preflabel_array(sdoc['entry_type_tesim'])
@@ -113,7 +232,12 @@ class NewSolrFieldsController < ApplicationController
       # date_facet = get_date_array(get_id(sdoc[:id]))
       date_facet = Indexer::DateFacetHelper.s_get_date_facets_from_entry(get_id(sdoc[:id]))
 
-      sdoc['date_facet_ssim'] = date_facet
+      sdoc['date_facet_ssim'] = date_facet[0] unless date_facet.blank?
+      sdoc['date_full_ssim'] = date_facet[1] unless date_facet.blank?
+
+      # Store SingleDate in single Solr dynamic field e.g. *_ssi (Note *_dttsi requieres dates in ISO format)
+      # Downcase occassional dates with comments
+      sdoc['date_new_ssi'] = sdoc['date_tesim'][0].downcase unless sdoc['date_tesim'].blank?
 
       # add the register name and folio label to the entries
       register_new,folio_new = get_entry_register_array(sdoc['folio_ssim'])
@@ -362,6 +486,62 @@ class NewSolrFieldsController < ApplicationController
 
   def get_id(o)
     id = (o.include? '/') ? o.rpartition('/').last : o
+  end
+
+  # From RelatedPlace(AR), TnaPlace(TNA), PlaceOfDating(TNA)
+  # Get place_same_as(string) and place_written_as(string)
+  # input_array: array of linked object ids
+  # return [place_same_as],[place_as_written]
+  def get_place_array(document_id)
+    begin
+      place_same_as_array = []
+      place_same_as_facet_array = []
+      place_same_as_search_array = []
+      place_as_written_array = []
+
+      fields_to_query = ['placeOfDatingFor_ssim','tnaPlaceFor_ssim']
+      unless document_id.blank?
+        fields_to_query.each do |query_field|
+          @solr_server.query("#{query_field}:#{document_id}", 'place_same_as_tesim,place_same_as_facet_ssim,place_same_as_search,place_as_written_tesim', 65535)['response']['docs'].map do |result|
+            unless result['place_as_written_tesim'].nil?
+              place_as_written = result['place_as_written_tesim']
+
+              place_as_written.each do |paw|
+                place_as_written_array << paw.squish
+              end
+            end
+
+            unless result['place_same_as_tesim'].nil?
+              place_same_as = result['place_same_as_tesim']
+              place_same_as.each do |psa|
+                place_same_as_array << psa.squish
+              end
+            end
+
+            unless result['place_same_as_facet_ssim'].nil?
+              place_same_as_facets = result['place_same_as_facet_ssim']
+              place_same_as_facets.each do |psaf|
+                place_same_as_facet_array << psaf.squish
+              end
+            end
+
+            unless result['place_same_as_search'].nil?
+              place_same_as_search = result['place_same_as_search']
+              place_same_as_search.each do |psas|
+                place_same_as_search_array << psas.squish
+              end
+            end
+          end
+        end
+      end
+
+      return place_same_as_array, place_same_as_facet_array, place_same_as_search_array, place_as_written_array
+
+    rescue => error
+      log_error(__method__, __FILE__, error)
+      raise
+    end
+
   end
 
 end
