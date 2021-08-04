@@ -165,7 +165,7 @@ module Ingest
                     place_authority_ids = Ingest::AuthorityHelper.s_get_exact_match_place_object_id(
                         place_of_dating_desc.place_name,
                         place_of_dating_desc.county,
-                        place_of_dating_desc.country) unless place_of_dating_desc.place_name.blank?
+                        place_of_dating_desc.country)
                     # allow empty place names, so possibly we could have empty place_authority_ids
                     if place_authority_ids.blank? or place_authority_ids.length()==0
                         puts '  Place of dating warning: cannot find place_authority id'
@@ -206,9 +206,9 @@ module Ingest
                             ['place of dating'],
                             place_of_dating_desc.place_note)
                         place_of_dating_id = place_of_dating.id
-                        puts '2. create Place of dating: ' + place_of_dating.id
+                        puts '  2. create Place of dating: ' + place_of_dating.id
                     else # if found, use existing Place of Dating
-                        puts '3. Found Place of dating ' + place_of_dating_id
+                        puts '  3. Found Place of dating ' + place_of_dating_id
                         place_of_dating = PlaceOfDating.find(place_of_dating_id)
                     end
                 end
@@ -229,11 +229,11 @@ module Ingest
                             place_desc.county,
                             place_desc.country)
                         if place_authority_ids.blank?
-                            puts 'Place(s) Warn: cannot find place_authority id'
-                            puts ">>> #{reference}..."
-                        elsif place_authority_ids.length()!=1
-                            puts 'Place(s) Error: returns more than 1 places.'
-                            puts ">>> #{reference}..."
+                            puts '  Place(s) Warn: cannot find place_authority id'
+                            puts "  >>> #{reference}..."
+                        elsif place_authority_ids.length()>1
+                            puts '  Place(s) Error: returns more than 1 places.'
+                            puts "  >>> #{reference}..."
                         end
                     end
 
@@ -251,10 +251,12 @@ module Ingest
                             # puts '1. created tna place: ' + tna_place.id
                         else
                             # try to find existing tna place object
+                            current_place_authority_id = nil
+                            current_place_authority_id = place_authority_ids[0] unless place_authority_ids.blank? or place_authority_ids.length()==0
                             tna_place_id = Ingest::TnaPlaceHelper.get_tna_place_id(
                                 d.id,
-                                place_authority_ids[0],
-                                place_desc.place_as_written) unless place_authority_ids.blank?
+                                current_place_authority_id,
+                                place_desc.place_as_written)
                             # if NOT found tna_place, create a new one
                             if tna_place_id.blank?
                                 tna_place = Ingest::TnaPlaceHelper.create_tna_place(
@@ -264,7 +266,7 @@ module Ingest
                                     [place_desc.place_role],
                                     [place_desc.place_note])
                                 tna_place_id = tna_place.id
-                                # puts '2. created tna place: ' + tna_place.id
+                                puts '  2. created tna place: ' + tna_place.id
                                 # else # if found, use existing Tna Place
                                 #     puts '3. found tna place: ' + tna_place_id
                             end
