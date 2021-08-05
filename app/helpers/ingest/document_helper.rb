@@ -179,7 +179,7 @@ module Ingest
                         puts place_authority_ids
                         puts '  -------------------------------------'
                         puts '  -------------------------------------'
-                        # return
+                        # next
                     end
                 end
 
