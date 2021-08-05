@@ -168,7 +168,7 @@ module Ingest
                         place_of_dating_desc.country)
                     # allow empty place names, so possibly we could have empty place_authority_ids
                     if place_authority_ids.blank? or place_authority_ids.length()==0
-                        puts '  Place of dating warning: cannot find place_authority id'
+                        puts '  Place of dating warning: cannot find placeofdating.place_authority id'
                         puts "  >>> #{reference}..."
                         # return
                     elsif place_authority_ids.length() > 1
@@ -229,10 +229,10 @@ module Ingest
                             place_desc.county,
                             place_desc.country)
                         if place_authority_ids.blank?
-                            puts '  Place(s) Warn: cannot find place_authority id'
+                            puts '  Place(s) Warn: cannot find tna_place.place_authority id'
                             puts "  >>> #{reference}..."
                         elsif place_authority_ids.length()>1
-                            puts '  Place(s) Error: returns more than 1 places.'
+                            puts '  Place(s) Error: returns more than 1 tna_place.places.'
                             puts "  >>> #{reference}..."
                         end
                     end
