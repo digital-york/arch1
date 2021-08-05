@@ -224,14 +224,19 @@ module Ingest
             # and there shouldn't be any duplicates, so perhaps,
             # if you can tell your code not to look for a county if the word 'prebend' appears within a name,
             # that might cover everything?
-            return '' if place_name.blank? or county.blank?
+            #
+            # updated notes 05 Aug 2021: The whole 'X Cathedral, Y prebend' is the place name
+            # e.g. 'prebend' isn't part of the county
+
+            # return '' if place_name.blank? or county.blank?
+            return '' if place_name.blank?
 
             place_ids = []
 
             q = "has_model_ssim:Place"     # place authority
             q += " AND place_name_tesim:\"#{place_name.downcase}\""  # place name
             # ignore county if ' prebend' is include as it won't return duplicates
-            unless county.downcase.include? ' prebend'
+            unless county.blank?
                 q += " AND parent_ADM2_tesim:\"#{county.downcase}\"" # county
             end
             q += " AND parent_ADM1_tesim:\"#{country.downcase}\"" unless country.blank? # country
