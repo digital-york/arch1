@@ -268,7 +268,7 @@ module Ingest
                                     place_desc.place_as_written,
                                     place_authority_ids,
                                     [place_desc.place_role],
-                                    [place_desc.place_note])
+                                    place_desc.place_note.nil? ? []: [place_desc.place_note])
                                 tna_place_id = tna_place.id
                                 puts '  2. created tna place: ' + tna_place.id
                                 # else # if found, use existing Tna Place
