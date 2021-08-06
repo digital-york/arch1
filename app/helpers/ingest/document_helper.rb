@@ -172,10 +172,14 @@ module Ingest
                         puts "  >>> #{reference}..."
                         # return
                     elsif place_authority_ids.length() > 1
+                        puts '  -------------------------------------'
+                        puts '  -------------------------------------'
                         puts '  Place of dating Error: returns more than 1 places.'
                         puts "  >>> #{reference}..."
                         puts place_authority_ids
-                        # return
+                        puts '  -------------------------------------'
+                        puts '  -------------------------------------'
+                        # next
                     end
                 end
 

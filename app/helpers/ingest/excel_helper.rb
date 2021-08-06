@@ -259,45 +259,86 @@ module Ingest
             row[index] = updated_place_of_dating
         end
 
+        # In general, places are provided in the format as:
+        # Place, County, Country.
+        # However, there are some exceptions, e.g.
+        #   York, St Mary's Abbey, York, UK
+        #   York, St Helen, Fishergate, York, UK
+        # This method is used to load these exceptional places into an array
+        # Usage: Ingest::ExcelHelper.load_special_places()
+        def self.load_special_places()
+            JSON.parse(File.read(Rails.root + 'app/assets/lists/special_places.json'))
+        end
 
         # extract place info from a single string, e.g.
         # From: Kirkstall (Kyrkestall) abbey, West Riding of Yorkshire
         # to a PlaceDesc object
         # Usage: Ingest::ExcelHelper.extract_place_info('Kirkstall (Kyrkestall) abbey, West Riding of Yorkshire', 'place of dating', '')
         def self.extract_place_info(place_string, place_role, place_type)
+            special_places = Ingest::ExcelHelper.load_special_places()
+
             # remove spaces from both sides
             place_string.strip!
 
-            place_parts = place_string.split(',')
-            place_name_and_written_as = place_parts[0]
-
-            place_as_written = ''
             place_name = ''
-            place_note = ''
-            if place_name_and_written_as.include? '(' and place_name_and_written_as.include? ')'
-                # with completely unidentified placenames,
-                # I've simply put them in (round brackets),
-                # so that the name goes into the 'As written' field,
-                # but without any other info - there won't be an authority.
-                if place_name_and_written_as.starts_with? '(' and place_name_and_written_as.ends_with? ')'
-                    place_name = ''
-                    place_as_written = place_name_and_written_as[1..place_name_and_written_as.length-2]
-                    place_note = 'place unidentified'
-                else
-                    place_as_written = place_name_and_written_as.split('(')[1].split(')')[0]
-                    place_name = place_name_and_written_as.gsub(place_as_written,'')
-                                     .gsub('(','')
-                                     .gsub(') ','')
-                                     .gsub(')','')
+            place_as_written = ''
+            county = ''
+            country = ''
+
+            # First, try to find if the place_string contains a special place name
+            # If yes, save it to place_name_and_written_as
+            special_places.each do |p|
+                if place_string.downcase.start_with? p.downcase
+                    place_name = place_string[0, p.length]
                 end
-            else
-                place_name = place_name_and_written_as
             end
-            county = (place_parts[1] || '').gsub(';','')
-            if county.blank?
-                county = get_default_county(place_name)
+
+            # If place_name is still blank,
+            # means the place_string should be dealt as a normal string
+            if place_name.blank?
+                place_parts = place_string.split(',')
+                place_name_and_written_as = place_parts[0]
+                place_as_written = ''
+                place_note = ''
+                if place_name_and_written_as.include? '(' and place_name_and_written_as.include? ')'
+                    # with completely unidentified placenames,
+                    # I've simply put them in (round brackets),
+                    # so that the name goes into the 'As written' field,
+                    # but without any other info - there won't be an authority.
+                    if place_name_and_written_as.starts_with? '(' and place_name_and_written_as.ends_with? ')'
+                        place_name = ''
+                        place_as_written = place_name_and_written_as[1..place_name_and_written_as.length-2]
+                        place_note = 'place unidentified'
+                    else
+                        place_as_written = place_name_and_written_as.split('(')[1].split(')')[0]
+                        place_name = place_name_and_written_as.gsub(place_as_written,'')
+                                         .gsub('(','')
+                                         .gsub(') ','')
+                                         .gsub(')','')
+                    end
+                else
+                    place_name = place_name_and_written_as
+                end
+                county = (place_parts[1] || '').gsub(';','')
+                if county.blank?
+                    county = get_default_county(place_name)
+                end
+                country = place_parts[2] || ''
+            else # Already identified a special place name
+                unless place_string.split(place_name).nil? or place_string.split(place_name)[1].nil?
+                    place_parts = place_string.split(place_name)[1].split(',')
+                    if !place_parts[0].nil? and place_parts[0].include?('(') and place_parts[0].include?(')')
+                        place_as_written = place_parts[0].split('(')[1].split(')')[0]
+                    end
+                    unless place_parts.length() <2
+                        county = place_parts[1]
+                    end
+                    unless place_parts.length() <3
+                        country = place_parts[2]
+                    end
+                end
             end
-            country = place_parts[2] || ''
+
             place_as_written.strip!
             place_name.strip!
             county.strip!
