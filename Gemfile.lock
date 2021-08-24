@@ -1,7 +1,7 @@
 GIT
   remote: https://github.com/digital-york/tnw_common
-  revision: 874e891c8e31667e7f28e7d9cdcad1c20da09057
-  branch: development
+  revision: 4acd7d9b54b8484a310c13de8518efa3799b9244
+  branch: main
   specs:
     tnw_common (0.1.0)
       rsolr
