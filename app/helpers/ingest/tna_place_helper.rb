@@ -13,8 +13,8 @@ module Ingest
             tna_place.rdftype = tna_place.add_rdf_types
             tna_place.place_as_written = [place_as_written] unless place_as_written.blank? # string
             tna_place.place_same_as = place_name_authority_ids[0] unless place_name_authority_ids.blank? or place_name_authority_ids.length()>1 # reference
-            tna_place.place_role = place_roles unless place_roles.blank? # reference
-            tna_place.place_note = place_note unless place_note.blank?
+            tna_place.place_role = place_roles unless place_roles.blank? or place_roles.join.blank? # reference
+            tna_place.place_note = place_note unless place_note.blank? or place_note.join.blank?
             tna_place.document_id = document_id unless document_id.blank?
 
             tna_place.save
