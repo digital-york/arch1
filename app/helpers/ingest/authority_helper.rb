@@ -138,14 +138,19 @@ module Ingest
         def self.s_get_subject_object_ids(subject_texts)
             subject_ids = []
             subject_texts.each do |subject_text|
+                next if subject_text.nil?
+
                 response = SolrQuery.new.solr_query('has_model_ssim:"ConceptScheme" AND preflabel_tesim:"Borthwick Institute for Archives Subject Headings for the Archbishops\' Registers"', 'id')
                 response['response']['docs'].map do |s|
-                    resp = SolrQuery.new.solr_query('inScheme_ssim:"' + s['id'] + '" AND preflabel_tesim:"' + subject_text.downcase + '"', 'id,preflabel_tesim')
-                    resp['response']['docs'].map do |se|
-                        # doing an exact match of the search term
-                        if se['preflabel_tesim'][0].to_s.downcase == subject_text.downcase
-                            subject_ids << se['id']
+                    begin
+                        resp = SolrQuery.new.solr_query('inScheme_ssim:"' + s['id'] + '" AND preflabel_tesim:"' + subject_text.downcase + '"', 'id,preflabel_tesim')
+                        resp['response']['docs'].map do |se|
+                            # doing an exact match of the search term
+                            if se['preflabel_tesim'][0].to_s.downcase == subject_text.downcase
+                                subject_ids << se['id']
+                            end
                         end
+                    rescue
                     end
                 end
             end
