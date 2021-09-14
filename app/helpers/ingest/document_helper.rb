@@ -234,6 +234,8 @@ module Ingest
                             place_desc.country)
                         if place_authority_ids.blank?
                             puts '  Place(s) Warn: cannot find tna_place.place_authority id'
+                            puts '    ' + place_desc.place_name
+                            puts '    ' + place_desc.county
                             puts "  >>> #{reference}..."
                         elsif place_authority_ids.length()>1
                             puts '  Place(s) Error: returns more than 1 tna_place.places.'

@@ -287,9 +287,25 @@ module Ingest
 
             # First, try to find if the place_string contains a special place name
             # If yes, save it to place_name_and_written_as
+            found_parentheses_in_place_string = false
+            special_place_part1 = ''
+            special_place_part2 = ''
             special_places.each do |p|
-                if place_string.downcase.start_with? p.downcase
-                    place_name = place_string[0, p.length]
+                # if place_as_written (those with '(' and ')') exists in the place_string
+                if place_string.include? '(' and place_string.include? ')'
+                    found_parentheses_in_place_string = true
+                    special_place_part1 = place_string.split('(')[0].strip
+                    special_place_part2 = place_string.split(')')[1].gsub(',','').strip
+                    temp_place_string = special_place_part1 + ' ' + special_place_part2
+
+                    if temp_place_string.downcase.start_with? p.downcase
+                        place_name = temp_place_string[0, p.length]
+                        place_as_written = place_string.split('(')[1].split(')')[0].strip
+                    end
+                else
+                    if place_string.downcase.start_with? p.downcase
+                        place_name = place_string[0, p.length]
+                    end
                 end
             end
 
@@ -325,8 +341,17 @@ module Ingest
                 end
                 country = place_parts[2] || ''
             else # Already identified a special place name
-                unless place_string.split(place_name).nil? or place_string.split(place_name)[1].nil?
-                    place_parts = place_string.split(place_name)[1].split(',')
+                if found_parentheses_in_place_string
+                    generated_place_name = special_place_part1 + ' (' + place_as_written + ') ' + special_place_part2
+                end
+                unless (place_string.split(place_name).nil? or place_string.split(place_name)[1].nil?) and
+                       (place_string.split(generated_place_name).nil? or place_string.split(generated_place_name)[1].nil?)
+                    # if the place string is a special string, also place_as_written exists
+                    if found_parentheses_in_place_string
+                        place_parts = place_string.split(generated_place_name)[1].split(',')
+                    else
+                        place_parts = place_string.split(place_name)[1].split(',')
+                    end
                     if !place_parts[0].nil? and place_parts[0].include?('(') and place_parts[0].include?(')')
                         place_as_written = place_parts[0].split('(')[1].split(')')[0]
                     end
