@@ -361,7 +361,7 @@ module Ingest
                     else
                         unless place_string.strip == place_name.strip or
                             place_string.split(place_name).nil? or
-                            len(place_string.split(place_name)) < 1
+                            place_string.split(place_name).length() < 1
                             place_parts = place_string.split(place_name)[1].split(',')
 
                             if !place_parts[0].nil? and place_parts[0].include?('(') and place_parts[0].include?(')')
