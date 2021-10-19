@@ -106,11 +106,11 @@ namespace :ingest do
                 # For test purpose, only print selected entry rows
                 # if index >= 1 and index < 4
                 # if index < 1
-              # if document_row.reference == 'C 269/2/17'
+              if document_row.reference == 'C 254/37A/1'
                 puts "[#{index} / #{document_rows.length}] #{document_row.to_s}"
                 log.info "[#{index} / #{document_rows.length}] #{document_row.to_s}"
                 Ingest::TnaDocumentBuilder.build_document(document_row, allow_edit)
-              # end
+              end
             rescue => exception
                 log.error exception.backtrace
                 puts exception.backtrace

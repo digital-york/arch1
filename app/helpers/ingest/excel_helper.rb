@@ -311,6 +311,7 @@ module Ingest
 
             # If place_name is still blank,
             # means the place_string should be dealt as a normal string
+            place_parts = []
             if place_name.blank?
                 place_parts = place_string.split(',')
                 place_name_and_written_as = place_parts[0]
@@ -350,16 +351,21 @@ module Ingest
                     if found_parentheses_in_place_string
                         place_parts = place_string.split(generated_place_name)[1].split(',')
                     else
-                        place_parts = place_string.split(place_name)[1].split(',')
-                    end
-                    if !place_parts[0].nil? and place_parts[0].include?('(') and place_parts[0].include?(')')
-                        place_as_written = place_parts[0].split('(')[1].split(')')[0]
-                    end
-                    unless place_parts.length() <2
-                        county = place_parts[1]
-                    end
-                    unless place_parts.length() <3
-                        country = place_parts[2]
+                        unless place_string == place_name or
+                            place_string.split(place_name).nil? or
+                            len(place_string.split(place_name)) < 1
+                            place_parts = place_string.split(place_name)[1].split(',')
+
+                            if !place_parts[0].nil? and place_parts[0].include?('(') and place_parts[0].include?(')')
+                                place_as_written = place_parts[0].split('(')[1].split(')')[0]
+                            end
+                        end
+                        unless place_parts.length() <2
+                            county = place_parts[1]
+                        end
+                        unless place_parts.length() <3
+                            country = place_parts[2]
+                        end
                     end
                 end
             end
