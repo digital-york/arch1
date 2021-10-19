@@ -356,19 +356,23 @@ module Ingest
                 # update place_of_datings
                 puts '  updating place_of_datings'
                 place_of_dating_ids.each do |pd_id|
-                    pd = PlaceOfDating.find(pd_id)
-                    pd.document_id = d.id
-                    # puts 'updated place of dating: ' + pd.id
-                    pd.save
+                    unless pd_id.nil? or pd_id.blank?
+                        pd = PlaceOfDating.find(pd_id)
+                        pd.document_id = d.id
+                        # puts 'updated place of dating: ' + pd.id
+                        pd.save
+                    end
                 end
 
                 # update tna_place
                 puts '  updating tna places'
                 tna_place_ids.each do |tp_id|
-                    tp = TnaPlace.find(tp_id)
-                    tp.document_id = d.id
-                    # puts 'updated tna_places: ' + tp.id
-                    tp.save
+                    unless tp_id.nil? or tp_id.blank?
+                        tp = TnaPlace.find(tp_id)
+                        tp.document_id = d.id
+                        # puts 'updated tna_places: ' + tp.id
+                        tp.save
+                    end
                 end
 
                 # update TNA addressee
