@@ -294,8 +294,13 @@ module Ingest
                 # if place_as_written (those with '(' and ')') exists in the place_string
                 if place_string.include? '(' and place_string.include? ')'
                     found_parentheses_in_place_string = true
+
                     special_place_part1 = place_string.split('(')[0].strip
-                    special_place_part2 = place_string.split(')')[1].gsub(',','').strip
+                    if place_string.ends_with? ')'  # if no county specified in the place string
+                        special_place_part2 = ''
+                    else
+                        special_place_part2 = place_string.split(')')[1].gsub(',','').strip
+                    end
                     temp_place_string = special_place_part1 + ' ' + special_place_part2
 
                     if temp_place_string.downcase.start_with? p.downcase
@@ -349,9 +354,12 @@ module Ingest
                        (place_string.split(generated_place_name).nil? or place_string.split(generated_place_name)[1].nil?)
                     # if the place string is a special string, also place_as_written exists
                     if found_parentheses_in_place_string
-                        place_parts = place_string.split(generated_place_name)[1].split(',')
+                        # if the place_string==generated_place_name, means no county in place_string, so no need to split
+                        unless place_string.strip == generated_place_name.strip
+                            place_parts = place_string.split(generated_place_name)[1].split(',')
+                        end
                     else
-                        unless place_string == place_name or
+                        unless place_string.strip == place_name.strip or
                             place_string.split(place_name).nil? or
                             len(place_string.split(place_name)) < 1
                             place_parts = place_string.split(place_name)[1].split(',')
