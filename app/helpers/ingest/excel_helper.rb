@@ -349,7 +349,7 @@ module Ingest
                 country = place_parts[2] || ''
             else # Already identified a special place name
                 if found_parentheses_in_place_string
-                    generated_place_name = special_place_part1 + ' (' + place_as_written + ') ' + special_place_part2
+                    generated_place_name = special_place_part1 + ' (' + place_as_written + '), ' + special_place_part2
                 end
                 unless (place_string.split(place_name).nil? or place_string.split(place_name)[1].nil?) and
                        (place_string.split(generated_place_name).nil? or place_string.split(generated_place_name)[1].nil?)
@@ -357,7 +357,9 @@ module Ingest
                     if found_parentheses_in_place_string
                         # if the place_string==generated_place_name, means no county in place_string, so no need to split
                         unless place_string.strip == generated_place_name.strip
-                            place_parts = place_string.split(generated_place_name)[1].split(',')
+                            # if place_string.include? generated_place_name
+                                place_parts = place_string.split(generated_place_name)[1].split(',')
+                            # end
                         end
                     else
                         unless place_string.strip == place_name.strip or
