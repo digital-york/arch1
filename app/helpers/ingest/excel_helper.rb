@@ -7,7 +7,8 @@ module Ingest
         DEFAULT_COUNTY = {
             "City of London" => "London",
             "City of York" => "York",
-            "Westminster" => "Middlesex"
+            "Westminster" => "Middlesex",
+            "York City" => "York",
         }.freeze
 
         # parse a row from Borthwick spreadsheet
