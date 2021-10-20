@@ -53,38 +53,38 @@ module Validator
             document_types_from_spreadsheet = [tna_document_row.document_type]
             unless document_types_from_spreadsheet.blank?
                 document_types_from_spreadsheet = document_types_from_spreadsheet.map(&:capitalize)
-                document_types_from_solr = Ingest::AuthorityHelper.s_get_entry_type_labels(document_json['document_type_search'])
+                document_types_from_solr = Ingest::AuthorityHelper.s_get_entry_type_labels(document_json['document_type_tesim'])
                 # compare document types and ignoring the order
                 return "#{document_id}/document_type" if (document_types_from_spreadsheet & document_types_from_solr) != document_types_from_spreadsheet
             end
 
             # Date of document
-            date_of_document = tna_document_row.date_of_document
-            unless date_of_document.blank?
-                return "#{document_id}/date of document" if date_of_document != document_json['first_date_full_ssim'][0]
-            end
+            # date_of_document = tna_document_row.date_of_document
+            # unless date_of_document.blank?
+            #     return "#{document_id}/date of document" if date_of_document != document_json['first_date_full_ssim'][0]
+            # end
 
             # Place of dating
-            place_of_dating = tna_document_row.place_of_dating
-            unless place_of_dating.blank?
-                place_of_dating_descs = Ingest::ExcelHelper.extract_places_info(place_of_dating, 'place of dating', '')
-                place_of_dating_descs.each do |place_of_dating_desc|
-                    place_of_dating_desc.country = 'England' if place_of_dating_desc.country.blank?
-                    return "#{document_id}/place_of_dating.place" unless document_json['place_same_as_facet_ssim'].include? "#{place_of_dating_desc.place_name}, #{place_of_dating_desc.county}, #{place_of_dating_desc.country}"
-                    return "#{document_id}/place_of_dating.place_as_written" unless document_json['place_as_written_tesim'].include? "#{place_of_dating_desc.place_as_written}"
-                end
-            end
+            # place_of_dating = tna_document_row.place_of_dating
+            # unless place_of_dating.blank?
+            #     place_of_dating_descs = Ingest::ExcelHelper.extract_places_info(place_of_dating, 'place of dating', '')
+            #     place_of_dating_descs.each do |place_of_dating_desc|
+            #         place_of_dating_desc.country = 'England' if place_of_dating_desc.country.blank?
+            #         return "#{document_id}/place_of_dating.place" unless document_json['place_same_as_facet_ssim'].include? "#{place_of_dating_desc.place_name}, #{place_of_dating_desc.county}, #{place_of_dating_desc.country}"
+            #         return "#{document_id}/place_of_dating.place_as_written" unless document_json['place_as_written_tesim'].include? "#{place_of_dating_desc.place_as_written}"
+            #     end
+            # end
 
             # Place
-            place = tna_document_row.place
-            unless place.blank?
-                place_descs = Ingest::ExcelHelper.extract_places_info(place, '', '')
-                place_descs.each do |place_desc|
-                    place_desc.country = 'England' if place_desc.country.blank?
-                    return "#{document_id}/place.place" unless document_json['place_same_as_facet_ssim'].include? "#{place_desc.place_name}, #{place_desc.county}, #{place_desc.country}"
-                    return "#{document_id}/place.place_as_written" unless document_json['place_as_written_tesim'].include? "#{place_desc.place_as_written}"
-                end
-            end
+            # place = tna_document_row.place
+            # unless place.blank?
+            #     place_descs = Ingest::ExcelHelper.extract_places_info(place, '', '')
+            #     place_descs.each do |place_desc|
+            #         place_desc.country = 'England' if place_desc.country.blank?
+            #         return "#{document_id}/place.place" unless document_json['place_same_as_facet_ssim'].include? "#{place_desc.place_name}, #{place_desc.county}, #{place_desc.country}"
+            #         return "#{document_id}/place.place_as_written" unless document_json['place_as_written_tesim'].include? "#{place_desc.place_as_written}"
+            #     end
+            # end
 
             # Language
             language = tna_document_row.language

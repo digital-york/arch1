@@ -67,7 +67,7 @@ namespace :validate do
         document_rows.each_with_index { |document_row, index|
             begin
                 # For test purpose, only print selected document rows
-                if document_row.reference == 'C 81/1786/45'
+                # if document_row.reference == 'C 81/1786/45'
                     first_mismatched_field = Validator::TnaValidator.validate_document(document_row)
                     unless first_mismatched_field.blank?
                         puts "[#{index} / #{document_rows.length}] #{document_row.to_s}"
@@ -78,7 +78,7 @@ namespace :validate do
                     end
 
                     break
-                end
+                # end
             rescue => exception
                 log.error exception.backtrace
                 puts exception.backtrace
