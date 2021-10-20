@@ -210,9 +210,9 @@ module Ingest
                             ['place of dating'],
                             place_of_dating_desc.place_note)
                         place_of_dating_id = place_of_dating.id
-                        puts '  2. create Place of dating: ' + place_of_dating.id
+                        # puts '  2. create Place of dating: ' + place_of_dating.id
                     else # if found, use existing Place of Dating
-                        puts '  3. Found Place of dating ' + place_of_dating_id
+                        # puts '  3. Found Place of dating ' + place_of_dating_id
                         place_of_dating = PlaceOfDating.find(place_of_dating_id)
                     end
                 end
@@ -272,7 +272,7 @@ module Ingest
                                     [place_desc.place_role],
                                     place_desc.place_note.nil? ? []: [place_desc.place_note])
                                 tna_place_id = tna_place.id
-                                puts '  2. created tna place: ' + tna_place.id
+                                # puts '  2. created tna place: ' + tna_place.id
                                 # else # if found, use existing Tna Place
                                 #     puts '3. found tna place: ' + tna_place_id
                             end
