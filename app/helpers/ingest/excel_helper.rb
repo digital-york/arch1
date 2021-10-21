@@ -357,9 +357,9 @@ module Ingest
                     if found_parentheses_in_place_string
                         # if the place_string==generated_place_name, means no county in place_string, so no need to split
                         unless place_string.strip == generated_place_name.strip
-                            # if place_string.include? generated_place_name
-                                place_parts = place_string.split(generated_place_name)[1].split(',')
-                            # end
+                            if place_string.strip.include? generated_place_name.strip
+                                place_parts = place_string.strip.split(generated_place_name.strip)[1].split(',')
+                            end
                         end
                     else
                         unless place_string.strip == place_name.strip or
