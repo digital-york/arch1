@@ -292,25 +292,28 @@ module Ingest
             special_place_part1 = ''
             special_place_part2 = ''
             special_places.each do |p|
-                # if place_as_written (those with '(' and ')') exists in the place_string
-                if place_string.include? '(' and place_string.include? ')'
-                    found_parentheses_in_place_string = true
+                # if place_string contains a special place
+                if place_string.start_with? p
+                    # if place_as_written (those with '(' and ')') exists in the place_string
+                    if place_string.include? '(' and place_string.include? ')'
+                        found_parentheses_in_place_string = true
 
-                    special_place_part1 = place_string.split('(')[0].strip
-                    if place_string.ends_with? ')'  # if no county specified in the place string
-                        special_place_part2 = ''
+                        special_place_part1 = place_string.split('(')[0].strip
+                        if place_string.ends_with? ')'  # if no county specified in the place string
+                            special_place_part2 = ''
+                        else
+                            special_place_part2 = place_string.split(')')[1].gsub(',','').strip
+                        end
+                        temp_place_string = special_place_part1 + ' ' + special_place_part2
+
+                        if temp_place_string.downcase.start_with? p.downcase
+                            place_name = temp_place_string[0, p.length]
+                            place_as_written = place_string.split('(')[1].split(')')[0].strip
+                        end
                     else
-                        special_place_part2 = place_string.split(')')[1].gsub(',','').strip
-                    end
-                    temp_place_string = special_place_part1 + ' ' + special_place_part2
-
-                    if temp_place_string.downcase.start_with? p.downcase
-                        place_name = temp_place_string[0, p.length]
-                        place_as_written = place_string.split('(')[1].split(')')[0].strip
-                    end
-                else
-                    if place_string.downcase.start_with? p.downcase
-                        place_name = place_string[0, p.length]
+                        if place_string.downcase.start_with? p.downcase
+                            place_name = place_string[0, p.length]
+                        end
                     end
                 end
             end
