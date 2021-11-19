@@ -169,6 +169,8 @@ module Ingest
                     # allow empty place names, so possibly we could have empty place_authority_ids
                     if place_authority_ids.blank? or place_authority_ids.length()==0
                         puts '  Place of dating warning: cannot find placeofdating.place_authority id'
+                        puts place_of_dating_desc.place_name
+                        puts place_of_dating_desc.county
                         puts "  >>> #{reference}..."
                         # return
                     elsif place_authority_ids.length() > 1
