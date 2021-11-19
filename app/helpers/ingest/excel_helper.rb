@@ -293,7 +293,7 @@ module Ingest
             special_place_part2 = ''
             special_places.each do |p|
                 # if place_string contains a special place
-                if place_string.start_with? p
+                if place_string.downcase.start_with? p.downcase
                     # if place_as_written (those with '(' and ')') exists in the place_string
                     if place_string.include? '(' and place_string.include? ')'
                         found_parentheses_in_place_string = true
