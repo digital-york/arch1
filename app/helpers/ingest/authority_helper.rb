@@ -241,7 +241,7 @@ module Ingest
             q = "has_model_ssim:Place"     # place authority
             q += " AND place_name_tesim:\"#{place_name.downcase}\""  # place name
             # ignore county if ' prebend' is include as it won't return duplicates
-            unless county.blank?
+            unless county.blank? or county.end_with? 'prebend'
                 q += " AND parent_ADM2_tesim:\"#{county.downcase}\"" # county
             end
             q += " AND parent_ADM1_tesim:\"#{country.downcase}\"" unless country.blank? # country
