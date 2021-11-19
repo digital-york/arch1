@@ -334,10 +334,7 @@ module Ingest
                         place_note = 'place unidentified'
                     else
                         place_as_written = place_name_and_written_as.split('(')[1].split(')')[0]
-                        place_name = place_name_and_written_as.gsub(place_as_written,'')
-                                         .gsub('(','')
-                                         .gsub(') ','')
-                                         .gsub(')','')
+                        place_name = place_name_and_written_as.split('(')[0].strip
                     end
                 else
                     place_name = place_name_and_written_as
