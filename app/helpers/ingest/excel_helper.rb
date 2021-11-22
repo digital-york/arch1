@@ -351,21 +351,21 @@ module Ingest
                 if found_parentheses_in_place_string
                     generated_place_name = special_place_part1 + ' (' + place_as_written + '), ' + special_place_part2
                 end
-                unless (place_string.split(place_name).nil? or place_string.split(place_name)[1].nil?) and
-                       (place_string.split(generated_place_name).nil? or place_string.split(generated_place_name)[1].nil?)
+                unless (place_string.downcase.split(place_name.downcase).nil? or place_string.downcase.split(place_name.downcase)[1].nil?) and
+                       (place_string.downcase.split(generated_place_name.downcase).nil? or place_string.downcase.split(generated_place_name.downcase)[1].nil?)
                     # if the place string is a special string, also place_as_written exists
                     if found_parentheses_in_place_string
                         # if the place_string==generated_place_name, means no county in place_string, so no need to split
-                        unless place_string.strip == generated_place_name.strip
-                            if place_string.strip.include? generated_place_name.strip
-                                place_parts = place_string.strip.split(generated_place_name.strip)[1].split(',')
+                        unless place_string.downcase.strip == generated_place_name.downcase.strip
+                            if place_string.downcase.strip.include? generated_place_name.downcase.strip
+                                place_parts = place_string.downcase.strip.split(generated_place_name.downcase.strip)[1].split(',')
                             end
                         end
                     else
-                        unless place_string.strip == place_name.strip or
-                            place_string.split(place_name).nil? or
-                            place_string.split(place_name).length() < 1
-                            place_parts = place_string.split(place_name)[1].split(',')
+                        unless place_string.downcase.strip == place_name.downcase.strip or
+                            place_string.downcase.split(place_name.downcase).nil? or
+                            place_string.downcase.split(place_name.downcase).length() < 1
+                            place_parts = place_string.downcase.split(place_name.downcase)[1].split(',')
 
                             if !place_parts[0].nil? and place_parts[0].include?('(') and place_parts[0].include?(')')
                                 place_as_written = place_parts[0].split('(')[1].split(')')[0]
