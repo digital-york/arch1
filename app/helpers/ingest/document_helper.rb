@@ -124,6 +124,9 @@ module Ingest
                     date_array = date_string.split('/')
                     date_string = date_array[0].tr('^0-9', '') + '/' + date_array[1].tr('^0-9', '') + '/' + date_array[2].tr('^0-9', '')
 
+                    # store year for creating date_facet later in new_solr_fields_controller
+                    d.document_dates_year_only << date_array[0].tr('^0-9', '')
+
                     document_date_ids << document_date.id
                     d.document_date_ids << document_date.id
 

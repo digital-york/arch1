@@ -45,18 +45,28 @@ class NewSolrFieldsController < ApplicationController
     # Note (Text field)
     solr_doc[TnwCommon::Shared::Constants::SOLR_FILED_COMMON_NOTE_SEARCH] = array_to_lowercase(solr_doc[TnwCommon::Shared::Constants::SOLR_FILED_COMMON_NOTE_TESIM])
 
+    # update FACET_DATE
+    solr_doc[TnwCommon::Shared::Constants::FACET_DATE] = []  # Use this field for facet
+
+    # pulling the year of document date directly from solr_doc as the linked document_date & single_date might not indexed yet
+    unless solr_doc['document_dates_year_only_tesim'].nil?
+      solr_doc['document_dates_year_only_tesim'].each do |year|
+        solr_doc[TnwCommon::Shared::Constants::FACET_DATE] << year
+      end
+    end
+
     document_date_ids = Ingest::DocumentDateHelper.s_get_document_date_ids(solr_doc[:id], nil, entry_date_note)
     document_date_ids.each do |document_date_id|
       single_date_ids = Ingest::DocumentDateHelper.s_get_single_date_ids(document_date_id)
-      solr_doc[TnwCommon::Shared::Constants::FACET_DATE] = []  # Use this field for facet
+      # solr_doc[TnwCommon::Shared::Constants::FACET_DATE] = []  # Use this field for facet
       solr_doc[TnwCommon::Shared::Constants::SOLR_FILED_COMMON_DATE_ALL_SSIM] = [] # Use this field for date fields
       solr_doc[TnwCommon::Shared::Constants::SOLR_FILED_COMMON_DATE_FULL_SSIM] = ''   # use this field for ordering
 
       single_date_ids.each_with_index do |single_date_id, index|
         @solr_server.query("id:#{single_date_id}", 'date_tesim', 65535)['response']['docs'].map do |result|
           date = result['date_tesim'][0]
-          year = date.split('/')[0]
-          solr_doc[TnwCommon::Shared::Constants::FACET_DATE] << year
+          # year = date.split('/')[0]
+          # solr_doc[TnwCommon::Shared::Constants::FACET_DATE] << year
           solr_doc[TnwCommon::Shared::Constants::SOLR_FILED_COMMON_DATE_ALL_SSIM] << date
           if index==0
             solr_doc[TnwCommon::Shared::Constants::SOLR_FILED_COMMON_DATE_FULL_SSIM] = date

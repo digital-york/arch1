@@ -45,6 +45,9 @@ class Document < ActiveFedora::Base
   has_many :document_dates, :dependent => :destroy
   accepts_nested_attributes_for :document_dates, :allow_destroy => true, :reject_if => :all_blank
 
+  property :document_dates_year_only, predicate: ::RDF::URI.new('http://dlib.york.ac.uk/ontologies/tna#document_date_year_only'), multiple: true do |index|
+    index.as :stored_searchable
+  end
 
   has_many :tna_addressees, :dependent => :destroy
   accepts_nested_attributes_for :tna_addressees, :allow_destroy => true, :reject_if => :all_blank
