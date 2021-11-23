@@ -121,8 +121,12 @@ module Ingest
                     end
 
                     # remove other characters from Year, Month, and Day
-                    date_array = date_string.split('/')
-                    date_string = date_array[0].tr('^0-9', '') + '/' + date_array[1].tr('^0-9', '') + '/' + date_array[2].tr('^0-9', '')
+                    if date_string.include? '/'
+                        date_array = date_string.split('/')
+                        date_string = date_array[0].tr('^0-9', '') + '/' + date_array[1].tr('^0-9', '') + '/' + date_array[2].tr('^0-9', '')
+                    else
+                        date_array = [date_string.tr('^0-9', '')]
+                    end
 
                     # store year for creating date_facet later in new_solr_fields_controller
                     d.document_dates_year_only << date_array[0].tr('^0-9', '')
