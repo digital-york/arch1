@@ -12,15 +12,22 @@ module Ingest
             # document reference
             reference = tna_document_row.reference
 
-            department_label = reference.split(' ')[0]
+            if reference.starts_with? 'CPR '
+                department_label = tna_document_row.series.split(' ')[0] # supported format 2: extract department from series column
+            else
+                department_label = reference.split(' ')[0] # supported format 2: extract department from reference column
+            end
             department_id = Ingest::DepartmentHelper.s_get_department_id(department_label)
             if department_id.nil?
                 puts 'cannot find department for: ' + reference
                 log.info 'cannot find department for: ' + reference
                 return nil
             end
-
-            series_label = reference.split('/')[0].gsub(" ", "")
+            if reference.include? '/'  # supported format 1: C 85/180/23
+                series_label = reference.split('/')[0].gsub(" ", "")
+            else  # supported format 2: C 66 - Patent Rolls
+                series_label = tna_document_row.series.split('-')[0].gsub(" ", "")
+            end
             series_id = Ingest::SeriesHelper.s_get_series_id(department_id, series_label)
             if series_id.nil?
                 puts 'cannot find series for: ' + reference
