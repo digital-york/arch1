@@ -12,7 +12,7 @@ module Ingest
             # document reference
             reference = tna_document_row.reference
 
-            if reference.starts_with? 'CPR '
+            if reference.starts_with? 'CCR' or reference.starts_with? 'CPR'
                 department_label = tna_document_row.series.split(' ')[0] # supported format 2: extract department from series column
             else
                 department_label = reference.split(' ')[0] # supported format 2: extract department from reference column
@@ -23,7 +23,9 @@ module Ingest
                 log.info 'cannot find department for: ' + reference
                 return nil
             end
-            if reference.include? '/'  # supported format 1: C 85/180/23
+            if reference.starts_with? 'CCR' or reference.starts_with? 'CPR'
+                series_label = tna_document_row.series.split('-')[0].gsub(" ", "")
+            elsif reference.include? '/'  # supported format 1: C 85/180/23
                 series_label = reference.split('/')[0].gsub(" ", "")
             else  # supported format 2: C 66 - Patent Rolls
                 series_label = tna_document_row.series.split('-')[0].gsub(" ", "")
