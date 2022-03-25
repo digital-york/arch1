@@ -81,6 +81,7 @@ class NewSolrFieldsController < ApplicationController
         place_same_as_search_array,
         place_as_written_array = get_place_array(solr_doc[:id])
     solr_doc[TnwCommon::Shared::Constants::SOLR_FILED_COMMON_PLACE_SAME_AS_TESIM] = place_same_as_array.uniq
+    solr_doc[TnwCommon::Shared::Constants::SOLR_FILED_COMMON_PLACE_SAME_AS_NEW_TESIM] = place_same_as_search_array.uniq 
     solr_doc[TnwCommon::Shared::Constants::SOLR_FILED_COMMON_PLACE_SAME_AS_SEARCH] = place_same_as_search_array.uniq
     solr_doc[TnwCommon::Shared::Constants::SOLR_FILED_COMMON_PLACE_AS_WRITTEN_TESIM] = place_as_written_array.uniq
     solr_doc[TnwCommon::Shared::Constants::FACET_PLACE_SAME_AS] = place_same_as_facet_array.uniq
