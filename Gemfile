@@ -13,7 +13,7 @@ gem 'qa', '~> 5.4.0'
 gem 'rsolr'
 gem 'solrizer'
 
-gem 'rails', '~> 5.2.0'
+gem 'rails', '~> 5.2.7.1'
 gem 'sprockets', '~> 3.7.2'
 # Use sqlite3 as the database for Active Record
 gem 'sqlite3', '~> 1.3.13'
