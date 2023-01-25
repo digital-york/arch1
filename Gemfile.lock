@@ -212,7 +212,7 @@ GEM
     libv8 (3.16.14.19)
     libv8 (3.16.14.19-x86_64-linux)
     link_header (0.0.8)
-    loofah (2.18.0)
+    loofah (2.19.1)
       crass (~> 1.0.2)
       nokogiri (>= 1.5.9)
     mail (2.7.1)
@@ -265,7 +265,7 @@ GEM
       nokogiri (~> 1.6)
       rails (>= 5.0, < 6.1)
       rdf
-    racc (1.6.0)
+    racc (1.6.1)
     rack (2.2.3.1)
     rack-test (2.0.0)
       rack (>= 1.3)
